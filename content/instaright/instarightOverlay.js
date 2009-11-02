@@ -1,6 +1,7 @@
 var instaRight={
 	prefs: null,
 	account: "",
+	disableAlert:false,
 	targetUrl:"",
 	ajaxResponse:"",
 	
@@ -12,6 +13,8 @@ var instaRight={
 		this.prefs.addObserver("", this, false);
 		
 		this.account= this.prefs.getCharPref("account").toLowerCase();
+		this.disableAlert = this.prefs.getCharPref("disableAlert").toLowerCase();
+		alert(this.disableAlert);
 		
 		this.refreshInformation();  
 		window.setInterval(this.refreshInformation, 10*60*1000);
@@ -26,6 +29,10 @@ var instaRight={
 		switch(data){
 		    case "account":
 			this.account= this.prefs.getCharPref("account").toLowerCase();
+			this.refreshInformation();
+			break;
+			case "disableAlert":
+			this.disableAlert = this.prefs.getCharPref("disableAlert").toLowerCase();
 			this.refreshInformation();
 			break;
 		}		
@@ -44,6 +51,9 @@ function startup() {
 	if (!gContextMenu) { // Mysterious error console
 		return;
 	}	
+	alert(instaRight.disableAlert);
+	alert(instaRight.account);
+	return;
 	//var keyValue ='h6Rjjit8imBH';
 	if (!gContextMenu.onLink){
 		alert("This element is not link. Please right click on link.");

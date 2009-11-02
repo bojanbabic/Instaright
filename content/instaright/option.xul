@@ -4,11 +4,13 @@
 <prefwindow id="cwp-prefs" title="Instapaper Account" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
      <prefpane  id="instaright-pane">
 	<preferences>
-		<preference id="instaright_account" name="extension.instaright.account" type="string"/>		
+		<preference id="instarightAccount" name="extension.instaright.account" type="string"/>		
+		<preference id="disableAlert" name="extension.instaright.disableAlert" type="bool"/>		
 	</preferences>
 	<hbox>
 		<label control="test" value="Your Instapaper account:"/>
-		<textbox preference="instaright_account" id="test" maxlength="100"/>		
+		<textbox id="accountEmail" preference="instarightAccount" maxlength="100"/>		
+		<checkbox id="alertCheckbox" label="Disable Success alert" preference="disableAlert"/>
 	</hbox>
      </prefpane>
      
