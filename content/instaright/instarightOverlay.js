@@ -16,7 +16,8 @@ var instaRight={
 		this.disableAlert = this.prefs.getBoolPref("disableAlert").toLowerCase();
 		
 		this.refreshInformation();  
-		window.setInterval(this.refreshInformation, 10*60*1000);
+		// if necessary use nsITimer#Example instead of timer
+		//window.setInterval(this.refreshInformation, 10*60*1000);
 	}, 
 	shutdown: function(){
 		this.prefs.removeObserver("", this);
@@ -99,8 +100,28 @@ function startup() {
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
 	var params = "username="+instaRight.account+"&url="+encodeURIComponent(url);		
+	var _SERVER="127.0.0.1";
 	try{
+		var logging = new XMLHttpRequest();
+		loc = _SERVER+"/rpc?";
+		logging.open('GET', loc+params, true);
+		logging.onreadystatechange = function() {
+      			if(logging.readyState == 4 && logging.status == 200) {
+        			var response = null;
+				try {
+			             response = logging.responseText;
+				     alert("responded");
+            			} catch (e) {
+             			     response = logging.responseText;
+            			}
+
+    			}	
+		}
+		logging.send(null);
+
+
 		var http = new XMLHttpRequest();
+		alert("instaright")
 		http.open("POST", urlInstapaper, false);
 		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		http.setRequestHeader("Content-length", params.length);
@@ -109,7 +130,7 @@ function sendUrlSynchAjax(url){
 		http.send(params);
 		instaRight.ajaxResponse=http.responseText;
 	}catch(e){
-		// AWS servise for error handling
+		// google app engine for error handling
 		//alert(e);
 	}
 
