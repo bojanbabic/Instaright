@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<prefwindow id="cwp-prefs" title="Instapaper Account" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+     <prefpane  id="instaright-pane">
+	<preferences>
+		<preference id="instaright_account" name="extension.instaright.account" type="string"/>		
+	</preferences>
+	<hbox>
+		<label control="test" value="Your Instapaper account:"/>
+		<textbox preference="instaright_account" id="test" maxlength="100"/>		
+	</hbox>
+     </prefpane>
+     
+
+</prefwindow>     

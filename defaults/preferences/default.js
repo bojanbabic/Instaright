@@ -1,0 +1,1 @@
+pref("extension.instaright.account","");

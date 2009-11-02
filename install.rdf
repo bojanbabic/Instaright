@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+	<Description about="urn:mozilla:install-manifest">
+
+		<em:id>{1d682819-bef2-4a75-8ffa-adf3733f5557}</em:id>
+		<em:name>Instaright!</em:name>		
+		<em:version>0.2.1</em:version>
+		<em:description>Instapaper links on right-click.</em:description>
+		<em:creator>Bojan Babic</em:creator>
+		<em:homepageURL>http://bojanbabic.blogspot.com</em:homepageURL>
+		<em:aboutURL>chrome://instaright/content/about.xul</em:aboutURL>
+		<em:iconURL>chrome://instaright/skin/instapaper.png</em:iconURL>
+		<em:optionsURL>chrome://instaright/content/option.xul</em:optionsURL>
+		<em:file>
+			<Description about="urn:mozilla:extension:file:instaright.jar">
+				<em:package>content/instaright/</em:package>
+				<em:skin>skin/classic/instaright/</em:skin>
+			</Description>
+		</em:file>
+
+		<em:targetApplication>
+			<Description>
+				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+				<em:minVersion>3.0</em:minVersion>
+				<em:maxVersion>3.5.*</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+
+	</Description>
+
+</RDF>

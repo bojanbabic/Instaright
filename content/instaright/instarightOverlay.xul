@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<overlay id="instarightOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+// This imports our javascript.
+
+<script type="application/x-javascript" src="chrome://instaright/content/instarightOverlay.js">
+
+</script>
+
+
+// This is for the right click menu.
+
+<popup id="contentAreaContextMenu">
+  <menuitem id="instaright" label="Instapaper it!" accesskey="I" 
+  insertafter="context-stop" oncommand="startup();"/>
+</popup>
+
+</overlay>
+
