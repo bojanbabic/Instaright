@@ -1,5 +1,5 @@
 cd $HOME/d/work/_ff_extensions/my_ff/build/instaright/
-zip -r chrome/instaright.zip content/ skin/ 
+zip -vr chrome/instaright.zip content/ skin/  -x "*.svn*"
 mv chrome/instaright.zip chrome/instaright.jar
-zip -r instaright.zip chrome/ install.js  install.rdf defaults/  
+zip -vr instaright.zip chrome/ install.js  install.rdf defaults/   -x "*.svn*"
 mv instaright.zip instaright.xpi

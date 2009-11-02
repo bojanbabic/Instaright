@@ -10,6 +10,8 @@
 	<hbox>
 		<label control="test" value="Your Instapaper account:"/>
 		<textbox id="accountEmail" preference="instarightAccount" maxlength="100"/>		
+	</hbox>
+	<hbox>	
 		<checkbox id="alertCheckbox" label="Disable Success alert" preference="disableAlert"/>
 	</hbox>
      </prefpane>
