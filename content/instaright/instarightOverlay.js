@@ -28,15 +28,16 @@ var instaRight={
 		}
 		switch(data){
 		    case "account":
-			this.account= this.prefs.getCharPref("account").toLowerCase();
-			this.refreshInformation();
+				this.account= this.prefs.getCharPref("account").toLowerCase();
+				this.refreshInformation();
 		    case "disableAlert":
-			this.disableAlert = this.prefs.getBoolPref("disableAlert");
-			this.refreshInformation();
-			break;
+				this.disableAlert = this.prefs.getBoolPref("disableAlert");
+				this.refreshInformation();
+				break;
 		}		
 	},
 	refreshInformation: function(){
+		this.disableAlert;
 		//alert("disable alert changed:"+this.disableAlert);
 		
 	}
@@ -61,7 +62,7 @@ function startup() {
 	//while( instaRight.ajaxResponse == '' ){
 		
 	//}
-	return;
+	//alert(instaRight.disableAlert);
 	if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
 		alert('Success.');
 	}
@@ -100,30 +101,36 @@ function startup() {
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
 	var params = "username="+instaRight.account+"&url="+encodeURIComponent(url);		
-	var _SERVER="http://127.0.0.1:8080";
+	//var _SERVER="http://127.0.0.1:8080";
+	var _SERVER="http://instaright.appspot.com";
+	//logging.send(null);
+	var body = new Array();
+	body.push(instaRight.account);
+	body.push(encodeURIComponent(url));
+	var bodyJSON=JSON.stringify(body);
+
 	try{
 		var logging = new XMLHttpRequest();
 //		loc = _SERVER+"/rpc?";
 		loc = _SERVER+"/rpc";
 		//logging.open('GET', loc+params, true);
+		
 		logging.open('POST', loc, true);
 		logging.onreadystatechange = function() {
       			if(logging.readyState == 4 && logging.status == 200) {
         			var response = null;
-				try {
-			             response = logging.responseText;
+					try {
+			             response = JSON.parse(logging.responseText);
             			} catch (e) {
              			     response = logging.responseText;
             			}
 
     			}	
 		}
-		//logging.send(null);
-		logging.send(params);
+		logging.send(bodyJSON);
 
 
 		var http = new XMLHttpRequest();
-		alert("instaright")
 		http.open("POST", urlInstapaper, false);
 		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		http.setRequestHeader("Content-length", params.length);
@@ -133,7 +140,7 @@ function sendUrlSynchAjax(url){
 		instaRight.ajaxResponse=http.responseText;
 	}catch(e){
 		// google app engine for error handling
-		alert(e);
+		// alert(e);
 	}
 
 }

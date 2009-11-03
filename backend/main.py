@@ -1,9 +1,11 @@
-import sys, cgi,re,os
+import sys, os, urllib2
+import logging 
 #import multiprocessing
 
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
+from django.utils import simplejson
 
 class SessionModel(db.Model):
 	user_agent=db.StringProperty()
@@ -13,12 +15,16 @@ class SessionModel(db.Model):
 
 class Logging(webapp.RequestHandler):
 	def post(self):
-		args=self.request.body
-		account=args
-		URL=""
-		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL)
-		model.put()
-		return self.response.out.write(1)
+		try:
+			args=simplejson.loads(self.request.body)
+			account=args[0]
+			URL=urllib2.unquote(args[1])
+			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL)
+			model.put()
+			return self.response.out.write(1)
+		except:
+			e = sys.exc_info()[1]
+			logging.error('Error while handling request %s' % e)
 		
 	def get(self):
 		URL=cgi.escape(self.request.get('url'))

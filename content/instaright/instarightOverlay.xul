@@ -6,7 +6,8 @@
 // This imports our javascript.
 
 <script type="application/x-javascript" src="chrome://instaright/content/instarightOverlay.js">
-
+</script>
+<script type="application/x-javascript" src="chrome://instaright/content/json2.js">
 </script>
 
 
