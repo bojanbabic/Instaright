@@ -100,24 +100,26 @@ function startup() {
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
 	var params = "username="+instaRight.account+"&url="+encodeURIComponent(url);		
-	var _SERVER="127.0.0.1";
+	var _SERVER="http://127.0.0.1:8080";
 	try{
 		var logging = new XMLHttpRequest();
-		loc = _SERVER+"/rpc?";
-		logging.open('GET', loc+params, true);
+//		loc = _SERVER+"/rpc?";
+		loc = _SERVER+"/rpc";
+		//logging.open('GET', loc+params, true);
+		logging.open('POST', loc, true);
 		logging.onreadystatechange = function() {
       			if(logging.readyState == 4 && logging.status == 200) {
         			var response = null;
 				try {
 			             response = logging.responseText;
-				     alert("responded");
             			} catch (e) {
              			     response = logging.responseText;
             			}
 
     			}	
 		}
-		logging.send(null);
+		//logging.send(null);
+		logging.send(params);
 
 
 		var http = new XMLHttpRequest();
@@ -131,7 +133,7 @@ function sendUrlSynchAjax(url){
 		instaRight.ajaxResponse=http.responseText;
 	}catch(e){
 		// google app engine for error handling
-		//alert(e);
+		alert(e);
 	}
 
 }
