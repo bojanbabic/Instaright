@@ -1,6 +1,7 @@
 var instaRight={
 	prefs: null,
 	account: "",
+	password: "",
 	disableAlert:false,
 	targetUrl:"",
 	ajaxResponse:"",
@@ -13,6 +14,7 @@ var instaRight={
 		this.prefs.addObserver("", this, false);
 		
 		this.account= this.prefs.getCharPref("account").toLowerCase();
+		this.password= this.prefs.getCharPref("password");
 		this.disableAlert = this.prefs.getBoolPref("disableAlert").toLowerCase();
 		
 		this.refreshInformation();  
@@ -30,6 +32,9 @@ var instaRight={
 		    case "account":
 				this.account= this.prefs.getCharPref("account").toLowerCase();
 				this.refreshInformation();
+		    case "password":
+				this.password = this.prefs.getCharPref("password");
+				this.refreshInformation();
 		    case "disableAlert":
 				this.disableAlert = this.prefs.getBoolPref("disableAlert");
 				this.refreshInformation();
@@ -38,7 +43,7 @@ var instaRight={
 	},
 	refreshInformation: function(){
 		this.disableAlert;
-		//alert("disable alert changed:"+this.disableAlert);
+		//alert("disable alert changed:"+this.password);
 		
 	}
 }
@@ -62,7 +67,6 @@ function startup() {
 	//while( instaRight.ajaxResponse == '' ){
 		
 	//}
-	//alert(instaRight.disableAlert);
 	if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
 		alert('Success.');
 	}
@@ -100,7 +104,7 @@ function startup() {
 
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
-	var params = "username="+instaRight.account+"&url="+encodeURIComponent(url);		
+	var params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
 	//var _SERVER="http://127.0.0.1:8080";
 	var _SERVER="http://instaright.appspot.com";
 	//logging.send(null);
