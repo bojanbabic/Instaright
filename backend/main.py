@@ -33,9 +33,16 @@ class Logging(webapp.RequestHandler):
 		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL)
 		model.put()
 		return self.response.out.write(1)
+class ErrorHandling(webapp.RequestHandler):
+	def post(self):
+		args=simplejson.loads(self.request.body)
+		error=args[0]
+		logging.error('Error caught within extension:'+error)
+		return self.response.out.write(1)
 		
 application = webapp.WSGIApplication(
-                                     [('/rpc', Logging)],
+                                     [('/rpc', Logging),
+                                     ('/error', ErrorHandling)],
                                      debug=True)
 
 def main():

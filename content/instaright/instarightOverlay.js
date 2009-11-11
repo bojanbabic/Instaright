@@ -105,21 +105,19 @@ function startup() {
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
 	var params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
-	//var _SERVER="http://127.0.0.1:8080";
-	var _SERVER="http://instaright.appspot.com";
-	//logging.send(null);
-	var body = new Array();
-	body.push(instaRight.account);
-	body.push(encodeURIComponent(url));
-	var bodyJSON=JSON.stringify(body);
+	//var _SERVER="http://instaright.appspot.com";
+	var _SERVER="http://localhost:8080";
+	var loggingLocation = _SERVER+"/rpc";
+	var errorLocation = _SERVER+"/error";
 
 	try{
 		var logging = new XMLHttpRequest();
-//		loc = _SERVER+"/rpc?";
-		loc = _SERVER+"/rpc";
-		//logging.open('GET', loc+params, true);
+		var body = new Array();
+		body.push(instaRight.account);
+		body.push(encodeURIComponent(url));
+		var bodyJSON=JSON.stringify(body);
 		
-		logging.open('POST', loc, true);
+		logging.open('POST', loggingLocation, true);
 		logging.onreadystatechange = function() {
       			if(logging.readyState == 4 && logging.status == 200) {
         			var response = null;
@@ -133,7 +131,6 @@ function sendUrlSynchAjax(url){
 		}
 		logging.send(bodyJSON);
 
-
 		var http = new XMLHttpRequest();
 		http.open("POST", urlInstapaper, false);
 		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -144,9 +141,33 @@ function sendUrlSynchAjax(url){
 		instaRight.ajaxResponse=http.responseText;
 	}catch(e){
 		// google app engine for error handling
-		// alert(e);
+		try{
+			alert('error!');
+			logErrors(e,errorLocation);
+		}catch(e){
+		}
 	}
 
+}
+function logErrors(e, errorLocation){
+	var http = new XMLHttpRequest();
+	var params = "error="+e;
+	var body= new Array();
+	body.push(e);
+	var bodyJSON = JSON.stringify(body);
+	http.open("POST", errorLocation, true);
+	http.onreadystatechange = function() {
+      			if(http.readyState == 4 && http.status == 200) {
+        			var response = null;
+					try {
+			             response = JSON.parse(http.responseText);
+            			} catch (e) {
+             			     response = http.responseText;
+						}
+				}
+
+	}	
+	http.send(bodyJSON);
 }
 
 function getUrl(){
