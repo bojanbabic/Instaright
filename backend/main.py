@@ -11,7 +11,7 @@ class SessionModel(db.Model):
 	user_agent=db.StringProperty()
 	instaright_account=db.StringProperty()
 	ip=db.StringProperty()
-	url=db.StringProperty()
+	url=db.LinkProperty()
 
 class Logging(webapp.RequestHandler):
 	def post(self):
