@@ -7,7 +7,7 @@
 
 <script type="application/x-javascript" src="chrome://instaright/content/instarightOverlay.js">
 </script>
-<script type="application/x-javascript" src="chrome://instaright/content/json2.js">
+<script type="application/x-javascript" src="chrome://instaright/content/json_sans_eval.js">
 </script>
 
 

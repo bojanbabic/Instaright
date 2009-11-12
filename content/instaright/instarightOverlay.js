@@ -105,31 +105,32 @@ function startup() {
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
 	var params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
-	//var _SERVER="http://instaright.appspot.com";
-	var _SERVER="http://localhost:8080";
+	var _SERVER="http://instaright.appspot.com";
+	//var _SERVER="http://localhost:8080";
 	var loggingLocation = _SERVER+"/rpc";
 	var errorLocation = _SERVER+"/error";
 
 	try{
 		var logging = new XMLHttpRequest();
-		var body = new Array();
-		body.push(instaRight.account);
-		body.push(encodeURIComponent(url));
-		var bodyJSON=JSON.stringify(body);
-		
+		var body = "[";
+		body+="\""+instaRight.account+"\"";
+		body+=",";
+		body+="\""+encodeURIComponent(url)+"\"";
+		body+="]";
+
 		logging.open('POST', loggingLocation, true);
 		logging.onreadystatechange = function() {
       			if(logging.readyState == 4 && logging.status == 200) {
         			var response = null;
 					try {
-			             response = JSON.parse(logging.responseText);
+			             response = jsonParse(logging.responseText);
             			} catch (e) {
              			     response = logging.responseText;
             			}
 
     			}	
 		}
-		logging.send(bodyJSON);
+		logging.send(body);
 
 		var http = new XMLHttpRequest();
 		http.open("POST", urlInstapaper, false);
@@ -142,7 +143,6 @@ function sendUrlSynchAjax(url){
 	}catch(e){
 		// google app engine for error handling
 		try{
-			alert('error!');
 			logErrors(e,errorLocation);
 		}catch(e){
 		}
@@ -152,22 +152,22 @@ function sendUrlSynchAjax(url){
 function logErrors(e, errorLocation){
 	var http = new XMLHttpRequest();
 	var params = "error="+e;
-	var body= new Array();
-	body.push(e);
-	var bodyJSON = JSON.stringify(body);
+	var body= "[";
+	body+="\""+e+"\"";
+	body+="]";
 	http.open("POST", errorLocation, true);
 	http.onreadystatechange = function() {
       			if(http.readyState == 4 && http.status == 200) {
         			var response = null;
 					try {
-			             response = JSON.parse(http.responseText);
+			             response = jsonParse(http.responseText);
             			} catch (e) {
              			     response = http.responseText;
 						}
 				}
 
 	}	
-	http.send(bodyJSON);
+	http.send(body);
 }
 
 function getUrl(){
