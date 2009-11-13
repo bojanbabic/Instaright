@@ -1,0 +1,4 @@
+cron:
+- description: daily mails for users
+  url: /cron
+  schedule: every 3 minutes

@@ -12,6 +12,7 @@ class SessionModel(db.Model):
 	instaright_account=db.StringProperty()
 	ip=db.StringProperty()
 	url=db.LinkProperty()
+	date=db.DateProperty(auto_now_add=True)
 
 class Logging(webapp.RequestHandler):
 	def post(self):
