@@ -19,7 +19,7 @@ var instaRight={
 		
 		this.refreshInformation();  
 		// if necessary use nsITimer#Example instead of timer
-		//window.setInterval(this.refreshInformation, 10*60*1000);
+		//(this.refreshInformation, 10*60*1000);
 	}, 
 	shutdown: function(){
 		this.prefs.removeObserver("", this);
@@ -50,7 +50,7 @@ var instaRight={
 
 function startup() {
 	if (instaRight.account == "" || instaRight.account == null){
-			alert('Invalid email. Please enter valid email in plugin options.');
+			alert('Invalid email. Please ensetIntervalter valid email in plugin options.');
 			return;
 	}
 	if (!gContextMenu) { // Mysterious error console
@@ -64,9 +64,6 @@ function startup() {
 	}
 	var url=gContextMenu.link.href;
 	sendUrlSynchAjax(url);
-	//while( instaRight.ajaxResponse == '' ){
-		
-	//}
 	if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
 		alert('Success.');
 	}
@@ -79,34 +76,12 @@ function startup() {
 	else if (instaRight.ajaxResponse == '500'){
 		alert('The service encountered an error. Please try later again.');
 	}
-	//instaRight.targetUrl=url;
-	//TODO uncomment this when you solve url problem 
-	//try{
-	//var z=content.document.createElement('script');
-	//z.setAttribute('src','http://www.instapaper.com/j/pkRp5c0uhD7L');
-	//var u ='http://www.instapaper.com/j/h6Rjjit8imBH';
-	//content.document.location.href="javascript:void(getUrl))";
-	//content.document.body.appendChild(z);
-	//}catch(e){
-	//alert(e);
-	//}
-	//using key 
-	//var u="http://www.instapaper.com/b?v=4&k="+keyValue+"&u="+encodeURIComponent(url)+"&t="+encodeURIComponent(url)+"&s="+encodeURIComponent("");	
-	
-	// without using key
-	//var u="http://www.instapaper.com/b?v=4&u="+encodeURIComponent(url)+"&t="+encodeURIComponent(url)+"&s="+encodeURIComponent("");	
-	
-	
-	//if (!window.open(u,'t','toolbar=0,resizable=0,status=1,width=250,height=150')){
-	//	document.location.href=u;
-	//}	
 }
 
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
 	var params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
 	var _SERVER="http://instaright.appspot.com";
-	//var _SERVER="http://localhost:8080";
 	var loggingLocation = _SERVER+"/rpc";
 	var errorLocation = _SERVER+"/error";
 
