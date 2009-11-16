@@ -8,8 +8,6 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
 from main import SessionModel
 
-#TODO set timezone based on IP
-
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty()
 	totalDailyNumber=db.IntegerProperty()
@@ -19,10 +17,13 @@ class CronTask(webapp.RequestHandler):
 	def get(self):
 		try:
 			logging.info('Started crontask for %s' % datetime.date.today())
-			todayData=SessionModel.gql('WHERE date = :1', datetime.date.today())
+			yesterday=datetime.date.today() - datetime.timedelta(days=1)
+			logging.info('yesterday: %s',yesterday)
+			todayData=SessionModel.gql('WHERE date = :1', yesterday)
+			#todayData=SessionModel.gql('WHERE date = :1', datetime.date.today())
 			allData=SessionModel.all()
 			logging.info('Gathered all data : %d' % allData.count())
-			logging.info('Gathered today data : %d' % todayData.count())
+			logging.info('Gathered yesterday data : %d' % todayData.count())
 			stats=StatsModel()
 			stats.totalNumber=allData.count()
 			stats.totalDailyNumber=todayData.count()
@@ -31,6 +32,16 @@ class CronTask(webapp.RequestHandler):
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running crontask.Error: %s' % e)
+	def getAll(self):
+		try:
+			allData=SessionModel.all()
+			stats=StatsModel()
+			stats.totalNumber=allData.count()
+			stats.totalDailyNumber=allData.count()
+			stats.put()
+		except:
+			e = sys.exc_info()[1]
+			logging.error('Error while running getALl %s' %e)
 		
 application = webapp.WSGIApplication(
                                      [('/cron', CronTask)],debug=True)
