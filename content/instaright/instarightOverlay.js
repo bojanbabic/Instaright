@@ -135,8 +135,9 @@ com.appspot.instaright={
 			alert("This element is not link. Please right click on link.");
 			return;
 		}
+		alrt('before');
 		url=gContextMenu.link.href;
-		sendUrlSynchAjax(url);
+		this.sendUrlSynchAjax(url);
 		if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
 			alert('Success.');
 		}
@@ -149,6 +150,53 @@ com.appspot.instaright={
 		else if (instaRight.ajaxResponse == '500'){
 			alert('The service encountered an error. Please try later again.');
 		}
+	},
+	sendUrlSynchAjax:function(url){
+
+						urlInstapaper = "http://www.instapaper.com/api/add";
+						params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
+						_SERVER="http://instaright.appspot.com";
+						loggingLocation = _SERVER+"/rpc";
+						errorLocation = _SERVER+"/error";
+						alrt(url);
+
+//						try{
+//							 logging = new XMLHttpRequest();
+//							 body = "[";
+//							 body+="\""+instaRight.account+"\"";
+//							 body+=",";
+//							 body+="\""+encodeURIComponent(url)+"\"";
+//							 body+="]";
+//
+//							 logging.open('POST', loggingLocation, true);
+//							 logging.onreadystatechange = function() {
+//								 if(logging.readyState == 4 && logging.status == 200) {
+//									 response = null;
+//									 try {
+//										 response = jsonParse(logging.responseText);
+//									 } catch (e) {
+//										 response = logging.responseText;
+//									 }
+//
+//								 }	
+//							 }
+//							 logging.send(body);
+//
+//							 http = new XMLHttpRequest();
+//							 http.open("POST", urlInstapaper, false);
+//							 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//								 http.setRequestHeader("Content-length", params.length);
+//								 http.setRequestHeader("Connection", "close");
+//
+//							 http.send(params);
+//							 instaRight.ajaxResponse=http.responseText;
+//						 }catch(e){
+//							 // google app engine for error handling
+//							 try{
+//								 logErrors(e,errorLocation);
+//							 }catch(e){
+//							 }
+//						 }
 	}
 }
 
