@@ -15,7 +15,7 @@
 
 <popup id="contentAreaContextMenu">
   <menuitem id="instaright" label="Instapaper it!" accesskey="I" 
-  insertafter="context-stop" oncommand="startup();"/>
+  insertafter="context-stop" oncommand="com.appspot.instaright.start();"/>
 </popup>
 
 </overlay>

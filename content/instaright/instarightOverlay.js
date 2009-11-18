@@ -48,35 +48,6 @@ var instaRight={
 	}
 }
 
-function startup() {
-	if (instaRight.account == "" || instaRight.account == null){
-			alert('Invalid email. Please ensetIntervalter valid email in plugin options.');
-			return;
-	}
-	if (!gContextMenu) { // Mysterious error console
-		return;
-	}	
-	
-	//var keyValue ='h6Rjjit8imBH';
-	if (!gContextMenu.onLink){
-		alert("This element is not link. Please right click on link.");
-		return;
-	}
-	var url=gContextMenu.link.href;
-	sendUrlSynchAjax(url);
-	if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
-		alert('Success.');
-	}
-	else if (instaRight.ajaxResponse == '400'){
-		alert('Bad request. Missing required parameter.');
-	}
-	else if (instaRight.ajaxResponse == '403'){
-		alert('Invalid username or password.');
-	}
-	else if (instaRight.ajaxResponse == '500'){
-		alert('The service encountered an error. Please try later again.');
-	}
-}
 
 function sendUrlSynchAjax(url){
 	var urlInstapaper = "http://www.instapaper.com/api/add";
@@ -145,8 +116,40 @@ function logErrors(e, errorLocation){
 	http.send(body);
 }
 
-function getUrl(){
-	return instaRight.targetUrl;
+if (!com) var com={};
+if (!com.appspot) com.appspot={};
+if (!com.appspot.instaright) com.appspot.instaright={};
+com.appspot.instaright={
+	start:function(){
+		alert('test');
+		if (instaRight.account == "" || instaRight.account == null){
+			alert('Invalid email. Please ensetIntervalter valid email in plugin options.');
+			return;
+		}
+		if (!gContextMenu) { // Mysterious error console
+			return;
+		}	
+
+		//var keyValue ='h6Rjjit8imBH';
+		if (!gContextMenu.onLink){
+			alert("This element is not link. Please right click on link.");
+			return;
+		}
+		url=gContextMenu.link.href;
+		sendUrlSynchAjax(url);
+		if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
+			alert('Success.');
+		}
+		else if (instaRight.ajaxResponse == '400'){
+			alert('Bad request. Missing required parameter.');
+		}
+		else if (instaRight.ajaxResponse == '403'){
+			alert('Invalid username or password.');
+		}
+		else if (instaRight.ajaxResponse == '500'){
+			alert('The service encountered an error. Please try later again.');
+		}
+	}
 }
 
 window.addEventListener("load", function(e) { instaRight.startup(); }, false);
