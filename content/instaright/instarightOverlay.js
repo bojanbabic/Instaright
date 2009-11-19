@@ -1,4 +1,9 @@
-var instaRight={
+if (!com) var com={};
+if (!com.appspot) com.appspot={};
+if (!com.appspot.instaright) com.appspot.instaright={};
+if (!com.appspot.model) com.appspot.model={}
+
+com.appspot.model={
 	prefs: null,
 	account: "",
 	password: "",
@@ -43,86 +48,16 @@ var instaRight={
 	},
 	refreshInformation: function(){
 		this.disableAlert;
-		//alert("disable alert changed:"+this.password);
+		//alert("password changed:"+this.password);
+		//alert("disable alert changed:"+this.disableAlert);
 		
 	}
 }
 
-
-function sendUrlSynchAjax(url){
-	var urlInstapaper = "http://www.instapaper.com/api/add";
-	var params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
-	var _SERVER="http://instaright.appspot.com";
-	var loggingLocation = _SERVER+"/rpc";
-	var errorLocation = _SERVER+"/error";
-
-	try{
-		var logging = new XMLHttpRequest();
-		var body = "[";
-		body+="\""+instaRight.account+"\"";
-		body+=",";
-		body+="\""+encodeURIComponent(url)+"\"";
-		body+="]";
-
-		logging.open('POST', loggingLocation, true);
-		logging.onreadystatechange = function() {
-      			if(logging.readyState == 4 && logging.status == 200) {
-        			var response = null;
-					try {
-			             response = jsonParse(logging.responseText);
-            			} catch (e) {
-             			     response = logging.responseText;
-            			}
-
-    			}	
-		}
-		logging.send(body);
-
-		var http = new XMLHttpRequest();
-		http.open("POST", urlInstapaper, false);
-		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		http.setRequestHeader("Content-length", params.length);
-		http.setRequestHeader("Connection", "close");
-
-		http.send(params);
-		instaRight.ajaxResponse=http.responseText;
-	}catch(e){
-		// google app engine for error handling
-		try{
-			logErrors(e,errorLocation);
-		}catch(e){
-		}
-	}
-
-}
-function logErrors(e, errorLocation){
-	var http = new XMLHttpRequest();
-	var params = "error="+e;
-	var body= "[";
-	body+="\""+e+"\"";
-	body+="]";
-	http.open("POST", errorLocation, true);
-	http.onreadystatechange = function() {
-      			if(http.readyState == 4 && http.status == 200) {
-        			var response = null;
-					try {
-			             response = jsonParse(http.responseText);
-            			} catch (e) {
-             			     response = http.responseText;
-						}
-				}
-
-	}	
-	http.send(body);
-}
-
-if (!com) var com={};
-if (!com.appspot) com.appspot={};
-if (!com.appspot.instaright) com.appspot.instaright={};
 com.appspot.instaright={
+	_SERVER:"http://instaright.appspot.com",
 	start:function(){
-		alert('test');
-		if (instaRight.account == "" || instaRight.account == null){
+		if (com.appspot.model.account == "" || com.appspot.model.account == null){
 			alert('Invalid email. Please ensetIntervalter valid email in plugin options.');
 			return;
 		}
@@ -130,74 +65,89 @@ com.appspot.instaright={
 			return;
 		}	
 
-		//var keyValue ='h6Rjjit8imBH';
 		if (!gContextMenu.onLink){
 			alert("This element is not link. Please right click on link.");
 			return;
 		}
-		alrt('before');
 		url=gContextMenu.link.href;
 		this.sendUrlSynchAjax(url);
-		if (instaRight.ajaxResponse == '201' && instaRight.disableAlert == false){
+		if (com.appspot.model.ajaxResponse == '201' && com.appspot.model.disableAlert == false){
 			alert('Success.');
 		}
-		else if (instaRight.ajaxResponse == '400'){
+		else if (com.appspot.model.ajaxResponse == '400'){
 			alert('Bad request. Missing required parameter.');
 		}
-		else if (instaRight.ajaxResponse == '403'){
+		else if (com.appspot.model.ajaxResponse == '403'){
 			alert('Invalid username or password.');
 		}
-		else if (instaRight.ajaxResponse == '500'){
+		else if (com.appspot.model.ajaxResponse == '500'){
 			alert('The service encountered an error. Please try later again.');
 		}
 	},
 	sendUrlSynchAjax:function(url){
-
 						urlInstapaper = "http://www.instapaper.com/api/add";
-						params = "username="+instaRight.account+"&password="+instaRight.password+"&url="+encodeURIComponent(url);		
-						_SERVER="http://instaright.appspot.com";
-						loggingLocation = _SERVER+"/rpc";
-						errorLocation = _SERVER+"/error";
-						alrt(url);
+						params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url);		
+						loggingLocation = this._SERVER+"/rpc";
 
-//						try{
-//							 logging = new XMLHttpRequest();
-//							 body = "[";
-//							 body+="\""+instaRight.account+"\"";
-//							 body+=",";
-//							 body+="\""+encodeURIComponent(url)+"\"";
-//							 body+="]";
-//
-//							 logging.open('POST', loggingLocation, true);
-//							 logging.onreadystatechange = function() {
-//								 if(logging.readyState == 4 && logging.status == 200) {
-//									 response = null;
-//									 try {
-//										 response = jsonParse(logging.responseText);
-//									 } catch (e) {
-//										 response = logging.responseText;
-//									 }
-//
-//								 }	
-//							 }
-//							 logging.send(body);
-//
-//							 http = new XMLHttpRequest();
-//							 http.open("POST", urlInstapaper, false);
-//							 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//								 http.setRequestHeader("Content-length", params.length);
-//								 http.setRequestHeader("Connection", "close");
-//
-//							 http.send(params);
-//							 instaRight.ajaxResponse=http.responseText;
-//						 }catch(e){
-//							 // google app engine for error handling
-//							 try{
-//								 logErrors(e,errorLocation);
-//							 }catch(e){
-//							 }
-//						 }
+						try{
+							 logging = new XMLHttpRequest();
+							 body = "[";
+							 body+="\""+com.appspot.model.account+"\"";
+							 body+=",";
+							 body+="\""+encodeURIComponent(url)+"\"";
+							 body+="]";
+
+							 logging.open('POST', loggingLocation, true);
+							 logging.onreadystatechange = function() {
+								 if(logging.readyState == 4 && logging.status == 200) {
+									 response = null;
+									 try {
+										 response = jsonParse(logging.responseText);
+									 } catch (e) {
+										 response = logging.responseText;
+									 }
+
+								 }	
+							 }
+							 logging.send(body);
+							 http = new XMLHttpRequest();
+							 http.open("POST", urlInstapaper, false);
+							 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+								 http.setRequestHeader("Content-length", params.length);
+								 http.setRequestHeader("Connection", "close");
+
+							 http.send(params);
+							 com.appspot.model.ajaxResponse=http.responseText;
+						 }catch(e){
+							 // google app engine for error handling
+							 try{
+								 this.logErrors(e);
+							 }catch(e){
+							 }
+						 }
+	},
+	logErrors:function(e){
+
+			  errorLocation = this._SERVER+"/error";
+			  http = new XMLHttpRequest();
+			  params = "error="+e;
+			  body= "[";
+			  body+="\""+e+"\"";
+			  body+="]";
+			  http.open("POST", errorLocation, true);
+			  http.onreadystatechange = function() {
+				  if(http.readyState == 4 && http.status == 200) {
+					  response = null;
+					  try {
+						  response = jsonParse(http.responseText);
+					  } catch (e) {
+						  response = http.responseText;
+					  }
+				  }
+
+			  }
+			  http.send(body);
 	}
 }
 
-window.addEventListener("load", function(e) { instaRight.startup(); }, false);
+window.addEventListener("load", function(e) { com.appspot.model.startup(); }, false);
