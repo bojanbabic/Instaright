@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
-<prefwindow id="cwp-prefs" title="Instapaper Account" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<prefwindow id="instaright-prefs" title="Instapaper Account" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
      <prefpane  id="instaright-pane">
 	<preferences>
 		<preference id="instarightAccount" name="extension.instaright.account" type="string"/>		
