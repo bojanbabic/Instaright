@@ -14,6 +14,28 @@ class SessionModel(db.Model):
 	url=db.LinkProperty()
 	date=db.DateProperty(auto_now_add=True)
 
+	@staticmethod
+	def countAll():
+		data=SessionModel.gql('ORDER by __key__').fetch(1000)
+		lastKey = data[-1].key()
+		total=len(data)
+		while len(data) == 1000:
+			data=SessionModel.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(1000)
+			lastKey=data[-1].key()
+			total+=len(data)
+		return total
+	@staticmethod
+	def getAll():
+		data=SessionModel.gql('ORDER by __key__').fetch(1000)
+		lastKey = data[-1].key()
+		results=data
+		while len(data) == 1000:
+			data=SessionModel.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(1000)
+			lastKey=data[-1].key()
+			results.extend(data)
+		return results
+		
+
 class Logging(webapp.RequestHandler):
 	def post(self):
 		try:
