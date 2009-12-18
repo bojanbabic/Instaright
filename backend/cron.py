@@ -42,6 +42,23 @@ class CronTask(webapp.RequestHandler):
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running getALl %s' %e)
+	def countAll():
+		firstK=SessionModel.fetch()
+		total=firstK.count()
+		if total < 1000:
+			return total
+		else:
+			iteration = 1
+			nextK=SessionModel.fetch(1000, (iteration++)*1000 -1)
+			nextKcount=nextK.count()
+			while 	nextKcount % 1000 == 0:
+				total+=1000
+				nextKcount=SessionModel.fetch(1000, (iteration++)*1000 -1).count()
+			total+=nextKcount
+			return total
+				
+			
+			
 		
 application = webapp.WSGIApplication(
                                      [('/cron', CronTask)],debug=True)
