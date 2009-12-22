@@ -1,5 +1,4 @@
-import sys, os, urllib2
-import logging 
+import sys, os, urllib2, datetime, logging
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -38,6 +37,8 @@ class SessionModel(db.Model):
 	@staticmethod
 	def getAll():
 		data=SessionModel.gql('ORDER by __key__').fetch(1000)
+		if not data:
+			return None
 		lastKey = data[-1].key()
 		results=data
 		while len(data) == 1000:
@@ -45,6 +46,46 @@ class SessionModel(db.Model):
 			lastKey=data[-1].key()
 			results.extend(data)
 		return results
+	@staticmethod
+	def getDailyStats():
+		today=datetime.date.today()
+		yesterday=datetime.date.today() - datetime.timedelta(days=1)
+		data = SessionModel.gql(' WHERE date = :1 ORDER by __key__', yesterday).fetch(1000)
+		if not data:
+			return None
+		lastKey= data[-1].key()
+		result = data
+		while len(data) == 1000:
+			data=SessionModel.gql('WHERE date = :1 __key__ > :2 order by __key__ ', yesterday, lastKey).fetch(1000)
+			result.extend(data)
+		return result	
+	@staticmethod
+	def getWeeklyStats():
+		today=datetime.date.today()
+		lastWeek=datetime.date.today() - datetime.timedelta(days=7)
+		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', today, lastWeek).fetch(1000)
+		if not data:
+			return None
+		lastKey= data[-1].key()
+		result = data
+		while len(data) == 1000:
+			data=SessionModel.gql('WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__ ', today, lastWeek, lastKey).fetch(1000)
+			result.extend(data)
+		return result
+
+	@staticmethod
+	def getYearStats():
+		today=datetime.date.today()
+		lastYear=datetime.date.today() - datetime.timedelta(days=365)
+		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', today, lastYear).fetch(1000)
+		if not data:
+			return None
+		lastKey= data[-1].key()
+		result = data
+		while len(data) == 1000:
+			data=SessionModel.gql('WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__ ', today, lastYear, lastKey).fetch(1000)
+			result.extend(data)
+		return result
 		
 
 class Logging(webapp.RequestHandler):

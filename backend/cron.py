@@ -1,5 +1,4 @@
-import sys, os, time, datetime
-import logging 
+import sys, os, time, datetime, cgi, logging
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -15,7 +14,17 @@ class StatsModel(db.Model):
 	totalDailyNumber=db.IntegerProperty()
 	date=db.DateProperty(auto_now_add=True)
 
-class DomainStats(db.Model):
+class DailyDomainStats(db.Model):
+	domain=db.StringProperty()
+	count=db.IntegerProperty()
+	date=db.DateProperty(auto_now_add=True)
+
+class WeeklyDomainStats(db.Model):
+	domain=db.StringProperty()
+	count=db.IntegerProperty()
+	date=db.DateProperty(auto_now_add=True)
+
+class YearDomainStats(db.Model):
 	domain=db.StringProperty()
 	count=db.IntegerProperty()
 	date=db.DateProperty(auto_now_add=True)
@@ -23,8 +32,17 @@ class DomainStats(db.Model):
 
 class CronTask(webapp.RequestHandler):
 	def get(self):
+		statstype=cgi.escape(self.request.get('type'))
+		if statstype == "daily":
+			self.dailyStats()
+		elif statstype == "weekly":
+			self.weeklyStats()
+		elif statstype == "year":
+			self.yearStats()
+	def dailyStats(self):
 		try:
-			logging.info('Started crontask for %s' % datetime.date.today())
+			today = datetime.date.today()
+			logging.info('Started crontask for %s' % today)
 			yesterday=datetime.date.today() - datetime.timedelta(days=1)
 			logging.info('yesterday: %s',yesterday)
 			todayData=SessionModel.gql('WHERE date = :1', yesterday)
@@ -38,23 +56,35 @@ class CronTask(webapp.RequestHandler):
 			#stats.date=datetime.date.today()
 			stats.put()
 			# daily count stats
-			allStats = SessionModel.getAll()
-			self.calculateStatsPerDomain(allStats)
+			# this will work for close to 500 domains - for success i'm not ready
+			allStats = SessionModel.getDailyStats()
+			if allStats:
+				self.calculateStatsPerDomain(allStats,'daily')
 			
 		except:
 			e = sys.exc_info()[1]
-			logging.error('Error while running crontask.Error: %s' % e)
-	def getAll(self):
+			logging.error('Error while running daily cron task. %s' % e)
+	def weeklyStats(self):
 		try:
-			allData=SessionModel.all()
-			stats=StatsModel()
-			stats.totalNumber=allData.count()
-			stats.totalDailyNumber=allData.count()
-			stats.put()
+			logging.info('Started weekly stats %s ' % datetime.date.today())
+			allWeeklyStats = SessionModel.getWeeklyStats()
+			self.calculateStatsPerDomain(allWeeklyStats, 'weekly')
+			
 		except:
 			e = sys.exc_info()[1]
-			logging.error('Error while running getALl %s' %e)
-	def calculateStatsPerDomain(self, data):
+			logging.error('Error while running weekly cron task. %s' % e)
+
+	def yearStats(self):
+		try:
+			logging.info('Started year stats %s ' % datetime.date.today())
+			allYearStats = SessionModel.getYearStats()
+			self.calculateStatsPerDomain(allYearStats,'year')
+			
+		except:
+			e = sys.exc_info()[1]
+			logging.error('Error while running weekly cron task. %s' % e)
+	
+	def calculateStatsPerDomain(self, data, period):
 		
 		if not data:
 			return
@@ -63,16 +93,20 @@ class CronTask(webapp.RequestHandler):
 		logging.info("total domains retrieved: %d", len(uniqdomains))
 		for domain in uniqdomains:
 			try:
-				logging.info("calculating stats for domain %s:", domain)
+				logging.info("calculating stats for domain %s:", domain )
+				if period == "daily":
+					domainStat = DailyDomainStats()
+				elif period == "weekly":
+					domainStat = WeeklyDomainStats()
+				elif period == "year":
+					domainStat = YearDomainStats()
 				countfordomain=domains.count(domain)
-				domainStat = DomainStats()
 				domainStat.domain=domain
 				domainStat.count=countfordomain
 				domainStat.put()
 			except DeadlineExceededError:
 				logging.error("deadline error while proceeding stats for domain %s", domain)
-				#sleep for 30 sec until system recovers
-				time.sleep(30)
+				
 			except:
 				e= sys.exc_info()[1]
 				logging.error('error calculating stats for domain %s', domain)
