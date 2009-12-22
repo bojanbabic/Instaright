@@ -13,6 +13,17 @@ class SessionModel(db.Model):
 	ip=db.StringProperty()
 	url=db.LinkProperty()
 	date=db.DateProperty(auto_now_add=True)
+	def count_all(self):
+		count = 0
+		query = SessionModel.all().order('__key__')
+		while count % 1000 == 0:
+			current_count = query.count()
+			count += current_count
+			
+			if current_count == 1000:
+				last_key = query.fetch(1, 999)[0].key()
+				query = query.filter('__key__ > ' , last_key)
+		return count
 
 	@staticmethod
 	def countAll():

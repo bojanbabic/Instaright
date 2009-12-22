@@ -6,6 +6,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
+from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
 from main import SessionModel
 
@@ -55,14 +56,26 @@ class CronTask(webapp.RequestHandler):
 			logging.error('Error while running getALl %s' %e)
 	def calculateStatsPerDomain(self, data):
 		
+		if not data:
+			return
 		domains=[ StatsUtil.getDomain(record.url) for record in data ]
 		uniqdomains = set(domains)
+		logging.info("total domains retrieved: %d", len(uniqdomains))
 		for domain in uniqdomains:
-			countfordomain=domains.count(domain)
-			domainStat = DomainStats()
-			domainStat.domain=domain
-			domainStat.count=countfordomain
-			domainStat.put()
+			try:
+				logging.info("calculating stats for domain %s:", domain)
+				countfordomain=domains.count(domain)
+				domainStat = DomainStats()
+				domainStat.domain=domain
+				domainStat.count=countfordomain
+				domainStat.put()
+			except DeadlineExceededError:
+				logging.error("deadline error while proceeding stats for domain %s", domain)
+				#sleep for 30 sec until system recovers
+				time.sleep(30)
+			except:
+				e= sys.exc_info()[1]
+				logging.error('error calculating stats for domain %s', domain)
 		
 
 class StatsUtil(object):
