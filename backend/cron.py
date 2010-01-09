@@ -18,11 +18,15 @@ class DailyDomainStats(db.Model):
 	domain=db.StringProperty()
 	count=db.IntegerProperty()
 	date=db.DateProperty(auto_now_add=True)
+	def toxml(self):
+		return "<domain>%s</domain><count>%s</count>" %(self.domain , self.count)
 
 class WeeklyDomainStats(db.Model):
 	domain=db.StringProperty()
 	count=db.IntegerProperty()
 	date=db.DateProperty(auto_now_add=True)
+	def toxml(self):
+		return "<domain>%s</domain><count>%s</count>" %(self.domain , self.count)
 
 class YearDomainStats(db.Model):
 	domain=db.StringProperty()
@@ -64,6 +68,7 @@ class CronTask(webapp.RequestHandler):
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running daily cron task. %s' % e)
+
 	def weeklyStats(self):
 		try:
 			logging.info('Started weekly stats %s ' % datetime.date.today())

@@ -5,8 +5,8 @@ cron:
 
 - description: weekly stats
   url: /cron?type=weekly
-  schedule: every friday 00:10
+  schedule: every tuesday 00:10
 
-- description: year stats
-  url: /cron?type=year
-  schedule: 1st of january 00:30
+#- description: year stats
+  #url: /cron?type=year
+  #schedule: 1st of january 00:30

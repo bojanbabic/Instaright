@@ -1,5 +1,5 @@
 application: instaright
-version: 4
+version: 5
 runtime: python 
 api_version: 1
 
@@ -10,6 +10,16 @@ handlers:
 
 - url: /scripts
   static_dir: scripts
+
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+#  login: admin
+
+- url: /visual
+  script: visualization.py
+
+- url: /stats
+  script: stats.py
 
 - url: /.*
   script: main.py

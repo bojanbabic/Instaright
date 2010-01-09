@@ -61,7 +61,7 @@ class SessionModel(db.Model):
 		return result	
 	@staticmethod
 	def getWeeklyStats():
-		today=datetime.date.today()
+		today=datetime.date.today() 
 		lastWeek=datetime.date.today() - datetime.timedelta(days=7)
 		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', today, lastWeek).fetch(1000)
 		if not data:
