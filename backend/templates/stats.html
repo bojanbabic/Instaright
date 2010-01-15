@@ -21,8 +21,25 @@
       google.load('visualization', '1', {packages: ['imagechart']});
     </script>
     <script type="text/javascript">
-      function drawVisualization() {
+      function drawVisualization(type, statsForDate) {
         var options = {};
+		if (statsForDate){
+			alert(statsForDate);
+		} else {
+			today = new Date()
+			alert(today);
+			statsForDate = '2010-01-12' 
+		}
+		if (type == 1){
+			typeString = 'weeklyfeed'
+		}
+		else {
+			typeString = 'dailyfeed'
+		} 
+		//typeString = 'weeklyfeed'
+		staticurl = 'http://instaright.appspot.com/visual?type='
+		dataurl = staticurl + typeString + '&date=' + statsForDate
+		alert(dataurl)
       
         // 'bhg' is a horizontal grouped bar chart in the Google Chart API.
         // The grouping is irrelevant here since there is only one numeric column.
@@ -48,7 +65,8 @@
       
         options.chm = [color, index, allbars, fontSize, priority].join(',');
         
-         new google.visualization.Query('http://5.latest.instaright.appspot.com/visual?type=weeklyfeed&date=2009-12-22').send(
+         //new google.visualization.Query('http://5.latest.instaright.appspot.com/visual?type=weeklyfeed&date=2009-12-22').send(
+         new google.visualization.Query(dataurl).send(
            function(response){
              
              new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
@@ -71,13 +89,19 @@
 		<div class="section">
 			<div class="headline"><img src="/static/images/find-me-on-the-web.png" style="width:139px" alt="Stats in last 5 days"/></div>
 			<table class="icons">
+				{% for d in dailyStats %}
 				<tr>
+				<input type="button" onclick="javascript:alert('alert');drawVisualization(0, {{ d }})" value="{{ d }}"/>
 				</tr>
+				{% endfor %}
 			</table>
 			<div class="headline"><img src="/static/images/find-me-on-the-web.png" style="width:139px" alt="Stats in last 5 weeks"/></div>
 			<table class="icons">
+				{% for d in weeklyStats %}
 				<tr>
+				<input type="button" onclick="javascript:alert('alert');drawVisualization(1, {{ d }})" value="{{ d }}"/>
 				</tr>
+				{%endfor%}
 			</table>
 		</div>
 	</div>
