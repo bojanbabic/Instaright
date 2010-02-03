@@ -7,8 +7,6 @@
 
 <script type="application/x-javascript" src="chrome://instaright/content/instarightOverlay.js">
 </script>
-<script type="application/x-javascript" src="chrome://instaright/content/json_sans_eval.js">
-</script>
 
 
 // This is for the right click menu.
