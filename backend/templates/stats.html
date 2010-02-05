@@ -16,6 +16,26 @@
     <title>
       Google Visualization API Sample
     </title>
+	<script>
+    	// Handy "macro"
+    	function $(id){
+     	 return document.getElementById(id);
+    	}
+		function clearElement(element){
+			$(element).innerHTML= "";
+		}
+
+    	// Client function that calls a server rpc and provides a callback
+    	function doMatchTargetDomain(type, statsForDate) {
+			$('visualisation').innerHTML = "";
+      		//onSuccess(	drawVisualization(type, statsForDate));
+    	}
+
+    	// Callback for after a successful doAdd
+    	function onSuccess(response) {
+      		$('visualization').innerHTML= response;
+    	}
+	</script>
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load('visualization', '1', {packages: ['imagechart']});
@@ -23,6 +43,7 @@
     <script type="text/javascript">
       function drawVisualization(type, statsForDate) {
         var options = {};
+		clearElement('visualization');
 		if (!statsForDate){
 			today = new Date();
 			day = today.getDate();
@@ -49,7 +70,6 @@
 		//typeString = 'weeklyfeed'
 		staticurl = 'http://instaright.appspot.com/visual?type='
 		dataurl = staticurl + typeString + '&date=' + statsForDate
-		alert(dataurl);
       
         // 'bhg' is a horizontal grouped bar chart in the Google Chart API.
         // The grouping is irrelevant here since there is only one numeric column.
@@ -72,20 +92,24 @@
        
         // Priority is not so important here, but Google Chart API requires it.
         var priority = 0;
+		try{
       
         options.chm = [color, index, allbars, fontSize, priority].join(',');
         
-         //new google.visualization.Query('http://5.latest.instaright.appspot.com/visual?type=weeklyfeed&date=2009-12-22').send(
-         new google.visualization.Query(dataurl).send(
+        new google.visualization.Query(dataurl).send(
            function(response){
-             
+				alert("response data:"+response.getDataTable());
              new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
            });
+		} catch(e){
+			alert(e);
+		}
        
       }
       
 
-      google.setOnLoadCallback(drawVisualization);
+      //google.setOnLoadCallback(drawVisualization);
+      //google.load(drawVisualization);
     </script>
 </head>
 
@@ -101,21 +125,17 @@
 			<table class="icons">
 				{% for d in dailyStats %}
 				<tr>
-				<script type="text/javascript">
-					var targetDate = "{{ d }}";
-				</script>
-				<input type="button" onclick="drawVisualization(0, targetDate );" value="{{ d }}"/>
+				<!--input type="button" onclick="drawVisualization(0, targetDate );" value="{{ d }}"/-->
+				<input type="button" onclick="drawVisualization(0, this.value);" value="{{ d }}"/>
 				</tr>
 				{% endfor %}
 			</table>
 			<div class="headline"><img src="/static/images/find-me-on-the-web.png" style="width:139px" alt="Stats in last 5 weeks"/></div>
 			<table class="icons">
 				{% for d in weeklyStats %}
-				<script type="text/javascript">
-					var targetDate = "{{ d }}";
-				</script>
 				<tr>
-				<input type="button" onclick="drawVisualization(1, targetDate );" value="{{ d }}"/>
+				<!--input type="button" onclick="drawVisualization(1, targetDate );" value="{{ d }}"/-->
+				<input type="button" onclick="drawVisualization(1, this.value );" value="{{ d }}"/>
 				</tr>
 				{%endfor%}
 			</table>
