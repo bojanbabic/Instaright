@@ -7,7 +7,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
 from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
-from main import SessionModel
+#from main import SessionModel
 
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty()

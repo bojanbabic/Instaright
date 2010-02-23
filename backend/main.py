@@ -5,6 +5,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
+from cron import StatsUtil
 
 class SessionModel(db.Model):
 	user_agent=db.StringProperty()
@@ -12,6 +13,7 @@ class SessionModel(db.Model):
 	ip=db.StringProperty()
 	url=db.LinkProperty()
 	date=db.DateProperty(auto_now_add=True)
+	domain=db.LinkProperty()
 	def count_all(self):
 		count = 0
 		query = SessionModel.all().order('__key__')
@@ -94,7 +96,8 @@ class Logging(webapp.RequestHandler):
 			args=simplejson.loads(self.request.body)
 			account=args[0]
 			URL=urllib2.unquote(args[1])
-			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL)
+			domain=StatsUtil.getDomain(URL)
+			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL, domain=domain)
 			model.put()
 			return self.response.out.write(1)
 		except:
@@ -105,7 +108,8 @@ class Logging(webapp.RequestHandler):
 		URL=cgi.escape(self.request.get('url'))
 		account=cgi.escape(self.request.get('username'))
 		self.response.out.write(URL)
-		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL)
+		domain=StatsUtil.getDomain(URL)
+		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL, domain=domain)
 		model.put()
 		return self.response.out.write(1)
 class ErrorHandling(webapp.RequestHandler):
