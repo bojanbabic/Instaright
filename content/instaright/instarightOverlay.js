@@ -10,6 +10,7 @@ com.appspot.model={
 	disableAlert:false,
 	targetUrl:"",
 	ajaxResponse:"",
+	menu: null,
 	
 	startup: function(){
 		this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
@@ -25,6 +26,7 @@ com.appspot.model={
 		this.refreshInformation();  
 		// if necessary use nsITimer#Example instead of timer
 		//(this.refreshInformation, 10*60*1000);
+		this.showItem();
 	}, 
 	shutdown: function(){
 		this.prefs.removeObserver("", this);
@@ -51,7 +53,17 @@ com.appspot.model={
 		//alert("password changed:"+this.password);
 		//alert("disable alert changed:"+this.disableAlert);
 		
-	}
+	},
+	showItem: function(){
+		alert('yap');
+		menu = document.getElementById("contentAreaContextMenu");
+		menu.addEventListener("itemShowing", this.itemShowing, false);
+	},
+	itemShowing: function(){
+		alert('yeah');
+		menuItem = document.getElementById("instaright");
+		menuItem.hidden = !gContextMenu.onLink;
+	}	
 }
 
 com.appspot.instaright={

@@ -8,9 +8,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>Experimenting with Google App Engine - Bret Taylor's blog</title>
+<title>User Trending topics</title>
 <link rel="stylesheet" href="/static/blog.css" type="text/css"/>
-<link rel="alternate" href="#" type="application/atom+xml" title="Bret Taylor's blog"/>
+<link rel="alternate" href="#" type="application/atom+xml" title="Instaright Stats"/>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>
@@ -122,6 +122,7 @@
 	<div id="sidebar">
 		<div class="section">
 			<div class="headline"><img src="/static/images/find-me-on-the-web.png" style="width:139px" alt="Stats in last 5 days"/></div>
+			<div class="headline"><p>Stats in last 5 days</p></div>
 			<table class="icons">
 				{% for d in dailyStats %}
 				<tr>
@@ -130,7 +131,7 @@
 				</tr>
 				{% endfor %}
 			</table>
-			<div class="headline"><img src="/static/images/find-me-on-the-web.png" style="width:139px" alt="Stats in last 5 weeks"/></div>
+			<div class="headline"><p>Stats in last 5 weeks</p></div>
 			<table class="icons">
 				{% for d in weeklyStats %}
 				<tr>
