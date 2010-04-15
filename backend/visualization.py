@@ -20,14 +20,19 @@ class VisualStats(webapp.RequestHandler):
 
 class Visualization(webapp.RequestHandler):
 	def get(self):
+		txId = self.request.get('tqx')
+		params=dict([ p.split(':') for p in txId.split(';')])
+		reqId = params['reqId']
+		for p in params.iterkeys():
+			logging.info(" request params %s: %s " %(p , params[p]))
 		statstype=cgi.escape(self.request.get('type'))
 		if statstype == "dailyfeed":
 			targetdate=cgi.escape(self.request.get('date'))
-			self.dailyFeed(targetdate)
+			self.dailyFeed(targetdate, reqId)
 		elif statstype == "weeklyfeed":
 			targetdate=cgi.escape(self.request.get('date'))
-			self.weeklyFeed(targetdate)
-	def dailyFeed(self,targetdate):
+			self.weeklyFeed(targetdate, reqId)
+	def dailyFeed(self,targetdate,reqId):
 		try:
 			if not targetdate:
 				today = datetime.date.today()
@@ -59,7 +64,7 @@ class Visualization(webapp.RequestHandler):
 			data_table.LoadData(datastore)
 			
 			self.response.headers['Content-Type'] = 'text/plain'
-			self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames)))
+			self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames), req_id=reqId))
 			
 			
 		except:
@@ -78,7 +83,7 @@ class Visualization(webapp.RequestHandler):
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error visualizing stats %s' %e )
-	def weeklyFeed(self,targetdate):
+	def weeklyFeed(self,targetdate, reqId):
 		try:
 			if not targetdate:
 				s="<?xml version=\"1.0\" encoding=\"UTF-8\"?><daily_stats>"
@@ -111,7 +116,7 @@ class Visualization(webapp.RequestHandler):
 			data_table.LoadData(datastore)
 			
 			self.response.headers['Content-Type'] = 'text/plain'
-			self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames)))
+			self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames), req_id=reqId))
 			
 		except:
 			e = sys.exc_info()[1]
