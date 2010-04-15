@@ -41,35 +41,29 @@
       google.load('visualization', '1', {packages: ['imagechart']});
     </script>
     <script type="text/javascript">
-      function drawVisualization(type, statsForDate) {
+      function drawVisualization() {
+	
         var options = {};
-		clearElement('visualization');
-		if (!statsForDate){
-			today = new Date();
-			day = today.getDate();
-			day--;
-			day = day + "";
-			if ( day.length == 1 ) {
-				day = "0" + day;
-			}
-			month = today.getMonth();
-			month++;
-			month = month + "";
-			if (month.length == 1 ){
-				month = "0" + month;
-			}
-			year = today.getFullYear();
-			statsForDate = year+'-'+month+'-'+day; 
-		}
-		if (type == 1){
-			typeString = 'weeklyfeed';
-		}
-		else {
-			typeString = 'dailyfeed';
-		} 
-		//typeString = 'weeklyfeed'
-		staticurl = 'http://instaright.appspot.com/visual?type='
-		dataurl = staticurl + typeString + '&date=' + statsForDate
+	clearElement('visualization');
+	today = new Date();
+	day = today.getDate();
+	day--;
+	day = day + "";
+	if ( day.length == 1 ) {
+		day = "0" + day;
+	}
+	month = today.getMonth();
+	month++;
+	month = month + "";
+	if (month.length == 1 ){
+		month = "0" + month;
+	}
+	year = today.getFullYear();
+	statsForDate = year+'-'+month+'-'+day; 
+	typeString = 'dailyfeed'
+	staticurl = 'http://instaright.appspot.com/visual?type=';
+	dataurl = staticurl + typeString + '&date=' + statsForDate;
+	alert(dataurl);
       
         // 'bhg' is a horizontal grouped bar chart in the Google Chart API.
         // The grouping is irrelevant here since there is only one numeric column.
@@ -92,23 +86,51 @@
        
         // Priority is not so important here, but Google Chart API requires it.
         var priority = 0;
+	var chart = new google.visualization.ImageChart($('visualization'));
 		try{
       
         options.chm = [color, index, allbars, fontSize, priority].join(',');
         
-        new google.visualization.Query(dataurl).send(
+        var query= new google.visualization.Query(dataurl);
+	query.setTimeout(10);
+	query.send(
            function(response){
 				alert("response data:"+response.getDataTable());
-             new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
+             chart.draw(response.getDataTable(), options);  
            });
 		} catch(e){
 			alert(e);
 		}
        
-      }
+      };
+
+      function redraw(type, statsForDate){
+	   alert('redraw!');
+	   if (type == 1){
+		typeString = 'weeklyfeed';
+	   }
+	   else {
+		typeString = 'dailyfeed';
+      	   }
+	   //typeString = 'weeklyfeed'
+	   staticurl = 'http://instaright.appspot.com/visual?type=';
+	   dataurl = staticurl + typeString + '&date=' + statsForDate;
+	   clearElement('visualization');
+	   alert(dataurl);
+	   try{
+		new google.visualization.Query(dataurl).send(
+           		function(response){
+				alert("response data:"+response.getDataTable());
+				alert("reasons:"+response.getReasons());
+             			chart.draw(response.getDataTable(), option);  
+           		});
+	    }catch(e){
+		alert(e);
+	    }
+      }; 
       
 
-      //google.setOnLoadCallback(drawVisualization);
+      google.setOnLoadCallback(drawVisualization);
       //google.load(drawVisualization);
     </script>
 </head>
@@ -127,7 +149,8 @@
 				{% for d in dailyStats %}
 				<tr>
 				<!--input type="button" onclick="drawVisualization(0, targetDate );" value="{{ d }}"/-->
-				<input type="button" onclick="drawVisualization(0, this.value);" value="{{ d }}"/>
+				<!--input type="button" onclick="drawVisualization(0, this.value);" value="{{ d }}"/-->
+				<td><a href="#" onclick="redraw(0, this.innerHTML);" >{{ d }}</a></td>
 				</tr>
 				{% endfor %}
 			</table>
@@ -136,7 +159,7 @@
 				{% for d in weeklyStats %}
 				<tr>
 				<!--input type="button" onclick="drawVisualization(1, targetDate );" value="{{ d }}"/-->
-				<input type="button" onclick="drawVisualization(1, this.value );" value="{{ d }}"/>
+				<td><a href="#" onclick="redraw(1, this.innerHTML);" >{{ d }}</a></td>
 				</tr>
 				{%endfor%}
 			</table>
