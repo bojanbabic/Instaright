@@ -21,3 +21,15 @@ indexes:
   - name: date
   - name: count
     direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: instaright_account
+  - name: __key__
+    direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: instaright_account
+  - name: date
+    direction: desc
