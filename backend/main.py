@@ -1,4 +1,4 @@
-import sys, os, urllib2, datetime, logging
+import sys, os, urllib2, datetime, logging, cgi
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -64,7 +64,8 @@ class SessionModel(db.Model):
 	@staticmethod
 	def getWeeklyStats():
 		today=datetime.date.today() 
-		lastWeek=datetime.date.today() - datetime.timedelta(days=7)
+		#today=datetime.date(2010,03,30)
+		lastWeek=today - datetime.timedelta(days=7)
 		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', today, lastWeek).fetch(1000)
 		if not data:
 			return None
@@ -107,6 +108,8 @@ class Logging(webapp.RequestHandler):
 	def get(self):
 		URL=cgi.escape(self.request.get('url'))
 		account=cgi.escape(self.request.get('username'))
+		if URL is None:
+			return
 		self.response.out.write(URL)
 		domain=StatsUtil.getDomain(URL)
 		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL, domain=domain)
