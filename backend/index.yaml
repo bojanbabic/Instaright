@@ -16,12 +16,6 @@ indexes:
   - name: count
     direction: desc
 
-- kind: WeeklyDomainStats
-  properties:
-  - name: date
-  - name: count
-    direction: desc
-
 - kind: SessionModel
   properties:
   - name: instaright_account
@@ -32,4 +26,10 @@ indexes:
   properties:
   - name: instaright_account
   - name: date
+    direction: desc
+
+- kind: WeeklyDomainStats
+  properties:
+  - name: date
+  - name: count
     direction: desc

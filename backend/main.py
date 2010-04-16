@@ -13,7 +13,7 @@ class SessionModel(db.Model):
 	ip=db.StringProperty()
 	url=db.LinkProperty()
 	date=db.DateProperty(auto_now_add=True)
-	domain=db.LinkProperty()
+	domain=db.StringProperty()
 	def count_all(self):
 		count = 0
 		query = SessionModel.all().order('__key__')
@@ -102,8 +102,9 @@ class Logging(webapp.RequestHandler):
 			model.put()
 			return self.response.out.write(1)
 		except:
+			e0 = sys.exc_info()[0]
 			e = sys.exc_info()[1]
-			logging.error('Error while handling request %s' % e)
+			logging.error('Error while handling request %s %s' % (e0, e))
 		
 	def get(self):
 		URL=cgi.escape(self.request.get('url'))
