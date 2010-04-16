@@ -21,6 +21,7 @@ class VisualStats(webapp.RequestHandler):
 class Visualization(webapp.RequestHandler):
 	def get(self):
 		txId = self.request.get('tqx')
+		logging.info('txId: %s' % txId)
 		params=dict([ p.split(':') for p in txId.split(';')])
 		reqId = params['reqId']
 		for p in params.iterkeys():
@@ -74,8 +75,12 @@ class Visualization(webapp.RequestHandler):
 	def prepareforvisualize(self, stats):
 		try:
 			datastore = []
+			if stats[0].count > 10:
+				lowerMargin = 10
+			else:
+				lowerMargin = 5
 			for stat in stats:
-				if stat.count > 10 :
+				if stat.count > lowerMargin :
 					entry = {"domain": stat.domain, "count":stat.count}
 					datastore.append(entry)
 			return datastore
