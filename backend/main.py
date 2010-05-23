@@ -5,7 +5,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
-from cron import StatsUtil
+from utils import StatsUtil
 
 class SessionModel(db.Model):
 	user_agent=db.StringProperty()
@@ -49,44 +49,55 @@ class SessionModel(db.Model):
 			results.extend(data)
 		return results
 	@staticmethod
-	def getDailyStats():
-		today=datetime.date.today()
-		yesterday=datetime.date.today() - datetime.timedelta(days=1)
-		data = SessionModel.gql(' WHERE date = :1 ORDER by __key__', yesterday).fetch(1000)
+	def getDailyStats(targetDate):
+		if targetDate is None:
+			# take yesterday for targetDate
+			targetDate=datetime.date.today() - datetime.timedelta(days=1)
+		data = SessionModel.gql(' WHERE date = :1 ORDER by __key__', targetDate).fetch(1000)
 		if not data:
 			return None
 		lastKey= data[-1].key()
 		result = data
 		while len(data) == 1000:
-			data=SessionModel.gql('WHERE date = :1 __key__ > :2 order by __key__ ', yesterday, lastKey).fetch(1000)
+			data=SessionModel.gql('WHERE date = :1 __key__ > :2 order by __key__ ', targetDate, lastKey).fetch(1000)
+			lastKey=data[-1].key()
 			result.extend(data)
-		return result	
+		return result
 	@staticmethod
-	def getWeeklyStats():
-		today=datetime.date.today() 
-		#today=datetime.date(2010,03,30)
-		lastWeek=today - datetime.timedelta(days=7)
-		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', today, lastWeek).fetch(1000)
+	def getWeeklyStats(targetDate):
+		if targetDate is None:
+			targetDate=datetime.date.today() 
+		previousWeek = targetDate - datetime.timedelta(days=7)
+		logging.info('ranges %s -> %s ' %( targetDate, previousWeek))
+		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, previousWeek).fetch(1000)
 		if not data:
 			return None
 		lastKey= data[-1].key()
 		result = data
 		while len(data) == 1000:
-			data=SessionModel.gql('WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__ ', today, lastWeek, lastKey).fetch(1000)
+			nextK = SessionModel.gql(' WHERE __key__ > :1 ORDER by  __key__, date', lastKey).fetch(1000)
+			lastKey=nextK[-1].key()
+			#data = SessionModel.gql(' WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__', targetDate, previousWeek, lastKey).fetch(1000)
+			data = [ x for x in nextK if x.date <= targetDate and x.date > previousWeek ]
 			result.extend(data)
 		return result
 
 	@staticmethod
-	def getYearStats():
-		today=datetime.date.today()
-		lastYear=datetime.date.today() - datetime.timedelta(days=365)
-		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', today, lastYear).fetch(1000)
+	def getYearStats(targetDate):
+		if targetDate is None:
+			targetDate=datetime.date.today()
+		lastYear = targetDate - datetime.timedelta(days=365)
+		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, lastYear).fetch(1000)
 		if not data:
 			return None
 		lastKey= data[-1].key()
 		result = data
 		while len(data) == 1000:
-			data=SessionModel.gql('WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__ ', today, lastYear, lastKey).fetch(1000)
+			#data=SessionModel.gql('WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__ ', targetDate, lastYear, lastKey).fetch(1000)
+			nextK = SessionModel.gql(' WHERE __key__ > :1 ORDER by  __key__, date', lastKey).fetch(1000)
+			lastKey=nextK[-1].key()
+			data = [ x for x in nextK if x.date <= targetDate and x.date > previousWeek ]
+			lastKey=data[-1].key()
 			result.extend(data)
 		return result
 		

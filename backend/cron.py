@@ -6,8 +6,8 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
 from google.appengine.runtime import DeadlineExceededError
-from urlparse import urlparse
-#from main import SessionModel
+from main import SessionModel
+from google.appengine.ext.webapp import template
 
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty()
@@ -36,69 +36,94 @@ class YearDomainStats(db.Model):
 
 class CronTask(webapp.RequestHandler):
 	def get(self):
-		statstype=cgi.escape(self.request.get('type'))
+		logging.info('Cron task stats')
+		statstype=cgi.escape(self.request.get('type', None))
+		targetDate=cgi.escape(self.request.get('date', None))
 		if statstype == "daily":
-			self.dailyStats()
+			self.dailyStats(targetDate)
 		elif statstype == "weekly":
-			self.weeklyStats()
+			self.weeklyStats(targetDate)
 		elif statstype == "year":
-			self.yearStats()
-	def dailyStats(self):
+			self.yearStats(targetDate)
+	def countDailySessions(self, tDate):
 		try:
-			today = datetime.date.today()
-			logging.info('Started crontask for %s' % today)
-			yesterday=datetime.date.today() - datetime.timedelta(days=1)
-			logging.info('yesterday: %s',yesterday)
-			todayData=SessionModel.gql('WHERE date = :1', yesterday)
-			#todayData=SessionModel.gql('WHERE date = :1', datetime.date.today())
+			if tDate is None:
+				today = datetime.date.today()
+				logging.info('Started session count for %s' % today)
+				targetDate=datetime.date.today() - datetime.timedelta(days=1)
+			else:
+				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
+			logging.info('targetDate: %s', tDate)
+			todayData=SessionModel.gql('WHERE date = :1', targetDate)
 			totalCount=SessionModel.countAll()
-			logging.info('total count: %d' % totalCount)
-			logging.info('Gathered yesterday data : %d' % todayData.count())
 			stats=StatsModel()
 			stats.totalNumber=totalCount
 			stats.totalDailyNumber=todayData.count()
-			#stats.date=datetime.date.today()
 			stats.put()
-			# daily count stats
-			# this will work for close to 500 domains - for success i'm not ready
-			allStats = SessionModel.getDailyStats()
+			logging.info('total count: %d' % totalCount)
+			logging.info('Gathered session: %d' % todayData.count())
+		except:
+			e = sys.exc_info()[1]
+			logging.error('Error while running stats cron task. %s' % e)
+			
+	def dailyStats(self, tDate):
+		try:
+			if tDate is None:
+				targetDate = None
+			else:
+				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
+			allStats = SessionModel.getDailyStats(targetDate)
+			logging.info('daily stats for %s ' % targetDate )
 			if allStats:
-				self.calculateStatsPerDomain(allStats,'daily')
+				logging.info('retieved %s ' % len(allStats))
+				self.calculateStatsPerDomain(allStats,'daily', targetDate)
 			
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running daily cron task. %s' % e)
 
-	def weeklyStats(self):
+	def weeklyStats(self, tDate):
 		try:
-			logging.info('Started weekly stats %s ' % datetime.date.today())
-			allWeeklyStats = SessionModel.getWeeklyStats()
-			self.calculateStatsPerDomain(allWeeklyStats, 'weekly')
-			
+			if tDate is None:
+				targetDate = None
+			else:
+				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
+			allWeeklyStats = SessionModel.getWeeklyStats(targetDate)
+			logging.info('weekly stats for %s ' % targetDate )
+			if allWeeklyStats:
+				logging.info('retieved %s ' % len(allWeeklyStats))
+				self.calculateStatsPerDomain(allWeeklyStats, 'weekly', targetDate)
 		except:
+			e0 = sys.exc_info()[0]
 			e = sys.exc_info()[1]
-			logging.error('Error while running weekly cron task. %s' % e)
+			logging.error('Error while running weekly cron task. %s. More info %s' % (e, e0))
 
-	def yearStats(self):
+	def yearStats(self, tDate):
 		try:
-			logging.info('Started year stats %s ' % datetime.date.today())
-			allYearStats = SessionModel.getYearStats()
-			self.calculateStatsPerDomain(allYearStats,'year')
+			if tDate is None:
+				targetDate = None
+			else:
+				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
+			allYearStats = SessionModel.getYearStats(targetDate)
+			logging.info('yearly stats for %s ' % targetDate )
+			if allYearStats:
+				logging.info('retieved %s ' % len(allYearStats))
+				self.calculateStatsPerDomain(allYearStats,'year', targetDate)
 			
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running weekly cron task. %s' % e)
 	
-	def calculateStatsPerDomain(self, data, period):
+	def calculateStatsPerDomain(self, data, period, target):
 		
 		if not data:
 			return
-		domains=[ StatsUtil.getDomain(record.url) for record in data ]
+		# take domain if exists
+		domains=[ record.domain for record in data if record.domain ]
 		uniqdomains = set(domains)
 		logging.info("total domains retrieved: %d", len(uniqdomains))
 		for domain in uniqdomains:
 			try:
-				logging.info("calculating stats for domain %s:", domain )
 				if period == "daily":
 					domainStat = DailyDomainStats()
 				elif period == "weekly":
@@ -108,7 +133,10 @@ class CronTask(webapp.RequestHandler):
 				countfordomain=domains.count(domain)
 				domainStat.domain=domain
 				domainStat.count=countfordomain
+				if target:
+					domainStat.date=target
 				domainStat.put()
+				logging.info("stats for domain %s: %s" % (domain, countfordomain) )
 			except DeadlineExceededError:
 				logging.error("deadline error while proceeding stats for domain %s", domain)
 				
@@ -116,29 +144,46 @@ class CronTask(webapp.RequestHandler):
 				e= sys.exc_info()[1]
 				logging.error('error calculating stats for domain %s', domain)
 		
-
-class StatsUtil(object):
-	@staticmethod
-	def getDomain(url):
-		urlobject=urlparse(url)
-		return urlobject.netloc
-	
-	def callResolverAPI(self, ip):
-		apiCall="http://api.hostip.info/get_xml.php?ip="+ip
-		req = urllib2.Request(apiCall)
-		response = req.read()
-		# TODO  parse xml 
-		
+class DateTask(webapp.RequestHandler):
+	def get(self):
+		dummyDate = datetime.datetime.strptime("2009-11-16", "%Y-%m-%d").date()
+		wrongDate = datetime.datetime.strptime("2010-05-19", "%Y-%m-%d").date()
+		self.response.out.write('setting dummy date %s <br>' % dummyDate )
+		keyS = self.request.get('key', None);
+		if keyS is None:
+			firstKey = SessionModel.gql('ORDER by __key__ asc ').get()
+			if firstKey is None:
+				self.response.out.write('Empty DB')
+				return
+			key = firstKey.key() 
+		else:
+		  	key = db.Key(keyS)
+		sessionQ = SessionModel.gql('WHERE __key__ > :1 ORDER by __key__ asc ', key)
+		sessions = sessionQ.fetch(limit=2)
+		currentSession = sessions[0]
+		oldDate = currentSession.date
+		if currentSession.date == wrongDate or currentSession.date is None:
+			currentSession.date = dummyDate
+			#currentSession.put()
+		nextTime = sessions[1].date
+		nextKey = sessions[1].key()
+		context = { 'current_date' : dummyDate, 
+			    'old_date' : oldDate,
+			    'next_date': nextTime,
+			    'next_key' : nextKey, 
+			    'next_url' : '/date_update?key=%s' % nextKey
+			}
+		logging.info('rendering')
+		#path= os.path.join(os.path.dirname(__file__), 'templates/update_date.html')
+		#self.response.out.write(template.render(path, context))
 		
 			
 		
 application = webapp.WSGIApplication(
                                      [('/cron', CronTask)],debug=True)
-                                     
 
 def main():
   run_wsgi_app(application)
 
 if __name__ == "__main__":
-  main()
-
+	main()

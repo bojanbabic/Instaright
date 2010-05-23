@@ -18,6 +18,11 @@ indexes:
 
 - kind: SessionModel
   properties:
+  - name: __key__
+    direction: desc
+
+- kind: SessionModel
+  properties:
   - name: instaright_account
   - name: __key__
     direction: desc

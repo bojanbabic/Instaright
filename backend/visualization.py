@@ -79,10 +79,14 @@ class Visualization(webapp.RequestHandler):
 				lowerMargin = 10
 			else:
 				lowerMargin = 5
+			result_margine = 10
 			for stat in stats:
 				if stat.count > lowerMargin :
 					entry = {"domain": stat.domain, "count":stat.count}
 					datastore.append(entry)
+					result_margine-=1
+				if result_margine == 0:
+					break
 			return datastore
 			
 		except:
