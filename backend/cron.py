@@ -133,7 +133,14 @@ class CronTask(webapp.RequestHandler):
 		if not data:
 			return
 		# take domain if exists
-		domains=[ record.domain for record in data if record.domain ]
+		today=str(datetime.date.today())
+		memcache_domains_key = "domains_"+period + today
+		if memcache.get(memcache_domains_key):
+			logging.info('getting domain list from cache')
+			domains = memcache.get(memcache_domains_key)
+		else:
+			domains=[ record.domain for record in data if record.domain ]
+			memcache.set(memcache_domains_key, domains)
 		uniqdomains = set(domains)
 		logging.info("total domains retrieved: %d", len(uniqdomains))
 		for domain in uniqdomains:
@@ -146,6 +153,7 @@ class CronTask(webapp.RequestHandler):
 				elif period == "year":
 					domainStat = YearDomainStats()
 				if memcache.get(memcache_key):
+					logging.info('found entry in cache. skipping %s' % domain)
 					continue
 				countfordomain=domains.count(domain)
 				domainStat.domain=domain
