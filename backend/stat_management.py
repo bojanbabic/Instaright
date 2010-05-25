@@ -1,6 +1,7 @@
 import datetime
 from google.appengine.ext import webapp
 from google.appengine.ext import db
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import SessionModel
 from models import DailyDomainStats, WeeklyDomainStats
@@ -28,14 +29,21 @@ class SessionManager(webapp.RequestHandler):
 			return
 		db.delete(results)
 		self.response.out.write('Just deleted %s for date %s ( type=%s)' %( len(results), date, type))
+
+class StatsTask(webapp.RequestHandler):
+	def get(self):
+		dateStr=self.request.get('date',None)
+		type=self.request.get('type', None)
+		if type is None:
+			self.response.out.write('Get out of here!!')
+			return 
+		taskqueue.add(url='/cron', params={'date':dateStr, 'type':type})
 		
 application = webapp.WSGIApplication(
-                                     [('/delete_stats', SessionManager)],debug=True)
+                                     [('/delete_stats', SessionManager), ('/stats_task', StatsTask)],debug=True)
 
 def main():
   run_wsgi_app(application)
 
 if __name__ == "__main__":
 	main()
-import sys, os, time, datetime, cgi, logging
-#import multiprocessing

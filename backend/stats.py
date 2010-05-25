@@ -5,6 +5,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
+from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
 from main import SessionModel
@@ -22,6 +23,9 @@ class VisualStats(webapp.RequestHandler):
 		path= os.path.join(os.path.dirname(__file__), 'templates/stats.html')
 		self.response.out.write(template.render(path,template_variables))
 	def latestDailyStats(self):
+		memcache_key = "daily_stats_dates"+str(datetime.date.today())
+		if memcache.get(memcache_key):
+			return memcache.get(memcache_key)
 		allDailyStats = DailyDomainStats.gql(' ORDER by date desc ')
 		allDailyStatsDates = [ d.date for d in allDailyStats if d.date is not None ]
 		uniqDates = set(allDailyStatsDates)
@@ -32,8 +36,12 @@ class VisualStats(webapp.RequestHandler):
 			maxDates = 5
 		top5Dates = sortUniqDates[0:maxDates]
 		logging.info("top5Dates %s" % top5Dates )
+		memcache.set(memcache_key, top5Dates)
 		return top5Dates
 	def latestWeeklyStats(self):
+		memcache_key = "weeky_stats_dates"+str(datetime.date.today())
+		if memcache.get(memcache_key):
+			return memcache.get(memcache_key)
 		allWeeklyStats = WeeklyDomainStats.gql(' ORDER by date desc ')
 		allWeeklyStatsDates = [ d.date for d in allWeeklyStats if d.date is not None ]
 		uniqDates = set(allWeeklyStatsDates)
@@ -44,6 +52,7 @@ class VisualStats(webapp.RequestHandler):
 			maxDates = 5
 		top5Dates = sortUniqDates[0:maxDates]
 		logging.info("top5Dates %s" % top5Dates )
+		memcache.set(memcache_key, top5Dates)
 		return top5Dates
 
 application = webapp.WSGIApplication(

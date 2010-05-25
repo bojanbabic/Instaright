@@ -4,7 +4,7 @@ import sys, os, time, datetime, cgi, logging
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.api import mail
+from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
 from main import SessionModel
 from google.appengine.ext.webapp import template
@@ -37,14 +37,29 @@ class YearDomainStats(db.Model):
 class CronTask(webapp.RequestHandler):
 	def get(self):
 		logging.info('Cron task stats')
-		statstype=cgi.escape(self.request.get('type', None))
-		targetDate=cgi.escape(self.request.get('date', None))
+		statstype=self.request.get('type', None)
+		targetDate=self.request.get('date', None)
 		if statstype == "daily":
 			self.dailyStats(targetDate)
 		elif statstype == "weekly":
 			self.weeklyStats(targetDate)
 		elif statstype == "year":
 			self.yearStats(targetDate)
+		else:
+			self.response.out.write('Not yet implemented!')
+	def post(self):
+		logging.info('cron post call')
+		statstype = self.request.get('type', None)
+		targetDate = self.request.get('date', None)
+		logging.info(' for parameters: %s %s' % (statstype, targetDate))
+		if statstype == "daily":
+			self.dailyStats(targetDate)
+		elif statstype == "weekly":
+			self.weeklyStats(targetDate)
+		elif statstype == "year":
+			self.yearStats(targetDate)
+		else:
+			self.response.out.write('Not yet implemented!')
 	def countDailySessions(self, tDate):
 		try:
 			if tDate is None:
@@ -68,7 +83,7 @@ class CronTask(webapp.RequestHandler):
 			
 	def dailyStats(self, tDate):
 		try:
-			if tDate is None:
+			if tDate is None or tDate == "None":
 				targetDate = None
 			else:
 				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
@@ -84,7 +99,7 @@ class CronTask(webapp.RequestHandler):
 
 	def weeklyStats(self, tDate):
 		try:
-			if tDate is None:
+			if tDate is None or tDate == "None":
 				targetDate = None
 			else:
 				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
@@ -100,7 +115,7 @@ class CronTask(webapp.RequestHandler):
 
 	def yearStats(self, tDate):
 		try:
-			if tDate is None:
+			if tDate is None or tDate == "None":
 				targetDate = None
 			else:
 				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
@@ -115,7 +130,6 @@ class CronTask(webapp.RequestHandler):
 			logging.error('Error while running weekly cron task. %s' % e)
 	
 	def calculateStatsPerDomain(self, data, period, target):
-		
 		if not data:
 			return
 		# take domain if exists
@@ -123,6 +137,7 @@ class CronTask(webapp.RequestHandler):
 		uniqdomains = set(domains)
 		logging.info("total domains retrieved: %d", len(uniqdomains))
 		for domain in uniqdomains:
+			memcache_key = period+str(datetime.date.today())+domain
 			try:
 				if period == "daily":
 					domainStat = DailyDomainStats()
@@ -130,6 +145,8 @@ class CronTask(webapp.RequestHandler):
 					domainStat = WeeklyDomainStats()
 				elif period == "year":
 					domainStat = YearDomainStats()
+				if memcache.get(memcache_key):
+					continue
 				countfordomain=domains.count(domain)
 				domainStat.domain=domain
 				domainStat.count=countfordomain
@@ -137,12 +154,12 @@ class CronTask(webapp.RequestHandler):
 					domainStat.date=target
 				domainStat.put()
 				logging.info("stats for domain %s: %s" % (domain, countfordomain) )
+				memcache.set(memcache_key, 'done')
 			except DeadlineExceededError:
 				logging.error("deadline error while proceeding stats for domain %s", domain)
-				
 			except:
 				e= sys.exc_info()[1]
-				logging.error('error calculating stats for domain %s', domain)
+				logging.error('error calculating stats for domain %s . Error: %s' %(domain, e))
 		
 class DateTask(webapp.RequestHandler):
 	def get(self):
