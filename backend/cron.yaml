@@ -4,7 +4,7 @@ cron:
   schedule: every day 00:02
 
 - description: weekly stats
-  url: /cron?type=weekly
+  url: /stats_task?type=weekly
   schedule: every tuesday 00:10
 
 #- description: year stats
