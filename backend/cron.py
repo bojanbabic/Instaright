@@ -133,8 +133,11 @@ class CronTask(webapp.RequestHandler):
 		if not data:
 			return
 		# take domain if exists
-		today=str(datetime.date.today())
-		memcache_domains_key = "domains_"+period + today
+		if target:
+			for_date = str(target)
+		else:
+			for_date = str(datetime.date.today())
+		memcache_domains_key = "domains_"+period + for_date
 		if memcache.get(memcache_domains_key):
 			logging.info('getting domain list from cache')
 			domains = memcache.get(memcache_domains_key)
@@ -168,6 +171,7 @@ class CronTask(webapp.RequestHandler):
 			except:
 				e= sys.exc_info()[1]
 				logging.error('error calculating stats for domain %s . Error: %s' %(domain, e))
+		logging.info('finished %s stats calculating for %s ' % ( period, target))
 		
 class DateTask(webapp.RequestHandler):
 	def get(self):

@@ -54,7 +54,11 @@ class Visualization(webapp.RequestHandler):
 					
 			logging.info('Fetching stats for %s' % targetdate)
 			dailyStats=DailyDomainStats.gql('WHERE date = :1 ORDER BY count DESC ', targetdate)
-			datastore = []
+			if dailyStats is None or dailyStats.count() == 0 :
+				logging.info('Not enough data for graph')
+				self.response.out.write('Not enough data for graph')
+				return
+			logging.info('about to prepare %s query results for visualisation.' % dailyStats.count())
 			datastore = self.prepareforvisualize(dailyStats)
 			
 			# prepare for output 
@@ -86,12 +90,13 @@ class Visualization(webapp.RequestHandler):
 					datastore.append(entry)
 					result_margine-=1
 				if result_margine == 0:
-					break
+					return datastore
 			return datastore
 			
 		except:
+			e0 = sys.exc_info()[0]
 			e = sys.exc_info()[1]
-			logging.error('Error visualizing stats %s' %e )
+			logging.error('Error visualizing stats %s %s' % (e0 , e) )
 	def weeklyFeed(self,targetdate, reqId):
 		try:
 			if not targetdate:
@@ -114,7 +119,11 @@ class Visualization(webapp.RequestHandler):
 					
 			logging.info('Fetching stats for %s' % targetdate)
 			weeklyStats=WeeklyDomainStats.gql('WHERE date = :1 ORDER BY count DESC ', targetdate)
-			datastore = []
+			if weeklyStats is None or weeklyStats.count() == 0 :
+				logging.info('Not enough data for graph')
+				self.response.out.write('Not enough data for graph')
+				return
+			logging.info('about to prepare %s query results for visualisation.' % weeklyStats.count())
 			datastore = self.prepareforvisualize(weeklyStats)
 			
 			# prepare for output 

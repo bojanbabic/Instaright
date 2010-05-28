@@ -1,11 +1,11 @@
 cron:
 - description: daily stats
-  url: /cron?type=daily
+  url: /stats_task?type=daily
   schedule: every day 00:02
 
 - description: weekly stats
   url: /stats_task?type=weekly
-  schedule: every tuesday 00:10
+  schedule: every wednesday 00:10
 
 #- description: year stats
   #url: /cron?type=year

@@ -19,9 +19,9 @@ class SessionManager(webapp.RequestHandler):
 			self.response.out.write('Get out of here!!')
 			return 
 		if type == 'daily':
-			results = db.GqlQuery('SELECT __key__ from DailyDomainStats WHERE date = :1', date).fetch(1000)
+			results = db.GqlQuery('SELECT __key__ from DailyDomainStats WHERE date = :1', date).fetch(400)
 		elif type == 'weekly':
-			results = db.GqlQuery('SELECT __key__ from WeeklyDomainStats WHERE date = :1', date).fetch(1000)
+			results = db.GqlQuery('SELECT __key__ from WeeklyDomainStats WHERE date = :1', date).fetch(400)
 		else:
 			self.response.out.write('Mode %s still to be implemented!' %s)
 		if results is None or len(results) == 0:
@@ -37,6 +37,8 @@ class StatsTask(webapp.RequestHandler):
 		if type is None:
 			self.response.out.write('Get out of here!!')
 			return 
+		if dateStr is None:
+			dateStr = str(datetime.date.today() - datetime.timedelta(days=1))
 		taskqueue.add(url='/cron', params={'date':dateStr, 'type':type})
 		
 application = webapp.WSGIApplication(

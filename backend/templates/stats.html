@@ -101,6 +101,9 @@ function drawVisualization(type, statsForDate) {
 
 	// Priority is not so important here, but Google Chart API requires it.
 	var priority = 0;
+
+	var height = 450;
+	var weight = 500;
 	try{
 
 		options.chm = [color, index, allbars, fontSize, priority].join(',');
@@ -129,7 +132,7 @@ function drawVisualization(type, statsForDate) {
 
 	<div id="sidebar">
 		<div class="section">
-			<div class="headline"><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="http://www.seobook.com/images/install-now.png" style="width:139px" alt="Stats in last 5 days"/></a></div>
+			<div class="headline"><p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Join the Instaright mafia</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
 			<div class="headline"><p>Stats in last 5 days</p></div>
 			<table class="icons">
 				{% for d in dailyStats %}
@@ -156,7 +159,7 @@ function drawVisualization(type, statsForDate) {
 			<h1><a href="#"></a></h1>
 			<div class="body">
 				<div id="statsHeader" ></div>
-    				<div id="visualization" style="width: 300px; height: 300px;"></div>
+    				<div id="visualization" style="width: 400px; height: 400px;"></div>
 			
 			</div>
 		</div>

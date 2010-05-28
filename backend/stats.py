@@ -39,7 +39,7 @@ class VisualStats(webapp.RequestHandler):
 		memcache.set(memcache_key, top5Dates)
 		return top5Dates
 	def latestWeeklyStats(self):
-		memcache_key = "weeky_stats_dates"+str(datetime.date.today())
+		memcache_key = "weekly_stats_dates"+str(datetime.date.today())
 		if memcache.get(memcache_key):
 			return memcache.get(memcache_key)
 		allWeeklyStats = WeeklyDomainStats.gql(' ORDER by date desc ')
