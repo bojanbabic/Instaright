@@ -22,6 +22,8 @@ class SessionManager(webapp.RequestHandler):
 			results = db.GqlQuery('SELECT __key__ from DailyDomainStats WHERE date = :1', date).fetch(400)
 		elif type == 'weekly':
 			results = db.GqlQuery('SELECT __key__ from WeeklyDomainStats WHERE date = :1', date).fetch(400)
+		elif type == 'count':
+			results = db.GqlQuery('SELECT __key__ from StatsModel WHERE date = :1', date).fetch(400)
 		else:
 			self.response.out.write('Mode %s still to be implemented!' %s)
 		if results is None or len(results) == 0:

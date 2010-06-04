@@ -10,8 +10,8 @@ from main import SessionModel
 from google.appengine.ext.webapp import template
 
 class StatsModel(db.Model):
-	totalNumber=db.IntegerProperty()
-	totalDailyNumber=db.IntegerProperty()
+	totalNumber=db.IntegerProperty(default=0)
+	totalDailyNumber=db.IntegerProperty(default=0)
 	date=db.DateProperty(auto_now_add=True)
 
 class DailyDomainStats(db.Model):
@@ -45,6 +45,8 @@ class CronTask(webapp.RequestHandler):
 			self.weeklyStats(targetDate)
 		elif statstype == "year":
 			self.yearStats(targetDate)
+		elif statstype == "count":
+			self.countDailySessions(targetDate)
 		else:
 			self.response.out.write('Not yet implemented!')
 	def post(self):
@@ -62,21 +64,21 @@ class CronTask(webapp.RequestHandler):
 			self.response.out.write('Not yet implemented!')
 	def countDailySessions(self, tDate):
 		try:
-			if tDate is None:
+			if tDate is None or tDate == 'None':
 				today = datetime.date.today()
 				logging.info('Started session count for %s' % today)
 				targetDate=datetime.date.today() - datetime.timedelta(days=1)
 			else:
 				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
-			logging.info('targetDate: %s', tDate)
-			todayData=SessionModel.gql('WHERE date = :1', targetDate)
-			totalCount=SessionModel.countAll()
+			logging.info('targetDate: %s', targetDate)
+			dailyData=SessionModel.getDailyStats(targetDate)
+			#totalCount=SessionModel.countAll()
 			stats=StatsModel()
-			stats.totalNumber=totalCount
-			stats.totalDailyNumber=todayData.count()
+			if dailyData:
+				stats.totalDailyNumber=len(dailyData)
+			stats.date=targetDate
 			stats.put()
-			logging.info('total count: %d' % totalCount)
-			logging.info('Gathered session: %d' % todayData.count())
+			logging.info('Link volume for %s : %s' % (tDate , stats.totalDailyNumber ))
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running stats cron task. %s' % e)

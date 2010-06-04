@@ -10,14 +10,6 @@ from urlparse import urlparse
 from main import SessionModel
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
 
-class VisualStats(webapp.RequestHandler):
-	def get(self):
-#		template_variables=''
-#		logging.info('generating visual stats')
-#		path= os.path.join(os.path.dirname(__file__), 'templates/stats.html')
-#		self.response.out.write(template.render(path,template_variables))
-		self.response.out.write("check 1 2 ")
-
 class Visualization(webapp.RequestHandler):
 	def get(self):
 		txId = self.request.get('tqx')
@@ -33,6 +25,10 @@ class Visualization(webapp.RequestHandler):
 		elif statstype == "weeklyfeed":
 			targetdate=cgi.escape(self.request.get('date'))
 			self.weeklyFeed(targetdate, reqId)
+		elif statstype == "linkvolume":
+			self.linkVolume(reqId)
+		else:
+			self.response.out.write('Not yet implementd')
 	def dailyFeed(self,targetdate,reqId):
 		try:
 			if not targetdate:
@@ -140,9 +136,32 @@ class Visualization(webapp.RequestHandler):
 			e = sys.exc_info()[1]
 			logging.error('Error while fetching weekly feed %s' % e)
 
+	def linkVolume(self, reqId):
+		logging.info('Link volume for last 30 days')
+		linkCount = StatsModel.gql('ORDER by date desc').fetch(31)
+		if linkCount is None: 
+			logging.info('Not enough data or graph')
+			self.repsonse.out.write('Not enough data for graph')
+			return
+		logging.info('retrieved %s stats' % len(linkCount))
+		description = {"date": ("string", "Date"),
+				"link_volume":("number", "Link volume")}
+		columnnames = [ "date", "link_volume" ]
+		data_table = gviz_api.DataTable(description)
+		lnkCnt = []
+		for linkCnt in linkCount:
+			entry = {"date": linkCnt.date, "link_volume":linkCnt.totalDailyNumber}
+			lnkCnt.append(entry)
+		data_table.LoadData(lnkCnt)
+		
+		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
+					
+		
+		
+
 application = webapp.WSGIApplication(
-                                     [('/visual', Visualization), 
-					('/stats', VisualStats)],
+                                     [('/visual', Visualization)],
 					debug=True)
                                      
 

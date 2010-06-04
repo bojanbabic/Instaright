@@ -8,14 +8,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>User Trending topics</title>
+<title>Instaright Dashboard</title>
 <link rel="stylesheet" href="/static/blog.css" type="text/css"/>
-<link rel="alternate" href="#" type="application/atom+xml" title="Instaright Stats"/>
+<link rel="alternate" href="#" type="application/atom+xml" title="Instaright Dashboard"/>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-<title>
-Google Visualization API Sample
-</title>
 <script>
 // Handy "macro"
 function $(id){
@@ -49,36 +45,38 @@ function drawVisualization(type, statsForDate) {
 	clearElement('visualization');
 	clearElement('statsHeader');
 	if (!statsForDate){
-		today = new Date();
-		day = today.getDate();
-		day--;
-		day = day + "";
-		if ( day.length == 1 ) {
-			day = "0" + day;
-		}
-		month = today.getMonth();
-		month++;
-		month = month + "";
-		if (month.length == 1 ){
-			month = "0" + month;
-		}
-		year = today.getFullYear();
-		statsForDate = year+'-'+month+'-'+day; 
+		statsForDate = "{{ dailyStats.0 }}";
 	}
-	if (type == 1){
+	staticurl = '/visual?type=';
+	if (!type){
+		typeString = 'dailyfeed';
+		typeLabel="Daily stats for "+statsForDate;
+		dataurl = staticurl + typeString + '&date=' + statsForDate;
+	}
+	else if (type == 1){
 		typeString = 'weeklyfeed';
 		typeLabel="Week stats for "+statsForDate;
+		dataurl = staticurl + typeString + '&date=' + statsForDate;
+	}
+	else if (type == 2){
+		typeString = 'dailyfeed';
+		typeLabel="Daily stats for "+statsForDate;
+		dataurl = staticurl + typeString + '&date=' + statsForDate;
+	} 
+	else if (type == 3){
+		typeString = 'linkvolume';
+		typeLabel="Daily Link Volume";
+		dataurl = staticurl + typeString;
 	}
 	else {
 		typeString = 'dailyfeed';
 		typeLabel="Daily stats for "+statsForDate;
+		dataurl = staticurl + typeString + '&date=' + statsForDate;
 	} 
 	//alert(typeLabel);
 	setElementValue('statsHeader',typeLabel);
 	//typeString = 'weeklyfeed'
-	//staticurl = 'http://instaright.appspot.com/visual?type='
-	staticurl = '/visual?type='
-	dataurl = staticurl + typeString + '&date=' + statsForDate
+	//alert(dataurl);
 
 	// 'bhg' is a horizontal grouped bar chart in the Google Chart API.
 	// The grouping is irrelevant here since there is only one numeric column.
@@ -122,6 +120,19 @@ function drawVisualization(type, statsForDate) {
       google.setOnLoadCallback(drawVisualization);
       google.load(drawVisualization);
     </script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9005862-5']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </head>
 
 <body>
@@ -132,13 +143,12 @@ function drawVisualization(type, statsForDate) {
 
 	<div id="sidebar">
 		<div class="section">
-			<div class="headline"><p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Join the Instaright mafia</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
+			<div class="headline"><p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Instapaper Firefox addon</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
 			<div class="headline"><p>Stats in last 5 days</p></div>
 			<table class="icons">
 				{% for d in dailyStats %}
 				<tr>
-				<!--input type="button" onclick="drawVisualization(0, targetDate );" value="{{ d }}"/-->
-				<td><a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a></td>
+					<td><a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a></td>
 				</tr>
 				{% endfor %}
 			</table>
@@ -146,10 +156,15 @@ function drawVisualization(type, statsForDate) {
 			<table class="icons">
 				{% for d in weeklyStats %}
 				<tr>
-				<!--input type="button" onclick="drawVisualization(1, targetDate );" value="{{ d }}"/-->
-				<td><a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a></td>
+					<td><a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a></td>
 				</tr>
 				{%endfor%}
+			</table>
+			<div class="headline"><p>Link Volume</p></div>
+			<table class="icons">
+				<tr>
+					<td><a href="#" onclick="drawVisualization(3);" >Last Month Volume</a></td>
+				</tr>
 			</table>
 		</div>
 	</div>
