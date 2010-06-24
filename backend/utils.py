@@ -1,4 +1,5 @@
-import urlparse
+import urlparse, urllib
+from xml.dom import minidom
 
 class StatsUtil():
 	@staticmethod
@@ -6,8 +7,16 @@ class StatsUtil():
 		urlobject=urlparse.urlparse(url)
 		return urlobject.netloc
 	
-	def callResolverAPI(self, ip):
+	@staticmethod
+	def ipResolverAPI(ip):
 		apiCall="http://api.hostip.info/get_xml.php?ip="+ip
-		req = urllib2.Request(apiCall)
-		response = req.read()
+		dom = minidom.parse(urllib.urlopen(apiCall))
+		data = []
+		city = dom.getElementsByTagName('gml:name')[1].firstChild.nodeValue
+		country = dom.getElementsByTagName('countryAbbrev')[0].firstChild.nodeValue
+		data.append(city)
+		data.append(country)
+		#xml = libxml2.parseDoc(urllib2.urlopen(req).read())
+		#data = [x.content for x in xml.xpathEval('//Hostip/node()')]	
+		return data
 		# TODO  parse xml 

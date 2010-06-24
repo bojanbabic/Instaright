@@ -68,6 +68,16 @@ function drawVisualization(type, statsForDate) {
 		typeLabel="Daily Link Volume";
 		dataurl = staticurl + typeString;
 	}
+	else if (type == 4){
+		typeString = 'countryFeed';
+		typeLabel="Most Instaright! Countries";
+		dataurl = staticurl + typeString;
+	}
+	else if (type == 5){
+		typeString = 'cityFeed';
+		typeLabel="Most Instaright! Cities";
+		dataurl = staticurl + typeString;
+	}
 	else {
 		typeString = 'dailyfeed';
 		typeLabel="Daily stats for "+statsForDate;
@@ -147,7 +157,7 @@ function drawVisualization(type, statsForDate) {
 			<div class="headline"><p>Stats in last 5 days</p></div>
 			<table class="icons">
 				{% for d in dailyStats %}
-				<tr>
+				<tr style="height: 15px;">
 					<td><a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a></td>
 				</tr>
 				{% endfor %}
@@ -155,7 +165,7 @@ function drawVisualization(type, statsForDate) {
 			<div class="headline"><p>Stats in last 5 weeks</p></div>
 			<table class="icons">
 				{% for d in weeklyStats %}
-				<tr>
+				<tr style="height: 15px;">
 					<td><a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a></td>
 				</tr>
 				{%endfor%}
@@ -164,6 +174,18 @@ function drawVisualization(type, statsForDate) {
 			<table class="icons">
 				<tr>
 					<td><a href="#" onclick="drawVisualization(3);" >Last Month Volume</a></td>
+				</tr>
+			</table>
+			<div class="headline"><p>Most Instaright Countries</p></div>
+			<table class="icons">
+				<tr>
+					<td><a href="#" onclick="drawVisualization(4);" >All The Time</a></td>
+				</tr>
+			</table>
+			<div class="headline"><p>Most Instaright Cities</p></div>
+			<table class="icons">
+				<tr>
+					<td><a href="#" onclick="drawVisualization(5);" >All The Time</a></td>
 				</tr>
 			</table>
 		</div>
@@ -179,6 +201,9 @@ function drawVisualization(type, statsForDate) {
 			</div>
 		</div>
 	</div>
+</div>
+<div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
+<p><a href="mailto:gbabun@gmail.com">contact</a> | <a href="http://twitter.com/bojanbabic">twitter</a> | <a href="http://bojanbabic.blogspot.com">blog</a></p>
 </div>
 <!-- closing body div -->
 </div>

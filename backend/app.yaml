@@ -1,15 +1,11 @@
 application: instaright
-version: 9
+version: 10
 runtime: python 
 api_version: 1
 
 handlers:
 - url: /cron
   script: cron.py
-#  login: admin
-
-- url: /loadusers
-  script: loaders/stats_loader.py
 #  login: admin
 
 - url: /scripts
@@ -36,6 +32,12 @@ handlers:
 
 - url: /stats_task
   script: stat_management.py
+
+- url: /correct_domains
+  script: data_consolidation.py
+
+- url: /data_consolidation
+  script: data_consolidation.py
 
 - url: /.*
   script: main.py

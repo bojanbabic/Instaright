@@ -133,10 +133,15 @@ class ErrorHandling(webapp.RequestHandler):
 		error=args[0]
 		logging.error('Error caught within extension:'+error)
 		return self.response.out.write(1)
+class Redirect(webapp.RequestHandler):
+	def get(self):
+		url = 'http://bojanbabic.blogspot.com'
+		return self.response.out.write('<script language="javascript">top.location.href="' + url + '"</script>')
 		
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
-                                     ('/error', ErrorHandling)],
+                                     ('/error', ErrorHandling),
+                                     ('/', Redirect)],
                                      debug=True)
 
 def main():

@@ -1,4 +1,4 @@
-import sys, os, time, datetime, cgi, logging, gviz_api
+import sys, os, time, datetime, cgi, logging, gviz_api, re
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -9,6 +9,7 @@ from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
 from main import SessionModel
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
+from models import CountryStats, CityStats
 
 class Visualization(webapp.RequestHandler):
 	def get(self):
@@ -27,6 +28,10 @@ class Visualization(webapp.RequestHandler):
 			self.weeklyFeed(targetdate, reqId)
 		elif statstype == "linkvolume":
 			self.linkVolume(reqId)
+		elif statstype == "countryFeed":
+			self.countryFeed(reqId)
+		elif statstype == "cityFeed":
+			self.cityFeed(reqId)
 		else:
 			self.response.out.write('Not yet implementd')
 	def dailyFeed(self,targetdate,reqId):
@@ -75,13 +80,10 @@ class Visualization(webapp.RequestHandler):
 	def prepareforvisualize(self, stats):
 		try:
 			datastore = []
-			if stats[0].count > 10:
-				lowerMargin = 10
-			else:
-				lowerMargin = 5
+			lowerMargin = 10
 			result_margine = 10
 			for stat in stats:
-				if stat.count > lowerMargin :
+				if stat.count > lowerMargin or len(datastore) < 5:
 					entry = {"domain": stat.domain, "count":stat.count}
 					datastore.append(entry)
 					result_margine-=1
@@ -140,7 +142,7 @@ class Visualization(webapp.RequestHandler):
 		logging.info('Link volume for last 30 days')
 		linkCount = StatsModel.gql('ORDER by date desc').fetch(31)
 		if linkCount is None: 
-			logging.info('Not enough data or graph')
+			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
 			return
 		logging.info('retrieved %s stats' % len(linkCount))
@@ -157,7 +159,49 @@ class Visualization(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = 'text/plain'
 		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
 					
+	def countryFeed(self, reqId):
+		logging.info('Country stats feed')
+		countryStats= CountryStats.gql('WHERE count > 10 ORDER BY count desc ').fetch(100)
+		if countryStats is None: 
+			logging.info('Not enough data for graph')
+			self.repsonse.out.write('Not enough data for graph')
+			return
+		countryStats = [ x for x in countryStats if x.countryCode != 'XX' and x.countryCode != 'EU']
+		logging.info('retrieved %s stats' % len(countryStats))
+		description = {"countryCode": ("string", "Country Code"),
+				"count":("number", "Count")}
+		columnnames = [ "countryCode", "count" ]
+		data_table = gviz_api.DataTable(description)
+		cntrCnt = []
+		for countryCnt in countryStats:
+			entry = {"countryCode": countryCnt.countryCode, "count":countryCnt.count}
+			cntrCnt.append(entry)
+		data_table.LoadData(cntrCnt)
 		
+		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
+		
+	def cityFeed(self, reqId):
+		logging.info('City stats feed')
+		cityStatsQ= CityStats.gql('WHERE count > 100 ORDER BY count desc ').fetch(100)
+		if cityStatsQ is None: 
+			logging.info('Not enough data for graph')
+			self.repsonse.out.write('Not enough data for graph')
+			return
+		cityStats = [ x for x in cityStatsQ if not "unknown" in x.city.lower()]
+		logging.info('retrieved %s stats' % len(cityStats))
+		description = {"city_countryCode": ("string", "City Code"),
+				"count":("number", "Count")}
+		columnnames = [ "city_countryCode", "count" ]
+		data_table = gviz_api.DataTable(description)
+		cityCnt = []
+		for ctCnt in cityStats:
+			entry = {"city_countryCode": ctCnt.city + ', ' + ctCnt.countryCode, "count":ctCnt.count}
+			cityCnt.append(entry)
+		data_table.LoadData(cityCnt)
+		
+		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
 		
 
 application = webapp.WSGIApplication(

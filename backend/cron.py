@@ -8,6 +8,7 @@ from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
 from main import SessionModel
 from google.appengine.ext.webapp import template
+from utils import StatsUtil
 
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty(default=0)
@@ -174,41 +175,6 @@ class CronTask(webapp.RequestHandler):
 				e= sys.exc_info()[1]
 				logging.error('error calculating stats for domain %s . Error: %s' %(domain, e))
 		logging.info('finished %s stats calculating for %s ' % ( period, target))
-		
-class DateTask(webapp.RequestHandler):
-	def get(self):
-		dummyDate = datetime.datetime.strptime("2009-11-16", "%Y-%m-%d").date()
-		wrongDate = datetime.datetime.strptime("2010-05-19", "%Y-%m-%d").date()
-		self.response.out.write('setting dummy date %s <br>' % dummyDate )
-		keyS = self.request.get('key', None);
-		if keyS is None:
-			firstKey = SessionModel.gql('ORDER by __key__ asc ').get()
-			if firstKey is None:
-				self.response.out.write('Empty DB')
-				return
-			key = firstKey.key() 
-		else:
-		  	key = db.Key(keyS)
-		sessionQ = SessionModel.gql('WHERE __key__ > :1 ORDER by __key__ asc ', key)
-		sessions = sessionQ.fetch(limit=2)
-		currentSession = sessions[0]
-		oldDate = currentSession.date
-		if currentSession.date == wrongDate or currentSession.date is None:
-			currentSession.date = dummyDate
-			#currentSession.put()
-		nextTime = sessions[1].date
-		nextKey = sessions[1].key()
-		context = { 'current_date' : dummyDate, 
-			    'old_date' : oldDate,
-			    'next_date': nextTime,
-			    'next_key' : nextKey, 
-			    'next_url' : '/date_update?key=%s' % nextKey
-			}
-		logging.info('rendering')
-		#path= os.path.join(os.path.dirname(__file__), 'templates/update_date.html')
-		#self.response.out.write(template.render(path, context))
-		
-			
 		
 application = webapp.WSGIApplication(
                                      [('/cron', CronTask)],debug=True)
