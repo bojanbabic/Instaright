@@ -37,7 +37,8 @@ function onSuccess(response) {
 </script>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-google.load('visualization', '1', {packages: ['imagechart']});
+	google.load('visualization', '1', {packages: ['imagechart']});
+	google.load('jquery', '1.4.2');
 </script>
 <script type="text/javascript">
 function drawVisualization(type, statsForDate) {
@@ -129,7 +130,7 @@ function drawVisualization(type, statsForDate) {
 
       google.setOnLoadCallback(drawVisualization);
       google.load(drawVisualization);
-    </script>
+</script>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -143,6 +144,17 @@ function drawVisualization(type, statsForDate) {
   })();
 
 </script>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+	$(".menu_body").hide();
+	$(".menu_body_daily").show();
+	$(".menu_header").click(function(){
+		$(this).next(".menu_body").slideToggle(100);
+		$(this).next(".menu_body_daily").slideToggle(100);
+	});	
+	});
+</script>
 </head>
 
 <body>
@@ -153,41 +165,33 @@ function drawVisualization(type, statsForDate) {
 
 	<div id="sidebar">
 		<div class="section">
-			<div class="headline"><p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Instapaper Firefox addon</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
-			<div class="headline"><p>Stats in last 5 days</p></div>
-			<table class="icons">
+			<div class="headline" style=" margin-bottom: 5px"><p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Instapaper Firefox addon</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
+			<div class="menu_list">
+				<p class="menu_header" style=" margin-bottom: 5px;">Domain Stats in last 5 days</p>
+				<p class="menu_body_daily" style=" margin-bottom: 5px;">
 				{% for d in dailyStats %}
-				<tr style="height: 15px;">
-					<td><a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a></td>
-				</tr>
-				{% endfor %}
-			</table>
-			<div class="headline"><p>Stats in last 5 weeks</p></div>
-			<table class="icons">
-				{% for d in weeklyStats %}
-				<tr style="height: 15px;">
-					<td><a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a></td>
-				</tr>
+					<a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a><br>
 				{%endfor%}
-			</table>
-			<div class="headline"><p>Link Volume</p></div>
-			<table class="icons">
-				<tr>
-					<td><a href="#" onclick="drawVisualization(3);" >Last Month Volume</a></td>
-				</tr>
-			</table>
-			<div class="headline"><p>Most Instaright Countries</p></div>
-			<table class="icons">
-				<tr>
-					<td><a href="#" onclick="drawVisualization(4);" >All The Time</a></td>
-				</tr>
-			</table>
-			<div class="headline"><p>Most Instaright Cities</p></div>
-			<table class="icons">
-				<tr>
-					<td><a href="#" onclick="drawVisualization(5);" >All The Time</a></td>
-				</tr>
-			</table>
+				</p>
+				<p class="menu_header" style="margin-bottom: 5px;">Domain Stats in last 5 weeks</p>
+				<p class="menu_body" style=" margin-bottom: 5px;">
+				{% for d in weeklyStats %}
+						<a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
+				{%endfor%}
+				</p>
+				<p class="menu_header" style="margin-bottom: 5px;">Link Volume</p>
+				<p class="menu_body" style=" margin-bottom: 5px;">
+					<a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
+				</p>
+				<p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
+				<p class="menu_body" style=" margin-bottom: 5px;">
+					<a href="#" onclick="drawVisualization(4);" >All The Time</a>
+				</p>
+				<p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
+				<p class="menu_body" style=" margin-bottom: 5px;">
+					<a href="#" onclick="drawVisualization(5);" >All The Time</a>
+				</p>
+			</div>
 		</div>
 	</div>
 

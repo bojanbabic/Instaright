@@ -32,6 +32,10 @@ class Visualization(webapp.RequestHandler):
 			self.countryFeed(reqId)
 		elif statstype == "cityFeed":
 			self.cityFeed(reqId)
+		elif statstype == "weekLinks":
+			self.weekLinks(reqId)
+		elif statstype == "overAllLinks":
+			self.overAllLinks(reqId)
 		else:
 			self.response.out.write('Not yet implementd')
 	def dailyFeed(self,targetdate,reqId):
@@ -202,6 +206,13 @@ class Visualization(webapp.RequestHandler):
 		
 		self.response.headers['Content-Type'] = 'text/plain'
 		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
+	def linkOverAllLinks(self, reqId):
+		logging.info('overAll link popularity')
+
+		
+	def linkWeekly(self,reqId):
+		logging.info('weekly link popularity')
+		
 		
 
 application = webapp.WSGIApplication(

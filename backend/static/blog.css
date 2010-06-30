@@ -163,6 +163,31 @@ a:hover {
   margin-top: 1em;
 }
 
+.menu_list {
+  margin: 0px;
+  padding: 0px;
+  width: 313px;
+}
+
+.menu_header {
+  padding: 5px 10px;
+  cursor: pointer;
+  position: relative;
+  background-color:#0066CC;
+  margin:1px;
+  color:#ffffff;
+}
+
+.menu_body {
+  padding: 5px 10px 5px;
+  background-color:#F4F4F8;
+}
+
+.menu_body_daily {
+  padding: 5px 10px 5px;
+  background-color:#F4F4F8;
+}
+
 #content p,
 #content li {
   line-height: 17pt;
