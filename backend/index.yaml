@@ -44,3 +44,9 @@ indexes:
   - name: date
   - name: count
     direction: desc
+
+- kind: LinkStats
+  properties:
+  - name: date
+  - name: count
+    direction: desc
