@@ -16,6 +16,26 @@ indexes:
   - name: count
     direction: desc
 
+- kind: LinkStats
+  properties:
+  - name: count
+    direction: desc
+  - name: countUpdated
+    direction: desc
+
+- kind: LinkStats
+  properties:
+  - name: countUpdated
+  - name: count
+    direction: desc
+
+- kind: LinkStats
+  properties:
+  - name: countUpdated
+    direction: desc
+  - name: count
+    direction: desc
+
 - kind: SessionModel
   properties:
   - name: __key__
@@ -40,12 +60,6 @@ indexes:
     direction: desc
 
 - kind: WeeklyDomainStats
-  properties:
-  - name: date
-  - name: count
-    direction: desc
-
-- kind: LinkStats
   properties:
   - name: date
   - name: count
