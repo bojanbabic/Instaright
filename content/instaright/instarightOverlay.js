@@ -7,7 +7,8 @@ com.appspot.model={
 	prefs: null,
 	account: "",
 	password: "",
-	disableAlert:false,
+	disableAlert: false,
+	disablePageSaveMode: false,
 	targetUrl:"",
 	ajaxResponse:"",
 	menu: null,
@@ -21,7 +22,8 @@ com.appspot.model={
 		
 		this.account= this.prefs.getCharPref("account").toLowerCase();
 		this.password= this.prefs.getCharPref("password");
-		this.disableAlert = this.prefs.getBoolPref("disableAlert").toLowerCase();
+		this.disableAlert = this.prefs.getBoolPref("disableAlert");
+		this.disablePageSaveMode = this.prefs.getBoolPref("disablePageSaveMode");
 		
 		this.refreshInformation();  
 		// if necessary use nsITimer#Example instead of timer
@@ -42,6 +44,9 @@ com.appspot.model={
 		    case "password":
 				this.password = this.prefs.getCharPref("password");
 				this.refreshInformation();
+		    case "disablePageSaveMode":
+				this.disablePageSaveMode = this.prefs.getBoolPref("disablePageSaveMode");
+				this.refreshInformation();
 		    case "disableAlert":
 				this.disableAlert = this.prefs.getBoolPref("disableAlert");
 				this.refreshInformation();
@@ -50,17 +55,16 @@ com.appspot.model={
 	},
 	refreshInformation: function(){
 		this.disableAlert;
+		this.disablePageSaveMode;
 		//alert("password changed:"+this.password);
 		//alert("disable alert changed:"+this.disableAlert);
 		
 	},
 	showItem: function(){
-		alert('yap');
 		menu = document.getElementById("contentAreaContextMenu");
 		menu.addEventListener("itemShowing", this.itemShowing, false);
 	},
 	itemShowing: function(){
-		alert('yeah');
 		menuItem = document.getElementById("instaright");
 		menuItem.hidden = !gContextMenu.onLink;
 	}	
@@ -68,20 +72,31 @@ com.appspot.model={
 
 com.appspot.instaright={
 	_SERVER:"http://instaright.appspot.com",
+	//_SERVER:"http://7.latest.instaright.appspot.com",
+	//_SERVER:"http://localhost:8080",
 	start:function(){
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
-			alert('Invalid email. Please ensetIntervalter valid email in plugin options.');
+			alert('Invalid email. Please enter valid email in plugin options.');
 			return;
 		}
 		if (!gContextMenu) { // Mysterious error console
 			return;
 		}	
-
-		if (!gContextMenu.onLink){
-			alert("This element is not link. Please right click on link.");
+		if (gContextMenu.onLink){
+			url=gContextMenu.link.href;
+			//alert("This element is not link. Please right click on link.");
+			//return;
+		} else if (!com.appspot.model.disablePageSaveMode){
+			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
+		} else {
+			alert("Page saving mode has been disabled. Please recheck your settings.");
 			return;
 		}
-		url=gContextMenu.link.href;
+		if (url == null){
+			alert('Can\'t determine link... try another!')
+			this.logErrors("Can't determine link , try another");
+			return;
+		}
 		this.sendUrlSynchAjax(url);
 		if (com.appspot.model.ajaxResponse == '201' && com.appspot.model.disableAlert == false){
 			alert('Success.');

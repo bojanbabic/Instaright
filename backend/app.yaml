@@ -1,5 +1,5 @@
 application: instaright
-version: 11
+version: 12
 runtime: python 
 api_version: 1
 
@@ -32,9 +32,6 @@ handlers:
 
 - url: /stats_task
   script: stat_management.py
-
-- url: /correct_domains
-  script: data_consolidation.py
 
 - url: /data_consolidation
   script: data_consolidation.py

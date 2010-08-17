@@ -133,6 +133,13 @@ class ErrorHandling(webapp.RequestHandler):
 		error=args[0]
 		logging.error('Error caught within extension:'+error)
 		return self.response.out.write(1)
+
+class FeedHandler(webapp.RequestHandler):
+	def get(self):
+		entries=SessionModel.gql('ORDER by __key__ DESC').fetch(50)
+		self.response.headers["Content-Type"] = "application/atom+xml"
+		self.response.render("templates/atom.xml", entries = entries)
+	
 class Redirect(webapp.RequestHandler):
 	def get(self):
 		url = 'http://bojanbabic.blogspot.com'
@@ -141,6 +148,7 @@ class Redirect(webapp.RequestHandler):
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
+                                     ('/feed', FeedHandler),
                                      ('/', Redirect)],
                                      debug=True)
 

@@ -7,6 +7,7 @@
 		<preference id="instarightAccount" name="extension.instaright.account" type="string"/>		
 		<preference id="instarightPassword" name="extension.instaright.password" type="string"/>		
 		<preference id="disableAlert" name="extension.instaright.disableAlert" type="bool"/>		
+		<preference id="disablePageSaveMode" name="extension.instaright.disablePageSaveMode" type="bool"/>		
 	</preferences>
 	<hbox>
 		<label control="test" value="Your Instapaper account:"/>
@@ -18,6 +19,9 @@
 	</hbox>
 	<hbox>	
 		<checkbox id="alertCheckbox" label="Disable Success alert" preference="disableAlert"/>
+	</hbox>
+	<hbox>	
+		<checkbox id="pageSaveMode" label="Disable Page Save Mode" preference="disablePageSaveMode"/>
 	</hbox>
      </prefpane>
      

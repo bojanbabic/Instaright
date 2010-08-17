@@ -16,19 +16,18 @@ class GeneralConsolidation(webapp.RequestHandler):
 		upper_limit_date = datetime.datetime.today().date()
 		dateStr = self.request.get('date',None)
 		processType = self.request.get('process_type',None)
-		if dateStr is None and processType is None: 
-			logging.info('no date specified')
-			return
-		date = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
-		if  upper_limit_date - date < datetime.timedelta(1):
-			logging.info('invalid date specified: %s' %dateStr)
-			self.response.out.write('invalid date specified: %s' %dateStr)
-			memcache.delete(memcache_key)
-			return
-		#keyS = self.request.get('key', None);
-		#if keyS:
-		#	logging.info('got from request %s' % keyS )
-		#  	key = db.Key(keyS)
+		if processType is None: 
+			if dateStr is None :
+				logging.info('no date specified')
+				memcache.delete(memcache_key)
+				return
+			else:
+				date = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
+				if  upper_limit_date - date < datetime.timedelta(1):
+					logging.info('invalid date specified: %s' %dateStr)
+					self.response.out.write('invalid date specified: %s' %dateStr)
+					memcache.delete(memcache_key)
+					return
 		if memcache.get(memcache_key):
 			logging.info('getting from memcache %s ' % memcache.get('domain_update_key'))
 		  	key = memcache.get(memcache_key)
