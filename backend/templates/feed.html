@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+<title>Link Feed</title>
+<link href="/feed" rel="hub" />
+<updated>{{ dateupdated }}</updated>
+<author>
+	<name>Bojan Babic</name>
+	<email>gbabun@gmail.com</email>
+</author>
+<id>http://instright.appspot.com</id>
+{% for entry in entries %}
+<entry>
+	<id>{{ entry.key }}</id>
+	<title>Link from {{ entry.domain }} submited by {{ entry.key }}</title>
+	<link>http://instaright.appspot.com/{{ entry.key }}</link>
+	<updated>{{ entry.date }}</updated>
+	<desc>Link from {{ entry.domain }}. More about it can be found visiting link</desc>
+</entry>
+{% endfor %}
+</feed>
