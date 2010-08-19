@@ -5,8 +5,9 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-from django.utils import simplejsonrom django.utils import simplejson
+from django.utils import simplejson
 from utils import StatsUtil
+from google.appengine.api.labs import taskqueue
 
 class SessionModel(db.Model):
 	user_agent=db.StringProperty()
@@ -127,6 +128,9 @@ class Logging(webapp.RequestHandler):
 		domain=StatsUtil.getDomain(URL)
 		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL, domain=domain)
 		model.put()
+		# add task queue that generates feed
+		taskqueue.add(url='/feed')
+		# todo add task queue that sends XMPP
 		return self.response.out.write(1)
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):
@@ -143,16 +147,26 @@ class FeedHandler(webapp.RequestHandler):
 		template_variables = { 'entries':entries, 'dateupdate': now }
 		path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
 		self.response.out.write(template.render(path,template_variables))
-class RetrieveArticle(webapp.RequestHandler):
+class ArticleHandler(webapp.RequestHandler):
 	def get(self, location):
 		logging.info('fetching: %s' % location)
-		#article = SessionModel.gql( 'WHERE __key__ = :1', location)
-		self.response.out.write(article)
+		keyS=location
+		key = db.Key(keyS)
+		if not key:
+			logging.info('not provided proper key entry : %s' % keyS)
+			self.response.out.write('not provided  proper key entry %s' % keyS)
+		article = SessionModel.gql( 'WHERE __key__ = :1', key).get()
+		if not article:
+			self.response.out.write('For key %s no article has been found' % keyS)
+		logging.info('redirecting to %s' % article.url)
+		template_variables={ 'url' : article.url }
+		path = os.path.join(os.path.dirname(__file__), 'templates/article.html')
+		self.response.out.write(template.render(path, template_variables))
 		
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
-                                     ('/article/(.*)', ErrorHandling),
+                                     ('/article/(.*)', ArticleHandler),
                                      ('/feed', FeedHandler)],
                                      debug=True)
 
@@ -162,3 +176,4 @@ def main():
 if __name__ == "__main__":
   main()
 
+		
