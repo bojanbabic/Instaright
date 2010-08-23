@@ -1,5 +1,5 @@
 import sys, os, urllib2, datetime, logging, cgi
-#import multiprocessing
+import pubsubhubbub_publish as pshb
 
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -111,9 +111,10 @@ class Logging(webapp.RequestHandler):
 			domain=StatsUtil.getDomain(URL)
 			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, domain=domain)
 			model.put()
-			logging.info('just have written : % s' % model.to_xml())
+			logging.info('bookmark update written: % s' % model.to_xml())
+			logging.info('triggering feed update')
 			#trigger taskqueue that generates feed
-			#taskqueue.add(url='/feed')
+			pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
 		except:
 			e0 = sys.exc_info()[0]
 			e = sys.exc_info()[1]
@@ -144,7 +145,8 @@ class Redirect(webapp.RequestHandler):
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
-                                     ('/', Redirect)],
+                                    # ('/', Redirect)
+				     ],
                                      debug=True)
 
 def main():

@@ -5,6 +5,8 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import SessionModel
 
+import feedparser
+
 new_updates = Queue.Queue()
 
 class CallbackHandler(webapp.RequestHandler):
@@ -21,14 +23,21 @@ class CallbackHandler(webapp.RequestHandler):
 		logging.info('recieved subscription token %s ' % token)
 		self.response.out.write(token)
 	def post(self):
-		data = self.request.stream.read()
+		feed = feedparser.parse(self.request.body)
 		
-		root = ElementTree.fromstring(data)
-		logging.info('recieved: %s' % root)
-		#for update in parse_updates(data):
-		#	new_updates.put(update)
-		
-	#def parse_updates(data):
+		#root = ElementTree.fromstring(data)
+		logging.info('recieved: ' )
+		for update in feed.entries:
+			logging.info(' %s ' %update)
+			title = update.title
+			link = update.link
+			#new_updates.put(update)
+#class RealTimeUpdateHandler(webapp.RequestHandler):
+#	def get(self):
+#		try:
+#		except Queue.Empty:
+#			logging.info('empty queue')
+#			pass
 		
 application = webapp.WSGIApplication(
                                      [

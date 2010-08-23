@@ -31,7 +31,7 @@ class AtomGenerator(webapp.RequestHandler):
 			item["uid"]=str(entry.key())
 			
 			feed.items.insert(0, item)
-		self.response.headers['Content-Type'] = 'application/rss+xml'
+		self.response.headers['Content-Type'] = "application/rss+xml"
 		self.response.out.write(feed.format_atom_string())
 class FeedGenerator(webapp.RequestHandler):
 	def get(self):
@@ -59,6 +59,7 @@ class ArticleHandler(webapp.RequestHandler):
 		logging.info('redirecting to %s' % article.url)
 		template_variables={ 'url' : article.url }
 		path = os.path.join(os.path.dirname(__file__), 'templates/article.html')
+		self.response.headers['Content-Type'] = "application/rss+xml"
 		self.response.out.write(template.render(path, template_variables))
 		
 application = webapp.WSGIApplication(
