@@ -84,12 +84,15 @@ class Visualization(webapp.RequestHandler):
 	def prepareforvisualize(self, stats):
 		try:
 			datastore = []
+			# try to remember domains processed in order to avoid domain repeat
+			tmp_list_processed_domains = []
 			lowerMargin = 10
 			result_margine = 10
 			for stat in stats:
-				if stat.count > lowerMargin or len(datastore) < 5:
+				if (stat.count > lowerMargin or len(datastore) < 5) and ( stat.domain not in tmp_list_processed_domains):
 					entry = {"domain": stat.domain, "count":stat.count}
 					datastore.append(entry)
+					tmp_list_processed_domains.append(stat.domain)
 					result_margine-=1
 				if result_margine == 0:
 					return datastore

@@ -1,5 +1,5 @@
 application: instaright
-version: 12
+version: 15
 runtime: python 
 api_version: 1
 
@@ -35,6 +35,18 @@ handlers:
 
 - url: /data_consolidation
   script: data_consolidation.py
+
+- url: /article/(.*)
+  script: articles.py
+
+- url: /feed
+  script: articles.py
+
+- url: /callback
+  script: phbb_callback.py
+
+- url: /memcache_test
+  script: cron.py
 
 - url: /.*
   script: main.py

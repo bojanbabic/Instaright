@@ -24,7 +24,9 @@ class VisualStats(webapp.RequestHandler):
 		self.response.out.write(template.render(path,template_variables))
 	def latestDailyStats(self):
 		memcache_key = "daily_stats_dates"+str(datetime.date.today())
+		logging.info('looking up for memcache key: %s' % memcache_key)
 		if memcache.get(memcache_key):
+			logging.info('key found in cache')
 			return memcache.get(memcache_key)
 		allDailyStats = DailyDomainStats.gql(' ORDER by date desc ')
 		allDailyStatsDates = [ d.date for d in allDailyStats if d.date is not None ]

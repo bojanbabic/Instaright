@@ -210,3 +210,9 @@ a:hover {
 .tablerow {
   height: 20px;
 }
+
+.footer-container {
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+}

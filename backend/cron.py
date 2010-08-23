@@ -89,7 +89,7 @@ class CronTask(webapp.RequestHandler):
 			if tDate is None or tDate == "None":
 				targetDate = None
 			else:
-				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
+				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d")
 			allStats = SessionModel.getDailyStats(targetDate)
 			logging.info('daily stats for %s ' % targetDate )
 			if allStats:
@@ -105,7 +105,8 @@ class CronTask(webapp.RequestHandler):
 			if tDate is None or tDate == "None":
 				targetDate = None
 			else:
-				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d").date()
+				targetDate = datetime.datetime.strptime(tDate, "%Y-%m-%d")
+			logging.info('target date %s' % targetDate)
 			allWeeklyStats = SessionModel.getWeeklyStats(targetDate)
 			logging.info('weekly stats for %s ' % targetDate )
 			if allWeeklyStats:
@@ -137,12 +138,13 @@ class CronTask(webapp.RequestHandler):
 			return
 		# take domain if exists
 		if target:
-			for_date = str(target)
+			for_date = target.strftime("%Y-%m-%d")
 		else:
 			for_date = str(datetime.date.today())
+		logging.info('calculating stats for date: %s' % for_date)
 		memcache_domains_key = "domains_"+period + for_date
 		if memcache.get(memcache_domains_key):
-			logging.info('getting domain list from cache')
+			logging.info('geting domain list from cache')
 			domains = memcache.get(memcache_domains_key)
 		else:
 			domains=[ record.domain for record in data if record.domain ]
@@ -150,7 +152,7 @@ class CronTask(webapp.RequestHandler):
 		uniqdomains = set(domains)
 		logging.info("total domains retrieved: %d", len(uniqdomains))
 		for domain in uniqdomains:
-			memcache_key = period+str(datetime.date.today())+domain
+			memcache_key = period+str(datetime.date.today())+domain+'_'+for_date
 			try:
 				if period == "daily":
 					domainStat = DailyDomainStats()
@@ -165,7 +167,7 @@ class CronTask(webapp.RequestHandler):
 				domainStat.domain=domain
 				domainStat.count=countfordomain
 				if target:
-					domainStat.date=target
+					domainStat.date=target.date()
 				domainStat.put()
 				logging.info("stats for domain %s: %s" % (domain, countfordomain) )
 				memcache.set(memcache_key, 'done')
@@ -175,9 +177,44 @@ class CronTask(webapp.RequestHandler):
 				e= sys.exc_info()[1]
 				logging.error('error calculating stats for domain %s . Error: %s' %(domain, e))
 		logging.info('finished %s stats calculating for %s ' % ( period, target))
+		# we are providing new memcache entry for current date
+		if not target:
+			target = datetime.datetime.now()
+		self.updateCacheEntries(period,target)
+	# looks up for cache entry previous to "date" and for "period"
+	# and updates same entry with "date"
+	# 
+	def updateCacheEntries(self, period, date):
+		#toDate = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+		logging.info('memcache update ( %s )' % period)
+		previous_date = datetime.datetime.now() - datetime.timedelta(days = 1)
+		current_date = datetime.datetime.now()
 		
+		memcache_key_previous_date = period+"_stats_dates"+str(previous_date.date())
+		#memcache_key_current_date = period+"_stats_dates"+str(date.date())
+		memcache_key_current_date = period+"_stats_dates"+str(current_date.date())
+		cache_value =  memcache.get(memcache_key_current_date)
+		if not cache_value:
+			logging.info('memcache entry not found for current date %s , looking up for  previous date cache' % memcache_key_current_date )
+			cache_value =  memcache.get(memcache_key_previous_date)
+		if not cache_value:
+			logging.info('cache not found for both current date or previous date. initialing cache entries')
+			cache_value=[]
+			cache_value.append(date.date())
+		else:
+			logging.info('cache for previous date found ')
+			if len(cache_value) >= 5:
+				cache_value.pop(len(cache_value) -1 )
+			cache_value.insert(0,date.date())
+		
+			for d in cache_value:
+				logging.info(d)
+		logging.info('setting memcache entry %s ' %memcache_key_current_date )
+		memcache.set(memcache_key_current_date, cache_value)
+
 application = webapp.WSGIApplication(
-                                     [('/cron', CronTask)],debug=True)
+                                     [('/cron', CronTask)],
+				     debug=True)
 
 def main():
   run_wsgi_app(application)

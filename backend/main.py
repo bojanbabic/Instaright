@@ -12,7 +12,7 @@ class SessionModel(db.Model):
 	instaright_account=db.StringProperty()
 	ip=db.StringProperty()
 	url=db.LinkProperty()
-	date=db.DateProperty(auto_now_add=True)
+	date=db.DateTimeProperty()
 	domain=db.StringProperty()
 	def count_all(self):
 		count = 0
@@ -59,7 +59,7 @@ class SessionModel(db.Model):
 		lastKey= data[-1].key()
 		result = data
 		while len(data) == 1000:
-			data=SessionModel.gql('WHERE date = :1 __key__ > :2 order by __key__ ', targetDate, lastKey).fetch(1000)
+			data=SessionModel.gql('WHERE date = :1 and __key__ > :2 order by __key__', targetDate, lastKey).fetch(1000)
 			lastKey=data[-1].key()
 			result.extend(data)
 		return result
@@ -109,9 +109,11 @@ class Logging(webapp.RequestHandler):
 			account=args[0]
 			URL=urllib2.unquote(args[1])
 			domain=StatsUtil.getDomain(URL)
-			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL, domain=domain)
+			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, domain=domain)
 			model.put()
-			return self.response.out.write(1)
+			logging.info('just have written : % s' % model.to_xml())
+			#trigger taskqueue that generates feed
+			#taskqueue.add(url='/feed')
 		except:
 			e0 = sys.exc_info()[0]
 			e = sys.exc_info()[1]
@@ -124,7 +126,7 @@ class Logging(webapp.RequestHandler):
 			return
 		self.response.out.write(URL)
 		domain=StatsUtil.getDomain(URL)
-		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, url=URL, domain=domain)
+		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date = datetime.datetime.now(), url=URL, domain=domain)
 		model.put()
 		return self.response.out.write(1)
 class ErrorHandling(webapp.RequestHandler):
@@ -134,12 +136,6 @@ class ErrorHandling(webapp.RequestHandler):
 		logging.error('Error caught within extension:'+error)
 		return self.response.out.write(1)
 
-class FeedHandler(webapp.RequestHandler):
-	def get(self):
-		entries=SessionModel.gql('ORDER by __key__ DESC').fetch(50)
-		self.response.headers["Content-Type"] = "application/atom+xml"
-		self.response.render("templates/atom.xml", entries = entries)
-	
 class Redirect(webapp.RequestHandler):
 	def get(self):
 		url = 'http://bojanbabic.blogspot.com'
@@ -148,7 +144,6 @@ class Redirect(webapp.RequestHandler):
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
-                                     ('/feed', FeedHandler),
                                      ('/', Redirect)],
                                      debug=True)
 
