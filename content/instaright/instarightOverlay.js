@@ -72,7 +72,6 @@ com.appspot.model={
 
 com.appspot.instaright={
 	_SERVER:"http://instaright.appspot.com",
-	//_SERVER:"http://7.latest.instaright.appspot.com",
 	//_SERVER:"http://localhost:8080",
 	start:function(){
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
@@ -97,7 +96,8 @@ com.appspot.instaright={
 			this.logErrors("Can't determine link , try another");
 			return;
 		}
-		this.sendUrlSynchAjax(url);
+		textSelected = this.getSelectedText();
+		this.sendUrlSynchAjax(url, textSelected);
 		if (com.appspot.model.ajaxResponse == '201' && com.appspot.model.disableAlert == false){
 			alert('Success.');
 		}
@@ -111,47 +111,65 @@ com.appspot.instaright={
 			alert('The service encountered an error. Please try later again.');
 		}
 	},
-	sendUrlSynchAjax:function(url){
-						urlInstapaper = "http://www.instapaper.com/api/add";
-						params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url);		
-						loggingLocation = this._SERVER+"/rpc";
+	getSelectedText:function(){
+                try{
+			focusedWindow = document.commandDispatcher.focusedWindow;
+			selectedText = focusedWindow.getSelection();
+			if (selectedText == null || selectedText == ""){
+				return null;
+			}
+			sText = selectedText.getRangeAt(0);
+			return sText;
+                } catch(e){
+                        alert(e);
+                }
+        },
 
-						try{
-							 logging = new XMLHttpRequest();
-							 body = "[";
-							 body+="\""+com.appspot.model.account+"\"";
-							 body+=",";
-							 body+="\""+encodeURIComponent(url)+"\"";
-							 body+="]";
+	sendUrlSynchAjax:function(url, textSelected){
+				 urlInstapaper = "http://www.instapaper.com/api/add";
+				 if (textSelected != null){
+					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url)+"&selection="+textSelected;
+				 } else {
+					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url);
+				 }
+				 loggingLocation = this._SERVER+"/rpc";
 
-							 logging.open('POST', loggingLocation, true);
-							 logging.onreadystatechange = function() {
-								 if(logging.readyState == 4 && logging.status == 200) {
-									 response = null;
-									 try {
-										 response = jsonParse(logging.responseText);
-									 } catch (e) {
-										 response = logging.responseText;
-									 }
+				 try{
+					 logging = new XMLHttpRequest();
+					 body = "[";
+					 body+="\""+com.appspot.model.account+"\"";
+					 body+=",";
+					 body+="\""+encodeURIComponent(url)+"\"";
+					 body+="]";
 
-								 }	
+					 logging.open('POST', loggingLocation, true);
+					 logging.onreadystatechange = function() {
+						 if(logging.readyState == 4 && logging.status == 200) {
+							 response = null;
+							 try {
+								 response = jsonParse(logging.responseText);
+							 } catch (e) {
+								 response = logging.responseText;
 							 }
-							 logging.send(body);
-							 http = new XMLHttpRequest();
-							 http.open("POST", urlInstapaper, false);
-							 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-								 http.setRequestHeader("Content-length", params.length);
-								 http.setRequestHeader("Connection", "close");
 
-							 http.send(params);
-							 com.appspot.model.ajaxResponse=http.responseText;
-						 }catch(e){
-							 // google app engine for error handling
-							 try{
-								 this.logErrors(e);
-							 }catch(e){
-							 }
-						 }
+						 }	
+					 }
+					 logging.send(body);
+					 http = new XMLHttpRequest();
+					 http.open("POST", urlInstapaper, false);
+					 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+						 http.setRequestHeader("Content-length", params.length);
+						 http.setRequestHeader("Connection", "close");
+
+					 http.send(params);
+					 com.appspot.model.ajaxResponse=http.responseText;
+				 }catch(e){
+					 // google app engine for error handling
+					 try{
+						 this.logErrors(e);
+					 }catch(e){
+					 }
+				 }
 	},
 	logErrors:function(e){
 
