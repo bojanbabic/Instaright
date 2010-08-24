@@ -54,15 +54,14 @@ class SessionModel(db.Model):
 		if targetDate is None:
 			# take yesterday for targetDate
 			targetDate=datetime.date.today() - datetime.timedelta(days=1)
-		data = SessionModel.gql(' WHERE date = :1 ORDER by __key__', targetDate).fetch(1000)
+		upperLimitDate = targetDate + datetime.timedelta(days=1)
+		data = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate).fetch(5000)
 		if not data:
+			logging.info('no results returned for daily stats')
 			return None
-		lastKey= data[-1].key()
-		result = data
-		while len(data) == 1000:
-			data=SessionModel.gql('WHERE date = :1 and __key__ > :2 order by __key__', targetDate, lastKey).fetch(1000)
-			lastKey=data[-1].key()
-			result.extend(data)
+		result=[]
+		result.extend(data)
+		logging.info('daily stats retrieved %s ' % len(result))
 		return result
 	@staticmethod
 	def getWeeklyStats(targetDate):

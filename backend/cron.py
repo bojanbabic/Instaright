@@ -135,6 +135,7 @@ class CronTask(webapp.RequestHandler):
 	
 	def calculateStatsPerDomain(self, data, period, target):
 		if not data:
+			self.updateCacheEntries(period,target)
 			return
 		# take domain if exists
 		if target:
@@ -193,6 +194,11 @@ class CronTask(webapp.RequestHandler):
 		memcache_key_previous_date = period+"_stats_dates"+str(previous_date.date())
 		#memcache_key_current_date = period+"_stats_dates"+str(date.date())
 		memcache_key_current_date = period+"_stats_dates"+str(current_date.date())
+
+		#TODO update weekly cache
+		memcache_key_weekly_current_date = "weekly_stats_dates"+str(current_date.date())
+		memcache_key_weekly_current_date = "weekly_stats_dates"+str(current_date.date())
+
 		cache_value =  memcache.get(memcache_key_current_date)
 		if not cache_value:
 			logging.info('memcache entry not found for current date %s , looking up for  previous date cache' % memcache_key_current_date )
