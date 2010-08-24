@@ -31,6 +31,7 @@ class CallbackHandler(webapp.RequestHandler):
 			logging.info(' %s ' %update)
 			title = update.title
 			link = update.link
+			logging.info('callback title: %s link %s ' % ( title, link))
 			#new_updates.put(update)
 #class RealTimeUpdateHandler(webapp.RequestHandler):
 #	def get(self):

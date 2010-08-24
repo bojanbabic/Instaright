@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>Realtime bookmark updates</title>
+		<script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript" charset="utf-8" >
+		
+			google.load('feeds', '2');
+			
+			var display;
+			var feed;
+			
+			function init(){
+				
+				display = document.getElementById('display');
+				
+				google.feeds.push.setOnBindCallback(function(){ alert('You are connected')});
+				//google.feeds.push.setOnBindCallback();
+				google.feeds.push.setOnUnbindCallback(function(){ alert('You have been disconected')});
+				//google.feeds.push.setOnUnbindCallback();
+				
+				feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
+				//feed = new google.feeds.push.Feed('http://pubsubhubbub-example-app.appspot.com/feed');
+				
+				feed.subscribe(entryLoaded);
+				
+			}
+
+			google.setOnLoadCallback(init);
+			
+			function entryLoaded(response){
+				alert('entry Loaded');
+				displayEntry(response,display);
+			}
+			
+			function displayEntry(response, div){
+				feed = response.feed;
+				var entries = feed.entries;
+				entries = entries.reverse();
+				for (var i = 0; i< entries.lenght; i++){
+					var entry = entries[i];
+					var title = entry.title;
+					var link = entry.link;
+					var container = document.createElement('div');
+					var anchor = document.createElement('a');
+					anchor.innerHTML = title;
+					anchor.href = link;
+					
+					container.appendChild(anchor);
+					container.appendChild(document.createElement('br'));
+					
+					div.insertBefore(container, div.firstChild);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<h1>Feed updates come every minute</h1>
+		<table border = "0" cellspacing = "5" cellpadding = "5" >
+			<tr>
+				<td><div id="display"></div></td>
+			</tr>
+		</table>
+
+		<input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);" />
+		<input type="button" value="unsubscribe" onclick="feed.unsubscribe();" />
+	</body>
+</html>

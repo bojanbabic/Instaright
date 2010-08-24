@@ -2,6 +2,7 @@ import sys, os, urllib2, datetime, logging, cgi
 import pubsubhubbub_publish as pshb
 
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
@@ -141,11 +142,19 @@ class Redirect(webapp.RequestHandler):
 	def get(self):
 		url = 'http://bojanbabic.blogspot.com'
 		return self.response.out.write('<script language="javascript">top.location.href="' + url + '"</script>')
+
+class IndexHandler(webapp.RequestHandler):
+	def get(self):
+		template_variables = []
+		path= os.path.join(os.path.dirname(__file__), 'index.html')
+		self.response.out.write(template.render(path,template_variables))
+		
 		
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
                                     # ('/', Redirect)
+                                     ('/', IndexHandler)
 				     ],
                                      debug=True)
 
