@@ -2,10 +2,31 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <prefwindow id="instaright-prefs" title="Instapaper Account" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-     <prefpane  id="instaright-pane">
+     		<script type="application/x-javascript" ><![CDATA[
+			function getPasswordValue(){
+				textboxValue = document.getElementById("accountPassword");
+	                        hostname = "http://www.instapaper.com";
+       	 			formSubmitURL = "http://www.instapaper.com/user/login";
+       		                httprealm = null;
+                        	myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+				
+                        	logins = myLoginManager.findLogins({}, hostname, formSubmitURL, httprealm);
+
+				loginInfoPassword = '';
+                        	for (i=0; i< logins.length; i++){
+                                	if (logins[i].username == username){
+                                        	alert('found login info in manager for ' + username);
+                                        	loginInfoPassword = logins[i].password;
+                                	}
+                                //alert('skipping login info: ' + logins[i].username);
+                        	}
+				alert('password from manager:  '+ loginInfoPassword); 
+			}
+     		]]></script>
+     <prefpane  id="instaright-pane" onpaneload="getPasswordValue();">
 	<preferences>
 		<preference id="instarightAccount" name="extension.instaright.account" type="string"/>		
-		<!--preference id="instarightPassword" name="extension.instaright.password" type="string"/-->		
+		<preference id="instarightPassword" name="extension.instaright.password" type="string"/>		
 		<preference id="disableAlert" name="extension.instaright.disableAlert" type="bool"/>		
 		<preference id="disablePageSaveMode" name="extension.instaright.disablePageSaveMode" type="bool"/>		
 	</preferences>
@@ -15,7 +36,7 @@
 	</hbox>
 	<hbox>
 		<label control="test" value="Your Instapaper password (optional):"/>
-		<textbox id="accountPassword" type="password" preference="extension.instaright.password" maxlength="100"/>		
+		<textbox id="accountPassword" type="password" maxlength="100" />		
 	</hbox>
 	<hbox>	
 		<checkbox id="alertCheckbox" label="Disable Success alert" preference="disableAlert"/>
