@@ -5,7 +5,7 @@
      <prefpane  id="instaright-pane">
 	<preferences>
 		<preference id="instarightAccount" name="extension.instaright.account" type="string"/>		
-		<preference id="instarightPassword" name="extension.instaright.password" type="string"/>		
+		<!--preference id="instarightPassword" name="extension.instaright.password" type="string"/-->		
 		<preference id="disableAlert" name="extension.instaright.disableAlert" type="bool"/>		
 		<preference id="disablePageSaveMode" name="extension.instaright.disablePageSaveMode" type="bool"/>		
 	</preferences>
@@ -15,7 +15,7 @@
 	</hbox>
 	<hbox>
 		<label control="test" value="Your Instapaper password (optional):"/>
-		<textbox id="accountPassword" type="password" preference="instarightPassword" maxlength="100"/>		
+		<textbox id="accountPassword" type="password" preference="extension.instaright.password" maxlength="100"/>		
 	</hbox>
 	<hbox>	
 		<checkbox id="alertCheckbox" label="Disable Success alert" preference="disableAlert"/>

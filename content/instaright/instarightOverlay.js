@@ -7,6 +7,8 @@ com.appspot.model={
 	prefs: null,
 	account: "",
 	password: "",
+	hostname: "http://www.instapaper.com",
+	formSubmitURL: "http://www.instapaper.com/user/login",
 	disableAlert: false,
 	disablePageSaveMode: false,
 	targetUrl:"",
@@ -21,7 +23,10 @@ com.appspot.model={
 		this.prefs.addObserver("", this, false);
 		
 		this.account= this.prefs.getCharPref("account").toLowerCase();
-		this.password= this.prefs.getCharPref("password");
+		loginInfo = this.getLoginInfoForUsername(this.account);
+		if ( loginInfo != null){
+			this.password = loginInfo.password;
+		}
 		this.disableAlert = this.prefs.getBoolPref("disableAlert");
 		this.disablePageSaveMode = this.prefs.getBoolPref("disablePageSaveMode");
 		
@@ -54,12 +59,58 @@ com.appspot.model={
 		}		
 	},
 	refreshInformation: function(){
-		this.disableAlert;
-		this.disablePageSaveMode;
-		//alert("password changed:"+this.password);
-		//alert("disable alert changed:"+this.disableAlert);
+				   this.disableAlert;
+				   this.disablePageSaveMode;
+				    //alert("password changed:"+this.password);
+				    //alert("disable alert changed:"+this.disableAlert);
+				    try{
+					    alert("update password manager:");
+					    nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  Components.interfaces.nsILoginInfo,  "init");  
+					    loginInfo = new nsLoginInfo('http://www.instapaper.com',  'http://www.instapaper.com/user/login', null,  this.account, this.password, 'username', 'password');  
+						    myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+
+					    // if already exists modify myLoginManager.modifyLogin(oldLogin, newLogin)
+					    existingLogin = this.getLoginInfoForUsername(this.account); 
+					    if ( existingLogin == null && this.password != ""){
+						    alert('new login info');
+						    myLoginManager.addLogin(loginInfo);
+					    } 
+					    else if ( this.password == "" && existingLogin != null){
+						    alert('removing empty pass login');
+						    myLoginManager.removeLogin(existingLogin);
+					    }
+					    else if ( existingLogin != null){
+						    alert('updated user login info');
+						    myLoginManager.modifyLogin(existingLogin, loginInfo);
+					    }
+				    } catch(e){
+					    alert(e);
+				    }
 		
 	},
+	getLoginInfoForUsername: function(username){
+		try{
+			hostname = "http://www.instapaper.com";
+			formSubmitURL = "http://www.instapaper.com/user/login";
+			httprealm = null;
+			myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
+			logins = myLoginManager.findLogins({}, hostname, formSubmitURL, httprealm);
+
+			alert('logins size: ' + logins.length);
+			alert('looking for username: ' + username);
+			for (i=0; i< logins.length; i++){
+				if (logins[i].username == username){
+					alert('found login info in manager for ' + username);
+					return logins[i];
+				}
+				alert('skipping login info: ' + logins[i].username);
+			}
+			return null;
+		} catch(e){
+			alert(e);
+		}		
+	},
+
 	showItem: function(){
 		menu = document.getElementById("contentAreaContextMenu");
 		menu.addEventListener("itemShowing", this.itemShowing, false);
@@ -126,6 +177,11 @@ com.appspot.instaright={
         },
 
 	sendUrlSynchAjax:function(url, textSelected){
+				 lrnfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
+				 alert('pwd:' + com.appspot.model.password);
+				 if ( loginInfo != null){
+					com.appspot.model.password = loginInfo.password;
+				 } 
 				 urlInstapaper = "http://www.instapaper.com/api/add";
 				 if (textSelected != null){
 					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url)+"&selection="+textSelected;
