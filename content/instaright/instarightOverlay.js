@@ -27,6 +27,7 @@ com.appspot.model={
 		if ( loginInfo != null){
 			this.password = loginInfo.password;
 		}
+		//this.password = this.prefs.getBoolPref("password");
 		this.disableAlert = this.prefs.getBoolPref("disableAlert");
 		this.disablePageSaveMode = this.prefs.getBoolPref("disablePageSaveMode");
 		
@@ -64,7 +65,7 @@ com.appspot.model={
 				    //alert("password changed:"+this.password);
 				    //alert("disable alert changed:"+this.disableAlert);
 				    try{
-					    alert("update password manager:");
+					    //alert("update password manager:");
 					    nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  Components.interfaces.nsILoginInfo,  "init");  
 					    loginInfo = new nsLoginInfo('http://www.instapaper.com',  'http://www.instapaper.com/user/login', null,  this.account, this.password, 'username', 'password');  
 						    myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
@@ -72,15 +73,15 @@ com.appspot.model={
 					    // if already exists modify myLoginManager.modifyLogin(oldLogin, newLogin)
 					    existingLogin = this.getLoginInfoForUsername(this.account); 
 					    if ( existingLogin == null && this.password != ""){
-						    alert('new login info');
+						    //alert('new login info');
 						    myLoginManager.addLogin(loginInfo);
 					    } 
 					    else if ( this.password == "" && existingLogin != null){
-						    alert('removing empty pass login');
+						    //alert('removing empty pass login');
 						    myLoginManager.removeLogin(existingLogin);
 					    }
 					    else if ( existingLogin != null){
-						    alert('updated user login info');
+						    //alert('updated user login info');
 						    myLoginManager.modifyLogin(existingLogin, loginInfo);
 					    }
 				    } catch(e){
@@ -96,14 +97,14 @@ com.appspot.model={
 			myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
 			logins = myLoginManager.findLogins({}, hostname, formSubmitURL, httprealm);
 
-			alert('logins size: ' + logins.length);
-			alert('looking for username: ' + username);
+			//alert('logins size: ' + logins.length);
+			//alert('looking for username: ' + username);
 			for (i=0; i< logins.length; i++){
 				if (logins[i].username == username){
 					alert('found login info in manager for ' + username);
 					return logins[i];
 				}
-				alert('skipping login info: ' + logins[i].username);
+				//alert('skipping login info: ' + logins[i].username);
 			}
 			return null;
 		} catch(e){
@@ -177,9 +178,9 @@ com.appspot.instaright={
         },
 
 	sendUrlSynchAjax:function(url, textSelected){
-				 lrnfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
+				 lInfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
 				 alert('pwd:' + com.appspot.model.password);
-				 if ( loginInfo != null){
+				 if ( lInfo != null){
 					com.appspot.model.password = loginInfo.password;
 				 } 
 				 urlInstapaper = "http://www.instapaper.com/api/add";
