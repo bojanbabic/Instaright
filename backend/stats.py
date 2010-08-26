@@ -28,36 +28,46 @@ class VisualStats(webapp.RequestHandler):
 		if memcache.get(memcache_key):
 			logging.info('key found in cache')
 			return memcache.get(memcache_key)
-		allDailyStats = DailyDomainStats.gql(' ORDER by date desc ')
-		allDailyStatsDates = [ d.date for d in allDailyStats if d.date is not None ]
-		uniqDates = set(allDailyStatsDates)
-		sortUniqDates=list(uniqDates)
-		sortUniqDates.sort(reverse=True)
-		maxDates = len(sortUniqDates) 
-		if maxDates > 5:
-			maxDates = 5
-		top5Dates = sortUniqDates[0:maxDates]
-		logging.info("top5Dates %s" % top5Dates )
-		memcache.set(memcache_key, top5Dates)
-		return top5Dates
+		topDailyStat = DailyDomainStats.gql(' ORDER by date desc ').get()
+		if topDailyStat:
+			dateInStats = topDailyStat.date
+		if not dateInStats:
+			logging.info('can\'t figure out last succesful daily stats execution')
+			return None
+		numberOfStats = 5
+		dayOffset = 1
+		datesForDailyStats = []
+		while numberOfStats > 0:
+			logging.info('daily stats date : %s ' % dateInStats)
+			datesForDailyStats.append(dateInStats)
+			dateInStats = dateInStats - datetime.timedelta(days = 1)
+			numberOfStats = numberOfStats - 1
+		logging.info("daily stats dates %s" % datesForDailyStats)
+		memcache.set(memcache_key, datesForDailyStats)
+		return datesForDailyStats
 	def latestWeeklyStats(self):
 		memcache_key = "weekly_stats_dates"+str(datetime.date.today())
 		logging.info('looking up for memcache key: %s' % memcache_key)
 		if memcache.get(memcache_key):
 			logging.info('key found in cache')
 			return memcache.get(memcache_key)
-		allWeeklyStats = WeeklyDomainStats.gql(' ORDER by date desc ')
-		allWeeklyStatsDates = [ d.date for d in allWeeklyStats if d.date is not None ]
-		uniqDates = set(allWeeklyStatsDates)
-		sortUniqDates= list(uniqDates)
-		sortUniqDates.sort(reverse=True)
-		maxDates = len(sortUniqDates) 
-		if maxDates > 5:
-			maxDates = 5
-		top5Dates = sortUniqDates[0:maxDates]
-		logging.info("top5Dates %s" % top5Dates )
-		memcache.set(memcache_key, top5Dates)
-		return top5Dates
+		topWeeklyStat = WeeklyDomainStats.gql(' ORDER by date desc ').get()
+		if topWeeklyStat:
+			dateInStats = topWeeklyStat.date
+		if not dateInStats:
+			logging.info('can\'t figure out last succesful weekly stats execution')
+			return None
+		numberOfStats = 5
+		dayOffset = 7
+		datesForWeeklyStats = []
+		while numberOfStats > 0:
+			logging.info('weekly stats date : %s ' % dateInStats)
+			datesForWeeklyStats.append(dateInStats)
+			dateInStats = dateInStats - datetime.timedelta(days = 7)
+			numberOfStats = numberOfStats - 1
+		logging.info("weekly stats dates %s" % datesForWeeklyStats)
+		memcache.set(memcache_key, datesForWeeklyStats)
+		return datesForWeeklyStats
 
 application = webapp.WSGIApplication(
                                      [('/stats', VisualStats)],
