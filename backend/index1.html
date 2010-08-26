@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title></title>
+
+    
+    <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+      // Load the v2 of the Feed API
+      google.load('feeds', '1');
+
+      // Create variables to display subscription options using HTML DIVs
+      var display;
+
+      // Initialize the API.
+function init(){
+	var feed = new google.feeds.Feed("http://instaright.appspot.com/feed");
+	feed.load(function(result) {
+			if (!result.error) {
+			var container = document.getElementById("display");
+			for (var i = 0; i < result.feed.entries.length; i++) {
+			var entry = result.feed.entries[i];
+			var div = document.createElement("div");
+			div.appendChild(document.createTextNode(entry.title));
+			container.appendChild(div);
+			}
+			}
+			});
+}
+	google.setOnLoadCallback(init);
+    </script>
+  </head>
+  <body>
+    <h1>Feed updates come every minute.</h1>
+    <h2>View source to see the simple Feed Push Javascript API</h2>
+    <table border="0" cellspacing="5" cellpadding="5">
+      <tr>
+        <td><div id="display"></div></td>
+      </tr>
+    </table>
+
+    
+    <input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);"/>
+    <input type="button" value="unsubscribe" onclick="feed.unsubscribe();"/>
+  </body>
+</html>

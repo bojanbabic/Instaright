@@ -148,12 +148,18 @@ class IndexHandler(webapp.RequestHandler):
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
 		self.response.out.write(template.render(path,template_variables))
 		
+class IndexHandlerV1(webapp.RequestHandler):
+	def get(self):
+		template_variables = []
+		path= os.path.join(os.path.dirname(__file__), 'index1.html')
+		self.response.out.write(template.render(path,template_variables))
 		
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
                                     # ('/', Redirect)
-                                     ('/', IndexHandler)
+                                     ('/', IndexHandler),
+                                     ('/v1', IndexHandlerV1),
 				     ],
                                      debug=True)
 

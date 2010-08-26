@@ -1,68 +1,85 @@
 <html>
-	<head>
-		<title>Realtime bookmark updates</title>
-		<script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
+  <head>
+    <title></title>
 
-		<script type="text/javascript" charset="utf-8" >
-		
-			google.load('feeds', '2');
-			
-			var display;
-			var feed;
-			
-			function init(){
-				
-				display = document.getElementById('display');
-				
-				google.feeds.push.setOnBindCallback(function(){ alert('You are connected')});
-				//google.feeds.push.setOnBindCallback();
-				google.feeds.push.setOnUnbindCallback(function(){ alert('You have been disconected')});
-				//google.feeds.push.setOnUnbindCallback();
-				
-				feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
-				//feed = new google.feeds.push.Feed('http://pubsubhubbub-example-app.appspot.com/feed');
-				
-				feed.subscribe(entryLoaded);
-				
-			}
+    
+    <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
 
-			google.setOnLoadCallback(init);
-			
-			function entryLoaded(response){
-				alert('entry Loaded');
-				displayEntry(response,display);
-			}
-			
-			function displayEntry(response, div){
-				feed = response.feed;
-				var entries = feed.entries;
-				entries = entries.reverse();
-				for (var i = 0; i< entries.lenght; i++){
-					var entry = entries[i];
-					var title = entry.title;
-					var link = entry.link;
-					var container = document.createElement('div');
-					var anchor = document.createElement('a');
-					anchor.innerHTML = title;
-					anchor.href = link;
-					
-					container.appendChild(anchor);
-					container.appendChild(document.createElement('br'));
-					
-					div.insertBefore(container, div.firstChild);
-				}
-			}
-		</script>
-	</head>
-	<body>
-		<h1>Feed updates come every minute</h1>
-		<table border = "0" cellspacing = "5" cellpadding = "5" >
-			<tr>
-				<td><div id="display"></div></td>
-			</tr>
-		</table>
+    <script type="text/javascript" charset="utf-8">
 
-		<input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);" />
-		<input type="button" value="unsubscribe" onclick="feed.unsubscribe();" />
-	</body>
+      // Load the v2 of the Feed API
+      google.load('feeds', '2');
+
+      // Create variables to display subscription options using HTML DIVs
+      var display;
+
+      // Initialize the API.
+      var feed;
+      function init() {
+
+        // This example works with one feed subscription. The feed displays in
+        // in the display div. The following code sets up the feed for that div.
+        display = document.getElementById('display');
+        
+        // Alert the user when they have connected and disconnected
+        // from the push stream.
+        google.feeds.push.setOnBindCallback(function() {alert('You are connected.'); feed.subscribe(entryLoaded);});
+        google.feeds.push.setOnUnbindCallback(function() {alert('You have been disconnected.')});
+
+        // Load a feed. We created the feed in this example using
+        // http://github.com/zh/atomgen
+        //feed = new google.feeds.push.Feed('http://fastpshb.appspot.com/feed/1/fastpshb');
+        feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
+
+        // Enable subscriptions to the feed.
+        feed.subscribe(entryLoaded);
+      }
+
+      // Set a callback to load your code when the page loads.
+      google.setOnLoadCallback(init);
+      
+      // Create a callback function for google.feeds.push.Feed.subscribe()
+      // and load it into the display DIV.
+      function entryLoaded(response) {
+        displayEntry(response, display);
+      }
+
+      // Specify the result objects to display with feed results.
+      function displayEntry(response, div) {
+        feed = response.feed;
+        var entries = feed.entries;
+        entries = entries.reverse();
+        for (var i = 0; i < entries.length; i++) {
+          var entry = entries[i];
+          var title = entry.title;
+          var link = entry.link;
+          var container = document.createElement('div');
+          var anchor = document.createElement('a');
+          anchor.innerHTML = title;
+          anchor.href = link;
+          container.appendChild(anchor);
+          container.appendChild(document.createElement('br'));
+          var contentParagraph = document.createElement('p');
+          contentParagraph.innerHTML = 'Place for description';
+          container.appendChild(contentParagraph);
+          container.appendChild(document.createElement('br'));
+          container.appendChild(document.createElement('br'));
+          div.insertBefore(container, div.firstChild);
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Feed updates come every minute.</h1>
+    <h2>View source to see the simple Feed Push Javascript API</h2>
+    <table border="0" cellspacing="5" cellpadding="5">
+      <tr>
+        <td><div id="display"></div></td>
+      </tr>
+    </table>
+
+    
+    <input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);"/>
+    <input type="button" value="unsubscribe" onclick="feed.unsubscribe();"/>
+  </body>
 </html>

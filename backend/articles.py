@@ -43,7 +43,7 @@ class FeedGenerator(webapp.RequestHandler):
 		template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
 
 		path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
-		self.response.headers['Content-Type'] = "application/rss+xml"
+		self.response.headers['Content-Type'] = "application/atom+xml"
 		self.response.out.write(template.render(path,template_variables))
 			
 class ArticleHandler(webapp.RequestHandler):
