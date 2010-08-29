@@ -1,5 +1,22 @@
 <html>
   <head>
+<style> 
+#display {
+    border:8px solid #FFFFFF;
+    height:230px;
+    margin:0px 0px 10px 0px;
+    width:660px;
+}
+.scan, .streamcontent {
+    -moz-border-radius:15px;
+    border:1px solid #ADA699;
+    clear:both;
+    display:block;
+    margin:10px 0px 10px 0px;
+    padding:10px;
+    text-decoration:none;
+}
+</style>
     <title>Instaright Realtime updates</title>
 
     
@@ -58,6 +75,7 @@
           var link = entry.link;
 	  var dateUpdated = new Date(entry.publishedDate);
           var container = document.createElement('div');
+	  container.setAttribute('class', 'streamcontent');
           var anchor = document.createElement('a');
           anchor.innerHTML = title;
           anchor.href = link;
@@ -82,7 +100,8 @@
     </table>
 
     
-    <input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);"/>
-    <input type="button" value="unsubscribe" onclick="feed.unsubscribe();"/>
+   
+    <!--input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);"/>
+    <input type="button" value="unsubscribe" onclick="feed.unsubscribe();"/-->
   </body>
 </html>
