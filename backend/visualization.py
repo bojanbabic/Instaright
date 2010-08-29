@@ -10,6 +10,7 @@ from urlparse import urlparse
 from main import SessionModel
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
 from models import CountryStats, CityStats
+from xmpp_handler import XMPPHandler
 
 class Visualization(webapp.RequestHandler):
 	def get(self):
@@ -129,6 +130,8 @@ class Visualization(webapp.RequestHandler):
 				self.response.out.write('Not enough data for graph')
 				return
 			logging.info('about to prepare %s query results for visualisation.' % weeklyStats.count())
+			xmpp_handler = XMPPHandler()
+			xmpp_handler.cacheTopWeeklyDomains(weeklyStats)
 			datastore = self.prepareforvisualize(weeklyStats)
 			
 			# prepare for output 

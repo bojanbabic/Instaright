@@ -1,5 +1,5 @@
 application: instaright
-version: 16
+version: 17
 runtime: python 
 api_version: 1
 
@@ -48,6 +48,11 @@ handlers:
 - url: /memcache_test
   script: cron.py
 
+- url: /_ah/xmpp/message/chat/
+  script: xmpp_handler.py
+
 - url: /.*
   script: main.py
 
+inbound_services:
+  - xmpp_message

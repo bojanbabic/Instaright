@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title></title>
+    <title>Instaright Realtime updates</title>
 
     
     <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
@@ -17,22 +17,25 @@
       var feed;
       function init() {
 
-        // This example works with one feed subscription. The feed displays in
-        // in the display div. The following code sets up the feed for that div.
-        display = document.getElementById('display');
-        
-        // Alert the user when they have connected and disconnected
-        // from the push stream.
-        google.feeds.push.setOnBindCallback(function() {alert('You are connected.'); feed.subscribe(entryLoaded);});
-        google.feeds.push.setOnUnbindCallback(function() {alert('You have been disconnected.')});
+	      // This example works with one feed subscription. The feed displays in
+	      // in the display div. The following code sets up the feed for that div.
+	      display = document.getElementById('display');
+	      display.innerHTML = '';
 
-        // Load a feed. We created the feed in this example using
-        // http://github.com/zh/atomgen
-        //feed = new google.feeds.push.Feed('http://fastpshb.appspot.com/feed/1/fastpshb');
-        feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
+	      // Load a feed. We created the feed in this example using
+	      // http://github.com/zh/atomgen
+	      //feed = new google.feeds.push.Feed('http://fastpshb.appspot.com/feed/1/fastpshb');
 
-        // Enable subscriptions to the feed.
-        feed.subscribe(entryLoaded);
+	      var feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
+	      feed.includeHistoricalEntries(10);
+	      //feed.subscribe(displayEntry);
+	      // Alert the user when they have connected and disconnected
+	      // from the push stream.
+	      //      google.feeds.push.setOnBindCallback(function() {alert('You are connected.'); feed.subscribe(entryLoaded);});
+	      //    google.feeds.push.setOnUnbindCallback(function() {alert('You have been disconnected.')});
+
+	      // Enable subscriptions to the feed.
+	      feed.subscribe(entryLoaded);
       }
 
       // Set a callback to load your code when the page loads.
@@ -53,6 +56,7 @@
           var entry = entries[i];
           var title = entry.title;
           var link = entry.link;
+	  var dateUpdated = new Date(entry.publishedDate);
           var container = document.createElement('div');
           var anchor = document.createElement('a');
           anchor.innerHTML = title;
@@ -60,7 +64,7 @@
           container.appendChild(anchor);
           container.appendChild(document.createElement('br'));
           var contentParagraph = document.createElement('p');
-          contentParagraph.innerHTML = 'Place for description';
+          contentParagraph.innerHTML = dateUpdated;
           container.appendChild(contentParagraph);
           container.appendChild(document.createElement('br'));
           container.appendChild(document.createElement('br'));
@@ -70,8 +74,7 @@
     </script>
   </head>
   <body>
-    <h1>Feed updates come every minute.</h1>
-    <h2>View source to see the simple Feed Push Javascript API</h2>
+    <h1>Instaright clicks realtime update.</h1>
     <table border="0" cellspacing="5" cellpadding="5">
       <tr>
         <td><div id="display"></div></td>

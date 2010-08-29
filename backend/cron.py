@@ -178,46 +178,16 @@ class CronTask(webapp.RequestHandler):
 				e= sys.exc_info()[1]
 				logging.error('error calculating stats for domain %s . Error: %s' %(domain, e))
 		logging.info('finished %s stats calculating for %s ' % ( period, target))
-		# we are providing new memcache entry for current date
-		if not target:
-			target = datetime.datetime.now()
-		self.updateCacheEntries(period,target)
-	# looks up for cache entry previous to "date" and for "period"
-	# and updates same entry with "date"
+		# delete memcache keys that have been generated for stats during running of stats 
+		daily_memcache_key = "daily_stats_dates"+str(datetime.date.today())
+		if memcache.get(daily_memcache_key):
+			logging.info('removing existing memcache entry: %s ' % daily_memcache_key)
+			memcache.delete(daily_memcache_key)
+		weekly_memcache_key = "weekly_stats_dates"+str(datetime.date.today())
+		if memcache.get(weekly_memcache_key):
+			logging.info('removing existing memcache entry: %s ' % weekly_memcache_key)
+			memcache.delete(weekly_memcache_key)
 	# 
-	def updateCacheEntries(self, period, date):
-		#toDate = datetime.datetime.strptime(date, "%Y-%m-%d").date()
-		logging.info('memcache update ( %s )' % period)
-		previous_date = datetime.datetime.now() - datetime.timedelta(days = 1)
-		current_date = datetime.datetime.now()
-		
-		memcache_key_previous_date = period+"_stats_dates"+str(previous_date.date())
-		#memcache_key_current_date = period+"_stats_dates"+str(date.date())
-		memcache_key_current_date = period+"_stats_dates"+str(current_date.date())
-
-		#TODO update weekly cache
-		memcache_key_weekly_current_date = "weekly_stats_dates"+str(current_date.date())
-		memcache_key_weekly_current_date = "weekly_stats_dates"+str(current_date.date())
-
-		cache_value =  memcache.get(memcache_key_current_date)
-		if not cache_value:
-			logging.info('memcache entry not found for current date %s , looking up for  previous date cache' % memcache_key_current_date )
-			cache_value =  memcache.get(memcache_key_previous_date)
-		if not cache_value:
-			logging.info('cache not found for both current date or previous date. initialing cache entries')
-			cache_value=[]
-			cache_value.append(date.date())
-		else:
-			logging.info('cache for previous date found ')
-			if len(cache_value) >= 5:
-				cache_value.pop(len(cache_value) -1 )
-			cache_value.insert(0,date.date())
-		
-			for d in cache_value:
-				logging.info(d)
-		logging.info('setting memcache entry %s ' %memcache_key_current_date )
-		memcache.set(memcache_key_current_date, cache_value)
-
 application = webapp.WSGIApplication(
                                      [('/cron', CronTask)],
 				     debug=True)

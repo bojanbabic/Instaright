@@ -1,9 +1,12 @@
 import logging, datetime, os, urllib2, urllib, Queue
 from google.appengine.ext import webapp
 from google.appengine.ext import db
+from google.appengine.api import xmpp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
+
 from main import SessionModel
+from models import Subscription
 
 import feedparser
 
@@ -26,19 +29,26 @@ class CallbackHandler(webapp.RequestHandler):
 		feed = feedparser.parse(self.request.body)
 		
 		#root = ElementTree.fromstring(data)
-		logging.info('recieved: ' )
+		logging.info('recieved:callback ' )
+		subscriptionInfo = Subscription.gql('WHERE active = True').fetch(100)
+		subscribers = [ s.subscriber.address for s in subscriptionInfo ]
+		logging.info(' sending messages to following addresses %s ' %(','.join(subscribers)))
 		for update in feed.entries:
 			logging.info(' %s ' %update)
 			title = update.title
 			link = update.link
 			logging.info('callback title: %s link %s ' % ( title, link))
 			#new_updates.put(update)
-#class RealTimeUpdateHandler(webapp.RequestHandler):
-#	def get(self):
-#		try:
-#		except Queue.Empty:
-#			logging.info('empty queue')
-#			pass
+			message = ' %s ( %s)' %( title, link)
+			# TODO update xmpp subscribers
+			xmpp.send_message(subscribers, message)
+class RealTimeUpdateHandler(webapp.RequestHandler):
+	def get(self):
+		try:
+			logging.info('real time update is about tobe implemente')
+		except Queue.Empty:
+			logging.info('empty queue')
+			pass
 		
 application = webapp.WSGIApplication(
                                      [

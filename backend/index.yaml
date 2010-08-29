@@ -64,3 +64,10 @@ indexes:
   - name: date
   - name: count
     direction: desc
+
+- kind: WeeklyDomainStats
+  properties:
+  - name: date
+    direction: desc
+  - name: count
+    direction: desc

@@ -36,3 +36,8 @@ class CityStats(db.Model):
 	city=db.StringProperty()
 	countryCode=db.StringProperty()
 	count=db.IntegerProperty()
+class Subscription(db.Model):
+	subscriber = db.IMProperty(required=True)
+	domain = db.StringProperty(required=True)
+	activationDate = db.DateTimeProperty(auto_now_add=True)
+	active = db.BooleanProperty()
