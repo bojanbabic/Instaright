@@ -5,7 +5,14 @@ class StatsUtil():
 	@staticmethod
 	def getDomain(url):
 		urlobject=urlparse.urlparse(url)
-		return urlobject.netloc
+		domain = urlobject.netloc
+		# domain should not contain spaces
+		if not domain or domain.find(' ') != -1:
+			return None
+		#strip www.
+		if domain.startswith('www.'):
+			domain = domain.replace('www.','')
+		return domain
 	
 	@staticmethod
 	def ipResolverAPI(ip):

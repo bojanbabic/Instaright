@@ -7,10 +7,12 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from main import SessionModel
 from models import Subscription
+from xmpp_handler import XMPPHandler 
 
 import feedparser
 
 new_updates = Queue.Queue()
+xmpp_handler = XMPPHandler()
 
 class CallbackHandler(webapp.RequestHandler):
 	def get(self):
@@ -30,18 +32,20 @@ class CallbackHandler(webapp.RequestHandler):
 		
 		#root = ElementTree.fromstring(data)
 		logging.info('recieved:callback ' )
-		subscriptionInfo = Subscription.gql('WHERE active = True').fetch(100)
-		subscribers = [ s.subscriber.address for s in subscriptionInfo ]
-		logging.info(' sending messages to following addresses %s ' %(','.join(subscribers)))
+		subscribers = Subscription.gql('WHERE active = True').fetch(100)
+		subscribers_address = [ s.subscriber.address for s in subscribers ]
+		logging.info(' trying to send messages to following addresses %s ' %(','.join(subscribers_address)))
 		for update in feed.entries:
 			logging.info(' %s ' %update)
 			title = update.title
 			link = update.link
-			logging.info('callback title: %s link %s ' % ( title, link))
+			domain = update.domain
+			logging.info('domain : %s' % domain)
+			#logging.info('callback title: %s link:%s domain: %s ' % ( title, link, domain))
 			#new_updates.put(update)
-			message = ' %s ( %s)' %( title, link)
-			# TODO update xmpp subscribers
-			xmpp.send_message(subscribers, message)
+			message = Message( title = title, link = link , domain = domain)
+			xmpp_handler.send_message(subscribers, message)
+			#xmpp.send_message(subscribers, message)
 class RealTimeUpdateHandler(webapp.RequestHandler):
 	def get(self):
 		try:
@@ -49,6 +53,11 @@ class RealTimeUpdateHandler(webapp.RequestHandler):
 		except Queue.Empty:
 			logging.info('empty queue')
 			pass
+class Message(object):
+	def __init__(self, title, link, domain):
+		self.title = title
+		self.link = link
+		self.domain = domain
 		
 application = webapp.WSGIApplication(
                                      [

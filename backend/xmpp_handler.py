@@ -8,6 +8,7 @@ from google.appengine.ext.webapp import xmpp_handlers
 
 from cron import WeeklyDomainStats
 from models import Subscription
+from utils import StatsUtil
 
 		
 #class XMPPHandler(webapp.RequestHandler):
@@ -17,15 +18,18 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 		""" % message.sender)
 		
 	def subscribe_command(self, message=None):
-		if not message.arg.startswith('http'):
-			message.reply('Make sure that your domains starts with http:// ')
-			return
 		im_from = db.IM('xmpp', message.sender)
+		domain = StatsUtil.getDomain(message.arg)
+		if message.arg == 'all':
+			domain = 'all'
+		if not domain:
+			message.reply('You must provide valide domain for subscription. \'%s\' is not valid domain. Make sure that domain starts with http://'  %message.arg)
+			return
 		existingSubscription = Subscription.gql(' WHERE subscriber = :1 and domain = :2 and active = True', im_from , message.arg).get()
 		if existingSubscription is not None:
 			message.reply('You have already subscribed for this domain %s. Remember?' % message.arg)
 			return
-		subscription = Subscription(subscriber = im_from, domain = message.arg, activationDate = datetime.datetime.now(), active = True)
+		subscription = Subscription(subscriber = im_from, domain = domain, activationDate = datetime.datetime.now(), active = True)
 		subscription.put()
 		message.reply('Subscription added.')
 	def unsubscribe_command(self, message=None):
@@ -63,6 +67,13 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 		logging.info('returning and storing top domain info in cache')
 		memcache.set(memcache_top_domains_key, domains)
 		return domains
+	def send_message(self, subscribers, message):
+		for s in subscribers:
+			if s.domain == message.domain or s.domain == 'all':
+				msg = ' %s ( %s )' %( message.title, message.link)
+				xmpp.send_message(s.subscriber.address, msg)
+			else:
+				logging.info('skipping: domain missmatch')
 
 
 application = webapp.WSGIApplication([

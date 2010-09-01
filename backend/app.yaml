@@ -11,6 +11,9 @@ handlers:
 - url: /scripts
   static_dir: scripts
 
+- url: /css
+  static_dir: css
+
 - url: /remote_api
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
 #  login: admin
@@ -50,6 +53,9 @@ handlers:
 
 - url: /_ah/xmpp/message/chat/
   script: xmpp_handler.py
+
+- url: /test_domains
+  script: test_domains.py
 
 - url: /.*
   script: main.py

@@ -1,22 +1,6 @@
 <html>
-  <head>
-<style> 
-#display {
-    border:8px solid #FFFFFF;
-    height:230px;
-    margin:0px 0px 10px 0px;
-    width:660px;
-}
-.scan, .streamcontent {
-    -moz-border-radius:15px;
-    border:1px solid #ADA699;
-    clear:both;
-    display:block;
-    margin:10px 0px 10px 0px;
-    padding:10px;
-    text-decoration:none;
-}
-</style>
+<head>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
     <title>Instaright Realtime updates</title>
 
     
@@ -36,7 +20,7 @@
 
 	      // This example works with one feed subscription. The feed displays in
 	      // in the display div. The following code sets up the feed for that div.
-	      display = document.getElementById('display');
+	      display = document.getElementById('stream');
 	      display.innerHTML = '';
 
 	      // Load a feed. We created the feed in this example using
@@ -92,12 +76,66 @@
     </script>
   </head>
   <body>
-    <h1>Instaright clicks realtime update.</h1>
-    <table border="0" cellspacing="5" cellpadding="5">
-      <tr>
-        <td><div id="display"></div></td>
-      </tr>
-    </table>
+<div class="wrapper"> 
+<div id="logo_bar"> 
+    <div id="header" class="container_24"> 
+ 
+        <div class="grid_7 alpha"> 
+            <h1 id="logo"><a href="/" title="Instaright">Instaright</a></h1> 
+        </div> 
+        
+        <div class="grid_17"> 
+        </div> 
+    </div> 
+</div> 
+<div class="clear"></div> 
+<div id="content" class="container_24"> 
+    <div id="left_col" class="grid_18"> 
+        
+        <div class="left_box_top"> 
+            <h2 class="round_title"> 
+                <span>Instaright Stream</span> 
+            </h2> 
+        </div> 
+        
+        <div class="left_box_mid"> 
+<style> 
+#streammap{
+    border:8px solid #FFFFFF;
+    height:230px;
+    margin:0px 0px 10px 0px;
+    width:660px;
+}
+.scan, .streamcontent {
+    -moz-border-radius:15px;
+    border:1px solid #ADA699;
+    clear:both;
+    display:block;
+    margin:10px 0px 10px 0px;
+    padding:10px;
+    text-decoration:none;
+}
+</style>
+	<div id="streammap" class="grid_7"></div> 
+        <div id="stream"></div>
+       	</div>
+	<div class="left_box_bot"></div> 
+   </div>
+   <div id="right_col" class="grid_6">
+   </div>
+</div>
+<div class="clear"></div> 
+</div>
+<div class="push"></div> 
+</div> 
+<div class="clearfix"></div> 
+</div>
+ 
+<div id="foot_wrap" style="margin-top:100px;">  
+<div id="foot" class="container_24"> 
+</div>
+<div class="clear"></div> 
+</div>
 
     
    
