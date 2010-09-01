@@ -145,6 +145,10 @@ com.appspot.instaright={
 			this.logErrors("Can't determine link , try another");
 			return;
 		}
+		// text javascript url fix
+		if (url.indexof('javascript') === 0){
+			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
+		}
 		textSelected = this.getSelectedText();
 		this.sendUrlSynchAjax(url, textSelected);
 		if (com.appspot.model.ajaxResponse == '201' && com.appspot.model.disableAlert == false){

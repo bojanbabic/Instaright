@@ -60,7 +60,7 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 			return top_domains_cache
 		if weekly_stats is None:
 			weekly_stats=WeeklyDomainStats.gql('ORDER BY date DESC, count DESC ').fetch(10)
-		if weekly_stats is None or len(weekly_stats) == 0 :
+		if weekly_stats is None or weekly_stats.count() == 0 :
 			logging.info('Not enough data')
 			return None
 		domains = [ w.domain for w in weekly_stats if w.count > 10 ]
