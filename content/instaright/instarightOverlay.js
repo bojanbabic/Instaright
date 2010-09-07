@@ -122,8 +122,8 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	_SERVER:"http://instaright.appspot.com",
-	//_SERVER:"http://localhost:8080",
+	//_SERVER:"http://instaright.appspot.com",
+	_SERVER:"http://localhost:8080",
 	start:function(){
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
 			alert('Invalid email. Please enter valid email in plugin options.');
@@ -146,7 +146,8 @@ com.appspot.instaright={
 			return;
 		}
 		// text javascript url fix
-		if (url.indexof('javascript') === 0){
+		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0){
+			//alert ('tricky url:' + url);
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
 		}
 		textSelected = this.getSelectedText();
