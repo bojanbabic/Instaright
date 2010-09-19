@@ -5,14 +5,17 @@
 
     
     <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
+    <script src="/_ah/channel/jsapi"></script>
 
     <script type="text/javascript" charset="utf-8">
 
-      // Load the v2 of the Feed API
-      google.load('feeds', '2');
+      // NOTE: we are using channel API instead of version v2 of the Feed API
+      google.load('feeds', '1');
+      // Set a callback to load your code when the page loads.
+      google.setOnLoadCallback(init);
 
       // Create variables to display subscription options using HTML DIVs
-      var display;
+      var stream;
 
       // Initialize the API.
       var feed;
@@ -20,15 +23,15 @@
 
 	      // This example works with one feed subscription. The feed displays in
 	      // in the display div. The following code sets up the feed for that div.
-	      display = document.getElementById('stream');
-	      display.innerHTML = '';
+	      stream = document.getElementById('stream');
+	      stream.innerHTML = '';
 
 	      // Load a feed. We created the feed in this example using
 	      // http://github.com/zh/atomgen
 	      //feed = new google.feeds.push.Feed('http://fastpshb.appspot.com/feed/1/fastpshb');
 
 	      var feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
-	      feed.includeHistoricalEntries(10);
+	      //feed.includeHistoricalEntries(10);
 	      //feed.subscribe(displayEntry);
 	      // Alert the user when they have connected and disconnected
 	      // from the push stream.
@@ -38,14 +41,37 @@
 	      // Enable subscriptions to the feed.
 	      feed.subscribe(entryLoaded);
       }
-
-      // Set a callback to load your code when the page loads.
-      google.setOnLoadCallback(init);
       
       // Create a callback function for google.feeds.push.Feed.subscribe()
       // and load it into the display DIV.
       function entryLoaded(response) {
-        displayEntry(response, display);
+        displayEntry(response, stream);
+      }
+      function updateDisplayEntry(response, div) {
+        entries = response.getElementsByTagName('entry')
+        for (var i = 0; i < entries.length; i++) {
+	  try{
+		  var entry = entries[i];
+		  var title = entry.getElementsByTagName("title")[0].firstChild.nodeValue;
+		  var link = entry.getElementsByTagName("link")[0].getAttribute('href');
+		  var dateUpdated = new Date(entry.getElementsByTagName("updated")[0].firstChild.nodeValue);
+
+		  var container = document.createElement('div');
+		  container.setAttribute('class', 'streamcontent');
+		  var anchor = document.createElement('a');
+		  anchor.innerHTML = title;
+		  anchor.href = link;
+		  container.appendChild(anchor);
+		  container.appendChild(document.createElement('br'));
+		  var contentParagraph = document.createElement('p');
+		  contentParagraph.innerHTML = dateUpdated;
+		  container.appendChild(contentParagraph);
+		  container.appendChild(document.createElement('br'));
+		  container.appendChild(document.createElement('br'));
+		  div.insertBefore(container, div.firstChild);
+	 }catch(e){
+	}
+        }
       }
 
       // Specify the result objects to display with feed results.
@@ -54,6 +80,7 @@
         var entries = feed.entries;
         entries = entries.reverse();
         for (var i = 0; i < entries.length; i++) {
+	  
           var entry = entries[i];
           var title = entry.title;
           var link = entry.link;
@@ -73,19 +100,37 @@
           div.insertBefore(container, div.firstChild);
         }
       }
+	var channel_id= "{{ channel_id }}";
+	var channel = new goog.appengine.Channel(channel_id);
+	var socket = channel.open();
+	socket.onopen = function(){
+	}
+	socket.onmessage = function(evt){
+	        stream = document.getElementById('stream');
+		feed_update =(new DOMParser()).parseFromString(evt.data, "text/xml");
+		updateDisplayEntry(feed_update, stream);
+	};
     </script>
   </head>
   <body>
+<div id="header" class="container_24">
+	<div>
+            <ul> 
+		{% if user %}
+                <li>Hi {{ user }}</li>
+		{% else %}
+                <li><a id="btn_login" href="{{ login_url }}" title="Login">introduce yourself</a></li>
+		{% endif %}
+		
+            </ul>
+        </div>
+</div>
 <div class="wrapper"> 
 <div id="logo_bar"> 
     <div id="header" class="container_24"> 
- 
-        <div class="grid_7 alpha"> 
+        <!--div class="grid_7 alpha"--> 
             <h1 id="logo"><a href="/" title="Instaright">Instaright</a></h1> 
-        </div> 
-        
-        <div class="grid_17"> 
-        </div> 
+        <!--/div--> 
     </div> 
 </div> 
 <div class="clear"></div> 
@@ -99,24 +144,23 @@
         </div> 
         
         <div class="left_box_mid"> 
-<style> 
-#streammap{
-    border:8px solid #FFFFFF;
-    height:230px;
-    margin:0px 0px 10px 0px;
-    width:660px;
-}
-.scan, .streamcontent {
-    -moz-border-radius:15px;
-    border:1px solid #ADA699;
-    clear:both;
-    display:block;
-    margin:10px 0px 10px 0px;
-    padding:10px;
-    text-decoration:none;
-}
-</style>
-	<div id="streammap" class="grid_7"></div> 
+	<style> 
+	#streammap{
+    		border:8px solid #FFFFFF;
+  		height:230px;
+    		margin:0px 0px 10px 0px;
+    		width:660px;
+	}
+	.scan, .streamcontent {
+    		-moz-border-radius:15px;
+    		border:1px solid #ADA699;
+    		clear:both;
+    		display:block;
+    		margin:10px 0px 10px 0px;
+    		padding:10px;
+    		text-decoration:none;
+	}
+	</style>
         <div id="stream"></div>
        	</div>
 	<div class="left_box_bot"></div> 
