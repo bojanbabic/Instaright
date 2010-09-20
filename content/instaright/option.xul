@@ -11,6 +11,7 @@
                         myLoginManager = Components.classes["@mozilla.org/login-manager;1"].getService(Components.interfaces.nsILoginManager);
 
 			function getPasswordValue(){
+				com.appspot.model.startup();
 				password = document.getElementById("accountPassword");
 				
                         	logins = myLoginManager.findLogins({}, com.appspot.model.hostname, com.appspot.model.formSubmitURL, com.appspot.model.httprealm);

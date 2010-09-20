@@ -26,13 +26,17 @@ com.appspot.model={
 		
 		this.account= this.prefs.getCharPref("account").toLowerCase();
 		loginInfo = this.getLoginInfoForUsername(this.account);
+		alert('starup: password :'+ loginInfo.password);
 		if ( loginInfo != null){
 			this.password = loginInfo.password;
-			document.getElementById("accountPassword").value = loginInfo.password;
+			if (document.getElementById("accountPassword") !== undefined){
+				document.getElementById("accountPassword").value = loginInfo.password;
+			}
 		}
 		this.disableAlert = this.prefs.getBoolPref("disableAlert");
 		this.disablePageSaveMode = this.prefs.getBoolPref("disablePageSaveMode");
 		
+		alert('pre refresh info');
 		this.refreshInformation();  
 		// if necessary use nsITimer#Example instead of timer
 		//(this.refreshInformation, 10*60*1000);
@@ -125,6 +129,8 @@ com.appspot.instaright={
 	_SERVER:"http://instaright.appspot.com",
 	//_SERVER:"http://localhost:8080",
 	start:function(){
+		com.appspot.model.startup();
+		alert('started up')
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
 			alert('Invalid email. Please enter valid email in plugin options.');
 			return;
@@ -156,8 +162,9 @@ com.appspot.instaright={
 		if (textSelected == null){
 			textSelected = this.getSelectedText();
 		}
+		alert('about to send')
 		this.sendUrlSynchAjax(url, textSelected);
-		if (com.appspot.model.ajaxResponse == '201' && com.appspot.model.disableAlert == false){
+		if (com.appspot.model.ajaxResponse == '201' && com.appspot.model.disableAlert == "false"){
 			alert('Success.');
 		}
 		else if (com.appspot.model.ajaxResponse == '400'){
@@ -185,13 +192,14 @@ com.appspot.instaright={
         },
 
 	sendUrlSynchAjax:function(url, textSelected){
+				 alert('sending');
 				 lInfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
 				 // there is nasty bug that when user removes passwprd , password info stays untill ff is restarted
 				 // but it doen't effect user experience
 				 if ( lInfo != null){
 					com.appspot.model.password = lInfo.password;//document.getElementById("accountPassword").value;
 				 } 
-				 //alert('password:'+com.appspot.model.password);
+				 alert('password:'+com.appspot.model.password);
 				 urlInstapaper = "http://www.instapaper.com/api/add";
 				 if (textSelected != null){
 					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url)+"&selection="+textSelected;
@@ -261,4 +269,4 @@ com.appspot.instaright={
 	}
 }
 
-window.addEventListener("load", function(e) { com.appspot.model.startup(); }, false);
+//window.addEventListener("load", function(e) { com.appspot.model.startup(); }, false);
