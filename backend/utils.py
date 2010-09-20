@@ -1,6 +1,6 @@
 import urlparse, urllib
 from xml.dom import minidom
-
+DOMAIN='http://instaright.appspot.com'
 class StatsUtil():
 	@staticmethod
 	def getDomain(url):
@@ -27,3 +27,13 @@ class StatsUtil():
 		#data = [x.content for x in xml.xpathEval('//Hostip/node()')]	
 		return data
 		# TODO  parse xml 
+class FeedUtil:
+	def sessionModel2Feed(self, model):
+		item = {}
+		item["title"]=model.domain
+		item["link"]=DOMAIN + '/article/' + str(model.key())
+		item["description"]='Link submited by user %s' % model.instaright_account
+		item["pubDate"]=model.date.timetuple()
+		item["uid"]=str(model.key())
+
+		return item

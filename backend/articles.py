@@ -4,38 +4,13 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import SessionModel
+
 from feedformatter import Feed
 
 DOMAIN = 'http://instaright.appspot.com'
 
-class AtomGenerator(webapp.RequestHandler):
-	def get(self):
-
-		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
-
-		feed = Feed()
-		feed.feed["title"] = "Instaright live feed"
-		feed.feed["link"] = "http://instaright.appspot.com/feed"
-		feed.feed["author"]="@bojanbabic"
-
-		if not entries:
-			self.response.out.write('Nothing here')
-		entries_list = list(entries)
-		entries_list.reverse()
-		for entry in entries_list:
-			item = {}
-			item["title"]=entry.domain
-			item["link"]=DOMAIN + '/article/' + str(entry.key())
-			item["description"]='Link submited by user %s' % entry.instaright_account
-			item["pubDate"]=entry.date.timetuple()
-			item["uid"]=str(entry.key())
-			
-			feed.items.insert(0, item)
-		self.response.headers['Content-Type'] = "application/rss+xml"
-		self.response.out.write(feed.format_atom_string())
 class FeedGenerator(webapp.RequestHandler):
 	def get(self):
-		
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
 		if not entries:
 			self.response.out.write('Nothing here')
@@ -45,6 +20,16 @@ class FeedGenerator(webapp.RequestHandler):
 		path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
 		self.response.headers['Content-Type'] = "application/atom+xml"
 		self.response.out.write(template.render(path,template_variables))
+
+	def hideUsers(user):
+		if len(user) < 3:
+			return user
+		if user.find('@'):
+			endposition = user.find("@")
+		else:
+			endposition = len(user)-1
+		return user.replace(user[1:endposition], 'xxxx')
+		
 			
 class ArticleHandler(webapp.RequestHandler):
 	def get(self, location):
@@ -61,6 +46,7 @@ class ArticleHandler(webapp.RequestHandler):
 		template_variables={ 'url' : article.url }
 		path = os.path.join(os.path.dirname(__file__), 'templates/article.html')
 		self.response.out.write(template.render(path, template_variables))
+
 		
 application = webapp.WSGIApplication(
                                      [

@@ -1,5 +1,5 @@
 application: instaright
-version: 18
+version: 22
 runtime: python 
 api_version: 1
 
@@ -56,6 +56,13 @@ handlers:
 
 - url: /test_domains
   script: test_domains.py
+
+- url: /aggregate_data
+  script: data_consolidation.py
+
+- url: /favicon.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon.ico
 
 - url: /.*
   script: main.py

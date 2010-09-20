@@ -5,7 +5,7 @@ from google.appengine.api import xmpp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from main import SessionModel
+from main import SessionModel, BroadcastMessage
 from models import Subscription
 from xmpp_handler import XMPPHandler 
 
@@ -31,8 +31,9 @@ class CallbackHandler(webapp.RequestHandler):
 		feed = feedparser.parse(self.request.body)
 		
 		#root = ElementTree.fromstring(data)
+		boadcaster = BroadcastMessage()
 		logging.info('recieved:callback ' )
-		subscribers = Subscription.gql('WHERE active = True').fetch(100)
+		subscribers = Subscription.gql('WHERE active = True and mute = False').fetch(100)
 		subscribers_address = [ s.subscriber.address for s in subscribers ]
 		logging.info(' trying to send messages to following addresses %s ' %(','.join(subscribers_address)))
 		for update in feed.entries:
@@ -44,6 +45,7 @@ class CallbackHandler(webapp.RequestHandler):
 			#logging.info('callback title: %s link:%s domain: %s ' % ( title, link, domain))
 			#new_updates.put(update)
 			message = Message( title = title, link = link , domain = domain)
+			boadcaster.send_message(update)
 			xmpp_handler.send_message(subscribers, message)
 			#xmpp.send_message(subscribers, message)
 class RealTimeUpdateHandler(webapp.RequestHandler):

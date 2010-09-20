@@ -27,19 +27,11 @@
 	      stream.innerHTML = '';
 
 	      // Load a feed. We created the feed in this example using
-	      // http://github.com/zh/atomgen
-	      //feed = new google.feeds.push.Feed('http://fastpshb.appspot.com/feed/1/fastpshb');
 
-	      var feed = new google.feeds.push.Feed('http://instaright.appspot.com/feed');
-	      //feed.includeHistoricalEntries(10);
-	      //feed.subscribe(displayEntry);
-	      // Alert the user when they have connected and disconnected
-	      // from the push stream.
-	      //      google.feeds.push.setOnBindCallback(function() {alert('You are connected.'); feed.subscribe(entryLoaded);});
-	      //    google.feeds.push.setOnUnbindCallback(function() {alert('You have been disconnected.')});
-
+	      var feed = new google.feeds.Feed('http://instaright.appspot.com/feed');
+	      feed.setNumEntries(10);
 	      // Enable subscriptions to the feed.
-	      feed.subscribe(entryLoaded);
+	      feed.load(entryLoaded);
       }
       
       // Create a callback function for google.feeds.push.Feed.subscribe()
@@ -104,6 +96,7 @@
 	var channel = new goog.appengine.Channel(channel_id);
 	var socket = channel.open();
 	socket.onopen = function(){
+		alert('connected');
 	}
 	socket.onmessage = function(evt){
 	        stream = document.getElementById('stream');
