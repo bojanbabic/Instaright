@@ -5,7 +5,12 @@ class StatsUtil():
 	@staticmethod
 	def getDomain(url):
 		urlobject=urlparse.urlparse(url)
-		domain = urlobject.netloc
+		try:
+			domain = urlobject.netloc
+		except:
+			e0,e = sys.exc_info()[0], sys.exc_info()[1]
+			logging.info('domain was not fetched due to: %s , %s' %(e0, e)) 
+			
 		# domain should not contain spaces
 		if not domain or domain.find(' ') != -1:
 			return None

@@ -41,7 +41,7 @@ class StatsTask(webapp.RequestHandler):
 			return 
 		if dateStr is None:
 			dateStr = str(datetime.date.today() - datetime.timedelta(days=1))
-		taskqueue.add(url='/cron', params={'date':dateStr, 'type':type})
+		taskqueue.add(url='/cron', params={'date':dateStr, 'type': type})
 		
 application = webapp.WSGIApplication(
                                      [('/delete_stats', SessionManager), ('/stats_task', StatsTask)],debug=True)

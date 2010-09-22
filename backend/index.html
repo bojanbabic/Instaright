@@ -1,13 +1,27 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="static/style.css" />
     <title>Instaright Realtime updates</title>
-
     
     <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    </script>
     <script src="/_ah/channel/jsapi"></script>
 
     <script type="text/javascript" charset="utf-8">
+	$(function() {
+		function runEffect(){
+			options = {};
+			$("#effect").show("Blind", options, 500, callback);
+			
+		};
+
+		function callback(){
+			alert('right?');
+		}
+
+	});
 
       // NOTE: we are using channel API instead of version v2 of the Feed API
       google.load('feeds', '1');
@@ -50,6 +64,7 @@
 
 		  var container = document.createElement('div');
 		  container.setAttribute('class', 'streamcontent');
+		  $("#streamcontent").hide();
 		  var anchor = document.createElement('a');
 		  anchor.innerHTML = title;
 		  anchor.href = link;
@@ -61,8 +76,11 @@
 		  container.appendChild(document.createElement('br'));
 		  container.appendChild(document.createElement('br'));
 		  div.insertBefore(container, div.firstChild);
+		  runEffect();
+
 	 }catch(e){
-	}
+		alert("while adding new element :" +e);
+	 }
         }
       }
 
@@ -103,6 +121,38 @@
 		feed_update =(new DOMParser()).parseFromString(evt.data, "text/xml");
 		updateDisplayEntry(feed_update, stream);
 	};
+	function sendinvite(){
+		if( !window.XMLHttpRequest ) XMLHttpRequest = function()
+		{
+			try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
+			try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
+			try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
+			try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
+			throw new Error("Could not find an XMLHttpRequest alternative.")
+		};
+		try{
+			invite_mail = document.getElementById("invite_mail");
+			url = "/send_invite";
+			req = XMLHttpRequest();
+			req.open('POST', url);
+			req.send(invite_mail.value);
+			req.onreadystatechange =  function(){
+				if ( req.readyState == 4 && req.status == 200){
+					try{
+						done_paragraph = document.createElement('p');
+						done_paragraph.innerHTML = req.responseText;	
+						appendTo = document.getElementById('submitImg');
+						appendTo.appendChild(done_paragraph);
+					}catch(e){
+							alert('e:'+e);
+						}
+				}
+			}
+		} catch(e){
+			alert('e:'+e);
+		}
+		
+	}
     </script>
   </head>
   <body>
@@ -159,6 +209,8 @@
 	<div class="left_box_bot"></div> 
    </div>
    <div id="right_col" class="grid_6">
+	<input type="text" id="invite_mail">
+	<img link="/static/submit.ico" onclick="sendinvite();" id="submitImg"/>
    </div>
 </div>
 <div class="clear"></div> 
@@ -173,10 +225,5 @@
 </div>
 <div class="clear"></div> 
 </div>
-
-    
-   
-    <!--input type="button" value="subscribe" onclick="feed.subscribe(entryLoaded);"/>
-    <input type="button" value="unsubscribe" onclick="feed.unsubscribe();"/-->
   </body>
 </html>

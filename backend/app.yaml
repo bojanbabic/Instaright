@@ -54,6 +54,9 @@ handlers:
 - url: /_ah/xmpp/message/chat/
   script: xmpp_handler.py
 
+- url: /send_invite
+  script: xmpp_handler.py
+
 - url: /test_domains
   script: test_domains.py
 

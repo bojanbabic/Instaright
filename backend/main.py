@@ -75,6 +75,7 @@ class SessionModel(db.Model):
 		logging.info('ranges %s -> %s ' %( targetDate, previousWeek))
 		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, previousWeek).fetch(1000)
 		if not data:
+			logging.info('no records found for target date %s ' % str(targetDate))
 			return None
 		lastKey= data[-1].key()
 		result = data
@@ -144,7 +145,12 @@ class Logging(webapp.RequestHandler):
 			logging.info('bookmark update written: % s' % model.to_xml())
 			logging.info('triggering feed update')
 			#trigger taskqueue that generates feed
-			pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
+			try:
+				pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
+			except:
+				e0, e = sys.exc_info()[0], sys.exc_info()[1]
+				logging.error('Error while triggering pshb update: %s %s' % (e0, e))
+				
 			
 			# TODO delete after testing
 			entries = [model]
@@ -156,8 +162,7 @@ class Logging(webapp.RequestHandler):
 			# till here !!!!
 			#bm.send_message(model.to_xml())
 		except:
-			e0 = sys.exc_info()[0]
-			e = sys.exc_info()[1]
+			e0,e = sys.exc_info()[0],  sys.exc_info()[1]
 			logging.error('Error while handling request %s %s' % (e0, e))
 		
 	def get(self):

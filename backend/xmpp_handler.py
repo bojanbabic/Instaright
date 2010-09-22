@@ -124,9 +124,16 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 			else:
 				logging.info('skipping: domain missmatch')
 
+class XMPPUserHandler(webapp.RequestHandler):
+	def post(self):
+		user_mail = self.request.body
+		logging.info('sending invite to: %s' % user_mail)
+		xmpp.send_invite(user_mail)
+		self.response.out.write('success')
 
 application = webapp.WSGIApplication([
 			('/_ah/xmpp/message/chat/', XMPPHandler),
+			('/send_invite', XMPPUserHandler),
 			], debug=True)
 
 def main():
