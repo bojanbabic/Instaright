@@ -1,8 +1,11 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
     <script src='/_ah/channel/jsapi'></script>
-    <title>Instaright Realtime updates</title>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <title>Instaright Realtime Stream</title>
     
 </head>
   <body>
@@ -11,10 +14,10 @@
 	var channel = new goog.appengine.Channel(channel_id);
 	var socket = channel.open();
 	socket.onopen = function(){
-		alert('connected');
+		//alert('connected');
 	}
 	socket.onmessage = function(evt){
-		alert('on message');
+		//alert('on message');
 		try{
 		stream = document.getElementById('stream');
 		feed_update =(new DOMParser()).parseFromString(evt.data, "text/xml");
@@ -37,27 +40,51 @@
 
       function updateDisplayEntry(response, div) {
         entries = response.getElementsByTagName('entry')
+	maxElementsInStream = 2;
+	sElements = $("#stream").children();
         for (var i = 0; i < entries.length; i++) {
 	  try{
-		  var entry = entries[i];
-		  var title = entry.getElementsByTagName("title")[0].firstChild.nodeValue;
-		  var link = entry.getElementsByTagName("link")[0].getAttribute('href');
-		  var dateUpdated = new Date(entry.getElementsByTagName("updated")[0].firstChild.nodeValue);
+		  entry = entries[i];
+		  title = entry.getElementsByTagName("title")[0].firstChild.nodeValue;
+		  link = entry.getElementsByTagName("link")[0].getAttribute('href');
+		  dateUpdated = new Date(entry.getElementsByTagName("updated")[0].firstChild.nodeValue);
+	  	  id = entry.getElementsByTagName("id")[0].firstChild.nodeValue;
 
-		  var container = document.createElement('div');
+		  container = document.createElement('div');
+		  containerAvatar = document.createElement('div');
+		  
+			
+		  avatarElement = document.createElement('img');
+		  avatarElement.setAttribute('src', '/static/images/noavatar.png');
+		  avatarElement.setAttribute('class', 'avatar');
+
+		  containerAvatar.appendChild(avatarElement);
 		  container.setAttribute('class', 'streamcontent');
-		  var anchor = document.createElement('a');
+		  container.setAttribute('id', id);
+		  anchor = document.createElement('a');
 		  anchor.innerHTML = title;
 		  anchor.href = link;
+
+		  container.appendChild(containerAvatar);
 		  container.appendChild(anchor);
 		  container.appendChild(document.createElement('br'));
-		  var contentParagraph = document.createElement('p');
+		  contentParagraph = document.createElement('p');
 		  contentParagraph.innerHTML = dateUpdated;
 		  container.appendChild(contentParagraph);
 		  container.appendChild(document.createElement('br'));
 		  container.appendChild(document.createElement('br'));
 		  div.insertBefore(container, div.firstChild);
-		  //runEffect();
+		  $("#"+id).hide();
+		  $("#"+id).show('blind');
+		  if (sElements.length > maxElementsInStream ){
+			alert('removing element');
+			lastElement = sElements.get(-1); 
+			lastElement.setAttribute('style', 'color: red');
+			id = lastElement.getAttribute('id');
+			alert('id:'+ id);
+			//$("#"+id).hide();
+			lastElement.innerHTML = "";
+		  }
 
 	 }catch(e){
 		alert("while adding new element :" +e);

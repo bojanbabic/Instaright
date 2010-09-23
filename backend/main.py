@@ -153,13 +153,13 @@ class Logging(webapp.RequestHandler):
 				
 			
 			# TODO delete after testing
-			#entries = [model]
-			#template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
-			#path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
-			#feed = template.render(path,template_variables)
-			#bm = BroadcastMessage()
-			#bm.send_message(feed)
-			#logging.info('send messages')
+			entries = [model]
+			template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
+			path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
+			feed = template.render(path,template_variables)
+			bm = BroadcastMessage()
+			bm.send_message(feed)
+			logging.info('send messages')
 			# till here !!!!
 			#bm.send_message(model.to_xml())
 		except:
