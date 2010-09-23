@@ -1,28 +1,33 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <script src='/_ah/channel/jsapi'></script>
     <title>Instaright Realtime updates</title>
     
-</head>
-  <body>
+    <!--script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+		$(function(){
+		function runEffect(){
+			try{
+			alert('s');
+			options = {};
+			$("#streamcontent").show("Drop", options, 500, callback);
+			}catch(e){
+				alert(e);
+			}
+			
+		};
+
+		function callback(){
+			alert('right?');
+		};
+		$("#streamcontent").hide();
+		});
+
+    </script>
+    <script src="/_ah/channel/jsapi"></script>
+
     <script type="text/javascript" charset="utf-8">
-	var channel_id= '{{ channel_id }}';
-	var channel = new goog.appengine.Channel(channel_id);
-	var socket = channel.open();
-	socket.onopen = function(){
-		alert('connected');
-	}
-	socket.onmessage = function(evt){
-		alert('on message');
-		try{
-		stream = document.getElementById('stream');
-		feed_update =(new DOMParser()).parseFromString(evt.data, "text/xml");
-		updateDisplayEntry(feed_update, stream);
-		} catch(e){
-			alert('eee:'+e);
-		} 
-	};
 
       // NOTE: we are using channel API instead of version v2 of the Feed API
       //google.load('feeds', '1');
@@ -34,7 +39,26 @@
 
       // Initialize the API.
       var feed;
+      function init() {
 
+	      // This example works with one feed subscription. The feed displays in
+	      // in the display div. The following code sets up the feed for that div.
+	      stream = document.getElementById('stream');
+	      stream.innerHTML = '';
+
+	      // Load a feed. We created the feed in this example using
+
+	      var feed = new google.feeds.Feed('http://instaright.appspot.com/feed');
+	      feed.setNumEntries(10);
+	      // Enable subscriptions to the feed.
+	      feed.load(entryLoaded);
+      }
+      
+      // Create a callback function for google.feeds.push.Feed.subscribe()
+      // and load it into the display DIV.
+      function entryLoaded(response) {
+        displayEntry(response, stream);
+      }
       function updateDisplayEntry(response, div) {
         entries = response.getElementsByTagName('entry')
         for (var i = 0; i < entries.length; i++) {
@@ -46,6 +70,9 @@
 
 		  var container = document.createElement('div');
 		  container.setAttribute('class', 'streamcontent');
+		  container.setAttribute('id', 'streamcontent');
+		  //$("#streamcontent").hide();
+		  //container.setAttribute('style', 'visibility: hidden;');
 		  var anchor = document.createElement('a');
 		  anchor.innerHTML = title;
 		  anchor.href = link;
@@ -64,6 +91,44 @@
 	 }
         }
       }
+
+      // Specify the result objects to display with feed results.
+      function displayEntry(response, div) {
+        feed = response.feed;
+        var entries = feed.entries;
+        entries = entries.reverse();
+        for (var i = 0; i < entries.length; i++) {
+	  
+          var entry = entries[i];
+          var title = entry.title;
+          var link = entry.link;
+	  var dateUpdated = new Date(entry.publishedDate);
+          var container = document.createElement('div');
+	  container.setAttribute('class', 'streamcontent');
+          var anchor = document.createElement('a');
+          anchor.innerHTML = title;
+          anchor.href = link;
+          container.appendChild(anchor);
+          container.appendChild(document.createElement('br'));
+          var contentParagraph = document.createElement('p');
+          contentParagraph.innerHTML = dateUpdated;
+          container.appendChild(contentParagraph);
+          container.appendChild(document.createElement('br'));
+          container.appendChild(document.createElement('br'));
+          div.insertBefore(container, div.firstChild);
+        }
+      }
+	var channel_id= "{{ channel_id }}";
+	var channel = new goog.appengine.Channel(channel_id);
+	var socket = channel.open();
+	socket.onopen = function(){
+		alert('connected');
+	}
+	socket.onmessage = function(evt){
+	        stream = document.getElementById('stream');
+		feed_update =(new DOMParser()).parseFromString(evt.data, "text/xml");
+		updateDisplayEntry(feed_update, stream);
+	};
 	function sendinvite(){
 		if( !window.XMLHttpRequest ) XMLHttpRequest = function()
 		{
@@ -97,8 +162,8 @@
 		
 	}
     </script>
-
-
+  </head>
+  <body>
 <div id="header" class="container_24">
 	<div>
             <ul> 
