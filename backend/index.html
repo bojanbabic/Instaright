@@ -1,6 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
     <script src='/_ah/channel/jsapi'></script>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -20,17 +21,19 @@
 		//alert('on message');
 		try{
 		stream = document.getElementById('stream');
-		feed_update =(new DOMParser()).parseFromString(evt.data, "text/xml");
-		updateDisplayEntry(feed_update, stream);
+		//alert('evt data:' + evt.data);
+		feed_json_update = JSON.parse(evt.data);
+		//alert(feed_json_update);
+		updateDisplayEntry(feed_json_update, stream);
 		} catch(e){
-			alert('eee:'+e);
+			//alert('eee:'+e);
 		} 
 	};
 
       // NOTE: we are using channel API instead of version v2 of the Feed API
-      //google.load('feeds', '1');
+      google.load('feeds', '1');
       // Set a callback to load your code when the page loads.
-      //google.setOnLoadCallback(init);
+      google.setOnLoadCallback(init);
 
       // Create variables to display subscription options using HTML DIVs
       var stream;
@@ -38,58 +41,61 @@
       // Initialize the API.
       var feed;
 
+      function init(){
+	
+	}
+
       function updateDisplayEntry(response, div) {
-        entries = response.getElementsByTagName('entry')
-	maxElementsInStream = 2;
-	sElements = $("#stream").children();
-        for (var i = 0; i < entries.length; i++) {
 	  try{
-		  entry = entries[i];
-		  title = entry.getElementsByTagName("title")[0].firstChild.nodeValue;
-		  link = entry.getElementsByTagName("link")[0].getAttribute('href');
-		  dateUpdated = new Date(entry.getElementsByTagName("updated")[0].firstChild.nodeValue);
-	  	  id = entry.getElementsByTagName("id")[0].firstChild.nodeValue;
+		  maxElementsInStream = 2;
+		  sElements = $("#stream").children();
+		  //alert('length:' + response.length);
+		  for (i = 0; i < response.length; i++) {
+			  e = response[i]['u'];
+			  title = e['t'];
+			  link = e['l'];
+			  dateUpdated = new Date(e['u']);
+			  id = e['id'];
 
-		  container = document.createElement('div');
-		  containerAvatar = document.createElement('div');
-		  
-			
-		  avatarElement = document.createElement('img');
-		  avatarElement.setAttribute('src', '/static/images/noavatar.png');
-		  avatarElement.setAttribute('class', 'avatar');
+			  container = document.createElement('div');
+			  containerAvatar = document.createElement('div');
 
-		  containerAvatar.appendChild(avatarElement);
-		  container.setAttribute('class', 'streamcontent');
-		  container.setAttribute('id', id);
-		  anchor = document.createElement('a');
-		  anchor.innerHTML = title;
-		  anchor.href = link;
 
-		  container.appendChild(containerAvatar);
-		  container.appendChild(anchor);
-		  container.appendChild(document.createElement('br'));
-		  contentParagraph = document.createElement('p');
-		  contentParagraph.innerHTML = dateUpdated;
-		  container.appendChild(contentParagraph);
-		  container.appendChild(document.createElement('br'));
-		  container.appendChild(document.createElement('br'));
-		  div.insertBefore(container, div.firstChild);
-		  $("#"+id).hide();
-		  $("#"+id).show('blind');
-		  if (sElements.length > maxElementsInStream ){
-			alert('removing element');
-			lastElement = sElements.get(-1); 
-			lastElement.setAttribute('style', 'color: red');
-			id = lastElement.getAttribute('id');
-			alert('id:'+ id);
-			//$("#"+id).hide();
-			lastElement.innerHTML = "";
-		  }
+			  avatarElement = document.createElement('img');
+			  avatarElement.setAttribute('src', '/static/images/noavatar.png');
+			  avatarElement.setAttribute('class', 'avatar');
 
-	 }catch(e){
+			  containerAvatar.appendChild(avatarElement);
+			  container.setAttribute('class', 'streamcontent');
+			  container.setAttribute('id', id);
+			  anchor = document.createElement('a');
+			  anchor.innerHTML = title;
+			  anchor.href = link;
+
+			  container.appendChild(containerAvatar);
+			  container.appendChild(anchor);
+			  container.appendChild(document.createElement('br'));
+			  contentParagraph = document.createElement('p');
+			  contentParagraph.innerHTML = dateUpdated;
+			  container.appendChild(contentParagraph);
+			  container.appendChild(document.createElement('br'));
+			  container.appendChild(document.createElement('br'));
+			  div.insertBefore(container, div.firstChild);
+			  $("#"+id).hide();
+			  $("#"+id).show('blind');
+			  if (sElements.length > maxElementsInStream ){
+				  //alert('removing element');
+				  lastElement = sElements.get(-1); 
+				  last_id = lastElement.getAttribute('id');
+				  //alert('id:'+ id);
+				  $("#"+last_id).hide();
+				  div.removeChild(lastElement)
+			  }
+		}
+
+        }catch(e){
 		alert("while adding new element :" +e);
-	 }
-        }
+	}
       }
 	function sendinvite(){
 		if( !window.XMLHttpRequest ) XMLHttpRequest = function()

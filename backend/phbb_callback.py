@@ -1,4 +1,4 @@
-import logging, datetime, os, urllib2, urllib, Queue
+import logging, datetime ,os, urllib2, urllib, Queue
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api import xmpp
@@ -44,8 +44,10 @@ class CallbackHandler(webapp.RequestHandler):
 			logging.info('domain : %s' % domain)
 			#logging.info('callback title: %s link:%s domain: %s ' % ( title, link, domain))
 			#new_updates.put(update)
+			#message = Message( title = title, link = link , domain = domain)
 			message = Message( title = title, link = link , domain = domain)
-			boadcaster.send_message(update)
+			messageAsJSON = [{'u':{'id':update.id, 't':update.title,'l':update.link,'d':update.domain,'u':update.updated}}]
+			boadcaster.send_message(messageAsJSON)
 			xmpp_handler.send_message(subscribers, message)
 			#xmpp.send_message(subscribers, message)
 class RealTimeUpdateHandler(webapp.RequestHandler):
