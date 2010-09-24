@@ -10,6 +10,28 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 html { font-size:100%; height:100%; margin-bottom:1px; }
 body { repeat fixed 0 0; color:#3a3a3a; font-family:Helvetica, Arial, sans-serif; font-size:14px; line-height:1; }
 ol, ul { list-style:none; }
+li.socail_media{
+	-moz-background-clip:border;
+	-moz-background-origin:padding;
+	-moz-background-size:auto auto;
+	background-attachment:scroll;
+	background-color:#EEEEEE;
+	background-image:none;
+	background-position:0 0;
+	background-repeat:repeat;
+	color:#8B8B8B;
+	font-size:14px;
+	font-weight:bold;
+	height:40px;
+	line-height:2.7em;
+	margin-bottom:11px;
+	margin-left:0;
+	margin-right:0;
+	margin-top:10px;
+	text-align:center;
+	width:270px;
+}
+.socail_media img { width: 40px; height: 40px; }
 table { border-collapse:separate; border-spacing:0; }
 caption, th, td { font-weight:400; text-align:left; }
 blockquote:before, blockquote:after, q:before, q:after { content:""; }
@@ -107,6 +129,8 @@ form input[type="checkbox"], form input[type="radio"] { background:none; border:
 /* Grid >> Global
 ----------------------------------------------------------------------------------------------------*/
 .grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12, .grid_13, .grid_14, .grid_15, .grid_16, .grid_17, .grid_18, .grid_19, .grid_20, .grid_21, .grid_22, .grid_23, .grid_24 { display:inline; float:left; margin-left:5px; margin-right:5px; position:relative; }
+.sideBar { display:inline; float:left; margin-left:5px; margin-right:5px; position:relative; }
+
 /* Grid >> Children (Alpha ~ First, Omega ~ Last)
 ----------------------------------------------------------------------------------------------------*/
 .alpha { margin-left:0; }
@@ -118,6 +142,7 @@ form input[type="checkbox"], form input[type="radio"] { background:none; border:
 .container_24 .grid_3 { width:110px; }
 .container_24 .grid_4 { width:150px; }
 .container_24 .grid_5 { width:190px; }
+.container_24 .sidebar { width:230px; }
 .container_24 .grid_6 { width:230px; }
 .container_24 .grid_7 { width:270px; }
 .container_24 .grid_8 { width:310px; }

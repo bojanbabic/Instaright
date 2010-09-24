@@ -1,205 +1,258 @@
 <html>
-<head>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
-    <script src='/_ah/channel/jsapi'></script>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <title>Instaright Realtime Stream</title>
-    
-</head>
-  <body>
-    <script type="text/javascript" charset="utf-8">
-	var channel_id= '{{ channel_id }}';
-	var channel = new goog.appengine.Channel(channel_id);
-	var socket = channel.open();
-	socket.onopen = function(){
-		//alert('connected');
-	}
-	socket.onmessage = function(evt){
-		//alert('on message');
-		try{
-		stream = document.getElementById('stream');
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
+		<script src='/_ah/channel/jsapi'></script>
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+		<title>Instaright Realtime Stream</title>
+
+	</head>
+	<body>
+		<script type="text/javascript" charset="utf-8">
+			if( !window.XMLHttpRequest ) XMLHttpRequest = function()
+{
+	try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
+	try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
+	try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
+	try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
+	throw new Error("Could not find an XMLHttpRequest alternative.")
+};
+var channel_id= '{{ channel_id }}';
+var channel = new goog.appengine.Channel(channel_id);
+var socket = channel.open();
+socket.onopen = function(){
+	//alert('connected');
+}
+socket.onmessage = function(evt){
+	alert('on message');
+	try{
 		//alert('evt data:' + evt.data);
 		feed_json_update = JSON.parse(evt.data);
 		//alert(feed_json_update);
 		updateDisplayEntry(feed_json_update, stream);
-		} catch(e){
-			//alert('eee:'+e);
-		} 
-	};
+	} catch(e){
+		//alert('eee:'+e);
+	} 
+};
 
-      // NOTE: we are using channel API instead of version v2 of the Feed API
-      google.load('feeds', '1');
-      // Set a callback to load your code when the page loads.
-      google.setOnLoadCallback(init);
+// NOTE: we are using channel API instead of version v2 of the Feed API
+google.load('feeds', '1');
+// Set a callback to load your code when the page loads.
+google.setOnLoadCallback(init);
 
-      // Create variables to display subscription options using HTML DIVs
-      var stream;
+// Create variables to display subscription options using HTML DIVs
 
-      // Initialize the API.
-      var feed;
+var stream = document.getElementById('stream');
 
-      function init(){
-	
+// Initialize the API.
+var feed;
+
+function init(){
+	feed = new google.feeds.Feed('http://instaright.appspot.com/feed');
+	feed.setNumEntries(10);
+	// Enable subscriptions to the feed.
+	feed.load(entryLoaded);
+
+}
+function entryLoaded(response) {
+	displayEntry(response);
+}
+
+function displayEntry(response) {
+	feed = response.feed;
+	div = document.getElementById('stream');
+	var entries = feed.entries;
+	entries = entries.reverse();
+	for (var i = 0; i < entries.length; i++) {
+
+		var entry = entries[i];
+		var title = entry.title;
+		var link = entry.link;
+		var dateUpdated = new Date(entry.publishedDate);
+		var container = document.createElement('div');
+		container.setAttribute('class', 'streamcontent');
+		containerAvatar = document.createElement('div');
+
+
+		avatarElement = document.createElement('img');
+		avatarElement.setAttribute('src', '/static/images/noavatar.png');
+		avatarElement.setAttribute('class', 'avatar');
+
+		containerAvatar.appendChild(avatarElement);
+		container.appendChild(containerAvatar);
+		var anchor = document.createElement('a');
+		anchor.innerHTML = title;
+		anchor.href = link;
+		container.appendChild(anchor);
+		container.appendChild(document.createElement('br'));
+		var contentParagraph = document.createElement('p');
+		contentParagraph.innerHTML = dateUpdated;
+		container.appendChild(contentParagraph);
+		container.appendChild(document.createElement('br'));
+		container.appendChild(document.createElement('br'));
+		div.insertBefore(container, div.firstChild);
 	}
+}
 
-      function updateDisplayEntry(response, div) {
-	  try{
-		  maxElementsInStream = 2;
-		  sElements = $("#stream").children();
-		  //alert('length:' + response.length);
-		  for (i = 0; i < response.length; i++) {
-			  e = response[i]['u'];
-			  title = e['t'];
-			  link = e['l'];
-			  dateUpdated = new Date(e['u']);
-			  id = e['id'];
+function updateDisplayEntry(response, div) {
+	try{
+		maxElementsInStream = 2;
+		sElements = $("#stream").children();
+		//alert('length:' + response.length);
+		for (i = 0; i < response.length; i++) {
+			e = response[i]['u'];
+			title = e['t'];
+			link = e['l'];
+			dateUpdated = new Date(e['u']);
+			id = e['id'];
 
-			  container = document.createElement('div');
-			  containerAvatar = document.createElement('div');
+			container = document.createElement('div');
+			containerAvatar = document.createElement('div');
 
 
-			  avatarElement = document.createElement('img');
-			  avatarElement.setAttribute('src', '/static/images/noavatar.png');
-			  avatarElement.setAttribute('class', 'avatar');
+			avatarElement = document.createElement('img');
+			avatarElement.setAttribute('src', '/static/images/noavatar.png');
+			avatarElement.setAttribute('class', 'avatar');
 
-			  containerAvatar.appendChild(avatarElement);
-			  container.setAttribute('class', 'streamcontent');
-			  container.setAttribute('id', id);
-			  anchor = document.createElement('a');
-			  anchor.innerHTML = title;
-			  anchor.href = link;
+			containerAvatar.appendChild(avatarElement);
+			container.setAttribute('class', 'streamcontent');
+			container.setAttribute('id', id);
+			anchor = document.createElement('a');
+			anchor.innerHTML = title;
+			anchor.href = link;
 
-			  container.appendChild(containerAvatar);
-			  container.appendChild(anchor);
-			  container.appendChild(document.createElement('br'));
-			  contentParagraph = document.createElement('p');
-			  contentParagraph.innerHTML = dateUpdated;
-			  container.appendChild(contentParagraph);
-			  container.appendChild(document.createElement('br'));
-			  container.appendChild(document.createElement('br'));
-			  div.insertBefore(container, div.firstChild);
-			  $("#"+id).hide();
-			  $("#"+id).show('blind');
-			  if (sElements.length > maxElementsInStream ){
-				  //alert('removing element');
-				  lastElement = sElements.get(-1); 
-				  last_id = lastElement.getAttribute('id');
-				  //alert('id:'+ id);
-				  $("#"+last_id).hide();
-				  div.removeChild(lastElement)
-			  }
+			container.appendChild(containerAvatar);
+			container.appendChild(anchor);
+			container.appendChild(document.createElement('br'));
+			contentParagraph = document.createElement('p');
+			contentParagraph.innerHTML = dateUpdated;
+			container.appendChild(contentParagraph);
+			container.appendChild(document.createElement('br'));
+			container.appendChild(document.createElement('br'));
+			div.insertBefore(container, div.firstChild);
+			$("#"+id).hide();
+			$("#"+id).show('blind');
+			if (sElements.length > maxElementsInStream ){
+				//alert('removing element');
+				lastElement = sElements.get(-1); 
+				last_id = lastElement.getAttribute('id');
+				//alert('id:'+ id);
+				$("#"+last_id).hide();
+				div.removeChild(lastElement)
+			}
 		}
 
-        }catch(e){
+	}catch(e){
 		alert("while adding new element :" +e);
 	}
-      }
-	function sendinvite(){
-		if( !window.XMLHttpRequest ) XMLHttpRequest = function()
-		{
-			try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
-			try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
-			try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
-			try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
-			throw new Error("Could not find an XMLHttpRequest alternative.")
-		};
-		try{
-			invite_mail = document.getElementById("invite_mail");
-			url = "/send_invite";
-			req = XMLHttpRequest();
-			req.open('POST', url);
-			req.send(invite_mail.value);
-			req.onreadystatechange =  function(){
-				if ( req.readyState == 4 && req.status == 200){
-					try{
-						done_paragraph = document.createElement('p');
-						done_paragraph.innerHTML = req.responseText;	
-						appendTo = document.getElementById('submitImg');
-						appendTo.appendChild(done_paragraph);
-					}catch(e){
-							alert('e:'+e);
-						}
+}
+function sendinvite(){
+	try{
+		invite_mail = document.getElementById("invite_mail");
+		url = "/send_invite";
+		req = XMLHttpRequest();
+		req.open('POST', url);
+		req.send(invite_mail.value);
+		req.onreadystatechange =  function(){
+			if ( req.readyState == 4 && req.status == 200){
+				try{
+					done_paragraph = document.createElement('p');
+					done_paragraph.innerHTML = req.responseText;	
+					appendTo = document.getElementById('submitImg');
+					appendTo.appendChild(done_paragraph);
+				}catch(e){
+					alert('e:'+e);
 				}
 			}
-		} catch(e){
-			alert('e:'+e);
 		}
-		
+	} catch(e){
+		alert('e:'+e);
 	}
-    </script>
+
+}
+</script>
 
 
 <div id="header" class="container_24">
 	<div>
-            <ul> 
-		{% if user %}
-                <li>Hi {{ user }}</li>
-		{% else %}
-                <li><a id="btn_login" href="{{ login_url }}" title="Login">introduce yourself</a></li>
-		{% endif %}
-		
-            </ul>
-        </div>
+		<ul> 
+			{% if user %}
+			<li>Hi {{ user }}</li>
+			{% else %}
+			<li><a id="btn_login" href="{{ login_url }}" title="Login">introduce yourself</a></li>
+			{% endif %}
+
+		</ul>
+	</div>
 </div>
 <div class="wrapper"> 
-<div id="logo_bar"> 
-    <div id="header" class="container_24"> 
-        <!--div class="grid_7 alpha"--> 
-            <h1 id="logo"><a href="/" title="Instaright">Instaright</a></h1> 
-        <!--/div--> 
-    </div> 
-</div> 
-<div class="clear"></div> 
-<div id="content" class="container_24"> 
-    <div id="left_col" class="grid_18"> 
-        
-        <div class="left_box_top"> 
-            <h2 class="round_title"> 
-                <span>Instaright Stream</span> 
-            </h2> 
-        </div> 
-        
-        <div class="left_box_mid"> 
-	<style> 
-	#streammap{
-    		border:8px solid #FFFFFF;
-  		height:230px;
-    		margin:0px 0px 10px 0px;
-    		width:660px;
-	}
-	.scan, .streamcontent {
-    		-moz-border-radius:15px;
-    		border:1px solid #ADA699;
-    		clear:both;
-    		display:block;
-    		margin:10px 0px 10px 0px;
-    		padding:10px;
-    		text-decoration:none;
-	}
-	</style>
-        <div id="stream"></div>
-       	</div>
-	<div class="left_box_bot"></div> 
-   </div>
-   <div id="right_col" class="grid_6">
-	<input type="text" id="invite_mail">
-	<img link="/static/submit.ico" onclick="sendinvite();" id="submitImg"/>
-   </div>
+	<div id="logo_bar"> 
+		<div id="header" class="container_24"> 
+			<!--div class="grid_7 alpha"--> 
+			<h1 id="logo"><a href="/" title="Instaright">Instaright</a></h1> 
+		</div> 
+	</div> 
+	<div id="content" class="container_24"> 
+		<div id="left_col" class="grid_18"> 
+			<div class="left_box_top"> 
+				<h2 class="round_title"> 
+					<span>Instaright Stream</span> 
+				</h2> 
+			</div> 
+			<div class="left_box_mid"> 
+				<style> 
+					#streammap{
+						border:8px solid #FFFFFF;
+						height:230px;
+						margin:0px 0px 10px 0px;
+						width:660px;
+					}
+					.scan, .streamcontent {
+						-moz-border-radius:15px;
+						border:1px solid #ADA699;
+						clear:both;
+						display:block;
+						margin:10px 0px 10px 0px;
+						padding:10px;
+						text-decoration:none;
+					}
+				</style>
+				<div id="stream"></div>
+			</div>
+			<div class="left_box_bot"></div> 
+		</div>
+		<div id="right_col" class="grid_6">
+			<div id="right_box_top">
+			</div>
+			<div id="right_box_mid">
+				<ul>
+					<li id="socail_media">
+						<input type="text" id="invite_mail" />
+						<img link="/static/submit.ico" onclick="sendinvite();" id="submitImg"/>
+					</li>
+					<li class="socail_media"><img align="left" src="/static/images/twitter.png"/><a href="http://instaright">Twitter</a></li>
+					<li class="socail_media"><img align="left" src="/static/images/facebook.png"/><a href="http://instaright">Facebook Fan</a></li>
+					<li class="socail_media">Blog</li>
+					<li class="socail_media"><img align="left" src="/static/images/messenger.png"/><img align="left" src="/static/images/gtalk.png"/>XMPP Updates</li>
+				</ul>
+			</div>
+			<div id="right_box_bot">
+
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div> 
+	<div class="push"></div> 
 </div>
-<div class="clear"></div> 
-</div>
-<div class="push"></div> 
-</div> 
 <div class="clearfix"></div> 
 </div>
- 
+
 <div id="foot_wrap" style="margin-top:100px;">  
-<div id="foot" class="container_24"> 
+	<div id="foot" class="container_24"> 
+	</div>
+	<div class="clear"></div> 
 </div>
-<div class="clear"></div> 
-</div>
-  </body>
+</body>
 </html>
