@@ -60,12 +60,19 @@ class ArticleHandler(webapp.RequestHandler):
 		path = os.path.join(os.path.dirname(__file__), 'templates/article.html')
 		self.response.out.write(template.render(path, template_variables))
 
+class BlogLoader(webapp.RequestHandler):
+	def get(self):
+		template_variables=[]
+		path = os.path.join(os.path.dirname(__file__), 'templates/blog.html')
+		self.response.out.write(template.render(path, template_variables))
+
 		
 application = webapp.WSGIApplication(
                                      [
                                      	('/article/(.*)', ArticleHandler),
                                      	#('/feed', AtomGenerator)
-                                     	('/feed', FeedGenerator)
+                                     	('/feed', FeedGenerator),
+                                     	('/blog', BlogLoader)
                                      	#('/feed', FeedHandler)
 				     ],
                                      debug=True)
