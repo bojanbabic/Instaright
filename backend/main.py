@@ -149,19 +149,7 @@ class Logging(webapp.RequestHandler):
 				pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
 			except:
 				e0, e = sys.exc_info()[0], sys.exc_info()[1]
-				logging.error('Error while triggering pshb update: %s %s' % (e0, e))
-				
-			
-			# TODO delete after testing
-			#entries = [model]
-			#template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
-			#path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
-			#feed = template.render(path,template_variables)
-			#bm = BroadcastMessage()
-			#bm.send_message(feed)
-			#logging.info('send messages')
-			# till here !!!!
-			#bm.send_message(model.to_xml())
+                                logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
 		except:
 			e0,e = sys.exc_info()[0],  sys.exc_info()[1]
 			logging.error('Error while handling request %s %s' % (e0, e))
@@ -178,15 +166,78 @@ class Logging(webapp.RequestHandler):
 		return self.response.out.write(1)
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):
-		args=simplejson.loads(self.request.body)
-		error=args[0]
-		logging.error('Error caught within extension:' %error)
-		return self.response.out.write(1)
+                try:
+        		args=simplejson.loads(self.request.body)
+        		error=args[0]
+        		logging.error('Error caught within extension:' %error)
+        		return self.response.out.write(1)
+                except:
+                        e,e0 = sys.exc_info()[0], sys.exc_info()[1]
+                        logging.error('weird:ERROR while hadling ERROR for %s: ' % self.request.body)
+
 
 class Redirect(webapp.RequestHandler):
 	def get(self):
 		url = 'http://bojanbabic.blogspot.com'
 		return self.response.out.write('<script language="javascript">top.location.href="' + url + '"</script>')
+
+class IndexHandlerVar1(webapp.RequestHandler):
+	def get(self):
+		user = users.get_current_user()
+		uuid_cookie = self.request.cookies.get('user_uuid')
+		if uuid_cookie:
+			#Connect uuid with registered user
+			logging.info('reusing uuid: %s' % uuid_cookie)
+			user_uuid = uuid_cookie
+			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
+			userSession.user = user
+			userSession.put()
+		else:
+			user_uuid = uuid.uuid4()
+			logging.info('generated uuid: %s' % user_uuid)
+			self.response.headers.add_header('Set-Cookie', 'uuid=%s' %user_uuid)
+			userSession = UserSessionFE()
+			userSession.user = user
+			userSession.user_uuid = str(user_uuid)
+			userSession.active=True
+			userSession.put()
+		userMessager = UserMessager(str(user_uuid))
+		channel_id = userMessager.create_channel()
+		login_url = users.create_login_url('/index_1.html')	
+		template_variables = []
+		template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id}
+		path= os.path.join(os.path.dirname(__file__), 'index_1.html')
+		
+		self.response.out.write(template.render(path,template_variables))
+
+class IndexHandlerVar2(webapp.RequestHandler):
+	def get(self):
+		user = users.get_current_user()
+		uuid_cookie = self.request.cookies.get('user_uuid')
+		if uuid_cookie:
+			#Connect uuid with registered user
+			logging.info('reusing uuid: %s' % uuid_cookie)
+			user_uuid = uuid_cookie
+			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
+			userSession.user = user
+			userSession.put()
+		else:
+			user_uuid = uuid.uuid4()
+			logging.info('generated uuid: %s' % user_uuid)
+			self.response.headers.add_header('Set-Cookie', 'uuid=%s' %user_uuid)
+			userSession = UserSessionFE()
+			userSession.user = user
+			userSession.user_uuid = str(user_uuid)
+			userSession.active=True
+			userSession.put()
+		userMessager = UserMessager(str(user_uuid))
+		channel_id = userMessager.create_channel()
+		login_url = users.create_login_url('/index_2.html')	
+		template_variables = []
+		template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id}
+		path= os.path.join(os.path.dirname(__file__), 'index_2.html')
+		
+		self.response.out.write(template.render(path,template_variables))
 
 class IndexHandler(webapp.RequestHandler):
 	def get(self):
@@ -228,6 +279,8 @@ application = webapp.WSGIApplication(
                                      ('/error', ErrorHandling),
                                      #('/', Redirect),
                                      ('/', IndexHandler),
+                                     ('/index_1.html', IndexHandlerVar1),
+                                     ('/index_2.html', IndexHandlerVar2),
                                      ('/v1', IndexHandlerV1),
 				     ],
                                      debug=True)

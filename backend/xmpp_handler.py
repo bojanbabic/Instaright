@@ -1,13 +1,15 @@
-import wsgiref.handlers, sys, logging, datetime
+import wsgiref.handlers, sys, logging, datetime, os
 from google.appengine.api import xmpp
 from google.appengine.api import memcache
+from google.appengine.api import mail
 from google.appengine.ext import db
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import xmpp_handlers
 
 from cron import WeeklyDomainStats
-from models import Subscription
+from models import Subscription,IMInvite
 from utils import StatsUtil
 
 		
@@ -97,7 +99,10 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 		message.reply(msg)
 		
 	def text_message(self, message=None):
-		message.reply('Hello')
+                if message.arg.startswith(' '):
+                        message.replay('If you are typing command you have trailing space. Try again without space at begining of command.')
+                        return
+                message.reply('This bot supports commands. All commands start with / ( slash ).\nFor instance try:/help ')
 	def cacheTopWeeklyDomains(self, weekly_stats):
 		memcache_top_domains_key = 'latest_top_domains'
 		top_domains_cache = memcache.get(memcache_top_domains_key)
@@ -126,10 +131,37 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 
 class XMPPUserHandler(webapp.RequestHandler):
 	def post(self):
-		user_mail = self.request.body
-		logging.info('sending invite to: %s' % user_mail)
-		xmpp.send_invite(user_mail)
-		self.response.out.write('success')
+		user_jid = self.request.body
+		template_variables = []
+		path= os.path.join(os.path.dirname(__file__), 'templates/send_invite.html')
+                if user_jid is None or user_jid == '':
+		        template_variables = {'success_code':'need to provide jid'}
+		        self.response.out.write(template.render(path,template_variables))
+                        return
+		logging.info('sending invite to: %s' % user_jid )
+                msg = "Welcome to instaright@appspot.com. You can track domains that are of your interest. \n\nFor more info type:\n/help"
+                #TODO what about other protocols ?
+                im = db.IM('xmpp',user_jid)
+		xmpp.send_invite(user_jid)
+                status_code = xmpp.send_message(im.address, msg)
+                if status_code == xmpp.INVALID_JID or status_code == xmpp.OTHER_ERROR:
+		        template_variables = {'success_code':'error occured while sending xmpp message'}
+		        self.response.out.write(template.render(path,template_variables))
+                        return
+                chat_send = ( status_code != xmpp.NO_ERROR)
+                if not chat_send:
+                        mail.send_mail(sender="Instapaper Firefox Addon<gbabun@gmail.com>",to=user_jid,subject="Instaright over XMPP",
+                                        body=msg)
+                        logging.info('mail has been sent instead of welcome message')
+                logging.info('----%s----' % status_code)
+                invite = IMInvite()
+                invite.im=user_jid
+                invite.subscribed = False
+                invite.put()
+		template_variables = {'success_code':'success'}
+		self.response.out.write(template.render(path,template_variables))
+        def get(self):
+                        self.post();
 
 application = webapp.WSGIApplication([
 			('/_ah/xmpp/message/chat/', XMPPHandler),

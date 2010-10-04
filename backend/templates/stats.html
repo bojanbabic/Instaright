@@ -1,219 +1,204 @@
 <!--
-  Copyright (c) 2009 Google Inc.
+Copyright (c) 2009 Google Inc.
 
-  You are free to copy and use this sample.
-  License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
+You are free to copy and use this sample.
+License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
 -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>Instaright Dashboard</title>
-<link rel="stylesheet" href="/css/stats.css" type="text/css"/>
-<link rel="alternate" href="#" type="application/atom+xml" title="Instaright Dashboard"/>
-<head>
-<script>
-// Handy "macro"
-function $(id){
-	return document.getElementById(id);
-}
-function clearElement(element){
-	$(element).innerHTML= "";
-		}
-function setElementValue(element, value){
-	$(element).innerHTML = value;
-}
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Instaright Dashboard</title>
+        <link rel="stylesheet" href="/css/stats.css" type="text/css"/>
+        <link rel="alternate" href="#" type="application/atom+xml" title="Instaright Dashboard"/>
+        <head>
+                <script>
+                        // Handy "macro"
+                        function $(id){
+                                return document.getElementById(id);
+                        }
+                        function clearElement(element){
+                                $(element).innerHTML= "";
+                        }
+                        function setElementValue(element, value){
+                                $(element).innerHTML = value;
+                        }
 
-// Client function that calls a server rpc and provides a callback
-function doMatchTargetDomain(type, statsForDate) {
-	$('visualisation').innerHTML = "";
-	//onSuccess(	drawVisualization(type, statsForDate));
-    	}
+                        // Client function that calls a server rpc and provides a callback
+                        function doMatchTargetDomain(type, statsForDate) {
+                                $('visualisation').innerHTML = "";
+                                //onSuccess(	drawVisualization(type, statsForDate));
+                        }
 
-// Callback for after a successful doAdd
-function onSuccess(response) {
-	$('visualization').innerHTML= response;
-}
-</script>
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">
-	google.load('visualization', '1', {packages: ['imagechart']});
-	google.load('jquery', '1.4.2');
-</script>
-<script type="text/javascript">
-function drawVisualization(type, statsForDate) {
-	var options = {};
-	clearElement('visualization');
-	clearElement('statsHeader');
-	if (!statsForDate){
-		statsForDate = "{{ dailyStats.0 }}";
-	}
-	staticurl = '/visual?type=';
-	if (!type){
-		typeString = 'dailyfeed';
-		typeLabel="Daily stats for "+statsForDate;
-		dataurl = staticurl + typeString + '&date=' + statsForDate;
-	}
-	else if (type == 1){
-		typeString = 'weeklyfeed';
-		typeLabel="Week stats for "+statsForDate;
-		dataurl = staticurl + typeString + '&date=' + statsForDate;
-	}
-	else if (type == 2){
-		typeString = 'dailyfeed';
-		typeLabel="Daily stats for "+statsForDate;
-		dataurl = staticurl + typeString + '&date=' + statsForDate;
-	} 
-	else if (type == 3){
-		typeString = 'linkvolume';
-		typeLabel="Daily Link Volume";
-		dataurl = staticurl + typeString;
-	}
-	else if (type == 4){
-		typeString = 'countryFeed';
-		typeLabel="Most Instaright! Countries";
-		dataurl = staticurl + typeString;
-	}
-	else if (type == 5){
-		typeString = 'cityFeed';
-		typeLabel="Most Instaright! Cities";
-		dataurl = staticurl + typeString;
-	}
-	else {
-		typeString = 'dailyfeed';
-		typeLabel="Daily stats for "+statsForDate;
-		dataurl = staticurl + typeString + '&date=' + statsForDate;
-	} 
-	//alert(typeLabel);
-	setElementValue('statsHeader',typeLabel);
-	//typeString = 'weeklyfeed'
-	//alert(dataurl);
+                        // Callback for after a successful doAdd
+                        function onSuccess(response) {
+                                $('visualization').innerHTML= response;
+                        }
+                </script>
+                <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+                <script type="text/javascript">
+                        google.load('visualization', '1', {packages: ['imagechart']});
+                        google.load('jquery', '1.4.2');
+                </script>
+                <script type="text/javascript">
+                        function drawVisualization(type, statsForDate) {
+                                var options = {};
+                                clearElement('visualization');
+                                clearElement('statsHeader');
+                                if (!statsForDate){
+                                        statsForDate = "{{ dailyStats.0 }}";
+                                }
+                                staticurl = '/visual?type=';
+                                if (!type){
+                                        typeString = 'dailyfeed';
+                                        typeLabel="Daily stats for "+statsForDate;
+                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
+                                }
+                                else if (type == 1){
+                                        typeString = 'weeklyfeed';
+                                        typeLabel="Week stats for "+statsForDate;
+                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
+                                }
+                                else if (type == 2){
+                                        typeString = 'dailyfeed';
+                                        typeLabel="Daily stats for "+statsForDate;
+                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
+                                } 
+                                else if (type == 3){
+                                        typeString = 'linkvolume';
+                                        typeLabel="Daily Link Volume";
+                                        dataurl = staticurl + typeString;
+                                }
+                                else if (type == 4){
+                                        typeString = 'countryFeed';
+                                        typeLabel="Most Instaright! Countries";
+                                        dataurl = staticurl + typeString;
+                                }
+                                else if (type == 5){
+                                        typeString = 'cityFeed';
+                                        typeLabel="Most Instaright! Cities";
+                                        dataurl = staticurl + typeString;
+                                }
+                                else {
+                                        typeString = 'dailyfeed';
+                                        typeLabel="Daily stats for "+statsForDate;
+                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
+                                } 
+                                //alert(typeLabel);
+                                setElementValue('statsHeader',typeLabel);
+                                //typeString = 'weeklyfeed'
+                                //alert(dataurl);
 
-	// 'bhg' is a horizontal grouped bar chart in the Google Chart API.
-	// The grouping is irrelevant here since there is only one numeric column.
-	options.cht = 'bhg'; 
+                                // 'bhg' is a horizontal grouped bar chart in the Google Chart API.
+                                // The grouping is irrelevant here since there is only one numeric column.
+                                options.cht = 'bhg'; 
 
-	// Draw labels in pink.
-	var color = 'ff3399';
+                                // Draw labels in pink.
+                                var color = 'ff3399';
 
-	// Google Chart API needs to know which column to draw the labels on.
-	// Here we have one labels column and one data column.
-	// The Chart API doesn't see the label column.  From its point of view,
-	// the data column is column 0.
-	var index = 0;
+                                // Google Chart API needs to know which column to draw the labels on.
+                                // Here we have one labels column and one data column.
+                                // The Chart API doesn't see the label column.  From its point of view,
+                                // the data column is column 0.
+                                var index = 0;
 
-	// -1 tells Google Chart API to draw a label on all bars.
-	var allbars = -1;
+                                // -1 tells Google Chart API to draw a label on all bars.
+                                var allbars = -1;
 
-	// 10 pixels font size for the labels.
-	var fontSize = 10;
+                                // 10 pixels font size for the labels.
+                                var fontSize = 10;
 
-	// Priority is not so important here, but Google Chart API requires it.
-	var priority = 0;
+                                // Priority is not so important here, but Google Chart API requires it.
+                                var priority = 0;
 
-	var height = 450;
-	var weight = 500;
-	try{
+                                var height = 450;
+                                var weight = 500;
+                                try{
 
-		options.chm = [color, index, allbars, fontSize, priority].join(',');
+                                        options.chm = [color, index, allbars, fontSize, priority].join(',');
 
-        new google.visualization.Query(dataurl).send(
-           function(response){
-				//alert("response dat:"+response.getDataTable());
-             new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
-           });
-	} catch(e){
-		alert(e);
-	}
-       
-      }
+                                        new google.visualization.Query(dataurl).send(
+                                                        function(response){
+                                                        //alert("response dat:"+response.getDataTable());
+                                                        new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
+                                                        });
+                                } catch(e){
+                                        alert(e);
+                                }
 
-      google.setOnLoadCallback(drawVisualization);
-      google.load(drawVisualization);
-</script>
-<script type="text/javascript">
+                        }
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9005862-5']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
+google.setOnLoadCallback(drawVisualization);
+google.load(drawVisualization);
 </script>
 <script type="text/javascript">
-	$(document).ready(function()
-	{
-	$(".menu_body").hide();
-	$(".menu_body_daily").show();
-	$(".menu_header").click(function(){
-		$(this).next(".menu_body").slideToggle(100);
-		$(this).next(".menu_body_daily").slideToggle(100);
-	});	
-	});
-</script>
-</head>
+         $(document).ready(function()
+                         {
+                         $(".menu_body").hide();
+                         $(".menu_body_daily").show();
+                         $(".menu_header").click(function(){
+                                 $(this).next(".menu_body").slideToggle(100);
+                                 $(this).next(".menu_body_daily").slideToggle(100);
+                                 });	
+                         });
+                 </script>
+         </head>
 
-<body>
-<div id="body">
-<div id="header">
-</div>
-<div id="content">
+         <body>
+                 <div id="body">
+                         <div id="content">
 
-	<div id="sidebar">
-		<div class="section">
-			<div class="headline" style=" margin-bottom: 5px"><p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Instapaper Firefox addon</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
-			<div class="menu_list">
-				<p class="menu_header" style=" margin-bottom: 5px;">Domain Stats in last 5 days</p>
-				<p class="menu_body_daily" style=" margin-bottom: 5px;">
-				{% for d in dailyStats %}
-					<a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a><br>
-				{%endfor%}
-				</p>
-				<p class="menu_header" style="margin-bottom: 5px;">Domain Stats in last 5 weeks</p>
-				<p class="menu_body" style=" margin-bottom: 5px;">
-				{% for d in weeklyStats %}
-						<a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
-				{%endfor%}
-				</p>
-				<p class="menu_header" style="margin-bottom: 5px;">Link Volume</p>
-				<p class="menu_body" style=" margin-bottom: 5px;">
-					<a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
-				</p>
-				<p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
-				<p class="menu_body" style=" margin-bottom: 5px;">
-					<a href="#" onclick="drawVisualization(4);" >All The Time</a>
-				</p>
-				<p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
-				<p class="menu_body" style=" margin-bottom: 5px;">
-					<a href="#" onclick="drawVisualization(5);" >All The Time</a>
-				</p>
-			</div>
-		</div>
-	</div>
+                                 <div id="sidebar">
+                                         <div class="section">
+                                                 <div class="headline" style=" margin-bottom: 5px"> p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Instapaper Firefox addon</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
+                                                 <div class="menu_list">
+                                                         <p class="menu_header" style=" margin-bottom: 5px;">Domain Stats in last 5 days</p>
+                                                         <p class="menu_body_daily" style=" margin-bottom: 5px;">
+                                                         {% for d in dailyStats %}
+                                                         <a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a><br>
+                                                         {%endfor%}
+                                                         </p>
+                                                         <p class="menu_header" style="margin-bottom: 5px;">Domain Stats in last 5 weeks</p>
+                                                         <p class="menu_body" style=" margin-bottom: 5px;">
+                                                         {% for d in weeklyStats %}
+                                                         <a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
+                                                         {%endfor%}
+                                                         </p>
+                                                         <p class="menu_header" style="margin-bottom: 5px;">Link Volume</p>
+                                                         <p class="menu_body" style=" margin-bottom: 5px;">
+                                                         <a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
+                                                         </p>
+                                                         <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
+                                                         <p class="menu_body" style=" margin-bottom: 5px;">
+                                                         <a href="#" onclick="drawVisualization(4);" >All The Time</a>
+                                                         </p>
+                                                         <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
+                                                         <p class="menu_body" style=" margin-bottom: 5px;">
+                                                         <a href="#" onclick="drawVisualization(5);" >All The Time</a>
+                                                         </p>
+                                                 </div>
+                                         </div>
+                                 </div>
 
-	<div id="entries">
-		<div class="entry">
-			<h1><a href="#"></a></h1>
-			<div class="body">
-				<div id="statsHeader" ></div>
-    				<div id="visualization" style="width: 400px; height: 400px;"></div>
-			
-			</div>
-		</div>
-	</div>
-</div>
-<div class="footer-container">
-<div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
-<p><a href="mailto:gbabun@gmail.com">contact</a> | <a href="http://twitter.com/bojanbabic">twitter</a> | <a href="http://bojanbabic.blogspot.com">blog</a></p>
-</div>
-</div>
-<!-- closing body div -->
-</div>
+                                 <div id="entries">
+                                         <div class="entry">
+                                                 <h1><a href="#"></a></h1>
+                                                 <div class="body">
+                                                         <div id="statsHeader" ></div>
+                                                         <div id="visualization" style="width: 400px; height: 400px;"></div>
 
-</body>
-</html>
+                                                 </div>
+                                         </div>
+                                 </div>
+                         </div>
+                         <div class="footer-container">
+                                 <div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
+                                         <p><a href="mailto:gbabun@gmail.com">contact</a> | <a href="http://twitter.com/bojanbabic">twitter</a> | <a href="http://bojanbabic.blogspot.com">blog</a></p>
+                                 </div>
+                         </div>
+                         <!-- closing body div -->
+                 </div>
+
+         </body>
+ </html>
 

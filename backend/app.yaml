@@ -1,12 +1,12 @@
 application: instaright
-version: 22
+version: 26
 runtime: python 
 api_version: 1
 
 handlers:
 - url: /cron
   script: cron.py
-#  login: admin
+  login: admin
 
 - url: /scripts
   static_dir: scripts
@@ -16,7 +16,7 @@ handlers:
 
 - url: /remote_api
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
-#  login: admin
+  login: admin
 
 - url: /visual
   script: visualization.py
@@ -32,12 +32,15 @@ handlers:
 
 - url: /delete_stats
   script: stat_management.py
+  login: admin
 
 - url: /stats_task
   script: stat_management.py
+  login: admin
 
 - url: /data_consolidation
   script: data_consolidation.py
+  login: admin
 
 - url: /article/(.*)
   script: articles.py
@@ -50,6 +53,7 @@ handlers:
 
 - url: /memcache_test
   script: cron.py
+  login: admin
 
 - url: /_ah/xmpp/message/chat/
   script: xmpp_handler.py
@@ -59,13 +63,29 @@ handlers:
 
 - url: /test_domains
   script: test_domains.py
+  login: admin
 
 - url: /aggregate_data
   script: data_consolidation.py
+  login: admin
 
 - url: /favicon.ico
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
+
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /blog
+  script: articles.py
+
+- url: /user_consolidation
+  script: data_consolidation.py
+  #login: admin
+
+- url: /user/.*
+  script: users.py
 
 - url: /.*
   script: main.py

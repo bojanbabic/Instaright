@@ -1,0 +1,11 @@
+<html>
+        <head>
+        </head>
+        <body>
+                {% for u in users %}
+                <div>
+                        <a href="/user/{{ u }}" >{{ u }}</a>
+                </div>
+                {% endfor %}
+        </body>
+</html>

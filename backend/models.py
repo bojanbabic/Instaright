@@ -50,3 +50,20 @@ class UserSessionFE(db.Model):
 	user_uuid = db.StringProperty()
 	last_updatetime = db.DateTimeProperty(auto_now_add = True)
 	active = db.BooleanProperty()
+class IMInvite(db.Model):
+        im = db.StringProperty()
+        date = db.DateTimeProperty(auto_now_add = True)
+        subscribed = db.BooleanProperty()
+class UserDetails(db.Model):
+        instapaper_account=db.StringProperty()
+        occupations = db.StringProperty()
+        location= db.StringProperty()
+        facebook_account = db.LinkProperty()
+        linkedin_account = db.LinkProperty()
+        myspace_account = db.LinkProperty()
+        twitter_account = db.LinkProperty()
+        new_hype_account = db.LinkProperty()
+        last_active_date = db.DateTimeProperty()
+        links_added = db.IntegerProperty(default=0)
+        info_updated = db.DateTimeProperty(auto_now_add=True)
+

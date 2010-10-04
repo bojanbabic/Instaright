@@ -28,6 +28,7 @@ class CallbackHandler(webapp.RequestHandler):
 		logging.info('recieved subscription token %s ' % token)
 		self.response.out.write(token)
 	def post(self):
+                #TODO cache responses
 		feed = feedparser.parse(self.request.body)
 		
 		#root = ElementTree.fromstring(data)

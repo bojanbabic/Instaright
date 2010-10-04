@@ -9,7 +9,7 @@ from google.appengine.api.labs import taskqueue
 
 from utils import StatsUtil
 from main import SessionModel
-from models import UserLocationModel, CityStats, CountryStats, LinkStats
+from models import UserLocationModel, CityStats, CountryStats, LinkStats, UserDetails
 class GeneralConsolidation(webapp.RequestHandler):
 	memcache_key = 'domain_update_key'
 	def get(self):
@@ -235,10 +235,73 @@ class AggregateDataHandler(webapp.RequestHandler):
 		else:
 			logging.info('unchanged session' )
 		logging.info('done data aggregation')
-		
+
+class UserDetailsConsolidation(webapp.RequestHandler):
+        def get(self):
+                dt = self.request.get('date' , None)
+                memcache_key='user_details_key'+str(datetime.datetime.today().date())
+                memcache_date='user_details_date'+str(datetime.datetime.today().date())
+                memcache_prev_date='user_details_prev_date'+str(datetime.datetime.today().date())
+                if dt is None:
+                        key = memcache.get(memcache_key)
+                        date = memcache.get(memcache_date)
+                        logging.info('memcache key: %s %s' % (memcache_key, key))
+                        logging.info('memcache key: %s %s' % (memcache_date, date))
+                else:
+                        logging.info('got it from request %s ' %dt)
+			date = datetime.datetime.strptime(dt, '%Y-%m-%d').date() 
+                        key = None
+		path= os.path.join(os.path.dirname(__file__), 'templates/user_consolidation.html')
+                template_variables = []
+                if date is None:
+                        #fist time
+                        logging.info('fist usage')
+                        session = SessionModel.gql('ORDER by date asc, __key__ asc').get()
+                        logging.info('staring from date: %s' % session.date)
+                        if session.date is None:
+			        date = datetime.datetime.strptime('2009-11-15', '%Y-%m-%d').date()
+                                logging.info('rewamping date %s' %date)
+                                session.date = datetime.datetime.strptime('2009-11-15', '%Y-%m-%d')
+                                session.put()
+                                date = session.date
+                elif key is None:
+                        logging.info('new date %s ' % str(date))
+                        #new date
+                        session = SessionModel.gql('WHERE date = :1 ORDER by date asc, __key__ asc', date).get()
+                else:
+                        logging.info('contining from date %s ' % str(date))
+                        session = SessionModel.gql('WHERE __key__ > :1  and date = :2 ORDER by  __key__ asc, date asc ', key, date).get()
+                if session is None:
+                        date = date + datetime.timedelta(days=1)
+                        if date > datetime.datetime.today().date():
+                                logging.info('user details consolidation - finaly done')
+                                memcache.delete(memcache_date)
+                                memcache.delete(memcache_key)
+		                self.response.out.write(template.render(path,template_variables))
+                                return
+                        memcache.set(memcache_date, date)
+                        memcache.delete(memcache_key)
+		        self.response.out.write(template.render(path,template_variables))
+                        return
+                user_detail = UserDetails.gql('WHERE instapaper_account = :1' , session.instaright_account).get()
+                if user_detail is None:
+                        logging.info('new user: %s' % session.instaright_account)
+                        user_detail = UserDetails()
+                        user_detail.instapaper_account = session.instaright_account
+                        user_detail.last_active_date = session.date
+                        user_detail.put()
+                else:
+                        logging.info('updating usage for user: %s' % session.instaright_account)
+                        user_detail.last_active_date = session.date
+                        user_detail.links_added = user_detail.links_added + 1
+                        user_detail.put()
+
+                memcache.set(memcache_key, session.key())
+                memcache.set(memcache_date, date)
+		self.response.out.write(template.render(path,template_variables))
 		
 application = webapp.WSGIApplication(
-                                     [('/data_consolidation',GeneralConsolidation), 
+                                     [('/data_consolidation',GeneralConsolidation), ('/user_consolidation', UserDetailsConsolidation), 
 				      ('/aggregate_data', AggregateDataHandler)],debug=True)
 
 def main():
