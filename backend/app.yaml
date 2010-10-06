@@ -1,5 +1,5 @@
 application: instaright
-version: 26
+version: 27
 runtime: python 
 api_version: 1
 
@@ -83,6 +83,9 @@ handlers:
 - url: /user_consolidation
   script: data_consolidation.py
   #login: admin
+
+- url: /user_consolidation_task
+  script: data_consolidation.py
 
 - url: /user/.*
   script: users.py

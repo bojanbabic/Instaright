@@ -2,3 +2,9 @@ queue:
 - name: default
   rate: 1/m
   bucket_size: 1
+- name: user-info
+  rate: 5000/d
+  bucket_size: 1
+- name: user-consolidation
+  rate: 5/m
+  bucket_size: 1
