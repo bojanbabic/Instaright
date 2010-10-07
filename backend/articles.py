@@ -15,22 +15,23 @@ DOMAIN = 'http://instaright.appspot.com'
 class FeedGenerator(webapp.RequestHandler):
 	def get(self):
                 memcache_key='feed_json_cache'
-                feed_array_cached = memcache.get(memcache_key)
+                cached_feed= memcache.get(memcache_key)
 		format = self.request.get('format', None);
+                if format == 'json' and cached_feed:
+			logging.info('getting json from cache')
+			self.response.headers['Content-Type'] = "application/json"
+			self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':self.getAvatar(o.instaright_account)}}))
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
+		memcache.set(memcache_key, entries)
 		if not entries:
 			self.response.out.write('Nothing here')
 		now = datetime.datetime.now().strftime("%Y-%m-%d\T%H\:%i\:%s\Z")
 		if format is None or format == 'xml':
 			template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
-
 			path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
 			self.response.headers['Content-Type'] = "application/atom+xml"
 			self.response.out.write(template.render(path,template_variables))
 			return
-                if format == 'json' and feed_array_cached is not None:
-			self.response.headers['Content-Type'] = "application/json"
-			self.response.out.write(simplejson.dumps(feed_array_cached, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':self.getAvatar(o.instaright_account)}}))
 		if format == 'json':
 			#for e in entries:
 			#	j = {'u':{'id':e.key, 't':e.date.strftime("%Y-%m-%d\T%H\:%i\:%s\Z"),'d': e.domain, 'l':e.url}}	

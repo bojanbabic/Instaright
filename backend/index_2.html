@@ -55,8 +55,9 @@ socket.onmessage = function(evt){
 // NOTE: we are using channel API instead of version v2 of the Feed API
 google.load('feeds', '1');
 // Set a callback to load your code when the page loads.
-google.setOnLoadCallback(init);
+//google.setOnLoadCallback(init);
 $(document).ready(function(){
+		$.get('/feed?format=json', {}, updateDisplayEntry);
                 $("#jid_result").hide();
                 //$("#invite_jid").focus();
                 //alert('instaright_id:'+com.appspot.model.account);
@@ -164,13 +165,14 @@ function updateDisplayEntry(response, div) {
                         link = e['l'];
                         dateUpdated = new Date(e['u']);
                         id = e['id'];
+			a = e['a'];
 
                         container = document.createElement('div');
                         containerAvatar = document.createElement('div');
 
 
                         avatarElement = document.createElement('img');
-                        avatarElement.setAttribute('src', '/static/images/noavatar.png');
+                        avatarElement.setAttribute('src', a);
                         avatarElement.setAttribute('class', 'avatar');
 
                         containerAvatar.appendChild(avatarElement);
