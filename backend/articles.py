@@ -5,6 +5,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import SessionModel
+from models import UserDetails
 import simplejson
 
 from feedformatter import Feed
@@ -29,16 +30,15 @@ class FeedGenerator(webapp.RequestHandler):
 			return
                 if format == 'json' and feed_array_cached is not None:
 			self.response.headers['Content-Type'] = "application/json"
-			self.response.out.write(simplejson.dumps(feed_array_cached, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ")}}))
+			self.response.out.write(simplejson.dumps(feed_array_cached, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':self.getAvatar(o.instaright_account)}}))
 		if format == 'json':
-			json_output = []
-			for e in entries:
-				j = {'u':{'id':e.key, 't':e.date.strftime("%Y-%m-%d\T%H\:%i\:%s\Z"),'d': e.domain, 'l':e.url}}	
-				json_output.append(j)
-			logging.info('json_output:' % json_output)
-                        memcache.set('feed_as_array',json_output)
+			#for e in entries:
+			#	j = {'u':{'id':e.key, 't':e.date.strftime("%Y-%m-%d\T%H\:%i\:%s\Z"),'d': e.domain, 'l':e.url}}	
+			#	json_output.append(j)
+			#logging.info('json_output:' % json_output)
+                        #memcache.set('feed_as_array',json_output)
 			self.response.headers['Content-Type'] = "application/json"
-			self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ")}}))
+			self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':self.getAvatar(o.instaright_account)}}))
 			return
 
 	def hideUsers(user):
@@ -49,6 +49,18 @@ class FeedGenerator(webapp.RequestHandler):
 		else:
 			endposition = len(user)-1
 		return user.replace(user[1:endposition], 'xxxx')
+	def getAvatar(self, instapaper_account):
+		memcache_key='avatar_'+instapaper_account
+		cached_avatar = memcache.get(memcache_key)
+		if cached_avatar:
+			logging.info('getting avatar from cache')
+			return cached_avatar
+		userDetails = UserDetails.gql('WHERE instapaper_account = :1', instapaper_account).get()
+		if userDetails:
+			memcache.set(memcache_key, userDetails.instapaper_account)
+			return userDetails.instapaper_account
+		else:
+			return '/static/images/noavatar.png'
 		
 			
 class ArticleHandler(webapp.RequestHandler):

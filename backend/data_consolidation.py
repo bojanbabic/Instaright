@@ -237,14 +237,14 @@ class AggregateDataHandler(webapp.RequestHandler):
 		logging.info('done data aggregation')
 
 class UserDetailsConsolidation_batch(webapp.RequestHandler):
-        def post(self):
-
+        def get(self):
                 dt = self.request.get('date' , None)
                 logging.info('date from request %s ' %dt)
                 if dt is None:
-                        logging.info('don\'t have date to continue from. quiting.')
-                        return
-		date = datetime.datetime.strptime(dt, '%Y-%m-%d').date() 
+			date = datetime.datetime.now().date() - datetime.timedelta(days=1)
+                        logging.info('aggregatine users from yesterday.')
+		else:
+			date = datetime.datetime.strptime(dt, '%Y-%m-%d').date() 
                 if date >= datetime.datetime.now().date():
                         logging.info('too early , wait')
                         self.response.out.write('too early . wait')
@@ -286,6 +286,7 @@ class UserDetailsConsolidation_batch(webapp.RequestHandler):
                 logging.info('done for date %s' % str(date))
 		self.response.out.write('done for date %s' %str(date))
 
+#obsolete used one time for overall data aggregation
 class UserDetailsConsolidation_task(webapp.RequestHandler):
         def get(self):
                 date_from = self.request.get('from', None)
@@ -310,7 +311,7 @@ application = webapp.WSGIApplication(
                                              ('/data_consolidation',GeneralConsolidation), 
                                              #('/user_consolidation', UserDetailsConsolidation), 
                                              ('/user_consolidation', UserDetailsConsolidation_batch), 
-                                             ('/user_consolidation_task', UserDetailsConsolidation_task), 
+                                             #('/user_consolidation_task', UserDetailsConsolidation_task), 
 				             ('/aggregate_data', AggregateDataHandler)
                                              ],debug=True)
 

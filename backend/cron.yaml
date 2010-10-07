@@ -14,3 +14,7 @@ cron:
 - description: count stats
   url: /cron?type=count
   schedule: every day 00:30
+
+- description: user aggregations
+  url: /user_consolidation
+  schedule: every day 03:00
