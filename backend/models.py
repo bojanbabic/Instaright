@@ -82,6 +82,7 @@ class UserDetails(db.Model):
         wordpress = db.LinkProperty()
         xmpp_subscription = db.BooleanProperty()
         social_data = db.StringProperty()
+	activated_date = db.DateProperty(auto_now_add=True)
         last_active_date = db.DateTimeProperty()
         links_added = db.IntegerProperty(default=0)
         info_updated = db.DateTimeProperty(auto_now_add=True)

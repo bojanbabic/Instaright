@@ -301,7 +301,7 @@ class UserDetailsConsolidation_task(webapp.RequestHandler):
                         logging.info('from must be less then to ')
                         self.response.out.write('from must be less then to ')
                         return
-                while (d_from < d_to):
+                while (d_from <= d_to):
                         logging.info('adding task: user consolidation for date %s' % str(d_from))
 	                taskqueue.add(queue_name='user-consolidation', url='/user_consolidation', params={'date':d_from})
                         d_from = d_from + datetime.timedelta(days=1)
