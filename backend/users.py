@@ -10,19 +10,35 @@ from google.appengine.ext.webapp import template
 from models import UserDetails
 from main import SessionModel
 class TopUserHandler(webapp.RequestHandler):
-        def get(self):
-                memcache_key = 'top_domains_'+str(datetime.datetime.today().date())
-                usrs = memcache.get(memcache_key)
-                if usrs is not None:
-                        users = usrs
-                else:
-                        users = UserDetails.gql('ORDER by links_added desc').fetch(1800)
-                user_accounts = [ u.instapaper_account for u in users ]
-                memcache.set(memcache_key, users )
-                template_variables = {'users' : user_accounts }
-		path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
-                self.response.headers["Content-type"] = "text/html"
-		self.response.out.write(template.render(path,template_variables))
+        def get(self, stat_range):
+		#try:
+			if '-' in stat_range:
+				low, high = stat_range.split('-')
+			else:
+				low, high = stat_range, None
+       		 	memcache_key = 'top_users_'+str(datetime.datetime.now().date())
+       		        usrs = memcache.get(memcache_key)
+		        if usrs:
+       				users = usrs
+       			elif high:
+				logging.info('lower range %s ; higher range %s' %(low, high))
+				users = UserDetails.gql('WHERE links_added >= :1 and links_added < :2 ORDER by links_added DESC', low, high)
+			else:
+				logging.info('lower range %s ;' %low)
+				users = UserDetails.gql('WHERE links_added >= :1 ORDER by links_added DESC', low)
+	       		user_accounts = [ u.instapaper_account for u in users ]
+			if users.count() > 0:
+				logging.info('setting users cache. % user entries' % users.count())
+        			memcache.set(memcache_key, users )
+                	template_variables = {'users' : user_accounts }
+			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
+        		self.response.headers["Content-type"] = "text/html"
+			self.response.out.write(template.render(path,template_variables))
+		#except:
+		#	e, e0 = sys.exc_info()[0], sys.exc_info()[1]
+		#	logging.error('stats error: %s ; %s' %(e, e))
+		#	self.response.out.write('oups, try something else')
+
 
 class UserHandler(webapp.RequestHandler):
         def get(self, user):
@@ -171,7 +187,7 @@ class UserLinksHandler(webapp.RequestHandler):
                 
 
 app = webapp.WSGIApplication([
-                                ('/user/stats/top', TopUserHandler),
+                                ('/user/stats/top/(.*)', TopUserHandler),
                                 ('/user/delete_all', UserDeleteHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
