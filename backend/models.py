@@ -81,7 +81,7 @@ class UserDetails(db.Model):
         livejournal = db.LinkProperty()
         wordpress = db.LinkProperty()
         xmpp_subscription = db.BooleanProperty()
-        social_data = db.StringProperty()
+        social_data = db.TextProperty()
 	activated_date = db.DateProperty(auto_now_add=True)
         last_active_date = db.DateTimeProperty()
         links_added = db.IntegerProperty(default=0)

@@ -116,22 +116,29 @@ class UserMessager:
 
 class BroadcastMessage:
 	def send_message(self, message):
-		activeUsers = UserSessionFE.gql("WHERE active = True")
+		last_hour = datetime.datetime.now() - user.last_updatetime > datetime.timedelta(hours = 1)
+		taskqueue.add(url='/clean_old_channels')
+		activeUsers = UserSessionFE.gql("WHERE active = True and last_updatetime < :1", last_hour)
 		logging.info('getting all active user channels')
 		for user in activeUsers:
-			if ( datetime.datetime.now() - user.last_updatetime > datetime.timedelta(hours = 1)):
-				logging.info('Deactivating user:  %s' % (user.user_uuid))
-				user.active = False
-				user.put()
-			else:
-				logging.info('sending message to: %s' %user.user_uuid)
-				messager = UserMessager(user.user_uuid)
-				try:
-					messager.send(message)
-				except:
-					e0,e = sys.exc_info()[0], sys.exc_info()[1]
-					logging.info('message was not send due to %s , %s' %(e0, e)) 
+			logging.info('sending message to: %s' %user.user_uuid)
+			messager = UserMessager(user.user_uuid)
+			try:
+				messager.send(message)
+			except:
+				e0,e = sys.exc_info()[0], sys.exc_info()[1]
+				logging.info('message was not send due to %s , %s' %(e0, e)) 
 				
+class ChannelHandler(webapp.RequestHandler):
+	def post(self):
+		last_hour = datetime.datetime.now() - user.last_updatetime > datetime.timedelta(hours = 1)
+		inActiveUsers = UserSessionFE.gql("WHERE active = True and last_updatetime > :1", last_hour)
+		for i in inActiveUsers:
+			logging.info('Deactivating channel:  %s' % (user.user_uuid))
+			user.active = False
+			user.put()
+
+		
 
 class Logging(webapp.RequestHandler):
 	def post(self):
@@ -281,6 +288,7 @@ application = webapp.WSGIApplication(
                                      ('/', IndexHandler),
                                      ('/index_1.html', IndexHandlerVar1),
                                      ('/index_2.html', IndexHandlerVar2),
+                                     ('/deactivate_channels', ChannelHandler),
                                      ('/v1', IndexHandlerV1),
 				     ],
                                      debug=True)

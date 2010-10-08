@@ -49,7 +49,11 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 			message.reply('You have already subscribed for this domain %s. Remember?' % domain)
 			return
 		subscription = Subscription(subscriber = im_from, subscriber_mail = subscriber_mail, domain = domain, activationDate = datetime.datetime.now(), active = True, mute = False)
+		invite = IMInvite.gql('WHERE jid = :1 ', subscriber_mail)
 		subscription.put()
+		if invite:
+			invite.subscribed = True
+			invite.put()
 		message.reply('Subscription added.')
 
 	def mute_command(self, message=None):

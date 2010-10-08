@@ -134,6 +134,27 @@ class UserInfoFetchHandler(webapp.RequestHandler):
 	                logging.info('done fetching info for user %s' % user_decoded)
                 	logging.info('fetching info for user %s' % user)
 
+class UserUpdate(webapp.RequestHandler):
+	def get(self):
+		memcache_key = 'all_users_'+str(datetime.datetime.now().date())
+		cached_users=memcache.get(memcache_key)
+		if cached_users:
+			logging.info('getting users from cache')
+			users = cached_users
+		else:
+			logging.info('getting users from gql')
+			users= UserDetails.all()
+		for u in users:
+			if not '@' in u.instapaper_account:
+				logging.info('skipping %s' % u.instapaper_account)
+				continue
+			memcache_user_key='user_'+u.instapaper_account+'_'+str(datetime.datetime.now().date)
+			if memcache.get(memcache_user_key):
+				logging.info('skipping processed user %s ' % u.instapaper_account)
+			taskqueue.add(queue_name='user-info', url='/user/'+u.instapaper_account+'/fetch/')
+			memcache.set(memcache_user_key, u.key())
+		memcache.delete(memcache_key)
+
 
 class UserLinksHandler(webapp.RequestHandler):
         def get(self, user):
@@ -154,6 +175,7 @@ app = webapp.WSGIApplication([
                                 ('/user/delete_all', UserDeleteHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
+                                ('/user/task/update_all', UserUpdate),
                                 ('/user/(.*)', UserHandler),
                                         ], debug =True)
 def main():
