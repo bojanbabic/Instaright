@@ -64,6 +64,11 @@ indexes:
   - name: date
     direction: desc
 
+- kind: UserSessionFE
+  properties:
+  - name: active
+  - name: last_updatetime
+
 - kind: WeeklyDomainStats
   properties:
   - name: date

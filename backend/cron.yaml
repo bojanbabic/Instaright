@@ -16,5 +16,5 @@ cron:
   schedule: every day 00:30
 
 - description: user aggregations
-  url: /user_consolidation
+  url: /user_consolidation_task
   schedule: every day 03:00

@@ -5,6 +5,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.api import channel 
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
@@ -116,9 +117,9 @@ class UserMessager:
 
 class BroadcastMessage:
 	def send_message(self, message):
-		last_hour = datetime.datetime.now() - user.last_updatetime > datetime.timedelta(hours = 1)
-		taskqueue.add(url='/clean_old_channels')
-		activeUsers = UserSessionFE.gql("WHERE active = True and last_updatetime < :1", last_hour)
+		last_hour = datetime.datetime.now() - datetime.timedelta(hours = 1)
+                taskqueue.add(queue_name='deactivate-channels', url='/deactivate_channels')
+		activeUsers = UserSessionFE.gql("WHERE active = True and last_updatetime > :1", last_hour)
 		logging.info('getting all active user channels')
 		for user in activeUsers:
 			logging.info('sending message to: %s' %user.user_uuid)
@@ -131,12 +132,12 @@ class BroadcastMessage:
 				
 class ChannelHandler(webapp.RequestHandler):
 	def post(self):
-		last_hour = datetime.datetime.now() - user.last_updatetime > datetime.timedelta(hours = 1)
-		inActiveUsers = UserSessionFE.gql("WHERE active = True and last_updatetime > :1", last_hour)
+		last_hour = datetime.datetime.now() - datetime.timedelta(hours = 1)
+		inActiveUsers = UserSessionFE.gql("WHERE active = True and last_updatetime < :1", last_hour)
 		for i in inActiveUsers:
-			logging.info('Deactivating channel:  %s' % (user.user_uuid))
-			user.active = False
-			user.put()
+			logging.info('Deactivating channel:  %s' % (i.user_uuid))
+			i.active = False
+			i.put()
 
 		
 
@@ -284,11 +285,11 @@ class IndexHandlerV1(webapp.RequestHandler):
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
+                                     ('/deactivate_channels', ChannelHandler),
                                      #('/', Redirect),
                                      ('/', IndexHandler),
                                      ('/index_1.html', IndexHandlerVar1),
                                      ('/index_2.html', IndexHandlerVar2),
-                                     ('/deactivate_channels', ChannelHandler),
                                      ('/v1', IndexHandlerV1),
 				     ],
                                      debug=True)

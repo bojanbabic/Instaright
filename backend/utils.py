@@ -1,5 +1,7 @@
-import urlparse, urllib
+import urlparse, urllib,logging
+from google.appengine.api import memcache
 from xml.dom import minidom
+from models import UserDetails
 DOMAIN='http://instaright.appspot.com'
 class StatsUtil():
 	@staticmethod
@@ -42,3 +44,17 @@ class FeedUtil:
 		item["uid"]=str(model.key())
 
 		return item
+class UserUtil:
+        def getAvatar(self,instapaper_account):
+		memcache_key='avatar_'+instapaper_account
+		cached_avatar = memcache.get(memcache_key)
+		if cached_avatar:
+                        logging.info('getting avatar from cache: %s for user %s' %(cached_avatar, instapaper_account))
+			return cached_avatar
+		userDetails = UserDetails.gql('WHERE instapaper_account = :1', instapaper_account).get()
+		if userDetails and userDetails.avatar is not None:
+                        logging.info('%s avatar %s' % (instapaper_account, userDetails.avatar))
+			memcache.set(memcache_key, userDetails.avatar)
+			return userDetails.avatar
+		else:
+			return '/static/images/noavatar.png'

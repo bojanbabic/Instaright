@@ -16,28 +16,33 @@ class TopUserHandler(webapp.RequestHandler):
 				low, high = stat_range.split('-')
 			else:
 				low, high = stat_range, None
-       		 	memcache_key = 'top_users_'+str(datetime.datetime.now().date())
+       		 	memcache_key = 'top_users_'+str(datetime.datetime.now().date())+'_'+stat_range
        		        usrs = memcache.get(memcache_key)
 		        if usrs:
-       				users = usrs
+                	        template_variables = {'users' : usrs }
+        			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
+                    		self.response.headers["Content-type"] = "text/html"
+        			self.response.out.write(template.render(path,template_variables))
+                                return
        			elif high:
 				logging.info('lower range %s ; higher range %s' %(low, high))
-				users = UserDetails.gql('WHERE links_added >= :1 and links_added < :2 ORDER by links_added DESC', low, high)
+				users = UserDetails.gql('WHERE links_added >= :1 and links_added < :2 ORDER by links_added DESC', int(low), int(high))
 			else:
-				logging.info('lower range %s ;' %low)
-				users = UserDetails.gql('WHERE links_added >= :1 ORDER by links_added DESC', low)
+				logging.info('lower range %s ' %low)
+				users = UserDetails.gql('WHERE links_added >= :1 ORDER by links_added DESC', int(low))
+                        logging.info('fetched %d users ' % users.count())
 	       		user_accounts = [ u.instapaper_account for u in users ]
 			if users.count() > 0:
-				logging.info('setting users cache. % user entries' % users.count())
-        			memcache.set(memcache_key, users )
+				logging.info('setting users cache. %s user entries' % users.count())
+        			memcache.set(memcache_key, user_accounts )
                 	template_variables = {'users' : user_accounts }
 			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
         		self.response.headers["Content-type"] = "text/html"
 			self.response.out.write(template.render(path,template_variables))
-		#except:
-		#	e, e0 = sys.exc_info()[0], sys.exc_info()[1]
-		#	logging.error('stats error: %s ; %s' %(e, e))
-		#	self.response.out.write('oups, try something else')
+	#	except:
+	#		e, e0 = sys.exc_info()[0], sys.exc_info()[1]
+	#		logging.error('stats error: %s ; %s' %(e, e))
+	#		self.response.out.write('oups, try something else')
 
 
 class UserHandler(webapp.RequestHandler):
@@ -72,6 +77,7 @@ class UserHandler(webapp.RequestHandler):
 
                 if not '@' in user:
 			logging.info('not email address: skipping ...')
+                        user_detail = UserDetails()
 			return user_detail
                 user_detail = UserDetails.gql('where instapaper_account = :1' , user).get()
 		if user_detail is None:
@@ -151,26 +157,33 @@ class UserInfoFetchHandler(webapp.RequestHandler):
                 	logging.info('fetching info for user %s' % user)
 
 class UserUpdate(webapp.RequestHandler):
-	def get(self):
-		memcache_key = 'all_users_'+str(datetime.datetime.now().date())
-		cached_users=memcache.get(memcache_key)
-		if cached_users:
-			logging.info('getting users from cache')
-			users = cached_users
-		else:
-			logging.info('getting users from gql')
-			users= UserDetails.all()
+	def post(self):
+                users = simplejson.loads(self.request.get('users',None))
+                if users is None:
+                        logging.info('nothing to process.exiting')
+                        return
+                logging.info('processing %s' % len(users))
 		for u in users:
-			if not '@' in u.instapaper_account:
-				logging.info('skipping %s' % u.instapaper_account)
+                        user = u['u']
+                        if not '@' in user:
+				logging.info('skipping %s' % user)
 				continue
-			memcache_user_key='user_'+u.instapaper_account+'_'+str(datetime.datetime.now().date)
+			memcache_user_key='user_'+user+'_'+str(datetime.datetime.now().date)
 			if memcache.get(memcache_user_key):
-				logging.info('skipping processed user %s ' % u.instapaper_account)
-			taskqueue.add(queue_name='user-info', url='/user/'+u.instapaper_account+'/fetch/')
-			memcache.set(memcache_user_key, u.key())
-		memcache.delete(memcache_key)
+				logging.info('skipping processed user %s ' % user)
+                        taskqueue.add(queue_name='user-info', url='/user/'+user+'/fetch')
+			memcache.set(memcache_user_key, True)
+        def get(self):
 
+		users=UserDetails.gql('ORDER by __key__').fetch(100)
+		if not users:
+			return None
+                taskqueue.add(url='/user/task/update_all', params={'users':simplejson.dumps(users, default=lambda u: {'u':u.instapaper_account})})
+		lastKey = users[-1].key()
+		while len(users) == 100:
+			users=UserDetails.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(100)
+			lastKey=users[-1].key()
+                        taskqueue.add(url='/user/task/update_all', params={'users':simplejson.dumps(users, default=lambda u: {'u':u.instapaper_account})})
 
 class UserLinksHandler(webapp.RequestHandler):
         def get(self, user):

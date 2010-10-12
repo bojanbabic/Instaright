@@ -6,6 +6,7 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import SessionModel
 from models import UserDetails
+from utils import UserUtil
 import simplejson
 
 from feedformatter import Feed
@@ -17,52 +18,29 @@ class FeedGenerator(webapp.RequestHandler):
                 memcache_key='feed_json_cache'
                 cached_feed= memcache.get(memcache_key)
 		format = self.request.get('format', None);
+                userUtil = UserUtil()
                 if format == 'json' and cached_feed:
 			logging.info('getting json from cache')
 			self.response.headers['Content-Type'] = "application/json"
-			self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':self.getAvatar(o.instaright_account)}}))
+#			messageAsJSON = [{'u':{'id':update.id, 't':update.title,'l':update.link,'d':update.domain,'u':update.updated}}]
+                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':'Instaright bookmark from domain: '+o.domain, 'l': 'http://instaright.appspot.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account)}}))
+                        return
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
 		memcache.set(memcache_key, entries)
 		if not entries:
 			self.response.out.write('Nothing here')
-		now = datetime.datetime.now().strftime("%Y-%m-%d\T%H\:%i\:%s\Z")
+		now = datetime.datetime.now().strftime("%Y-%m-%dT%H\:%i\:%sZ")
 		if format is None or format == 'xml':
-			template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
+                        template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
 			path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
 			self.response.headers['Content-Type'] = "application/atom+xml"
 			self.response.out.write(template.render(path,template_variables))
 			return
 		if format == 'json':
-			#for e in entries:
-			#	j = {'u':{'id':e.key, 't':e.date.strftime("%Y-%m-%d\T%H\:%i\:%s\Z"),'d': e.domain, 'l':e.url}}	
-			#	json_output.append(j)
-			#logging.info('json_output:' % json_output)
-                        #memcache.set('feed_as_array',json_output)
 			self.response.headers['Content-Type'] = "application/json"
-			self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'d':o.domain, 'id':str(o.key()), 'l': o.url, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':self.getAvatar(o.instaright_account)}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':'Instaright bookmark from domain: '+o.domain, 'l': 'http://instaright.appspot.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account)}}))
 			return
 
-	def hideUsers(user):
-		if len(user) < 3:
-			return user
-		if user.find('@'):
-			endposition = user.find("@")
-		else:
-			endposition = len(user)-1
-		return user.replace(user[1:endposition], 'xxxx')
-	def getAvatar(self, instapaper_account):
-		memcache_key='avatar_'+instapaper_account
-		cached_avatar = memcache.get(memcache_key)
-		if cached_avatar:
-			logging.info('getting avatar from cache')
-			return cached_avatar
-		userDetails = UserDetails.gql('WHERE instapaper_account = :1', instapaper_account).get()
-		if userDetails:
-			memcache.set(memcache_key, userDetails.instapaper_account)
-			return userDetails.instapaper_account
-		else:
-			return '/static/images/noavatar.png'
-		
 			
 class ArticleHandler(webapp.RequestHandler):
 	def get(self, location):

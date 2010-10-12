@@ -49,7 +49,7 @@ handlers:
   script: articles.py
 
 - url: /callback
-  script: phbb_callback.py
+  script: pshb_callback.py
 
 - url: /memcache_test
   script: cron.py
@@ -82,13 +82,15 @@ handlers:
 
 - url: /user_consolidation
   script: data_consolidation.py
-  #login: admin
+  login: admin
 
 - url: /user_consolidation_task
   script: data_consolidation.py
+  login: admin
 
 - url: /user/.*
   script: users.py
+  #login: admin
 
 - url: /.*
   script: main.py

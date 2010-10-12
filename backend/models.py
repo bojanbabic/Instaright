@@ -86,4 +86,17 @@ class UserDetails(db.Model):
         last_active_date = db.DateTimeProperty()
         links_added = db.IntegerProperty(default=0)
         info_updated = db.DateTimeProperty(auto_now_add=True)
+	@staticmethod
+	def getAll():
+		data=UserDetails.gql('ORDER by __key__').fetch(1000)
+		if not data:
+			return None
+		lastKey = data[-1].key()
+		results=data
+		while len(data) == 1000:
+			data=UserDetails.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(1000)
+			lastKey=data[-1].key()
+			results.extend(data)
+		return results
+
 

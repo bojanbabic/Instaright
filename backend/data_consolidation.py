@@ -237,7 +237,7 @@ class AggregateDataHandler(webapp.RequestHandler):
 		logging.info('done data aggregation')
 
 class UserDetailsConsolidation_batch(webapp.RequestHandler):
-        def get(self):
+        def post(self):
                 dt = self.request.get('date' , None)
                 logging.info('date from request %s ' %dt)
                 if dt is None:
@@ -291,9 +291,9 @@ class UserDetailsConsolidation_task(webapp.RequestHandler):
         def get(self):
                 date_from = self.request.get('from', None)
                 date_to = self.request.get('to', None)
-                if date_from is None or date_to is None:
-                        logging.info('must enter both dates. from=&to=')
-                        self.response.out.write('must enter both dates. from=&to=')
+                if date_from is None and date_to is None:
+                        logging.info('adding task for previuos day')
+	                taskqueue.add(queue_name='user-consolidation', url='/user_consolidation')
                         return
                 d_from = datetime.datetime.strptime(date_from, '%Y-%m-%d').date()
                 d_to = datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
@@ -311,7 +311,7 @@ application = webapp.WSGIApplication(
                                              ('/data_consolidation',GeneralConsolidation), 
                                              #('/user_consolidation', UserDetailsConsolidation), 
                                              ('/user_consolidation', UserDetailsConsolidation_batch), 
-                                             #('/user_consolidation_task', UserDetailsConsolidation_task), 
+                                             ('/user_consolidation_task', UserDetailsConsolidation_task), 
 				             ('/aggregate_data', AggregateDataHandler)
                                              ],debug=True)
 
