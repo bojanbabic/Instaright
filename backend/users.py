@@ -53,25 +53,32 @@ class UserHandler(webapp.RequestHandler):
                 user_decoded = urllib.unquote(user)
                 logging.info('user: %s' %user_decoded)
                 memcache_key ='user_info_' + user_decoded+'_'+str(datetime.datetime.now().date())
+                sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , user_decoded).fetch(100)
+                links = [ s.url for s in sessions ]
                 cached_info = memcache.get(memcache_key)
                 if cached_info:
                         logging.info('getting from cache' )
-                        self.response.headers["Content-Type"]="application/json"
-                        self.response.out.write(cached_info)
+                        template_variables = {'user':cached_info,'links':links}
+                        path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
+                        self.response.headers["Content-type"] = "text/html"
+		        self.response.out.write(template.render(path,template_variables))
                         return
                 user_detail= UserDetails.gql('WHERE mail = :1', user_decoded).get()
                 if user_detail is None:
 			logging.info('new user %s added to queue' %user_decoded)
 			fetch_url = '/user/'+user_decoded+'/fetch'
 			taskqueue.add(queue_name='user-info', url= fetch_url)
-                        out_json = {'name':'', 'occupations': [], 'memberships': [], 'avatar':''} 
-                	self.response.headers["Content-Type"]="application/json"
-                	self.response.out.write(simplejson.dumps(out_json))
+                        template_variables = {'user':user_detail, 'links': links}
+                        path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
+                        self.response.headers["Content-type"] = "text/html"
+                        self.response.headers["Accept-Charset"] = "utf-8"
+		        self.response.out.write(template.render(path,template_variables))
 			return
-                out_json = {'name':user_detail.name, 'occupations': user_detail.occupations, 'memberships': user_detail.social_data, 'avatar':user_detail.avatar} 
-		memcache.set(memcache_key, simplejson.dumps(out_json))
-                self.response.headers["Content-Type"]="application/json"
-                self.response.out.write(simplejson.dumps(out_json))
+		memcache.set(memcache_key, user_detail)
+                template_variables = {'user':user_detail, "links" : links}
+                path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
+                self.response.headers["Content-type"] = "text/html"
+		self.response.out.write(template.render(path,template_variables))
 
         def gather_info(self, user):
 
