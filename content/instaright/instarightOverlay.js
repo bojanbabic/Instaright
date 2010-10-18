@@ -17,10 +17,18 @@ com.appspot.model={
 	ajaxResponse:"",
 	init: function(){
 		var ver = -1; firstrun = true;
-
-		gExtensionManager = Components.classes["@mozilla.org/extensions/manager;1"]  
-			.getService(Components.interfaces.nsIExtensionManager);
-		current = gExtensionManager.getItemForID("instaright@appspot.com").version;
+                var current = -100;
+                var error = false;
+                try{
+                        Components.utils.import("resource://modules/AddonManager.jsm");
+                        current = version();
+                        throw "exception";
+                }catch(e){
+                        error=true;
+                }
+                if (error){
+                        return;
+                }
 		try{
 			ver = this.prefs.getCharPref("version");
 			firstrun = this.prefs.getBoolPref("firstrun");

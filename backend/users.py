@@ -12,13 +12,19 @@ from main import SessionModel
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
 		#try:
+                        format=self.request.get('format',None)
 			if '-' in stat_range:
 				low, high = stat_range.split('-')
 			else:
 				low, high = stat_range, None
        		 	memcache_key = 'top_users_'+str(datetime.datetime.now().date())+'_'+stat_range
        		        usrs = memcache.get(memcache_key)
+
 		        if usrs:
+                                if format and format == 'txt':
+                                        self.response.headers["Content-type"] = "text/plain"
+                                        self.response.out.write("\n".join(usrs))
+                                        return 
                 	        template_variables = {'users' : usrs }
         			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
                     		self.response.headers["Content-type"] = "text/html"
@@ -35,6 +41,10 @@ class TopUserHandler(webapp.RequestHandler):
 			if users.count() > 0:
 				logging.info('setting users cache. %s user entries' % users.count())
         			memcache.set(memcache_key, user_accounts )
+                        if format and format == 'txt':
+                                self.response.headers["Content-type"] = "text/plain"
+                                self.response.out.write("\n".join(user_accounts))
+                                return
                 	template_variables = {'users' : user_accounts }
 			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
         		self.response.headers["Content-type"] = "text/html"
