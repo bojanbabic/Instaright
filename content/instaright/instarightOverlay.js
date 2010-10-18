@@ -4,7 +4,7 @@ if (!com.appspot.instaright) com.appspot.instaright={};
 if (!com.appspot.model) com.appspot.model={}
 
 com.appspot.model={
-	prefs: null,
+	prefs: Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extension.instaright."),
 	account: "",
 	password: "",
 	hostname: "http://www.instapaper.com",
@@ -15,12 +15,37 @@ com.appspot.model={
 	disablePageSaveMode: false,
 	targetUrl:"",
 	ajaxResponse:"",
+	init: function(){
+		var ver = -1; firstrun = true;
+
+		gExtensionManager = Components.classes["@mozilla.org/extensions/manager;1"]  
+			.getService(Components.interfaces.nsIExtensionManager);
+		current = gExtensionManager.getItemForID("instaright@appspot.com").version;
+		try{
+			ver = this.prefs.getCharPref("version");
+			firstrun = this.prefs.getBoolPref("firstrun");
+
+		}catch(e){
+			//nothing
+		}finally{
+			if (firstrun){
+				this.prefs.setBoolPref("firstrun",false);
+				this.prefs.setCharPref("version",current);
+
+				window.setTimeout(function(){
+					gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
+				}, 1500);
+			}
+			if (ver != current && !firstrun){
+				window.setTimeout(function(){
+					gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
+				}, 1500);
+			}
+		}
+		window.removeEventListener("load", function(){ com.appspot.model.init(); }, true);
+	},
 	menu: null,
-	
 	startup: function(){
-		this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
-			.getService(Components.interfaces.nsIPrefService)
-			.getBranch("extension.instaright.");
 		this.prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
 		this.prefs.addObserver("", this, false);
 		
@@ -131,8 +156,13 @@ com.appspot.instaright={
 	//_SERVER:"http://localhost:8080",
 	start:function(){
 		com.appspot.model.startup();
+		alertsService = Components.classes["@mozilla.org/alerts-service;1"].  
+			getService(Components.interfaces.nsIAlertsService);  
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
-			alert('Invalid email. Please enter valid email in plugin options.');
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "Invalid email. Please enter valid email in plugin options.",   
+					false, "", null, "");  
+			//alert('Invalid email. Please enter valid email in plugin options.');
 			return;
 		}
 		if (!gContextMenu) { // Mysterious error console
@@ -143,12 +173,18 @@ com.appspot.instaright={
 		} else if (!com.appspot.model.disablePageSaveMode){
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
 		} else {
-			alert("Page saving mode has been disabled. Please recheck your settings.");
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "Page saving mode has been disabled. Please recheck your settings.",   
+					false, "", null, "");  
+			//alert("Page saving mode has been disabled. Please recheck your settings.");
 			return;
 		}
 		if (url == null){
-			alert('Can\'t determine link... try another!')
-			this.logErrors("Can't determine link , try another");
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "Can\'t determine link... try another!",   
+					false, "", null, "");  
+			//alert('Can\'t determine link... try another!')
+				this.logErrors("Can't determine link , try another");
 			return;
 		}
 		textSelected = null;
@@ -165,16 +201,28 @@ com.appspot.instaright={
 		this.sendUrlSynchAjax(url, textSelected);
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
-			alert('Success.');
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "Success.",   
+					false, "", null, "");  
+			//alert('Success.');
 		}
 		else if (com.appspot.model.ajaxResponse == '400'){
-			alert('Bad request. Missing required parameter.');
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "Bad request. Missing required parameter.",   
+					false, "", null, "");  
+			//alert('Bad request. Missing required parameter.');
 		}
 		else if (com.appspot.model.ajaxResponse == '403'){
-			alert('Invalid username or password.');
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "Invalid username or password.",   
+					false, "", null, "");  
+			//alert('Invalid username or password.');
 		}
 		else if (com.appspot.model.ajaxResponse == '500'){
-			alert('The service encountered an error. Please try later again.');
+			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+					"Instaright alert", "The service encountered an error. Please try later again.",   
+					false, "", null, "");  
+			//alert('The service encountered an error. Please try later again.');
 		}
 	},
 	getSelectedText:function(){
@@ -267,4 +315,4 @@ com.appspot.instaright={
 	}
 }
 
-//window.addEventListener("load", function(e) { com.appspot.model.startup(); }, false);
+window.addEventListener("load", function(e) { com.appspot.model.init(); }, true);
