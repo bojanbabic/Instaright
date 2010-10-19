@@ -19,10 +19,12 @@ com.appspot.model={
 		var ver = -1; firstrun = true;
                 var current = -100;
                 var error = false;
+                var timer = Components.classes["@mozilla.org/timer;1"]
+                                    .createInstance(Components.interfaces.nsITimer);
+
                 try{
                         Components.utils.import("resource://modules/AddonManager.jsm");
                         current = version();
-                        throw "exception";
                 }catch(e){
                         error=true;
                 }
@@ -36,19 +38,27 @@ com.appspot.model={
 		}catch(e){
 			//nothing
 		}finally{
-			if (firstrun){
-				this.prefs.setBoolPref("firstrun",false);
-				this.prefs.setCharPref("version",current);
-
-				window.setTimeout(function(){
-					gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
-				}, 1500);
-			}
-			if (ver != current && !firstrun){
-				window.setTimeout(function(){
-					gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
-				}, 1500);
-			}
+                        alertsService = Components.classes["@mozilla.org/alerts-service;1"].  
+                                getService(Components.interfaces.nsIAlertsService);  
+                        if (firstrun){
+                                this.prefs.setBoolPref("firstrun",false);
+                                this.prefs.setCharPref("version",current);
+                                alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+                                                "Instaright alert", "Thanks for supporting continued development of this addon.",   
+                                                false, "", null, "");  
+                                timer.initWithCallback(function(){
+                                                gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
+                                                }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+                        }
+                        if (ver != current && !firstrun){
+                                this.prefs.setCharPref("version",current);
+                                alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+                                                "Instaright alert", "Thanks for supporting continued development of this addon.",   
+                                                false, "", null, "");  
+                                timer.initWithCallback(function(){
+                                                gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
+                                                }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+                        }
 		}
 		window.removeEventListener("load", function(){ com.appspot.model.init(); }, true);
 	},
