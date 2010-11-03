@@ -4,8 +4,7 @@ from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
-from main import SessionModel
-from models import UserDetails
+from models import UserDetails, SessionModel
 from utils import UserUtil
 import simplejson
 

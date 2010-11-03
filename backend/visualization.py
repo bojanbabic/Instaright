@@ -7,9 +7,8 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import mail
 from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
-from main import SessionModel
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
-from models import CountryStats, CityStats
+from models import CountryStats, CityStats, SessionModel
 from xmpp_handler import XMPPHandler
 
 class Visualization(webapp.RequestHandler):

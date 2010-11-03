@@ -8,8 +8,7 @@ from google.appengine.ext.webapp import template
 from google.appengine.api.labs import taskqueue
 
 from utils import StatsUtil
-from main import SessionModel
-from models import UserLocationModel, CityStats, CountryStats, LinkStats, UserDetails
+from models import UserLocationModel, CityStats, CountryStats, LinkStats, UserDetails, SessionModel
 class GeneralConsolidation(webapp.RequestHandler):
 	memcache_key = 'domain_update_key'
 	def get(self):

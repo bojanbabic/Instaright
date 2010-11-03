@@ -9,6 +9,7 @@
                 +'/siteopt.js?v=1&utmxkey='+k+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='
                 +new Date().valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
                 '" type="text/javascript" charset="utf-8"></sc'+'ript>')})();
+        
 </script><script>utmx("url",'A/B');</script>
 <!-- End of Google Website Optimizer Control Script -->
 <html>
@@ -100,18 +101,6 @@ function check_and_send_jid(){
 }
 
 function init(){
-        /*  try{
-            url = "/feed?format=json";
-            req = XMLHttpRequest();
-            req.open('GET', url);
-            req.onreadystatechange = function(){
-            if (req.status == 200){
-            alert(req.responseText);
-            }
-            }
-            req.send(null);
-            } catch(e){
-            }*/
         $("#invite_jid").bind('keypress', function(e){
                         if (e.keyCode == 13){
                         check_and_send_jid();

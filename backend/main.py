@@ -11,102 +11,8 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
 from utils import StatsUtil
 
-from models import UserSessionFE
+from models import UserSessionFE, SessionModel
 
-class SessionModel(db.Model):
-	user_agent=db.StringProperty()
-	instaright_account=db.StringProperty()
-	ip=db.StringProperty()
-	url=db.LinkProperty()
-	date=db.DateTimeProperty()
-	domain=db.StringProperty()
-	def count_all(self):
-		count = 0
-		query = SessionModel.all().order('__key__')
-		while count % 1000 == 0:
-			current_count = query.count()
-			count += current_count
-			
-			if current_count == 1000:
-				last_key = query.fetch(1, 999)[0].key()
-				query = query.filter('__key__ > ' , last_key)
-		return count
-
-	@staticmethod
-	def countAll():
-		data=SessionModel.gql('ORDER by __key__').fetch(1000)
-		lastKey = data[-1].key()
-		total=len(data)
-		while len(data) == 1000:
-			data=SessionModel.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(1000)
-			lastKey=data[-1].key()
-			total+=len(data)
-		return total
-	@staticmethod
-	def getAll():
-		data=SessionModel.gql('ORDER by __key__').fetch(1000)
-		if not data:
-			return None
-		lastKey = data[-1].key()
-		results=data
-		while len(data) == 1000:
-			data=SessionModel.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(1000)
-			lastKey=data[-1].key()
-			results.extend(data)
-		return results
-	@staticmethod
-	def getDailyStats(targetDate):
-		if targetDate is None:
-			# take yesterday for targetDate
-			targetDate=datetime.date.today() - datetime.timedelta(days=1)
-		upperLimitDate = targetDate + datetime.timedelta(days=1)
-		data = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate).fetch(5000)
-		if not data:
-			logging.info('no results returned for daily stats')
-			return None
-		result=[]
-		result.extend(data)
-		logging.info('daily stats retrieved %s ' % len(result))
-		return result
-	@staticmethod
-	def getWeeklyStats(targetDate):
-		if targetDate is None:
-			targetDate=datetime.date.today() 
-		previousWeek = targetDate - datetime.timedelta(days=7)
-		logging.info('ranges %s -> %s ' %( targetDate, previousWeek))
-		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, previousWeek).fetch(1000)
-		if not data:
-			logging.info('no records found for target date %s ' % str(targetDate))
-			return None
-		lastKey= data[-1].key()
-		result = data
-		while len(data) == 1000:
-			nextK = SessionModel.gql(' WHERE __key__ > :1 ORDER by  __key__, date', lastKey).fetch(1000)
-			lastKey=nextK[-1].key()
-			#data = SessionModel.gql(' WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__', targetDate, previousWeek, lastKey).fetch(1000)
-			data = [ x for x in nextK if x.date <= targetDate and x.date > previousWeek ]
-			result.extend(data)
-		return result
-
-	@staticmethod
-	def getYearStats(targetDate):
-		if targetDate is None:
-			targetDate=datetime.date.today()
-		lastYear = targetDate - datetime.timedelta(days=365)
-		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, lastYear).fetch(1000)
-		if not data:
-			return None
-		lastKey= data[-1].key()
-		result = data
-		while len(data) == 1000:
-			#data=SessionModel.gql('WHERE date <= :1 and date > :2 and __key__ > :3 order by date, __key__ ', targetDate, lastYear, lastKey).fetch(1000)
-			nextK = SessionModel.gql(' WHERE __key__ > :1 ORDER by  __key__, date', lastKey).fetch(1000)
-			lastKey=nextK[-1].key()
-			data = [ x for x in nextK if x.date <= targetDate and x.date > previousWeek ]
-			lastKey=data[-1].key()
-			result.extend(data)
-		return result
-		
 class UserMessager:
 	def __init__(self, user_uid):
 		self.user_uuid = user_uid
@@ -261,7 +167,11 @@ class IndexHandler(webapp.RequestHandler):
 		else:
 			user_uuid = uuid.uuid4()
 			logging.info('generated uuid: %s' % user_uuid)
-			self.response.headers.add_header('Set-Cookie', 'uuid=%s' %user_uuid)
+                        expires = datetime.datetime.now() + datetime.timedelta(minutes=5)
+                        exp_format = datetime.datetime.strftime(expires, '%a, %d-%b-%Y %H:%M:%S GMT')
+                        logging.info('expr date %s' %exp_format)
+
+			self.response.headers.add_header('Set-Cookie', 'user_uuid=%s; expires=%s; path=/' %( user_uuid, exp_format))
 			userSession = UserSessionFE()
 			userSession.user = user
 			userSession.user_uuid = str(user_uuid)

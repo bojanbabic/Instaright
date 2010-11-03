@@ -1,0 +1,103 @@
+<html>
+        <head>
+                <link rel="stylesheet" type="text/css" href="../css/style.css" />
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+                <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+                <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        </head>
+        <body>
+                {% if user %}
+                {% if user.name %}
+                <h2>{{ user.name }}</h2>
+                {% endif %}
+                <table>
+                        <tr>
+                                <td class="avatar">
+                                        {% if user.avatar %}
+                                        <img src="{{ user.avatar }}" />
+                                        {% endif %}</td>
+                                <td class="info">
+                                        <ul>
+                                                <li>
+                                                Instapaper: {{ user.instapaper_account }}
+                                                </li>
+                                                <li>
+                                                Links #{{ user.links_added }}
+                                                </li>
+                                                {% if user.occupations %}
+                                                <ul class="occupations">
+                                                        <li>{{ user.occupations }}</li>
+                                                </ul>
+                                                {% endif %}
+                                        </ul>
+                                </td>
+                        </tr>
+                </table>
+                <div class="social">
+                        {% if user.facebook %}
+                        <a href="{{ user.facebook }}"><img src="/static/images/facebook_small.png"/></a>
+                        {% endif %}
+                        {% if user.bebo %}
+                        <a href="{{ user.bebo }}"><img src="/static/images/bebo_small.png"/></a>
+                        {% endif %}
+                        {% if user.myspace %}
+                        <a href="{{ user.myspace }}"><img src="/static/images/myspace_small.png"/></a>
+                        {% endif %}
+                        {% if user.friendster %}
+                        <a href="{{ user.friendster }}"><img src="/static/images/friendster_small.png"/></a>
+                        {% endif %}
+                        {% if user.linkedin %}
+                        <a href="{{ user.linkedin }}"><img src="/static/images/linkedin_small.png"/></a>
+                        {% endif %}
+                        {% if user.google_reader %}
+                        <a href="{{ user.google_reader }}"><img src="/static/images/google_reader_small.png"/></a>
+                        {% endif %}
+                        {% if user.google_profile%}
+                        <a href="{{ user.google_profile }}"><img src="/static/images/google_profile_small.png"/></a>
+                        {% endif %}
+                        {% if user.twiter %}
+                        <a href="{{ user.twitter }}"><img src="/static/images/twitter_small.png"/></a>
+                        {% endif %}
+                        {% if user.flickr %}
+                        <a href="{{ user.flickr }}"><img src="/static/images/flickr_small.png"/></a>
+                        {% endif %}
+                        {% if user.youtube %}
+                        <a href="{{ user.youtube }}"><img src="/static/images/youtube_small.png"/></a>
+                        {% endif %}
+                        {% if user.hi5 %}
+                        <a href="{{ user.hi5 }}"><img src="/static/images/hi5_small.png"/></a>
+                        {% endif %}
+                        {% if user.picasa %}
+                        <a href="{{ user.bebo }}"><img src="/static/images/bebo_small.png"/></a>
+                        {% endif %}
+                        {% if user.plancast %}
+                        <a href="{{ user.picasa }}"><img src="/static/images/picasa_small.png"/></a>
+                        {% endif %}
+                        {% if user.delicious %}
+                        <a href="{{ user.delicious }}"><img src="/static/images/delicious_small.png"/></a>
+                        {% endif %}
+                        {% if user.multipy %}
+                        <a href="{{ user.multiply }}"><img src="/static/images/multiply_small.png"/></a>
+                        {% endif %}
+                        {% if user.tungle_me %}
+                        <a href="{{ user.tingle_me }}"><img src="/static/images/tingle_me.png"/></a>
+                        {% endif %}
+                        {% if user.livejournal %}
+                        <a href="{{ user.livejournal }}"><img src="/static/images/livejournal_small.png"/></a>
+                        {% endif %}
+                        {% if user.wordpress %}
+                        <a href="{{ user.wordpress }}"><img src="/static/images/wordpress_small.png"/></a>
+                        {% endif %}
+                </div>
+                {% else %}
+                <div>No info for user</div>
+                {% endif %}
+                <div class="links">
+                        <p>Links:</p>
+                        {% for l in links %}
+                        <p><a href="{{ l }}">{{ l }}</a></p>
+                        {% endfor %}
+                </div>
+        </body>
+</html>

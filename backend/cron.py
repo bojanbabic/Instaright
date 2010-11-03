@@ -6,7 +6,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
-from main import SessionModel
+from models import SessionModel
 from google.appengine.ext.webapp import template
 from utils import StatsUtil
 
@@ -97,8 +97,8 @@ class CronTask(webapp.RequestHandler):
 				self.calculateStatsPerDomain(allStats,'daily', targetDate)
 			
 		except:
-			e = sys.exc_info()[1]
-			logging.error('Error while running daily cron task. %s' % e)
+			e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+			logging.error('Error while running daily cron task. %s. More info %s' % (e0, e1))
 
 	def weeklyStats(self, tDate):
 		try:
@@ -113,8 +113,7 @@ class CronTask(webapp.RequestHandler):
 				logging.info('retieved %s ' % len(allWeeklyStats))
 				self.calculateStatsPerDomain(allWeeklyStats, 'weekly', targetDate)
 		except:
-			e0 = sys.exc_info()[0]
-			e = sys.exc_info()[1]
+			e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
 			logging.error('Error while running weekly cron task. %s. More info %s' % (e, e0))
 
 	def yearStats(self, tDate):
@@ -127,11 +126,29 @@ class CronTask(webapp.RequestHandler):
 			logging.info('yearly stats for %s ' % targetDate )
 			if allYearStats:
 				logging.info('retieved %s ' % len(allYearStats))
-				self.calculateStatsPerDomain(allYearStats,'year', targetDate)
-			
+		                memcache_domains_key = "domains_year" + str(datetime.datetime.now().date())
+        		        if memcache.get(memcache_domains_key):
+                                        logging.info('year stats::geting domain list from cache')
+        		        	allStats = memcache.get(memcache_domains_key)
+        		        else:
+			                allStats = [ (stat.domain, sum([ x.count for x in allYearStats if x.domain == stat.domain])) for stat in allYearStats if stat.domain ]
+        		        	memcache.set(memcache_domains_key, allStats)
+                                for s in allStats:
+                                        domain = s[0]
+                                        count = s[1]
+			                memcache_year_key = 'year'+str(datetime.datetime.now().date())+domain
+			        	if memcache.get(memcache_year_key):
+			        		logging.info('found entry in cache. skipping %s' % domain)
+			        		continue
+                                        logging.info(' %s %s ' %(domain , count))
+                                        ys = YearDomainStats()
+                                        ys.domain = domain
+                                        ys.count = count
+                                        ys.put()
+                                        memcache.set(memcache_year_key,count)
 		except:
-			e = sys.exc_info()[1]
-			logging.error('Error while running weekly cron task. %s' % e)
+			e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+			logging.error('Error while running weekly cron task. %s \n %s' %( e0, e1))
 	
 	def calculateStatsPerDomain(self, data, period, target):
 		if not data:
@@ -159,8 +176,6 @@ class CronTask(webapp.RequestHandler):
 					domainStat = DailyDomainStats()
 				elif period == "weekly":
 					domainStat = WeeklyDomainStats()
-				elif period == "year":
-					domainStat = YearDomainStats()
 				if memcache.get(memcache_key):
 					logging.info('found entry in cache. skipping %s' % domain)
 					continue

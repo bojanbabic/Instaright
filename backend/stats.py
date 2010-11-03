@@ -8,7 +8,7 @@ from google.appengine.api import mail
 from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
-from main import SessionModel
+from models import SessionModel
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
 from google.appengine.ext.webapp import template
 

@@ -1,5 +1,5 @@
 application: instaright
-version: 28
+version: 29
 runtime: python 
 api_version: 1
 
@@ -27,9 +27,6 @@ handlers:
 - url: /static
   static_dir: static
 
-- url: /date_update
-  script: cron.py
-
 - url: /delete_stats
   script: stat_management.py
   login: admin
@@ -40,7 +37,7 @@ handlers:
 
 - url: /data_consolidation
   script: data_consolidation.py
-  login: admin
+#  login: admin
 
 - url: /article/(.*)
   script: articles.py
@@ -90,7 +87,13 @@ handlers:
 
 - url: /user/.*
   script: users.py
-  #login: admin
+  login: admin
+
+- url: /link/stats
+  script: links.py
+  
+- url: /link/add
+  script: fetch/link_info.py
 
 - url: /.*
   script: main.py

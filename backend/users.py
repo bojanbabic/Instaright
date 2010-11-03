@@ -7,8 +7,8 @@ from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
 
-from models import UserDetails
-from main import SessionModel
+from models import UserDetails, SessionModel
+
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
 		#try:
@@ -78,7 +78,13 @@ class UserHandler(webapp.RequestHandler):
 			logging.info('new user %s added to queue' %user_decoded)
 			fetch_url = '/user/'+user_decoded+'/fetch'
 			taskqueue.add(queue_name='user-info', url= fetch_url)
-                        template_variables = {'user':user_detail, 'links': links}
+                        ud = UserDetails()
+                        ud.name = user_decoded
+                        ud.instapaper_account = user_decoded
+                        ud.links_added = SessionModel.countAllForUser(user_decoded)
+                        # tmp put until we find more info for user
+                        #ud.put()
+                        template_variables = {'user':ud, 'links': links}
                         path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
                         self.response.headers["Content-type"] = "text/html"
                         self.response.headers["Accept-Charset"] = "utf-8"
@@ -215,11 +221,40 @@ class UserLinksHandler(webapp.RequestHandler):
                 self.response.headers["Content-type"] = "text/html"
 		self.response.out.write(template.render(path,template_variables))
                 
+class UserFormKeyHandler(webapp.RequestHandler):
+        def get(self, user, form_key):
+                if user is None or len(user) == 0:
+                        logging.error('Empty user. Skipping')
+                        return
+                user_decoded = urllib.unquote(user)
+                user_detail= UserDetails.gql('WHERE instapaper_account = :1 ' , user_decoded).get()
+                self.response.headers["Content-type"] = "text/plain"
+                if user_detail and user_detail.form_key:
+		        form_key=user_detail.form_key     
+                else:
+                        form_key=""
+                self.response.out.write(form_key)
+
+        def post(self, user, form_key):
+                if user is None or len(user) == 0:
+                        logging.error('Empty user. Skipping')
+                        return
+                user_decoded = urllib.unquote(user)
+                user_detail= UserDetails.gql('WHERE instapaper_account = :1 ' , user_decoded).get()
+                if user_detail:
+                        user_detail.form_key=form_key
+                        user_detail.put()
+                self.response.headers["Content-type"] = "text/plain"
+                self.response.out.write(form_key)
+                
+
+                
 
 app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),
                                 ('/user/delete_all', UserDeleteHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
+                                ('/user/(.*)/(.*)', UserFormKeyHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
                                 ('/user/task/update_all', UserUpdate),
                                 ('/user/(.*)', UserHandler),

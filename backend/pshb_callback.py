@@ -5,9 +5,8 @@ from google.appengine.api import xmpp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
-
-from main import SessionModel, BroadcastMessage
-from models import Subscription
+from main import  BroadcastMessage
+from models import Subscription, SessionModel
 from utils import UserUtil
 from xmpp_handler import XMPPHandler 
 

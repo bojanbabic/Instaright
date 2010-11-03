@@ -3,8 +3,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
-from main import SessionModel
-from models import DailyDomainStats, WeeklyDomainStats
+from models import DailyDomainStats, WeeklyDomainStats, SessionModel
 from google.appengine.ext.webapp import template
 
 class SessionManager(webapp.RequestHandler):
