@@ -186,10 +186,13 @@ com.appspot.instaright={
 		if (!gContextMenu) { // Mysterious error console
 			return;
 		}	
+		textSelected = null;
+                title = null;
 		if (gContextMenu.onLink){
 			url=gContextMenu.link.href;
 		} else if (!com.appspot.model.disablePageSaveMode){
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
+                        title = document.title;
 		} else {
 			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
 					"Instaright alert", "Page saving mode has been disabled. Please recheck your settings.",   
@@ -205,18 +208,18 @@ com.appspot.instaright={
 				this.logErrors("Can't determine link , try another");
 			return;
 		}
-		textSelected = null;
 		// text javascript url fix
 		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0){
 			//add javascript or mailto into description
 			// TODO this can overwrite selected text if mouse is over malto or javascript link
 			textSelected = url;
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
+                        title = document.title;
 		}
 		if (textSelected == null){
 			textSelected = this.getSelectedText();
 		}
-		this.sendUrlSynchAjax(url, textSelected);
+		this.sendUrlSynchAjax(url, title, textSelected);
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
 			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
@@ -257,7 +260,7 @@ com.appspot.instaright={
                 }
         },
 
-	sendUrlSynchAjax:function(url, textSelected){
+	sendUrlSynchAjax:function(url, title, textSelected){
 				 lInfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
 				 // there is nasty bug that when user removes passwprd , password info stays untill ff is restarted
 				 // but it doen't effect user experience
@@ -270,6 +273,10 @@ com.appspot.instaright={
 				 } else {
 					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url);
 				 }
+                                 if ( title != null){
+                                         params += "title="+title;
+                                 }
+
 				 loggingLocation = this._SERVER+"/rpc";
 
 				 try{
