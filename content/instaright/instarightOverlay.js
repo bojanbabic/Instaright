@@ -192,7 +192,7 @@ com.appspot.instaright={
 			url=gContextMenu.link.href;
 		} else if (!com.appspot.model.disablePageSaveMode){
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
-                        title = document.title;
+                        title = content.document.title;
 		} else {
 			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
 					"Instaright alert", "Page saving mode has been disabled. Please recheck your settings.",   
@@ -214,7 +214,7 @@ com.appspot.instaright={
 			// TODO this can overwrite selected text if mouse is over malto or javascript link
 			textSelected = url;
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
-                        title = document.title;
+                        title = content.document.title;
 		}
 		if (textSelected == null){
 			textSelected = this.getSelectedText();
@@ -274,7 +274,7 @@ com.appspot.instaright={
 					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url);
 				 }
                                  if ( title != null){
-                                         params += "title="+title;
+                                         params += "&title="+title;
                                  }
 
 				 loggingLocation = this._SERVER+"/rpc";

@@ -1,7 +1,7 @@
 import urlparse, urllib,logging
-from google.appengine.api import memcache
+#from google.appengine.api import memcache
 from xml.dom import minidom
-from models import UserDetails
+#from models import UserDetails
 DOMAIN='http://instaright.appspot.com'
 class StatsUtil():
 	@staticmethod

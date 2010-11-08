@@ -73,10 +73,19 @@ google.load('feeds', '1');
 // Set a callback to load your code when the page loads.
 //google.setOnLoadCallback(init);
 $(document).ready(function(){
+		alert(dt);
+		$("#invite_jid").bind('keypress', function(e){
+			if (e.keyCode == 13){
+			check_and_send_jid();
+			}
+			});
+		$("#invite_jid").focus(function(){
+			$(this).val("");
+			});
 		$.get('/feed?format=json', {}, updateDisplayEntry)
-                $("#jid_result").hide();
-                //$("#invite_jid").focus();
-                //alert('instaright_id:'+com.appspot.model.account);
+		$("#jid_result").hide();
+		//$("#invite_jid").focus();
+		//alert('instaright_id:'+com.appspot.model.account);
                 });
 
 // Create variables to display subscription options using HTML DIVs
@@ -101,14 +110,6 @@ function check_and_send_jid(){
 }
 
 function init(){
-        $("#invite_jid").bind('keypress', function(e){
-                        if (e.keyCode == 13){
-                        check_and_send_jid();
-                        }
-                        });
-        $("#invite_jid").focus(function(){
-                        $(this).val("");
-                        });
         feed = new google.feeds.Feed('http://instaright.appspot.com/feed');
         feed.setNumEntries(10);
         // Enable subscriptions to the feed.
