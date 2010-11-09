@@ -6,12 +6,13 @@ from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.api import channel 
 from google.appengine.api.labs import taskqueue
+from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
 from utils import StatsUtil
 
-from models import UserSessionFE, SessionModel
+from models import UserSessionFE, SessionModel, Links
 
 class UserMessager:
 	def __init__(self, user_uid):
@@ -51,12 +52,19 @@ class Logging(webapp.RequestHandler):
 	def post(self):
 		try:
 			args=simplejson.loads(self.request.body)
+                        logging.info('args:%s' % args)
 			account=args[0]
 			URL=urllib2.unquote(args[1])
 			domain=StatsUtil.getDomain(URL)
-			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, domain=domain)
+                        try:
+                                title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
+                        except:
+                                e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                                logging.info('encoding error: %s ::: %s' %(e0, e1))
+                                #older version of plugin
+                                title = None
+			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, domain=domain, title=title)
 			model.put()
-			logging.info('bookmark update written: % s' % model.to_xml())
 			logging.info('triggering feed update')
 			#trigger taskqueue that generates feed
 			try:
@@ -89,72 +97,18 @@ class ErrorHandling(webapp.RequestHandler):
                         e,e0 = sys.exc_info()[0], sys.exc_info()[1]
                         logging.error('weird:ERROR while hadling ERROR for %s: ' % self.request.body)
 
-
 class Redirect(webapp.RequestHandler):
 	def get(self):
 		url = 'http://bojanbabic.blogspot.com'
 		return self.response.out.write('<script language="javascript">top.location.href="' + url + '"</script>')
 
-class IndexHandlerVar1(webapp.RequestHandler):
-	def get(self):
-		user = users.get_current_user()
-		uuid_cookie = self.request.cookies.get('user_uuid')
-		if uuid_cookie:
-			#Connect uuid with registered user
-			logging.info('reusing uuid: %s' % uuid_cookie)
-			user_uuid = uuid_cookie
-			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
-			userSession.user = user
-			userSession.put()
-		else:
-			user_uuid = uuid.uuid4()
-			logging.info('generated uuid: %s' % user_uuid)
-			self.response.headers.add_header('Set-Cookie', 'uuid=%s' %user_uuid)
-			userSession = UserSessionFE()
-			userSession.user = user
-			userSession.user_uuid = str(user_uuid)
-			userSession.active=True
-			userSession.put()
-		userMessager = UserMessager(str(user_uuid))
-		channel_id = userMessager.create_channel()
-		login_url = users.create_login_url('/index_1.html')	
-		template_variables = []
-		template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id}
-		path= os.path.join(os.path.dirname(__file__), 'index_1.html')
-		
-		self.response.out.write(template.render(path,template_variables))
-
-class IndexHandlerVar2(webapp.RequestHandler):
-	def get(self):
-		user = users.get_current_user()
-		uuid_cookie = self.request.cookies.get('user_uuid')
-		if uuid_cookie:
-			#Connect uuid with registered user
-			logging.info('reusing uuid: %s' % uuid_cookie)
-			user_uuid = uuid_cookie
-			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
-			userSession.user = user
-			userSession.put()
-		else:
-			user_uuid = uuid.uuid4()
-			logging.info('generated uuid: %s' % user_uuid)
-			self.response.headers.add_header('Set-Cookie', 'uuid=%s' %user_uuid)
-			userSession = UserSessionFE()
-			userSession.user = user
-			userSession.user_uuid = str(user_uuid)
-			userSession.active=True
-			userSession.put()
-		userMessager = UserMessager(str(user_uuid))
-		channel_id = userMessager.create_channel()
-		login_url = users.create_login_url('/index_2.html')	
-		template_variables = []
-		template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id}
-		path= os.path.join(os.path.dirname(__file__), 'index_2.html')
-		
-		self.response.out.write(template.render(path,template_variables))
-
 class IndexHandler(webapp.RequestHandler):
 	def get(self):
+                memcache_key_hotlinks='hot_links_'+str(datetime.datetime.now().date())
+                hotlinks = memcache.get(memcache_key_hotlinks)
+                if not hotlinks:
+                        hotlinks = Links.gql('ORDER by overall_score DESC').fetch(30)
+                        memcache.set(memcache_key_hotlinks, hotlinks)
 		user = users.get_current_user()
 		uuid_cookie = self.request.cookies.get('user_uuid')
 		if uuid_cookie:
@@ -181,15 +135,10 @@ class IndexHandler(webapp.RequestHandler):
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
 		template_variables = []
-		template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id}
+                template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id, 'hotlinks': hotlinks}
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
+                self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		
-		self.response.out.write(template.render(path,template_variables))
-		
-class IndexHandlerV1(webapp.RequestHandler):
-	def get(self):
-		template_variables = []
-		path= os.path.join(os.path.dirname(__file__), 'index1.html')
 		self.response.out.write(template.render(path,template_variables))
 		
 application = webapp.WSGIApplication(
@@ -198,9 +147,6 @@ application = webapp.WSGIApplication(
                                      ('/deactivate_channels', ChannelHandler),
                                      #('/', Redirect),
                                      ('/', IndexHandler),
-                                     ('/index_1.html', IndexHandlerVar1),
-                                     ('/index_2.html', IndexHandlerVar2),
-                                     ('/v1', IndexHandlerV1),
 				     ],
                                      debug=True)
 

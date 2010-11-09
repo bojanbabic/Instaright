@@ -9,7 +9,7 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
 <html xmlns="http://www.w3.org/1999/xhtml">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>Instaright Dashboard</title>
-        <link rel="stylesheet" href="/css/stats.css" type="text/css"/>
+        <link rel="stylesheet" href="/css/style.css" type="text/css"/>
         <link rel="alternate" href="#" type="application/atom+xml" title="Instaright Dashboard"/>
         <head>
                 <script>
@@ -134,9 +134,9 @@ google.load(drawVisualization);
 <script type="text/javascript">
          $(document).ready(function()
                          {
-                         $(".menu_body").hide();
+                         $(".social_media").hide();
                          $(".menu_body_daily").show();
-                         $(".menu_header").click(function(){
+                         $(".social_media").click(function(){
                                  $(this).next(".menu_body").slideToggle(100);
                                  $(this).next(".menu_body_daily").slideToggle(100);
                                  });	
@@ -145,26 +145,82 @@ google.load(drawVisualization);
          </head>
 
          <body>
-                 <div id="body">
-                         <div id="content">
+                 <div id="header" class="container_24">
+                         <div style="text-align: right">
+                                                 <li><a href="/">>Instaright home</a></li>
+                        </div>
+                 </div>
+                 <div class="wrapper">
+                         <div id="content" class="container_24">
+                                 <div id="left_col" class="grid_18">
+                                         <div class="left_box_mid">
+                                                 <h1><a href="#"></a></h1>
+                                                 <div class="body">
+                                                         <div id="statsHeader" ></div>
+                                                         <div id="visualization" style="width: 400px; height: 400px;"></div>
 
-                                 <div id="sidebar">
-                                         <div class="section">
-                                                 <div class="headline" style=" margin-bottom: 5px"><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/" title="Instapaper firefox addon">Instapaper Firefox addon</a></p><a href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:139px" alt="Instapaper firefox addon"/></a></div>
-                                                 <div class="menu_list">
-                                                         <p class="menu_header" style=" margin-bottom: 5px;">Domain Stats in last 5 days</p>
-                                                         <p class="menu_body_daily" style=" margin-bottom: 5px;">
-                                                         {% for d in dailyStats %}
-                                                         <a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a><br>
-                                                         {%endfor%}
+                                                 </div>
+                                         </div>
+                                 </div>
+                                 <div id="right_col" class="grid_6">
+                                         <div id="right_box_top">
+                                                <p style="text-align: center;">Instaright Firefox addon</p>
+                                                <p style="text-align: center;"><a title="Instapaper firefox addon" href="https://addons.mozilla.org/en-US/firefox/addon/13317/"><img src="static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
+                                                <div class="text-align: center; width: 270px;">
+                                                        <ul>
+                                                                <li>
+                                                                        <div class="social_media">Domain Stats in last 5 days
+                                                                                <p style="background: none repeat scroll 0 0 #FFFFFF; padding: 5px 0 17px">
+                                                                                 {% for d in dailyStats %}
+                                                                                 <a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a><br>
+                                                                                {%endfor%}
+                                                                                </p>
+                                                                        </div>
+                                                                </li>
+                                                                <li>
+                                                                        <div class="social_media">Domain Stats in last 5 weeks
+                                                                                <p style="background: none repeat scroll 0 0 #FFFFFF; padding: 5px 0 17px">
+                                                                                {% for d in weeklyStats %}
+                                                                                <a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
+                                                                                {%endfor%}
+                                                                                </p>
+                                                                        </div>
+                                                                </li>
+                                                                <li>
+                                                                        <p class="social_media">Link Volume
+                                                                        <p style="background: none repeat scroll 0 0 #FFFFFF; text-align: center;">
+                                                                        <a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
+                                                                        </p>
+                                                                        </p>
+                                                                </li>
+                                                                <li>
+                                                                        <p class="social_media">Most Instaright Countries
+                                                                        <p style="background: none repeat scroll 0 0 #FFFFFF; text-align: center;">
+                                                                        <a href="#" onclick="drawVisualization(3);" >All Time</a>
+                                                                        </p></p>
+                                                                </li>
+                                                                <li>
+                                                                        <p class="social_media"> Most Instaright Cities
+                                                                        <p style="background: none repeat scroll 0 0 #FFFFFF; text-align: center;">
+                                                                        <a href="#" onclick="drawVisualization(3);" >All Time</a>
+                                                                        </p></p>
+                                                                </li>
+                                                         <!--p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
+                                                         <p class="menu_body" style=" margin-bottom: 5px;">
+                                                         <a href="#" onclick="drawVisualization(4);" >All The Time</a>
                                                          </p>
-                                                         <p class="menu_header" style="margin-bottom: 5px;">Domain Stats in last 5 weeks</p>
+                                                         <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
+                                                         <p class="menu_body" style=" margin-bottom: 5px;">
+                                                         <a href="#" onclick="drawVisualization(5);" >All The Time</a>
+                                                         </p-->
+                                                        </ul>
+                                                         <!--p class="menu_header" style="margin-bottom: 5px;">Domain Stats in last 5 weeks</p>
                                                          <p class="menu_body" style=" margin-bottom: 5px;">
                                                          {% for d in weeklyStats %}
                                                          <a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
                                                          {%endfor%}
-                                                         </p>
-                                                         <p class="menu_header" style="margin-bottom: 5px;">Link Volume</p>
+                                                         </p-->
+                                                         <!--p class="menu_header" style="margin-bottom: 5px;">Link Volume</p>
                                                          <p class="menu_body" style=" margin-bottom: 5px;">
                                                          <a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
                                                          </p>
@@ -175,28 +231,19 @@ google.load(drawVisualization);
                                                          <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
                                                          <p class="menu_body" style=" margin-bottom: 5px;">
                                                          <a href="#" onclick="drawVisualization(5);" >All The Time</a>
-                                                         </p>
+                                                         </p-->
                                                  </div>
                                          </div>
                                  </div>
 
-                                 <div id="entries">
-                                         <div class="entry">
-                                                 <h1><a href="#"></a></h1>
-                                                 <div class="body">
-                                                         <div id="statsHeader" ></div>
-                                                         <div id="visualization" style="width: 400px; height: 400px;"></div>
-
-                                                 </div>
-                                         </div>
-                                 </div>
                          </div>
-                         <div class="footer-container">
-                                 <div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
-                                         <p><a href="mailto:gbabun@gmail.com">contact</a> | <a href="http://twitter.com/bojanbabic">twitter</a> | <a href="http://bojanbabic.blogspot.com">blog</a></p>
-                                 </div>
-                         </div>
-                         <!-- closing body div -->
+                 </div>
+                <div class="clearfix"></div> 
+                </div>
+                 <div class="footer-container">
+                        <div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
+                        <p><a href="mailto:gbabun@gmail.com">contact</a> | <a href="http://twitter.com/bojanbabic">twitter</a> | <a href="http://bojanbabic.blogspot.com">blog</a></p>
+                 </div>
                  </div>
 
          </body>

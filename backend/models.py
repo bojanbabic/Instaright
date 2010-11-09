@@ -8,6 +8,7 @@ class SessionModel(db.Model):
 	url=db.LinkProperty()
 	date=db.DateTimeProperty()
 	domain=db.StringProperty()
+        title=db.StringProperty()
 	def count_all(self):
 		count = 0
 		query = SessionModel.all().order('__key__')

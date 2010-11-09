@@ -1,4 +1,5 @@
 <!-- Google Website Optimizer Control Script -->
+<!-- A/B testing 
 <script>
         function utmx_section(){}function utmx(){}
         (function(){var k='2188815013',d=document,l=d.location,c=d.cookie;function f(n){
@@ -9,11 +10,12 @@
                 +'/siteopt.js?v=1&utmxkey='+k+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='
                 +new Date().valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
                 '" type="text/javascript" charset="utf-8"></sc'+'ript>')})();
-        
 </script><script>utmx("url",'A/B');</script>
+--> 
 <!-- End of Google Website Optimizer Control Script -->
 <html>
         <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <link rel="stylesheet" type="text/css" href="css/style.css" />
                 <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
                 <script src='/_ah/channel/jsapi'></script>
@@ -52,15 +54,13 @@ var channel_id= '{{ channel_id }}';
 var channel = new goog.appengine.Channel(channel_id);
 var socket = channel.open();
 var maxElementsInStream=4;
+var maxHotLinks = 3;
 socket.onopen = function(){
         //alert('connected');
 }
 socket.onmessage = function(evt){
-        //alert('on message');
         try{
-                //alert('evt data:' + evt.data);
                 feed_json_update = JSON.parse(evt.data);
-                //alert(feed_json_update);
                 updateDisplayEntry(feed_json_update, stream);
         } catch(e){
                 //alert('eee:'+e);
@@ -68,12 +68,7 @@ socket.onmessage = function(evt){
 };
 
 
-// NOTE: we are using channel API instead of version v2 of the Feed API
-google.load('feeds', '1');
-// Set a callback to load your code when the page loads.
-//google.setOnLoadCallback(init);
 $(document).ready(function(){
-		alert(dt);
 		$("#invite_jid").bind('keypress', function(e){
 			if (e.keyCode == 13){
 			check_and_send_jid();
@@ -84,8 +79,7 @@ $(document).ready(function(){
 			});
 		$.get('/feed?format=json', {}, updateDisplayEntry)
 		$("#jid_result").hide();
-		//$("#invite_jid").focus();
-		//alert('instaright_id:'+com.appspot.model.account);
+		$("#invite_jid").focus();
                 });
 
 // Create variables to display subscription options using HTML DIVs
@@ -109,64 +103,24 @@ function check_and_send_jid(){
         $("#invite_jid").val('');     
 }
 
-function init(){
-        feed = new google.feeds.Feed('http://instaright.appspot.com/feed');
-        feed.setNumEntries(10);
-        // Enable subscriptions to the feed.
-        feed.load(entryLoaded);
-
-}
-function entryLoaded(response) {
-        displayEntry(response);
-}
-
-function displayEntry(response) {
-        feed = response.feed;
-        div = document.getElementById('stream');
-        var entries = feed.entries;
-        entries = entries.reverse();
-        maxElements = entries.length;
-        if (maxElements >=  maxElementsInStream){
-                maxElements = maxElementsInStream;
-        }
-        for (var i = 0; i < maxElements; i++) {
-
-                var entry = entries[i];
-                var title = entry.title;
-                var link = entry.link;
-                var dateUpdated = new Date(entry.publishedDate);
-                var container = document.createElement('div');
-                container.setAttribute('class', 'streamcontent');
-                containerAvatar = document.createElement('div');
-
-
-                avatarElement = document.createElement('img');
-                avatarElement.setAttribute('src', '/static/images/noavatar.png');
-                avatarElement.setAttribute('class', 'avatar');
-
-                containerAvatar.appendChild(avatarElement);
-                container.appendChild(containerAvatar);
-                var anchor = document.createElement('a');
-                anchor.innerHTML = title;
-                anchor.href = link;
-                container.appendChild(anchor);
-                container.appendChild(document.createElement('br'));
-                var contentParagraph = document.createElement('p');
-                contentParagraph.innerHTML = dateUpdated;
-                container.appendChild(contentParagraph);
-                container.appendChild(document.createElement('br'));
-                container.appendChild(document.createElement('br'));
-                div.insertBefore(container, div.firstChild);
-        }
-}
-
 function updateDisplayEntry(response, div) {
         try{
                 div = document.getElementById('stream');
-                //alert('length:' + response.length);
-                for (i = 0; i < response.length; i++) {
+                for (i = response.length - 1; i >= 0; i--) {
                         e = response[i]['u'];
-                        title = e['t'];
+                        domain = e['d'];
+                        try{
+                                title=e['t'];
+                        }catch(e){
+                                title="Instaright article from domain "+domain;
+                        }
+                        if (title == null || title == 'None'){
+                                title="Instaright article from domain "+domain;
+                        } else {
+                                if (title.length >= 80){
+                                        title = title.substr(0,77) + ' ...';
+                                }
+                        }
                         link = e['l'];
                         dateUpdated = new Date(e['u']);
                         id = e['id'];
@@ -183,18 +137,33 @@ function updateDisplayEntry(response, div) {
                         containerAvatar.appendChild(avatarElement);
                         container.setAttribute('class', 'streamcontent');
                         container.setAttribute('id', id);
-                        anchor = document.createElement('a');
-                        anchor.innerHTML = title;
-                        anchor.href = link;
+
+                        titleElement = document.createElement('a');
+                        titleElement.innerHTML = title;
+                        titleElement.href = link;
+                        titleElement.target="_new"
+                        titleParagraph = document.createElement('p');
+                        titleParagraph.appendChild(titleElement);
+
+                        domainElement = document.createElement('a');
+                        domainElement.innerHTML = domain;
+                        domainElement.href = 'http://'+domain;
+                        domainElement.target="_new"
 
                         container.appendChild(containerAvatar);
-                        container.appendChild(anchor);
+                        container.appendChild(titleParagraph);
                         container.appendChild(document.createElement('br'));
+                        container.appendChild(domainElement);
+                        container.appendChild(document.createElement('br'));
+
                         contentParagraph = document.createElement('p');
                         contentParagraph.innerHTML = dateUpdated;
+
+                        domainParagraph = document.createElement('p');
+                        domainParagraph.innerHTML = domainElement;
+
                         container.appendChild(contentParagraph);
-                        container.appendChild(document.createElement('br'));
-                        container.appendChild(document.createElement('br'));
+                       
                         div.insertBefore(container, div.firstChild);
                         $("#"+id).hide();
                         $("#"+id).show('blind');
@@ -237,6 +206,13 @@ function send_invite(){
 </div>
 <div class="wrapper"> 
         <div id="content" class="container_24"> 
+                <!--div id="hot_links_container" class="hot_links">
+                        {% for l in hotlinks %}
+                        <div class=hot_links>
+                                <p><a href="{{ l.url }}">{{ l.title }}</a><ul><li id="tweet" style="background: no-repeat url('/static/images/twitter_small.png')">Tweets:{{ l.tweets}}</li><li id="reddit">Redditups:{{ l.redditups }}</li><li id="delicious">Delicious saves:{{ l.delicious_count }}</li><li id="instapaper" >Instapaper saves:{{ l.instapaper_count }}</li><li id="digg">Diggs:{{ l.diggs }}</li></p>
+                        </div>
+                        {% endfor %}
+                </div-->
                 <div id="left_col" class="grid_18"> 
                         <div class="left_box_top"> 
                                 <h2 class="round_title"> 

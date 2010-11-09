@@ -12,7 +12,11 @@
 {% for entry in entries %}
 <entry>
 	<id>{{ entry.key }}</id>
+        {% if entry.title %}
+        <title>{{ entry.title|escape }}</title>
+        {% else %}
 	<title>Instaright bookmark from domain: {{ entry.domain }} </title>
+        {% endif %} 
 	<link href="http://instaright.appspot.com/article/{{ entry.key }}" />
 	<updated>{{ entry.date|date:"Y-m-d\TH:i:s\Z" }}</updated>
 	<summary>{{ entry.domain }}</summary>
