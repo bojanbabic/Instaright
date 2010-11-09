@@ -134,7 +134,7 @@ google.load(drawVisualization);
 <script type="text/javascript">
          $(document).ready(function()
                          {
-                         $(".social_media").hide();
+                         $(".menu_body").hide();
                          $(".menu_body_daily").show();
                          $(".social_media").click(function(){
                                  $(this).next(".menu_body").slideToggle(100);
@@ -146,16 +146,18 @@ google.load(drawVisualization);
 
          <body>
                  <div id="header" class="container_24">
-                         <div style="text-align: right">
-                                                 <li><a href="/">>Instaright home</a></li>
+                         <div style="text-align: left">
+                                 <ul>
+                                                 <li><a href="/">Instaright home</a></li>
+                                </ul>
                         </div>
                  </div>
                  <div class="wrapper">
                          <div id="content" class="container_24">
                                  <div id="left_col" class="grid_18">
-                                         <div class="left_box_mid">
+                                         <div class="left_box_mid_no_pading">
                                                  <h1><a href="#"></a></h1>
-                                                 <div class="body">
+                                                 <div class="stats_body">
                                                          <div id="statsHeader" ></div>
                                                          <div id="visualization" style="width: 400px; height: 400px;"></div>
 
@@ -169,39 +171,39 @@ google.load(drawVisualization);
                                                 <div class="text-align: center; width: 270px;">
                                                         <ul>
                                                                 <li>
-                                                                        <div class="social_media">Domain Stats in last 5 days
-                                                                                <p style="background: none repeat scroll 0 0 #FFFFFF; padding: 5px 0 17px">
+                                                                        <p class="social_media">Domain Stats in last 5 days
+                                                                                <p class="menu_body_daily">
                                                                                  {% for d in dailyStats %}
                                                                                  <a href="#" onclick="drawVisualization(0, this.innerHTML);" >{{ d }}</a><br>
                                                                                 {%endfor%}
                                                                                 </p>
-                                                                        </div>
+                                                                        </p>
                                                                 </li>
                                                                 <li>
-                                                                        <div class="social_media">Domain Stats in last 5 weeks
-                                                                                <p style="background: none repeat scroll 0 0 #FFFFFF; padding: 5px 0 17px">
+                                                                        <p class="social_media">Domain Stats in last 5 weeks
+                                                                                <p class="menu_body">
                                                                                 {% for d in weeklyStats %}
                                                                                 <a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
                                                                                 {%endfor%}
                                                                                 </p>
-                                                                        </div>
+                                                                        </p>
                                                                 </li>
                                                                 <li>
                                                                         <p class="social_media">Link Volume
-                                                                        <p style="background: none repeat scroll 0 0 #FFFFFF; text-align: center;">
+                                                                        <p class="menu_body">
                                                                         <a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
                                                                         </p>
                                                                         </p>
                                                                 </li>
                                                                 <li>
                                                                         <p class="social_media">Most Instaright Countries
-                                                                        <p style="background: none repeat scroll 0 0 #FFFFFF; text-align: center;">
+                                                                        <p class="menu_body">
                                                                         <a href="#" onclick="drawVisualization(3);" >All Time</a>
                                                                         </p></p>
                                                                 </li>
                                                                 <li>
                                                                         <p class="social_media"> Most Instaright Cities
-                                                                        <p style="background: none repeat scroll 0 0 #FFFFFF; text-align: center;">
+                                                                        <p class="menu_body">
                                                                         <a href="#" onclick="drawVisualization(3);" >All Time</a>
                                                                         </p></p>
                                                                 </li>

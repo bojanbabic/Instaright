@@ -194,6 +194,8 @@ class UserDetails(db.Model):
         last_active_date = db.DateTimeProperty()
         links_added = db.IntegerProperty(default=0)
         info_updated = db.DateTimeProperty(auto_now_add=True)
+        follow_on_twitter = db.BooleanProperty()
+        
 	@staticmethod
 	def getAll():
 		data=UserDetails.gql('ORDER by __key__').fetch(1000)
