@@ -1,10 +1,15 @@
 <?xml version="1.0"?>
 
+<!DOCTYPE overlay SYSTEM "chrome://instaright/locale/context.dtd">
+
 <overlay id="instarightOverlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+// create string bundle
+<stringbundleset id="stringbundleset">
+        <stringbundle id="instaright_bundle" src="chrome://instaright/locale/alert_bundle.properties"/>
+</stringbundleset>
 
 // This imports our javascript.
-
 <script type="application/x-javascript" src="chrome://instaright/content/instarightOverlay.js">
 </script>
 
@@ -12,7 +17,7 @@
 // This is for the right click menu.
 
 <popup id="contentAreaContextMenu">
-  <menuitem id="instaright" label="Instapaper it!" accesskey="I" 
+  <menuitem id="instaright" label="&label.context;" accesskey="I" 
   insertafter="context-stop" oncommand="com.appspot.instaright.start();"/>
 </popup>
 

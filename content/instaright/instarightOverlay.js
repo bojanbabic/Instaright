@@ -14,8 +14,22 @@ com.appspot.model={
 	disableAlert: false,
 	disablePageSaveMode: false,
 	targetUrl:"",
-	ajaxResponse:"",
+	ajaxResponse:"",	
 	init: function(){
+		try{
+		this.stringBundle = document.getElementById("instaright_bundle");
+		//this.stringBundle.instaright_alert=com.appspot.model.stringBundle.getString("alert.instaright.alert");		
+		/*this.stringBundle.invalid_email = com.appspot.model.stringBundle.getString("alert.invalid.email");
+		this.stringBundle.page_saving_disabled = com.appspot.model.stringBundle.getString("alert.save.disabled");
+		this.stringBundle.no_url = com.appspot.model.stringBundle.getString("alert.no.url");
+		this.stringBundle.alert_success = com.appspot.model.stringBundle.getString("alert.success");
+		this.stringBundle.alert_bad_request = com.appspot.model.stringBundle.getString("alert.bad.request");
+		this.stringBundle.alert_invalid_credentials = com.appspot.model.stringBundle.getString("alert.invalid.credentials");
+		this.stringBundle.alert_service_error = com.appspot.model.stringBundle.getString("alert.service.error");
+*/
+	}catch(e){
+		alert(e);
+	}
 		var ver = -1; firstrun = true;
                 var current = -100;
                 var error = false;
@@ -174,6 +188,7 @@ com.appspot.instaright={
 	//_SERVER:"http://localhost:8080",
 	start:function(){
 		com.appspot.model.startup();
+		//alert(com.appspot.model.stringBundle.instaright_alert);
 		alertsService = Components.classes["@mozilla.org/alerts-service;1"].  
 			getService(Components.interfaces.nsIAlertsService);  
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
@@ -274,7 +289,7 @@ com.appspot.instaright={
 					 params = "username="+com.appspot.model.account+"&password="+com.appspot.model.password+"&url="+encodeURIComponent(url);
 				 }
                                  if ( title != null){
-                                         params += "&title="+title;
+                                         params += "&title="+encodeURIComponent(title);
                                  }
 
 				 loggingLocation = this._SERVER+"/rpc";
@@ -285,6 +300,8 @@ com.appspot.instaright={
 					 body+="\""+com.appspot.model.account+"\"";
 					 body+=",";
 					 body+="\""+encodeURIComponent(url)+"\"";
+					 body+=",";
+					 body+="\""+encodeURIComponent(title)+"\"";
 					 body+="]";
 
 					 logging.open('POST', loggingLocation, true);

@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+
+<!DOCTYPE prefwindow SYSTEM "chrome://instaright/locale/options.dtd">
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <prefwindow id="instaright-prefs" title="Instapaper Account" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
@@ -35,18 +37,18 @@
 		<preference id="disablePageSaveMode" name="extension.instaright.disablePageSaveMode" type="bool"/>		
 	</preferences>
 	<hbox>
-		<label control="test" value="Your Instapaper account:"/>
+		<label control="test" value="&label.instapaper.account;"/>
 		<textbox id="accountEmail" preference="instarightAccount" maxlength="100"/>		
 	</hbox>
 	<hbox>
-		<label control="test" value="Your Instapaper password (optional):"/>
+		<label control="test" value="&label.instapaper.password;"/>
 		<textbox id="accountPassword" type="password" maxlength="100" onchange="setPasswordValue();"/>		
 	</hbox>
 	<hbox>	
-		<checkbox id="alertCheckbox" label="Disable Success alert" preference="disableAlert"/>
+		<checkbox id="alertCheckbox" label="&label.deactivate.success;" preference="disableAlert"/>
 	</hbox>
 	<hbox>	
-		<checkbox id="pageSaveMode" label="Disable Page Save Mode" preference="disablePageSaveMode"/>
+		<checkbox id="pageSaveMode" label="&label.deactivate.save;" preference="disablePageSaveMode"/>
 	</hbox>
      </prefpane>
      
