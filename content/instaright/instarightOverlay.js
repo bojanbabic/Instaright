@@ -237,7 +237,9 @@ com.appspot.instaright={
 		this.sendUrlSynchAjax(url, title, textSelected);
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			badge = this.getBadge();
+			//badge = "instapaper_mod.png";
+			alertsService.showAlertNotification("chrome://instaright/skin/"+badge,   
 					"Instaright alert", "Success.",   
 					false, "", null, "");  
 			//alert('Success.');
@@ -354,7 +356,37 @@ com.appspot.instaright={
 
 			  }
 			  http.send(body);
-	}
+	},
+	getBadge:function(){
+			 try{
+		club = com.appspot.model.prefs.getBoolPref("badge.club");
+		fire = com.appspot.model.prefs.getBoolPref("badge.fire");
+		K1 = false;//com.appspot.model.prefs.getBoolPref("badge.k1");
+		K5 = false; //com.appspot.model.prefs.getBoolPref("badge.k5");
+		K10 = false; //com.appspot.model.prefs.getBoolPref("badge.k10");
+		if (club){
+			return "instapaper_club_mod.png";
+		}
+		if (fire){
+			return "instapaper_fire_mod.png";
+		}
+		if (K1){
+			return "instapaper_1K_mod.png";
+		}
+		if (K5){
+			return "instapaper_5K_mod.png";
+		}
+		if (K10){
+			return "instapaper_10K_mod.png";
+		}
+		
+		return "instapaper_mod.png";
+			 } catch(e){
+				 alert(e);
+				 return "instapaper_mod.png"
+			 }
+			
+	}, 
 }
 
 window.addEventListener("load", function(e) { com.appspot.model.init(); }, true);
