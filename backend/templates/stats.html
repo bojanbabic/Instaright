@@ -36,101 +36,15 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
                         }
                 </script>
                 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+                <script type="text/javascript" src="/static/javascript/chart.js"></script>
                 <script type="text/javascript">
                         google.load('visualization', '1', {packages: ['imagechart']});
                         google.load('jquery', '1.4.2');
                 </script>
                 <script type="text/javascript">
-                        function drawVisualization(type, statsForDate) {
-                                var options = {};
-                                clearElement('visualization');
-                                clearElement('statsHeader');
-                                if (!statsForDate){
-                                        statsForDate = "{{ dailyStats.0 }}";
-                                }
-                                staticurl = '/visual?type=';
-                                if (!type){
-                                        typeString = 'dailyfeed';
-                                        typeLabel="Daily stats for "+statsForDate;
-                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
-                                }
-                                else if (type == 1){
-                                        typeString = 'weeklyfeed';
-                                        typeLabel="Week stats for "+statsForDate;
-                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
-                                }
-                                else if (type == 2){
-                                        typeString = 'dailyfeed';
-                                        typeLabel="Daily stats for "+statsForDate;
-                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
-                                } 
-                                else if (type == 3){
-                                        typeString = 'linkvolume';
-                                        typeLabel="Daily Link Volume";
-                                        dataurl = staticurl + typeString;
-                                }
-                                else if (type == 4){
-                                        typeString = 'countryFeed';
-                                        typeLabel="Most Instaright! Countries";
-                                        dataurl = staticurl + typeString;
-                                }
-                                else if (type == 5){
-                                        typeString = 'cityFeed';
-                                        typeLabel="Most Instaright! Cities";
-                                        dataurl = staticurl + typeString;
-                                }
-                                else {
-                                        typeString = 'dailyfeed';
-                                        typeLabel="Daily stats for "+statsForDate;
-                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
-                                } 
-                                //alert(typeLabel);
-                                setElementValue('statsHeader',typeLabel);
-                                //typeString = 'weeklyfeed'
-                                //alert(dataurl);
-
-                                // 'bhg' is a horizontal grouped bar chart in the Google Chart API.
-                                // The grouping is irrelevant here since there is only one numeric column.
-                                options.cht = 'bhg'; 
-
-                                // Draw labels in pink.
-                                var color = 'ff3399';
-
-                                // Google Chart API needs to know which column to draw the labels on.
-                                // Here we have one labels column and one data column.
-                                // The Chart API doesn't see the label column.  From its point of view,
-                                // the data column is column 0.
-                                var index = 0;
-
-                                // -1 tells Google Chart API to draw a label on all bars.
-                                var allbars = -1;
-
-                                // 10 pixels font size for the labels.
-                                var fontSize = 10;
-
-                                // Priority is not so important here, but Google Chart API requires it.
-                                var priority = 0;
-
-                                var height = 450;
-                                var weight = 500;
-                                try{
-
-                                        options.chm = [color, index, allbars, fontSize, priority].join(',');
-
-                                        new google.visualization.Query(dataurl).send(
-                                                        function(response){
-                                                        //alert("response dat:"+response.getDataTable());
-                                                        new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
-                                                        });
-                                } catch(e){
-                                        alert(e);
-                                }
-
-                        }
-
-google.setOnLoadCallback(drawVisualization);
-google.load(drawVisualization);
-</script>
+                        google.setOnLoadCallback(drawVisualization);
+                        google.load(drawVisualization);
+                </script>
 <script type="text/javascript">
          $(document).ready(function()
                          {
@@ -206,6 +120,15 @@ google.load(drawVisualization);
                                                                         <p class="menu_body">
                                                                         <a href="#" onclick="drawVisualization(3);" >All Time</a>
                                                                         </p></p>
+                                                                </li>
+                                                                <li>
+                                                                        <p class="social_media"> Most Instaright Users
+                                                                                <p class="menu_body">
+                                                                                {% for d in userStats %}
+                                                                                <a href="#" onclick="drawVisualization(6, this.innerHTML);" >{{ d }}</a><br>
+                                                                                {%endfor%}
+                                                                                </p>
+                                                                        </p>
                                                                 </li>
                                                          <!--p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
                                                          <p class="menu_body" style=" margin-bottom: 5px;">
