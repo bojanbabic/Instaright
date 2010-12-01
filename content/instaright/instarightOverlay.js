@@ -44,9 +44,6 @@ com.appspot.model={
                                         this.prefs.setCharPref("version",current);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
                                                 "Instaright alert", "Thanks for supporting continued development of this addon.");
-                                        //alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-                                         //               "Instaright alert", "Thanks for supporting continued development of this addon.",   
-                                          //              false, "", null, "");  
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
@@ -55,9 +52,6 @@ com.appspot.model={
                                         this.prefs.setCharPref("version",current);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
                                                 "Instaright alert", "Thanks for supporting continued development of this addon.");
-                                        //alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-                                         //               "Instaright alert", "Thanks for supporting continued development of this addon.",   
-                                          //              false, "", null, "");  
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
@@ -87,8 +81,6 @@ com.appspot.model={
 		this.disablePageSaveMode = this.prefs.getBoolPref("disablePageSaveMode");
 		
 		this.refreshInformation();  
-		// if necessary use nsITimer#Example instead of timer
-		//(this.refreshInformation, 10*60*1000);
 		this.showItem();
 	}, 
 	shutdown: function(){
@@ -120,7 +112,6 @@ com.appspot.model={
 					    }
 					    nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",  Components.interfaces.nsILoginInfo,  "init");  
 					    loginInfo = new nsLoginInfo('http://www.instapaper.com',  'http://www.instapaper.com/user/login', null,  this.account, password, 'username', 'password');  
-				            //alert('about to modify login info - username:'+ this.account + ' password:' + password );
 					    this.updateLoginInfo(loginInfo, this.account, password);
 
 				    } catch(e){
@@ -132,18 +123,14 @@ com.appspot.model={
 					    // if already exists modify myLoginManager.modifyLogin(oldLogin, newLogin)
 					    existingLogin = this.getLoginInfoForUsername(account); 
 					    if ( existingLogin == null && password != ""){
-						    //alert('new login info');
 						    this.myLoginManager.addLogin(loginInfo);
 					    } 
 					    else if ( password == "" && existingLogin != null){
-						    //alert('removing empty pass login');
 						    this.myLoginManager.removeLogin(existingLogin);
 					    }
 					    else if ( existingLogin != null){
-						    //alert('updated user login info');
 						    this.myLoginManager.removeLogin(existingLogin);
 						    this.myLoginManager.addLogin(loginInfo);
-						    //myLoginManager.modifyLogin(existingLogin, loginInfo);
 					    }
 		
 	},
@@ -204,13 +191,31 @@ com.appspot.instaright={
         },
 	start:function(){
 		com.appspot.model.startup();
+                try{
+                var string_bundle = document.getElementById("instaright_bundle");
+                var alert_instaright = string_bundle.getString('alert_instaright');
+                alert(alert_instaright);
+                var alert_invalid_mail = string_bundle.getString('alert_invalid_email');
+                alert(alert_invalid_mail);
+                var alert_save_disabled = string_bundle.getString('alert_save_disabled');
+                alert(alert_save_disabled);
+                var alert_no_url = string_bundle.getString('alert_no_url');
+                alert(alert_no_url);
+                var alert_success = string_bundle.getString('alert_success');
+                alert(alert_success);
+                var alert_bad_request = string_bundle.getString('alert_bad_request');
+                alert(alert_bad_request);
+                var alert_invalid_credential = string_bundle.getString('alert_invalid_credentials');
+                alert(alert_invalid_credential);
+                var alert_service_error = string_bundle.getString('alert_service_error');
+                alert(alert_service_error);
+                
+                } catch(e){
+                       alert(e);
+                } 
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
                         this.sendAlert("chrome://instaright/skin/instapaper_mod.png",   
-                                        "Instaright alert", "Invalid email. Please enter valid email in plugin options.");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "Invalid email. Please enter valid email in plugin options.",   
-			//		false, "", null, "");  
-			//alert('Invalid email. Please enter valid email in plugin options.');
+                                        alert_instaright, alert_invalid_mail);
 			return;
 		}
 		if (!gContextMenu) { // Mysterious error console
@@ -224,20 +229,12 @@ com.appspot.instaright={
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
                         title = content.document.title;
 		} else {
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Page saving mode has been disabled. Please recheck your settings.");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "Page saving mode has been disabled. Please recheck your settings.",   
-			//		false, "", null, "");  
-			//alert("Page saving mode has been disabled. Please recheck your settings.");
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png",alert_instaright, alert_save_disabled);
 			return;
 		}
 		if (url == null){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Can\'t determine link... try another!");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "Can\'t determine link... try another!",   
-			//		false, "", null, "");  
-			//alert('Can\'t determine link... try another!')
-				this.logErrors("Can't determine link , try another");
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_no_url);
+			this.logErrors("Can't determine link , try another");
 			return;
 		}
 		// text javascript url fix
@@ -254,32 +251,16 @@ com.appspot.instaright={
 		this.sendUrlSynchAjax(url, title, textSelected);
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Success.");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "Success.",   
-			//		false, "", null, "");  
-			//alert('Success.');
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_success);
 		}
 		else if (com.appspot.model.ajaxResponse == '400'){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Bad request. Missing required parameter.");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "Bad request. Missing required parameter.",   
-			//		false, "", null, "");  
-			//alert('Bad request. Missing required parameter.');
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_bad_request);
 		}
 		else if (com.appspot.model.ajaxResponse == '403'){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Invalid username or password.");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "Invalid username or password.",   
-			//		false, "", null, "");  
-			//alert('Invalid username or password.');
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_invalid_credential);
 		}
 		else if (com.appspot.model.ajaxResponse == '500'){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "The service encountered an error. Please try later again.");
-			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-			//		"Instaright alert", "The service encountered an error. Please try later again.",   
-			//		false, "", null, "");  
-			//alert('The service encountered an error. Please try later again.');
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_service_error);
 		}
 	},
 	getSelectedText:function(){
