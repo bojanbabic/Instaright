@@ -14,22 +14,8 @@ com.appspot.model={
 	disableAlert: false,
 	disablePageSaveMode: false,
 	targetUrl:"",
-	ajaxResponse:"",	
+	ajaxResponse:"",
 	init: function(){
-		try{
-		this.stringBundle = document.getElementById("instaright_bundle");
-		//this.stringBundle.instaright_alert=com.appspot.model.stringBundle.getString("alert.instaright.alert");		
-		/*this.stringBundle.invalid_email = com.appspot.model.stringBundle.getString("alert.invalid.email");
-		this.stringBundle.page_saving_disabled = com.appspot.model.stringBundle.getString("alert.save.disabled");
-		this.stringBundle.no_url = com.appspot.model.stringBundle.getString("alert.no.url");
-		this.stringBundle.alert_success = com.appspot.model.stringBundle.getString("alert.success");
-		this.stringBundle.alert_bad_request = com.appspot.model.stringBundle.getString("alert.bad.request");
-		this.stringBundle.alert_invalid_credentials = com.appspot.model.stringBundle.getString("alert.invalid.credentials");
-		this.stringBundle.alert_service_error = com.appspot.model.stringBundle.getString("alert.service.error");
-*/
-	}catch(e){
-		alert(e);
-	}
 		var ver = -1; firstrun = true;
                 var current = -100;
                 var error = false;
@@ -52,26 +38,31 @@ com.appspot.model={
 		}catch(e){
 			//nothing
 		}finally{
-                        alertsService = Components.classes["@mozilla.org/alerts-service;1"].  
-                                getService(Components.interfaces.nsIAlertsService);  
-                        if (firstrun){
-                                this.prefs.setBoolPref("firstrun",false);
-                                this.prefs.setCharPref("version",current);
-                                alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-                                                "Instaright alert", "Thanks for supporting continued development of this addon.",   
-                                                false, "", null, "");  
-                                timer.initWithCallback(function(){
-                                                gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
-                                                }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
-                        }
-                        if (ver != current && !firstrun){
-                                this.prefs.setCharPref("version",current);
-                                alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-                                                "Instaright alert", "Thanks for supporting continued development of this addon.",   
-                                                false, "", null, "");  
-                                timer.initWithCallback(function(){
-                                                gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
-                                                }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+                        try{
+                                if (firstrun){
+                                        this.prefs.setBoolPref("firstrun",false);
+                                        this.prefs.setCharPref("version",current);
+                                        com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
+                                                "Instaright alert", "Thanks for supporting continued development of this addon.");
+                                        //alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+                                         //               "Instaright alert", "Thanks for supporting continued development of this addon.",   
+                                          //              false, "", null, "");  
+                                        timer.initWithCallback(function(){
+                                                        gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
+                                                        }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+                                }
+                                if (ver != current && !firstrun){
+                                        this.prefs.setCharPref("version",current);
+                                        com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
+                                                "Instaright alert", "Thanks for supporting continued development of this addon.");
+                                        //alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+                                         //               "Instaright alert", "Thanks for supporting continued development of this addon.",   
+                                          //              false, "", null, "");  
+                                        timer.initWithCallback(function(){
+                                                        gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
+                                                        }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+                                }
+                        } catch(e){
                         }
 		}
 		window.removeEventListener("load", function(){ com.appspot.model.init(); }, true);
@@ -175,26 +166,50 @@ com.appspot.model={
 
 	showItem: function(){
 		menu = document.getElementById("contentAreaContextMenu");
-		menu.addEventListener("itemShowing", this.itemShowing, false);
+                //TODO why this can be null?
+                if (menu != null){
+		        menu.addEventListener("itemShowing", this.itemShowing, false);
+                }
 	},
 	itemShowing: function(){
 		menuItem = document.getElementById("instaright");
-		menuItem.hidden = !gContextMenu.onLink;
+                //TODO why this can be null?
+                if (menuItem != null){
+		        menuItem.hidden = !gContextMenu.onLink;
+                }
 	}	
 }
 
 com.appspot.instaright={
 	_SERVER:"http://instaright.appspot.com",
 	//_SERVER:"http://localhost:8080",
+        alertService:null,
+        sendAlert:function(badge, alert_title, alert_message){
+                if (this.alertService == null){
+                        try{
+		                this.alertService = Components.classes["@mozilla.org/alerts-service;1"].  
+			                getService(Components.interfaces.nsIAlertsService);  
+                        }catch(e){
+                                this.alertService = null;
+                        }
+                }
+                if (this.alertService != null){
+			this.alertService.showAlertNotification(badge,
+					alert_title, alert_message,
+					false, "", null, "");  
+                }else{
+                        alert(alert_message);
+                }
+
+        },
 	start:function(){
 		com.appspot.model.startup();
-		//alert(com.appspot.model.stringBundle.instaright_alert);
-		alertsService = Components.classes["@mozilla.org/alerts-service;1"].  
-			getService(Components.interfaces.nsIAlertsService);  
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-					"Instaright alert", "Invalid email. Please enter valid email in plugin options.",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png",   
+                                        "Instaright alert", "Invalid email. Please enter valid email in plugin options.");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "Invalid email. Please enter valid email in plugin options.",   
+			//		false, "", null, "");  
 			//alert('Invalid email. Please enter valid email in plugin options.');
 			return;
 		}
@@ -209,22 +224,24 @@ com.appspot.instaright={
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
                         title = content.document.title;
 		} else {
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-					"Instaright alert", "Page saving mode has been disabled. Please recheck your settings.",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Page saving mode has been disabled. Please recheck your settings.");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "Page saving mode has been disabled. Please recheck your settings.",   
+			//		false, "", null, "");  
 			//alert("Page saving mode has been disabled. Please recheck your settings.");
 			return;
 		}
 		if (url == null){
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-					"Instaright alert", "Can\'t determine link... try another!",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Can\'t determine link... try another!");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "Can\'t determine link... try another!",   
+			//		false, "", null, "");  
 			//alert('Can\'t determine link... try another!')
 				this.logErrors("Can't determine link , try another");
 			return;
 		}
 		// text javascript url fix
-		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0){
+		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0 || url.indexOf('about:blank') == 0){
 			//add javascript or mailto into description
 			// TODO this can overwrite selected text if mouse is over malto or javascript link
 			textSelected = url;
@@ -237,29 +254,31 @@ com.appspot.instaright={
 		this.sendUrlSynchAjax(url, title, textSelected);
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
-			badge = this.getBadge();
-			//badge = "instapaper_mod.png";
-			alertsService.showAlertNotification("chrome://instaright/skin/"+badge,   
-					"Instaright alert", "Success.",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Success.");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "Success.",   
+			//		false, "", null, "");  
 			//alert('Success.');
 		}
 		else if (com.appspot.model.ajaxResponse == '400'){
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-					"Instaright alert", "Bad request. Missing required parameter.",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Bad request. Missing required parameter.");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "Bad request. Missing required parameter.",   
+			//		false, "", null, "");  
 			//alert('Bad request. Missing required parameter.');
 		}
 		else if (com.appspot.model.ajaxResponse == '403'){
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-					"Instaright alert", "Invalid username or password.",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "Invalid username or password.");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "Invalid username or password.",   
+			//		false, "", null, "");  
 			//alert('Invalid username or password.');
 		}
 		else if (com.appspot.model.ajaxResponse == '500'){
-			alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
-					"Instaright alert", "The service encountered an error. Please try later again.",   
-					false, "", null, "");  
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png","Instaright alert", "The service encountered an error. Please try later again.");
+			//alertsService.showAlertNotification("chrome://instaright/skin/instapaper_mod.png",   
+			//		"Instaright alert", "The service encountered an error. Please try later again.",   
+			//		false, "", null, "");  
 			//alert('The service encountered an error. Please try later again.');
 		}
 	},
@@ -356,37 +375,7 @@ com.appspot.instaright={
 
 			  }
 			  http.send(body);
-	},
-	getBadge:function(){
-			 try{
-		club = com.appspot.model.prefs.getBoolPref("badge.club");
-		fire = com.appspot.model.prefs.getBoolPref("badge.fire");
-		K1 = false;//com.appspot.model.prefs.getBoolPref("badge.k1");
-		K5 = false; //com.appspot.model.prefs.getBoolPref("badge.k5");
-		K10 = false; //com.appspot.model.prefs.getBoolPref("badge.k10");
-		if (club){
-			return "instapaper_club_mod.png";
-		}
-		if (fire){
-			return "instapaper_fire_mod.png";
-		}
-		if (K1){
-			return "instapaper_1K_mod.png";
-		}
-		if (K5){
-			return "instapaper_5K_mod.png";
-		}
-		if (K10){
-			return "instapaper_10K_mod.png";
-		}
-		
-		return "instapaper_mod.png";
-			 } catch(e){
-				 alert(e);
-				 return "instapaper_mod.png"
-			 }
-			
-	}, 
+	}
 }
 
 window.addEventListener("load", function(e) { com.appspot.model.init(); }, true);
