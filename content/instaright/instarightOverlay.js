@@ -194,21 +194,13 @@ com.appspot.instaright={
                 try{
                 var string_bundle = document.getElementById("instaright_bundle");
                 var alert_instaright = string_bundle.getString('alert_instaright');
-                alert(alert_instaright);
                 var alert_invalid_mail = string_bundle.getString('alert_invalid_email');
-                alert(alert_invalid_mail);
                 var alert_save_disabled = string_bundle.getString('alert_save_disabled');
-                alert(alert_save_disabled);
                 var alert_no_url = string_bundle.getString('alert_no_url');
-                alert(alert_no_url);
                 var alert_success = string_bundle.getString('alert_success');
-                alert(alert_success);
                 var alert_bad_request = string_bundle.getString('alert_bad_request');
-                alert(alert_bad_request);
                 var alert_invalid_credential = string_bundle.getString('alert_invalid_credentials');
-                alert(alert_invalid_credential);
                 var alert_service_error = string_bundle.getString('alert_service_error');
-                alert(alert_service_error);
                 
                 } catch(e){
                        alert(e);
