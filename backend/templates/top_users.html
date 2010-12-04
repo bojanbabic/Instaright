@@ -5,10 +5,12 @@
                 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
         </head>
         <body>
-                {% for u in users %}
-                <div>
-			<a href="/user/{{ u }}">{{ u }}</a>
-                </div>
+                <table>
+                {% for user in users %}
+                        <tr>
+			<td><a href="/user/{{ user.0 }}">{{ user.0 }}</a></td><td>{{ user.1 }}</span></td>
+                        </tr>
                 {% endfor %}
+                </table>
         </body>
 </html>

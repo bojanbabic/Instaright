@@ -7,7 +7,7 @@ from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
 
-from models import UserDetails, SessionModel
+from models import UserDetails, SessionModel, UserStats
 
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
@@ -19,11 +19,10 @@ class TopUserHandler(webapp.RequestHandler):
 				low, high = stat_range, None
        		 	memcache_key = 'top_users_'+str(datetime.datetime.now().date())+'_'+stat_range
        		        usrs = memcache.get(memcache_key)
-
 		        if usrs:
                                 if format and format == 'txt':
                                         self.response.headers["Content-type"] = "text/plain"
-                                        self.response.out.write("\n".join(usrs))
+                                        self.response.out.write("\n".join([ u[0] for u in usrs ]))
                                         return 
                 	        template_variables = {'users' : usrs }
         			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
@@ -37,13 +36,13 @@ class TopUserHandler(webapp.RequestHandler):
 				logging.info('lower range %s ' %low)
 				users = UserDetails.gql('WHERE links_added >= :1 ORDER by links_added DESC', int(low))
                         logging.info('fetched %d users ' % users.count())
-	       		user_accounts = [ u.instapaper_account for u in users ]
+	       		user_accounts = [ (u.instapaper_account, u.links_added) for u in users ]
 			if users.count() > 0:
 				logging.info('setting users cache. %s user entries' % users.count())
-        			memcache.set(memcache_key, user_accounts )
+        			memcache.set(memcache_key, user_accounts)
                         if format and format == 'txt':
                                 self.response.headers["Content-type"] = "text/plain"
-                                self.response.out.write("\n".join(user_accounts))
+                                self.response.out.write("\n".join([ u[0] for u in user_accounts ]))
                                 return
                 	template_variables = {'users' : user_accounts }
 			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
@@ -64,7 +63,7 @@ class UserHandler(webapp.RequestHandler):
                 logging.info('user: %s' %user_decoded)
                 memcache_key ='user_info_' + user_decoded+'_'+str(datetime.datetime.now().date())
                 sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , user_decoded).fetch(100)
-                links = [ s.url for s in sessions ]
+                links = [ s for s in sessions if s is not None ]
                 cached_info = memcache.get(memcache_key)
                 if cached_info:
                         logging.info('getting from cache' )
@@ -144,6 +143,10 @@ class UserHandler(webapp.RequestHandler):
                                 memships[service_name]=m['href']
 				try:
                                 	setattr(user_detail, service_name, m['href'])
+                                        if service_name == 'twitter':
+                                                # send twitter request 
+                                                screen_name = str(m['href']).replace('http://twitter.com/')
+                                                taskqueue.add(url='/utils/twitter/follow/'+screen_name, queue_name='twitter-follow')
 				except:
 					logging.error('can\'t find attribute %s in UserDetail' % service_name)
 
@@ -197,7 +200,6 @@ class UserUpdate(webapp.RequestHandler):
                         taskqueue.add(queue_name='user-info', url='/user/'+user+'/fetch')
 			memcache.set(memcache_user_key, True)
         def get(self):
-
 		users=UserDetails.gql('ORDER by __key__').fetch(100)
 		if not users:
 			return None
@@ -246,12 +248,46 @@ class UserFormKeyHandler(webapp.RequestHandler):
                         user_detail.put()
                 self.response.headers["Content-type"] = "text/plain"
                 self.response.out.write(form_key)
-                
-
-                
+class UserStatsHandler(webapp.RequestHandler):
+        def get(self, period):
+                date_ = self.request.get('date', None)
+                if date_:
+                        date = datetime.datetime.strptime(date_, '%Y-%m-%d')
+                else:   
+                        date = datetime.datetime.now() - datetime.timedelta(days=1)
+                logging.info('fetching stats for %s and %s' %(period,str(date.date())))
+                if period == 'daily':
+                        stats = UserStats.gql('WHERE date = :1 order by count desc', date).fetch(100)
+                elif period == 'weekly':
+                        self.response.out.write('TODO')
+                        return
+                else:
+                        self.response.out.write('Get outta here')
+                        return
+                if not stats:
+                        self.response.out.write('not stats for %s and date %s retreived no data' %( period, date_))
+                        return
+                self.response.headers["Content-type"] = "application/json"
+                self.response.out.write(simplejson.dumps(stats, default=lambda s: {'u':{'account':s.instapaper_account, 'cout': s.count}}))
+class UserStatsDeleteHandler(webapp.RequestHandler):
+        def get(self, period):
+                if period == 'daily':
+                        allUsers = UserStats.all()
+                else:
+                        self.response.out.write('get outta here')
+                        return
+                if not allUsers:
+                        loging.info('not stats for delete , exit')
+                        return
+                logging.info('total stats for delete %d' %allUsers.count())
+                for u in allUsers:
+                        u.delete()
+                logging.info('done')
 
 app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),
+                                ('/user/stats/(.*)/delete_all', UserStatsDeleteHandler),
+                                ('/user/stats/(.*)', UserStatsHandler),
                                 ('/user/delete_all', UserDeleteHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/(.*)', UserFormKeyHandler),
