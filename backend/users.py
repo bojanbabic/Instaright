@@ -75,7 +75,7 @@ class UserHandler(webapp.RequestHandler):
                 user_detail= UserDetails.gql('WHERE mail = :1', user_decoded).get()
                 if user_detail is None:
 			logging.info('new user %s added to queue' %user_decoded)
-			fetch_url = '/user/'+user_decoded+'/fetch'
+			fetch_url = '/user/'+user+'/fetch'
 			taskqueue.add(queue_name='user-info', url= fetch_url)
                         ud = UserDetails()
                         ud.name = user_decoded
@@ -173,8 +173,10 @@ class UserDeleteHandler(webapp.RequestHandler):
 
 class UserInfoFetchHandler(webapp.RequestHandler):
         def post(self, user):
+                logging.info('fetching info for user %s' % user)
                 userhandler = UserHandler()
                 user_decoded = urllib.unquote(user)
+                user_decoded = user_decoded.strip()
                 logging.info('fetching info for user %s' % user_decoded)
                 userDetail = userhandler.gather_info(user_decoded)
                 if userDetail.name:
@@ -197,7 +199,7 @@ class UserUpdate(webapp.RequestHandler):
 			memcache_user_key='user_'+user+'_'+str(datetime.datetime.now().date)
 			if memcache.get(memcache_user_key):
 				logging.info('skipping processed user %s ' % user)
-                        taskqueue.add(queue_name='user-info', url='/user/'+user+'/fetch')
+                        taskqueue.add(queue_name='user-info', url='/user/'+urllib2.quote(user)+'/fetch')
 			memcache.set(memcache_user_key, True)
         def get(self):
 		users=UserDetails.gql('ORDER by __key__').fetch(100)
@@ -270,16 +272,21 @@ class UserStatsHandler(webapp.RequestHandler):
                 self.response.headers["Content-type"] = "application/json"
                 self.response.out.write(simplejson.dumps(stats, default=lambda s: {'u':{'account':s.instapaper_account, 'cout': s.count}}))
 class UserStatsDeleteHandler(webapp.RequestHandler):
-        def get(self, period):
-                if period == 'daily':
-                        allUsers = UserStats.all()
-                else:
-                        self.response.out.write('get outta here')
+        def get(self, d):
+                if d is None:
+                        logging.info('no date.exit')
                         return
+                date=datetime.datetime.strptime(d, '%Y-%m-%d').date()
+                #if period == 'daily':
+                #        allUsers = UserStats.all()
+                #else:
+                #        self.response.out.write('get outta here')
+                #        return
+                allUsers = UserStats.gql('WHERE date = :1', date).fetch(1000)
                 if not allUsers:
-                        loging.info('not stats for delete , exit')
+                        loging.info('not stats for %s delete , exit' %d)
                         return
-                logging.info('total stats for delete %d' %allUsers.count())
+                logging.info('total stats for  %s delete %d' % (d, len(allUsers)))
                 for u in allUsers:
                         u.delete()
                 logging.info('done')
@@ -288,11 +295,12 @@ app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),
                                 ('/user/stats/(.*)/delete_all', UserStatsDeleteHandler),
                                 ('/user/stats/(.*)', UserStatsHandler),
-                                ('/user/delete_all', UserDeleteHandler),
+                                #NOTE: never uncomment this
+                                #('/user/delete_all', UserDeleteHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
-                                ('/user/(.*)/(.*)', UserFormKeyHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
                                 ('/user/task/update_all', UserUpdate),
+                                ('/user/(.*)/(.*)', UserFormKeyHandler),
                                 ('/user/(.*)', UserHandler),
                                         ], debug =True)
 def main():
