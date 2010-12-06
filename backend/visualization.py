@@ -1,4 +1,4 @@
-import sys, os, time, datetime, cgi, logging, gviz_api, re
+import sys, os, time, datetime, cgi, logging, gviz_api, re, math
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -8,7 +8,7 @@ from google.appengine.api import mail
 from google.appengine.runtime import DeadlineExceededError
 from urlparse import urlparse
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
-from models import CountryStats, CityStats, SessionModel
+from models import CountryStats, CityStats, SessionModel, UserStats
 from xmpp_handler import XMPPHandler
 
 class Visualization(webapp.RequestHandler):
@@ -36,6 +36,10 @@ class Visualization(webapp.RequestHandler):
 			self.weekLinks(reqId)
 		elif statstype == "overAllLinks":
 			self.overAllLinks(reqId)
+                elif statstype == "userfeed":
+			targetdate=cgi.escape(self.request.get('date'))
+                        user = cgi.escape(self.request.get('user'))
+                        self.userFeed(targetdate, user, reqId)
 		else:
 			self.response.out.write('Not yet implementd')
 	def dailyFeed(self,targetdate,reqId):
@@ -170,7 +174,7 @@ class Visualization(webapp.RequestHandler):
 					
 	def countryFeed(self, reqId):
 		logging.info('Country stats feed')
-		countryStats= CountryStats.gql('WHERE count > 10 ORDER BY count desc ').fetch(100)
+		countryStats= CountryStats.gql('WHERE count > 10 ORDER BY count desc ').fetch(40)
 		if countryStats is None: 
 			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
@@ -183,7 +187,7 @@ class Visualization(webapp.RequestHandler):
 		data_table = gviz_api.DataTable(description)
 		cntrCnt = []
 		for countryCnt in countryStats:
-			entry = {"countryCode": countryCnt.countryCode, "count":countryCnt.count}
+			entry = {"countryCode": countryCnt.countryCode, "count":math.log(countryCnt.count)}
 			cntrCnt.append(entry)
 		data_table.LoadData(cntrCnt)
 		
@@ -192,7 +196,7 @@ class Visualization(webapp.RequestHandler):
 		
 	def cityFeed(self, reqId):
 		logging.info('City stats feed')
-		cityStatsQ= CityStats.gql('WHERE count > 100 ORDER BY count desc ').fetch(100)
+		cityStatsQ= CityStats.gql('WHERE count > 100 ORDER BY count desc ').fetch(40)
 		if cityStatsQ is None: 
 			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
@@ -211,8 +215,74 @@ class Visualization(webapp.RequestHandler):
 		
 		self.response.headers['Content-Type'] = 'text/plain'
 		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
+
 	def linkOverAllLinks(self, reqId):
 		logging.info('overAll link popularity')
+        def userFeed(self, targetdate, user, reqId):
+                if user:
+                        logging.info('getting stats for user: %s' %user)
+                        stats = UserStats.gql('WHERE instapaper_account = :1 order by date desc', user).fetch(14)
+                        if stats is None:
+		        	logging.info('Not enough data for graph')
+		        	self.repsonse.out.write('Not enough data for graph')
+		        	return
+		        stats = [ x for x in stats if x is not None ]
+		        logging.info('retrieved %s stats' % len(stats))
+		        description = {"date": ("string", "Date"),
+		        		"count":("number", "Count")}
+		        columnnames = [ "date", "count" ]
+		        data_table = gviz_api.DataTable(description)
+		        userCnt = []
+		        for uCnt in stats:
+                                logging.info('account:%s' % uCnt.to_xml())
+			        entry = {"date": uCnt.date, "count":uCnt.count}
+			        userCnt.append(entry)
+		        data_table.LoadData(userCnt)
+		
+		        self.response.headers['Content-Type'] = 'text/plain'
+		        self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
+                        return
+
+	        if not targetdate:
+	                today = datetime.date.today()
+			yesterday=datetime.date.today() - datetime.timedelta(days=1)
+			targetdate=yesterday
+		else:
+		        try:
+		                year=targetdate[:4]
+			        month=targetdate[5:7]
+			        day=targetdate[8:10]
+			        logging.info('year %s month %s day %s' %(year, month, day))
+			        #targetdate=datetime.date(year,month, day)
+			        targetdate=datetime.date(int(year),int(month), int(day))
+			except:
+			        e = sys.exc_info()[1]
+			        logging.error('error formating date %s =>  %s' %(targetdate, e))
+			        targetdate=datetime.date.today() - datetime.timedelta(days=1)
+					
+                logging.info('User stats feed')
+                stats = UserStats.gql('WHERE date = :1 and count > 10 order by count desc', targetdate).fetch(50)
+                if stats is None:
+			logging.info('Not enough data for graph')
+			self.repsonse.out.write('Not enough data for graph')
+			return
+		stats = [ x for x in stats if x is not None ]
+		logging.info('retrieved %s stats' % len(stats))
+		description = {"account": ("string", "User"),
+				"count":("number", "Count")}
+		columnnames = [ "account", "count" ]
+		data_table = gviz_api.DataTable(description)
+		userCnt = []
+		for uCnt in stats:
+                        logging.info('account:%s' % uCnt.to_xml())
+			entry = {"account": uCnt.instapaper_account, "count":uCnt.count}
+			userCnt.append(entry)
+		data_table.LoadData(userCnt)
+		
+		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.out.write(data_table.ToJSonResponse(columns_order=(columnnames) , req_id=reqId))
+
+
 
 		
 	def linkWeekly(self,reqId):
