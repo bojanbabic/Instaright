@@ -1,5 +1,5 @@
 application: instaright
-version: 30
+version: 36
 runtime: python 
 api_version: 1
 
@@ -23,6 +23,11 @@ handlers:
 
 - url: /stats
   script: stats.py
+#  login: admin
+
+- url: /stats/.*
+  script: stats.py
+  login: admin
 
 - url: /static
   static_dir: static
@@ -33,9 +38,13 @@ handlers:
 
 - url: /stats_task
   script: stat_management.py
-  login: admin
+#  login: admin
 
 - url: /data_consolidation
+  script: data_consolidation.py
+#  login: admin
+
+- url: /short_link_consolidation
   script: data_consolidation.py
 #  login: admin
 
@@ -79,21 +88,32 @@ handlers:
 
 - url: /user_consolidation
   script: data_consolidation.py
-  login: admin
+#  login: admin
 
 - url: /user_consolidation_task
   script: data_consolidation.py
-  login: admin
+#  login: admin
+
+- url: /session_consolidation_task
+  script: data_consolidation.py
+#  login: admin
+
+- url: /feed_link_consolidation
+  script: data_consolidation.py
+#  login: admin
 
 - url: /user/.*
   script: users.py
-  login: admin
+#  login: admin
 
-- url: /link/stats
-  script: links.py
-  
 - url: /link/add
   script: fetch/link_info.py
+
+- url: /link/.*
+  script: links.py
+  
+- url: /util/.*
+  script: social/social_activity.py
 
 - url: /.*
   script: main.py

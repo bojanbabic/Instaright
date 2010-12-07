@@ -6,6 +6,8 @@ class SessionModel(db.Model):
 	instaright_account=db.StringProperty()
 	ip=db.StringProperty()
 	url=db.LinkProperty()
+        short_url=db.LinkProperty()
+        feed_url=db.LinkProperty()
 	date=db.DateTimeProperty()
 	domain=db.StringProperty()
         title=db.StringProperty()
@@ -24,6 +26,8 @@ class SessionModel(db.Model):
 	@staticmethod
 	def countAll():
 		data=SessionModel.gql('ORDER by __key__').fetch(1000)
+                if len(data) == 0:
+                        return 0
 		lastKey = data[-1].key()
 		total=len(data)
 		while len(data) == 1000:
@@ -37,10 +41,28 @@ class SessionModel(db.Model):
                 if user is None:
                         return 0
                 data=SessionModel.gql('WHERE instaright_account = :1 ORDER by __key__', user).fetch(1000)
+                if len(data) == 0:
+                        return 0
 		lastKey = data[-1].key()
 		total=len(data)
 		while len(data) == 1000:
                         data=SessionModel.gql('WHERE __key__> :1 and instaright_account = :2 ORDER by __key__', lastKey, user).fetch(1000)
+			lastKey=data[-1].key()
+			total+=len(data)
+		return total
+        @staticmethod
+	def countAllForUserForDate(user, date):
+                if user is None:
+                        return 0
+                data=SessionModel.gql('WHERE instaright_account = :1 and date = :2  ORDER by __key__', user, date).fetch(1000)
+                if len(data) == 0:
+                        return 0
+                upperDate = date + datetime.timedelta(days=1)
+		lastKey = data[-1].key()
+		total=len(data)
+		while len(data) == 1000:
+                        nextK=SessionModel.gql('WHERE __key__> :1 and instaright_account = :2 ORDER by __key__', lastKey, user).fetch(1000)
+			data = [ x for x in nextK if x.date <= date and x.date > upperDate ]
 			lastKey=data[-1].key()
 			total+=len(data)
 		return total
@@ -56,6 +78,21 @@ class SessionModel(db.Model):
 			lastKey=data[-1].key()
 			results.extend(data)
 		return results
+        @staticmethod
+        def getDailyDataWithOffset(targetDate, cursor):
+                if targetDate is None:
+                        targetDate = datetime.date.today() - datetime.timedelta(days=1)
+                upperLimitDate = targetDate + datetime.timedelta(days=1)
+                logging.info('fetching sessions within limits: %s -> %s' %(str(targetDate), str(upperLimitDate)))
+                if cursor:
+		        query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate).with_cursor(cursor)
+                else:
+                        logging.info('no key offset fetching first 1K')
+		        query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate)
+                data = query.fetch(1000)
+                logging.info('fetched data %d' %len(data))
+                return data
+
 	@staticmethod
 	def getDailyStats(targetDate):
 		if targetDate is None:
@@ -76,16 +113,16 @@ class SessionModel(db.Model):
 			targetDate=datetime.date.today() 
 		previousWeek = targetDate - datetime.timedelta(days=7)
 		logging.info('ranges %s -> %s ' %( targetDate, previousWeek))
-		data = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, previousWeek).fetch(1000)
+		query = SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, previousWeek)
+		data = query.fetch(1000)
 		if not data:
 			logging.info('no records found for target date %s ' % str(targetDate))
 			return None
-		lastKey= data[-1].key()
 		result = data
 		while len(data) == 1000:
-			nextK = SessionModel.gql(' WHERE __key__ > :1 ORDER by  __key__, date', lastKey).fetch(1000)
-			lastKey=nextK[-1].key()
-			data = [ x for x in nextK if x.date <= targetDate and x.date > previousWeek ]
+                        cursor = query.cursor()
+                        query= SessionModel.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, previousWeek).with_cursor(cursor)
+		        data = query.fetch(1000)
 			result.extend(data)
 		return result
 
@@ -96,6 +133,8 @@ class SessionModel(db.Model):
 		lastYear = targetDate - datetime.timedelta(days=365)
                 result = []
 		data = WeeklyDomainStats.gql(' WHERE date <= :1 and date > :2 ORDER by date, __key__', targetDate, lastYear).fetch(1000)
+                if len(data) == 0:
+                        return 0
 		result = data
                 lastKey= data[-1].key()
 		while len(data) == 1000:
@@ -113,22 +152,22 @@ class StatsModel(db.Model):
 
 class DailyDomainStats(db.Model):
 	domain=db.StringProperty()
-	count=db.IntegerProperty()
+	count=db.IntegerProperty(default=0)
 	date=db.DateProperty(auto_now_add=True)
 
 class WeeklyDomainStats(db.Model):
 	domain=db.StringProperty()
-	count=db.IntegerProperty()
+	count=db.IntegerProperty(default=0)
 	date=db.DateProperty(auto_now_add=True)
 
 class YearDomainStats(db.Model):
 	domain=db.StringProperty()
-	count=db.IntegerProperty()
+	count=db.IntegerProperty(default=0)
 	date=db.DateProperty(auto_now_add=True)
 class LinkStats(db.Model):
 	link=db.StringProperty()
 	countUpdated=db.DateTimeProperty(auto_now_add=True)
-	count=db.IntegerProperty()
+	count=db.IntegerProperty(default=0)
 	lastUpdatedBy=db.StringProperty()
 class UserLocationModel(db.Model):
 	countryCode=db.StringProperty()
@@ -137,12 +176,12 @@ class UserLocationModel(db.Model):
 	user=db.StringProperty()
 class CountryStats(db.Model):
 	countryCode=db.StringProperty()
-	count=db.IntegerProperty()
+	count=db.IntegerProperty(default=0)
 	dateUpdated=db.DateProperty(auto_now_add=True)
 class CityStats(db.Model):
 	city=db.StringProperty()
 	countryCode=db.StringProperty()
-	count=db.IntegerProperty()
+	count=db.IntegerProperty(default=0)
 	dateUpdated=db.DateProperty(auto_now_add=True)
 class Subscription(db.Model):
 	subscriber = db.IMProperty(required=True)
@@ -194,7 +233,7 @@ class UserDetails(db.Model):
         last_active_date = db.DateTimeProperty()
         links_added = db.IntegerProperty(default=0)
         info_updated = db.DateTimeProperty(auto_now_add=True)
-        follow_on_twitter = db.BooleanProperty()
+        twitter_request_sent = db.BooleanProperty()
         
 	@staticmethod
 	def getAll():
@@ -223,8 +262,14 @@ class Links(db.Model):
         excerpt = db.TextProperty()
         categories = db.StringProperty()
         delicious_count = db.IntegerProperty()
+        facebook_like = db.IntegerProperty()
         overall_score = db.IntegerProperty()
         created = db.IntegerProperty()
         date_added = db.DateProperty(auto_now_add=True)
+        date_updated = db.DateProperty(auto_now_add=True)
 
+class UserStats(db.Model):
+        instapaper_account=db.StringProperty()
+        count=db.IntegerProperty()
+        date=db.DateProperty()
 

@@ -58,13 +58,16 @@ class Logging(webapp.RequestHandler):
 			domain=StatsUtil.getDomain(URL)
                         try:
                                 title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
+                                if title == "null":
+                                        title = None
                         except:
                                 e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
                                 logging.info('encoding error: %s ::: %s' %(e0, e1))
                                 #older version of plugin
                                 title = None
-			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, domain=domain, title=title)
+			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, short_link=None, feed_link=None, domain=domain, title=title)
 			model.put()
+                        logging.info('model: %s' % model.to_xml())
 			logging.info('triggering feed update')
 			#trigger taskqueue that generates feed
 			try:
@@ -77,15 +80,7 @@ class Logging(webapp.RequestHandler):
 			logging.error('Error while handling request %s %s' % (e0, e))
 		
 	def get(self):
-		URL=cgi.escape(self.request.get('url'))
-		account=cgi.escape(self.request.get('username'))
-		if URL is None:
-			return
-		self.response.out.write(URL)
-		domain=StatsUtil.getDomain(URL)
-		model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date = datetime.datetime.now(), url=URL, domain=domain)
-		model.put()
-		return self.response.out.write(1)
+		return self.response.out.write('<script language="javascript">top.location.href="/"</script>')
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):
                 try:
@@ -107,7 +102,7 @@ class IndexHandler(webapp.RequestHandler):
                 memcache_key_hotlinks='hot_links_'+str(datetime.datetime.now().date())
                 hotlinks = memcache.get(memcache_key_hotlinks)
                 if not hotlinks:
-                        hotlinks = Links.gql('ORDER by overall_score DESC').fetch(30)
+                        hotlinks = Links.gql('ORDER by overall_score DESC').fetch(5)
                         memcache.set(memcache_key_hotlinks, hotlinks)
 		user = users.get_current_user()
 		uuid_cookie = self.request.cookies.get('user_uuid')
@@ -138,7 +133,6 @@ class IndexHandler(webapp.RequestHandler):
                 template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id, 'hotlinks': hotlinks}
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
-		
 		self.response.out.write(template.render(path,template_variables))
 		
 application = webapp.WSGIApplication(

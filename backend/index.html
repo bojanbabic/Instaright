@@ -18,7 +18,8 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <link rel="stylesheet" type="text/css" href="css/style.css" />
                 <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
-                <script src='/_ah/channel/jsapi'></script>
+                <!--script src='/_ah/channel/jsapi'></script-->
+                <script src='static/javascript/channel.js'></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
                 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -38,7 +39,6 @@
                          })();
                  </script>
                  <!-- Google Website Optimizer Tracking Script -->
-
          </head>
          <body>
                  <script type="text/javascript" charset="utf-8">
@@ -114,11 +114,17 @@ function updateDisplayEntry(response, div) {
                         }catch(e){
                                 title="Instaright article from domain "+domain;
                         }
-                        if (title == null || title == 'None'){
+                        if (title == null || title == 'None' || title == 'null' || title.length == 0){
                                 title="Instaright article from domain "+domain;
                         } else {
-                                if (title.length >= 80){
-                                        title = title.substr(0,77) + ' ...';
+                                try{
+                                if (title.charCodeAt(0) > 256 && title.length >= 40){
+                                        title = title.substr(0,37) + ' ...';
+                                }
+                                else if (title.length >= 70){
+                                        title = title.substr(0,67) + ' ...';
+                                }
+                                } catch(e){
                                 }
                         }
                         link = e['l'];
@@ -206,20 +212,13 @@ function send_invite(){
 </div>
 <div class="wrapper"> 
         <div id="content" class="container_24"> 
-                <!--div id="hot_links_container" class="hot_links">
-                        {% for l in hotlinks %}
-                        <div class=hot_links>
-                                <p><a href="{{ l.url }}">{{ l.title }}</a><ul><li id="tweet" style="background: no-repeat url('/static/images/twitter_small.png')">Tweets:{{ l.tweets}}</li><li id="reddit">Redditups:{{ l.redditups }}</li><li id="delicious">Delicious saves:{{ l.delicious_count }}</li><li id="instapaper" >Instapaper saves:{{ l.instapaper_count }}</li><li id="digg">Diggs:{{ l.diggs }}</li></p>
-                        </div>
-                        {% endfor %}
-                </div-->
                 <div id="left_col" class="grid_18"> 
                         <div class="left_box_top"> 
                                 <h2 class="round_title"> 
-                                        <span>Instaright Stream</span> 
+                                        <span>Instaright Hotlinks</span> 
                                 </h2> 
                         </div> 
-                        <div class="left_box_mid"> 
+                        <div class="left_box_mid">
                                 <style> 
                                         #streammap{
                                                 border:8px solid #ffffff;
@@ -239,7 +238,60 @@ function send_invite(){
                                 </style>
                                 <div id="stream"></div>
                         </div>
-                        <div class="left_box_bot"></div> 
+                                <!--style>
+                                        .hot_story_link {
+                                                background:#bbbb22; 
+                                        }
+                                 .hot_story_link, .hot_story {
+                                 -moz-border-radius:15px;
+                                 border:1px solid #ADA699;
+                                 clear:both;
+                                 display:block;
+                                 margin:10px 0px 10px 0px;
+                                 padding:10px;
+                                 text-decoration:none;
+                                 } 
+                                </style>
+                        {% for l in hotlinks %}
+                        <div id="hot_story"><p class="hot_story_link"><a href="{{ l.url }}">{{ l.title }}</a></p>
+                        <ul class="hot_story">
+                                {% if l.tweets %}
+                                <li> 
+                                        <span><img src="/static/images/twitter_small.png"/>{{ l.tweets }}&nbsp;&nbsp;&nbsp;</span>
+                                </li>
+                                {% endif %}
+                                {% if l.facebook_like %}
+                                <li>
+                                        <span><img src="/static/images/facebook_small.png"/>{{ l.facebook_like }}&nbsp;&nbsp;&nbsp;</span>
+                                </li>
+                                {% endif %}
+                                {% if l.redditups %}
+                                <li>
+                                        <span><img src="/static/images/reddit_small.png"/>{{ l.redditups }}&nbsp;&nbsp;&nbsp;</span>
+                                </li>
+                                {% endif %}
+                                <li>
+                                {% if l.delicious_count %}
+                                        <span><img src="/static/images/delicious_small.png"/>{{ l.delicious_count }}&nbsp;&nbsp;&nbsp;</span>
+                                </li>
+                                {% endif %}
+                                {% if l.instapaper_count %}
+                                <li>
+                                        <span><img src="/static/images/instapaper_small.png"/>{{ l.instapaper_count }}&nbsp;&nbsp;&nbsp;</span>
+                                </li>
+                                {% endif %}
+                                {% if l.diggs %}
+                                <li>
+                                        <span><img src="/static/images/digg_small.png"/><span>{{ l.diggs }}&nbsp;&nbsp;&nbsp;</span>
+                                </li>
+                                {% endif %}
+                        </ul>
+                        </div>
+                        {% endfor %}
+                        </div--> 
+                        <!--div class="left_box_mid_close"></div-->
+                        <div class="left_box_bot"> 
+                        </div>
                 </div>
                 <div id="right_col" class="grid_6">
                         <div id="right_box_top">

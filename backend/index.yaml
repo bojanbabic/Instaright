@@ -69,6 +69,18 @@ indexes:
   - name: active
   - name: last_updatetime
 
+- kind: UserStats
+  properties:
+  - name: date
+  - name: count
+    direction: desc
+
+- kind: UserStats
+  properties:
+  - name: instapaper_account
+  - name: date
+    direction: desc
+
 - kind: WeeklyDomainStats
   properties:
   - name: date

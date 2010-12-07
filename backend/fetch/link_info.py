@@ -6,7 +6,7 @@ import sys, urllib2, simplejson, exceptions, os, logging
 #class TopsyApi:
 #        def getInfo(self):
 #print os.environ['INSTAPAPER']
-sys.path.append('..')
+#sys.path.append('..')
 from utils import StatsUtil,Cast
 from models import Links
 from google.appengine.ext import webapp
