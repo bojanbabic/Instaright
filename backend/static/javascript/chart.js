@@ -1,4 +1,4 @@
-function drawVisualization(type, statsForDate) {
+function drawVisualization(type, statsForDate, user) {
                                 var options = {};
                                 clearElement('visualization');
                                 clearElement('statsHeader');
@@ -6,20 +6,16 @@ function drawVisualization(type, statsForDate) {
                                         var list = document.getElementsByClassName('menu_body_daily');
                                         try{
                                                 statsForDate = list[0].getElementsByTagName('a')[0].innerHTML;
-                                                throw "";
                                         } catch(e){
                                                 try{
                                                         var y = new Date((new Date()).getTime() - 86400000);
-                                                        year = y.getFullYear();
                                                         statsForDate = y.getFullYear() +'-'+ y.getMonth() + '-'+ y.getDate();
                                                 } catch(ee){
-                                                        alert('ee'+ee);
                                                 } 
                                         }
                                         //statsForDate = "{{ dailyStats.0 }}";
                                         //statsForDate = "2010-08-24";
                                 }
-                                alert(statsForDate);
                                 staticurl = '/visual?type=';
                                 if (!type){
                                         typeString = 'dailyfeed';
@@ -54,7 +50,11 @@ function drawVisualization(type, statsForDate) {
                                 else if (type == 6){
                                         typeString = 'userfeed';
                                         typeLabel="Most Instaright! Users";
-                                        dataurl = staticurl + typeString + '&date=' + statsForDate;
+                                        if (user){
+                                                dataurl = staticurl + typeString + '&user=' + user;
+                                        } else {
+                                                dataurl = staticurl + typeString + "&date=" + statsForDate;
+                                        }
                                 }
                                 else {
                                         typeString = 'dailyfeed';
@@ -97,6 +97,7 @@ function drawVisualization(type, statsForDate) {
                                                         //alert("response dat:"+response.getDataTable());
                                                         new google.visualization.ImageChart(document.getElementById('visualization')).draw(response.getDataTable(), options);  
                                                         });
+                                        //document.getElementById('visualization1').innerHTML=dataurl;
                                 } catch(e){
                                         alert(e);
                                 }
