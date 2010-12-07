@@ -199,7 +199,7 @@ com.appspot.instaright={
                 var alert_no_url = string_bundle.getString('alert_no_url');
                 var alert_success = string_bundle.getString('alert_success');
                 var alert_bad_request = string_bundle.getString('alert_bad_request');
-                var alert_invalid_credential = string_bundle.getString('alert_invalid_credentials');
+                var alert_invalid_credential = string_bundle.getString('alert_invalid_credential');
                 var alert_service_error = string_bundle.getString('alert_service_error');
                 
                 } catch(e){
