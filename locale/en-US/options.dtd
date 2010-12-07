@@ -1,4 +1,4 @@
 <!ENTITY	label.instapaper.account	"Your Instapaper Account:">
 <!ENTITY	label.instapaper.password	"Your Instapaper Password (optional):">
-<!ENTITY	label.deactivate.success	"Disable Success Alert:">
-<!ENTITY	label.deactivate.save	"Disable Page Save Mode:">
+<!ENTITY	label.deactivate.success	"Disable Success Alert">
+<!ENTITY	label.deactivate.save	"Disable Page Save Mode">
