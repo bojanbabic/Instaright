@@ -6,5 +6,5 @@ zip -vr chrome/instaright.zip content/ skin/ locale/ -x "*.svn*"
 mv chrome/instaright.zip chrome/instaright.jar
 cat modules/AddonManager.jsm | sed -E "s/VERSION=.*/VERSION=\"$version\";/" > modules/AddonManager.jsm.new
 mv modules/AddonManager.jsm.new modules/AddonManager.jsm
-zip -vr instaright.zip chrome/ icon.png install.js  install.rdf chrome.manifest defaults/ modules/  -x "*.svn*"
+zip -vr instaright.zip chrome/ install.js  install.rdf chrome.manifest defaults/ modules/  -x "*.svn*"
 mv instaright.zip instaright.xpi

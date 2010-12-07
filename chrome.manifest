@@ -4,8 +4,17 @@ resource	  instaright	jar:chrome/instaright.jar!/content/instaright/
 resource        modules         modules/
 overlay		  chrome://browser/content/browser.xul		chrome://instaright/content/instarightOverlay.xul
 overlay		  chrome://navigator/content/navigator.xul	chrome://instaright/content/instarightOverlay.xul
-
-locale  instaright  de-DE		jar:chrome/instaright.jar!/locale/de-DE/
-locale  instaright  sr  jar:chrome/instaright.jar!/locale/sr/
+locale  instaright  de-DE	jar:chrome/instaright.jar!/locale/de-DE/
+locale  instaright  sr		jar:chrome/instaright.jar!/locale/sr-RS/
 locale  instaright  en-US	jar:chrome/instaright.jar!/locale/en-US/
-
+locale  instaright  en		jar:chrome/instaright.jar!/locale/en/
+locale  instaright  fr		jar:chrome/instaright.jar!/locale/fr/
+locale  instaright  pt		jar:chrome/instaright.jar!/locale/pt/
+locale  instaright  it-IT	jar:chrome/instaright.jar!/locale/it-IT/
+locale  instaright  nl-NL	jar:chrome/instaright.jar!/locale/nl-NL/
+locale  instaright  ru-RU	jar:chrome/instaright.jar!/locale/ru-RU/
+locale  instaright  jp-JP	jar:chrome/instaright.jar!/locale/jp-JP/
+locale  instaright  cn-CN	jar:chrome/instaright.jar!/locale/cn-CN/
+locale  instaright  es-ES	jar:chrome/instaright.jar!/locale/es-ES/
+locale  instaright  cs-CZ	jar:chrome/instaright.jar!/locale/cs-CZ/
+locale  instaright  jp-JP	jar:chrome/instaright.jar!/locale/jp-JP/
