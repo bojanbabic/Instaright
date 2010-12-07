@@ -1,0 +1,4 @@
+<!ENTITY	label.instapaper.account	"您Instapaper帐户：">
+<!ENTITY	label.instapaper.password	"您Instapaper密码（可选）：">
+<!ENTITY	label.deactivate.success	"禁用成功警报">
+<!ENTITY	label.deactivate.save	"禁用页面保存模式">

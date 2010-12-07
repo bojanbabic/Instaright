@@ -1,0 +1,4 @@
+<!ENTITY	label.instapaper.account	"あなたのInstapaperのアカウント：">
+<!ENTITY	label.instapaper.password	"あなたのInstapaperのパスワード（オプション）：">
+<!ENTITY	label.deactivate.success	"無効にするサクセスアラート">
+<!ENTITY	label.deactivate.save	"無効にするページは、モードを保存する">
