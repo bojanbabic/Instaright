@@ -7,7 +7,7 @@ import sys, urllib2, simplejson, exceptions, os, logging
 #        def getInfo(self):
 #print os.environ['INSTAPAPER']
 sys.path.append('..')
-from utils_min import StatsUtil,Cast
+from utils import StatsUtil,Cast
 from models import Links
 from google.appengine.ext import webapp
 from google.appengine.ext import db
@@ -36,14 +36,20 @@ class LinkHandler(webapp.RequestHandler):
                 delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url='+url+'&type=json'
                 digg_api='http://services.digg.com/1.0/endpoint?method=story.getAll&link='+url+'&type=json'
                 reddit_api='http://www.reddit.com/api/info.json?url='+url
-                link = Links()
-                link.instapaper_count = Cast.toInt(count,0)
-                link.url = url
-                link.redditups = 0
-                link.redditdowns = 0
-                link.tweets = 0
-                link.diggs = 0
-                link.delicious_count = 0
+                facebook_api='https://api.facebook.com/method/fql.query?query=select%20%20like_count%20from%20link_stat%20where%20url=%22'+url+'%22&format=json'
+                link = Links.gql('WHERE url = :1', url).get()
+                if link is not None:
+                        link = Links()
+                        link.instapaper_count = Cast.toInt(count,0)
+                        link.url = url
+                        link.redditups = 0
+                        link.redditdowns = 0
+                        link.tweets = 0
+                        link.diggs = 0
+                        link.delicious_count = 0
+                        link.overall_score = 0
+                else:
+                        link.date_updated = datetime.datetime.now().date()
 
                 json = self.getData(topsy_api)
                 if json:
@@ -58,6 +64,9 @@ class LinkHandler(webapp.RequestHandler):
                 if json:
                         try:
                                 link.diggs =Cast.toInt(json['count'],0)
+                                if link.diggs is not None:
+                                        link.overall_score += link.diggs
+
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
@@ -69,6 +78,8 @@ class LinkHandler(webapp.RequestHandler):
                                 link.tweets=Cast.toInt(json['story']['url_count'],0)
                                 link.title=json['story']['title']
                                 link.excerpt = db.Text(unicode(json['story']['excerpt']))
+                                if link.tweets is not None:
+                                        link.overall_score += link.tweets
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
@@ -80,6 +91,8 @@ class LinkHandler(webapp.RequestHandler):
                                         link.title = json[0]['title']
                                 link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
                                 link.delicious_count = Cast.toInt(json[0]['total_posts'],0)
+                                if link.delicious_count is not None:
+                                        link.overall_score += link.delicious_count
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
@@ -93,11 +106,23 @@ class LinkHandler(webapp.RequestHandler):
                                      link.redditups = Cast.toInt(top_upped[0]['data']['ups'],0)
                                      link.redditdowns = Cast.toInt(top_upped[0]['data']['downs'],0)
                                      link.created = Cast.toInt(top_upped[0]['data']['created'],0)
+                                     if link.redditups is not None:
+                                                link.overall_score += link.redditups
+                                     if link.redditdowns is not None:
+                                                link.overall_score -= link.redditdowns
+                        except KeyError:
+                                e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
+                                logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
+                json = self.getData(facebook_api)
+                if json:
+                        try:
+                                link.facebook_like=Cast.toInt(json[0]['like_count'], 0)
+                                if link.facebook_like is not None:
+                                        link.overall_score += link.facebook_like
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
-                link.overall_score = link.diggs + link.delicious_count + link.tweets + link.instapaper_count + link.redditups - link.redditdowns
                 return link
 
         def getData(self, url):

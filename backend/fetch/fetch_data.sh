@@ -1,5 +1,9 @@
 #!/bin/bash
 OUTPUT_DIR=$1
+if [ $# != 1 ];then
+        echo "provide directory for results"
+        exit
+fi
 if [ ! -d $OUTPUT_DIR ];then
         echo "provide proper dir"
         exit
@@ -30,3 +34,6 @@ while read line;
         echo "done"
         echo "" 
 done 
+ $OUTPUT_DIR/*dat | while read line; do cat "$line" | ./separate_field.awk  >> $OUTPUT_DIR/all_links.txt;done
+#sort it
+sort  $OUTPUT_DIR/all_links.txt | uniq -c  | sort -rn  > $OUTPUT_DIR/sorted_links.txt
