@@ -1,6 +1,8 @@
 <html>
         <head>
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
+                <script type="text/javascript" src="/static/javascript/util.js"></script>
+                <script type="text/javascript" src="/static/javascript/chart.js"></script>
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -11,16 +13,18 @@
                         google.load('jquery', '1.4.2');
                 </script>
                 <script type="text/javascript">
-
+                        google.setOnLoadCallback(drawVisualization(6,null, "{{ user.instapaper_account }}"));
+                        google.load(drawVisualization);
                 </script>
-
         </head>
         <body>
                 {% if user %}
                 {% if user.name %}
                 <h2>{{ user.name }}</h2>
                 {% endif %}
-                <table>
+                <div id="table_container" style="width: 700px; height: 200px; margin 0 auto;">
+                <table style="float: left; width:500px;">
+                        <tbody>
                         <tr>
                                 <td class="avatar">
                                         {% if user.avatar %}
@@ -41,8 +45,12 @@
                                                 {% endif %}
                                         </ul>
                                 </td>
+                                        
                         </tr>
+                        </tbody> 
                 </table>
+                <table style="float: right;width: 200px;"><tr><td id="visualization" style="width: 200px; height: 200px;  display: inline-block;"></td></tr></table>
+        </div>
                 <div class="social">
                         {% if user.facebook %}
                         <a href="{{ user.facebook }}"><img src="/static/images/facebook_small.png"/></a>
@@ -102,10 +110,16 @@
                 {% else %}
                 <div>No info for user</div>
                 {% endif %}
+                <br>
                 <div class="links">
                         <p>Links:</p>
-                        {% for l in links %}
-                        <p><a href="{{ l }}">{{ l }}</a></p>
+                        {% regroup links|dictsortreversed:"date" by date|date:"Y-m-d"  as links_by_date %}
+                        {% for links in links_by_date %}
+                        <li>{{ links.grouper }}</li>
+                        
+                        {% for item in links.list %}
+                        <ul style="padding: 2px;"><a href="{{ item.url }}" target="_new">{{ item.url }}</a></ul>
+                        {% endfor %}
                         {% endfor %}
                 </div>
         </body>

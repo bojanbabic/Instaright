@@ -1,0 +1,16 @@
+<html>
+        <head>
+                <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+                <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        </head>
+        <body>
+                <table>
+                {% for l in links %}
+                        <tr>
+			        <td><a href="{{ l.0 }}" target="_new">{{ l.0 }}</a></td><td>{{ l.1 }}</td><td>{{ l.2 }}</td>
+                        </tr>
+                {% endfor %}
+                </table>
+        </body>
+</html>

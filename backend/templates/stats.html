@@ -12,30 +12,9 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
         <link rel="stylesheet" href="/css/style.css" type="text/css"/>
         <link rel="alternate" href="#" type="application/atom+xml" title="Instaright Dashboard"/>
         <head>
-                <script>
-                        // Handy "macro"
-                        function $(id){
-                                return document.getElementById(id);
-                        }
-                        function clearElement(element){
-                                $(element).innerHTML= "";
-                        }
-                        function setElementValue(element, value){
-                                $(element).innerHTML = value;
-                        }
-
-                        // Client function that calls a server rpc and provides a callback
-                        function doMatchTargetDomain(type, statsForDate) {
-                                $('visualisation').innerHTML = "";
-                                //onSuccess(	drawVisualization(type, statsForDate));
-                        }
-
-                        // Callback for after a successful doAdd
-                        function onSuccess(response) {
-                                $('visualization').innerHTML= response;
-                        }
-                </script>
                 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+                <script type="text/javascript" src="/static/javascript/util.js"></script>
+                <script type="text/javascript" src="/static/javascript/util.js"></script>
                 <script type="text/javascript" src="/static/javascript/chart.js"></script>
                 <script type="text/javascript">
                         google.load('visualization', '1', {packages: ['imagechart']});
@@ -45,16 +24,16 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
                         google.setOnLoadCallback(drawVisualization);
                         google.load(drawVisualization);
                 </script>
-<script type="text/javascript">
-         $(document).ready(function()
-                         {
-                         $(".menu_body").hide();
-                         $(".menu_body_daily").show();
-                         $(".social_media").click(function(){
-                                 $(this).next(".menu_body").slideToggle(100);
-                                 $(this).next(".menu_body_daily").slideToggle(100);
-                                 });	
-                         });
+                <script type="text/javascript">
+                        $(document).ready(function()
+                                  {
+                                        $(".menu_body").hide();
+                                        $(".menu_body_daily").show();
+                                        $(".social_media").click(function(){
+                                                $(this).next(".menu_body").slideToggle(100);
+                                                $(this).next(".menu_body_daily").slideToggle(100);
+                                                });	
+                                        });
                  </script>
          </head>
 
@@ -74,6 +53,7 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
                                                  <div class="stats_body">
                                                          <div id="statsHeader" ></div>
                                                          <div id="visualization" style="width: 400px; height: 400px;"></div>
+                                                         <div id="visualization1" style="width: 400px; height: 400px;"></div>
 
                                                  </div>
                                          </div>
@@ -112,13 +92,13 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
                                                                 <li>
                                                                         <p class="social_media">Most Instaright Countries
                                                                         <p class="menu_body">
-                                                                        <a href="#" onclick="drawVisualization(3);" >All Time</a>
+                                                                        <a href="#" onclick="drawVisualization(4);" >All Time</a>
                                                                         </p></p>
                                                                 </li>
                                                                 <li>
                                                                         <p class="social_media"> Most Instaright Cities
                                                                         <p class="menu_body">
-                                                                        <a href="#" onclick="drawVisualization(3);" >All Time</a>
+                                                                        <a href="#" onclick="drawVisualization(5);" >All Time</a>
                                                                         </p></p>
                                                                 </li>
                                                                 <li>
@@ -130,33 +110,7 @@ License can be found here: http://code.google.com/apis/ajaxsearch/faq/#license
                                                                                 </p>
                                                                         </p>
                                                                 </li>
-                                                         <!--p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
-                                                         <p class="menu_body" style=" margin-bottom: 5px;">
-                                                         <a href="#" onclick="drawVisualization(4);" >All The Time</a>
-                                                         </p>
-                                                         <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
-                                                         <p class="menu_body" style=" margin-bottom: 5px;">
-                                                         <a href="#" onclick="drawVisualization(5);" >All The Time</a>
-                                                         </p-->
                                                         </ul>
-                                                         <!--p class="menu_header" style="margin-bottom: 5px;">Domain Stats in last 5 weeks</p>
-                                                         <p class="menu_body" style=" margin-bottom: 5px;">
-                                                         {% for d in weeklyStats %}
-                                                         <a href="#" onclick="drawVisualization(1, this.innerHTML);" >{{ d }}</a><br>
-                                                         {%endfor%}
-                                                         </p-->
-                                                         <!--p class="menu_header" style="margin-bottom: 5px;">Link Volume</p>
-                                                         <p class="menu_body" style=" margin-bottom: 5px;">
-                                                         <a href="#" onclick="drawVisualization(3);" >Last Month Volume</a>
-                                                         </p>
-                                                         <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Countries</p>
-                                                         <p class="menu_body" style=" margin-bottom: 5px;">
-                                                         <a href="#" onclick="drawVisualization(4);" >All The Time</a>
-                                                         </p>
-                                                         <p class="menu_header" style="margin-bottom: 5px;">Most Instaright Cities</p>
-                                                         <p class="menu_body" style=" margin-bottom: 5px;">
-                                                         <a href="#" onclick="drawVisualization(5);" >All The Time</a>
-                                                         </p-->
                                                  </div>
                                          </div>
                                  </div>
