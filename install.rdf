@@ -12,7 +12,7 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 		<em:creator>Bojan Babic</em:creator>
 		<em:homepageURL>http://bojanbabic.blogspot.com</em:homepageURL>
 		<em:aboutURL>chrome://instaright/content/about.xul</em:aboutURL>
-		<em:iconURL>chrome://instaright/skin/instapaper.png</em:iconURL>
+		<em:iconURL>chrome://instaright/skin/instapaper_mod.png</em:iconURL>
 		<em:optionsURL>chrome://instaright/content/option.xul</em:optionsURL>
 		<em:file>
 			<Description about="urn:mozilla:extension:file:instaright.jar">
