@@ -1,0 +1,4 @@
+<!ENTITY	label.instapaper.account	"Ваш Instapaper счета:">
+<!ENTITY	label.instapaper.password	"Ваш Instapaper пароль (необязательно):">
+<!ENTITY	label.deactivate.success	"Отключить успеха Alert">
+<!ENTITY	label.deactivate.save	"Отключить Page Save режим">
