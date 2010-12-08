@@ -75,6 +75,7 @@ class Logging(webapp.RequestHandler):
 			except:
 				e0, e = sys.exc_info()[0], sys.exc_info()[1]
                                 logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
+                        self.response.out.write(1)
 		except:
 			e0,e = sys.exc_info()[0],  sys.exc_info()[1]
 			logging.error('Error while handling request %s %s' % (e0, e))

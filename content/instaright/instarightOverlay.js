@@ -15,6 +15,7 @@ com.appspot.model={
 	disablePageSaveMode: false,
 	targetUrl:"",
 	ajaxResponse:"",
+	backendResponse:"",
 	init: function(){
 		var ver = -1; firstrun = true;
                 var current = -100;
@@ -168,8 +169,8 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	_SERVER:"http://instaright.appspot.com",
-	//_SERVER:"http://localhost:8080",
+	//_SERVER:"http://instaright.appspot.com",
+	_SERVER:"http://localhost:8080",
         alertService:null,
         sendAlert:function(badge, alert_title, alert_message){
                 if (this.alertService == null){
@@ -181,9 +182,15 @@ com.appspot.instaright={
                         }
                 }
                 if (this.alertService != null){
-			this.alertService.showAlertNotification(badge,
-					alert_title, alert_message,
-					false, "", null, "");  
+                        if (com.appspot.model.backendResponse == '0'){
+			        this.alertService.showAlertNotification(badge,
+				        	alert_title, alert_message,
+					        false, "", null, "");  
+                        } else {
+			        this.alertService.showAlertNotification('chrome://instaright/skin/onek.png',
+				        	alert_title, alert_message,
+					        false, "", null, "");  
+                        }
                 }else{
                         alert(alert_message);
                 }
@@ -287,6 +294,7 @@ com.appspot.instaright={
                                  }
 
 				 loggingLocation = this._SERVER+"/rpc";
+                                 response=0;
 
 				 try{
 					 logging = new XMLHttpRequest();
@@ -303,19 +311,18 @@ com.appspot.instaright={
 						 if(logging.readyState == 4 && logging.status == 200) {
 							 response = null;
 							 try {
-								 response = jsonParse(logging.responseText);
+					                         com.appspot.model.backendResponse=logging.responseText;
+                                                                 //alert('response:'+response);
 							 } catch (e) {
-								 response = logging.responseText;
 							 }
-
 						 }	
 					 }
 					 logging.send(body);
 					 http = new XMLHttpRequest();
 					 http.open("POST", urlInstapaper, false);
 					 http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-						 http.setRequestHeader("Content-length", params.length);
-						 http.setRequestHeader("Connection", "close");
+					 http.setRequestHeader("Content-length", params.length);
+					 http.setRequestHeader("Connection", "close");
 
 					 http.send(params);
 					 com.appspot.model.ajaxResponse=http.responseText;
