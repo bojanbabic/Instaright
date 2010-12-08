@@ -35,16 +35,31 @@ com.appspot.model={
 		try{
 			ver = this.prefs.getCharPref("version");
 			firstrun = this.prefs.getBoolPref("firstrun");
+                	var string_bundle = document.getElementById("instaright_bundle");
+	                com.appspot.instaright.alert_instaright = string_bundle.getString('alert_instaright');
+                	com.appspot.instaright.alert_invalid_mail = string_bundle.getString('alert_invalid_email');
+                	com.appspot.instaright.alert_save_disabled = string_bundle.getString('alert_save_disabled');
+                	com.appspot.instaright.alert_no_url = string_bundle.getString('alert_no_url');
+                	com.appspot.instaright.alert_success = string_bundle.getString('alert_success');
+                	com.appspot.instaright.alert_bad_request = string_bundle.getString('alert_bad_request');
+                	com.appspot.instaright.alert_invalid_credential = string_bundle.getString('alert_invalid_credential');
+                	com.appspot.instaright.alert_service_error = string_bundle.getString('alert_service_error');
+                	com.appspot.instaright.alert_onek= string_bundle.getString('alert_onek');
+                	com.appspot.instaright.alert_fivek= string_bundle.getString('alert_fivek');
+                	com.appspot.instaright.alert_tenk= string_bundle.getString('alert_tenk');
+                	com.appspot.instaright.alert_thanks = string_bundle.getString('alert_thanks');
+                	com.appspot.instaright.alert_sl = string_bundle.getString('alert_sl');
+                	com.appspot.instaright.alert_ny = string_bundle.getString('alert_ny');
+                	com.appspot.instaright.alert_trophy = string_bundle.getString('alert_trophy');
 
 		}catch(e){
-			//nothing
 		}finally{
                         try{
                                 if (firstrun){
                                         this.prefs.setBoolPref("firstrun",false);
                                         this.prefs.setCharPref("version",current);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
-                                                "Instaright alert", "Thanks for supporting continued development of this addon.");
+                                                com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
@@ -52,12 +67,13 @@ com.appspot.model={
                                 if (ver != current && !firstrun){
                                         this.prefs.setCharPref("version",current);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
-                                                "Instaright alert", "Thanks for supporting continued development of this addon.");
+                                                com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
                                 }
                         } catch(e){
+				alert('ee:'+e);
                         }
 		}
 		window.removeEventListener("load", function(){ com.appspot.model.init(); }, true);
@@ -172,6 +188,86 @@ com.appspot.instaright={
 	//_SERVER:"http://instaright.appspot.com",
 	_SERVER:"http://localhost:8080",
         alertService:null,
+        alert_instaright:"",
+        alert_invalid_mail:"",
+        alert_save_disabled:"",
+        alert_no_url:"",
+        alert_success:"",
+        alert_bad_request:"",
+        alert_invalid_credential:"",
+        alert_service_error:"",
+	alert_thanks:"",
+	alert_onek:"",
+	alert_fivek:"",
+	alert_tenk:"",
+        alert_sl:"",
+        alert_ny:"",
+        alert_trophy:"",
+	alert_status:"",
+	alert_message:"",
+	alert_icon:"",
+	setAlert:function(alert_message){
+		if (com.appspot.model.backendResponse == ''){
+			this.alert_status=this.alert_instaright;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/instapaper_mod.png";
+		}
+		else if (com.appspot.model.backendResponse == '1000'){
+			this.alert_status=this.alert_onek;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/onek.png";
+		}
+		else if (com.appspot.model.backendResponse == '5000'){
+			this.alert_status=this.alert_fivek;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/fivek.png";
+		}
+		else if (com.appspot.model.backendResponse == '10000'){
+			this.alert_status=this.alert_tenk;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/tenk.png";
+		}
+		else if (com.appspot.model.backendResponse == '1'){
+			this.alert_status=this.alert_trophy;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/dfirst.png";
+		}
+		else if (com.appspot.model.backendResponse == '2'){
+			this.alert_status=this.alert_trophy;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/dsecond.png";
+		}
+		else if (com.appspot.model.backendResponse == '3'){
+			this.alert_status=this.alert_trophy;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/dthird.png";
+		}
+		else if (com.appspot.model.backendResponse == '25'){
+			this.alert_status=this.alert_sl;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/sl25.png";
+		}
+		else if (com.appspot.model.backendResponse == '55'){
+			this.alert_status=this.alert_sl;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/sl55.png";
+		}
+		else if (com.appspot.model.backendResponse == '65'){
+			this.alert_status=this.alert_sl;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/sl65.png";
+		}
+		else if (com.appspot.model.backendResponse == '105'){
+			this.alert_status=this.alert_sl;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/sl105.png";
+		}
+		else if (com.appspot.model.backendResponse == 'ny'){
+			this.alert_status=this.alert_ny;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/ny.png";
+		}
+	},
         sendAlert:function(badge, alert_title, alert_message){
                 if (this.alertService == null){
                         try{
@@ -182,15 +278,9 @@ com.appspot.instaright={
                         }
                 }
                 if (this.alertService != null){
-                        if (com.appspot.model.backendResponse == '0'){
-			        this.alertService.showAlertNotification(badge,
-				        	alert_title, alert_message,
-					        false, "", null, "");  
-                        } else {
-			        this.alertService.showAlertNotification('chrome://instaright/skin/onek.png',
-				        	alert_title, alert_message,
-					        false, "", null, "");  
-                        }
+			this.setAlert(alert_message);
+			this.alertService.showAlertNotification(this.alert_icon,this.alert_status,alert_message,
+				false, "", null, "");  
                 }else{
                         alert(alert_message);
                 }
@@ -198,23 +288,9 @@ com.appspot.instaright={
         },
 	start:function(){
 		com.appspot.model.startup();
-                try{
-                var string_bundle = document.getElementById("instaright_bundle");
-                var alert_instaright = string_bundle.getString('alert_instaright');
-                var alert_invalid_mail = string_bundle.getString('alert_invalid_email');
-                var alert_save_disabled = string_bundle.getString('alert_save_disabled');
-                var alert_no_url = string_bundle.getString('alert_no_url');
-                var alert_success = string_bundle.getString('alert_success');
-                var alert_bad_request = string_bundle.getString('alert_bad_request');
-                var alert_invalid_credential = string_bundle.getString('alert_invalid_credential');
-                var alert_service_error = string_bundle.getString('alert_service_error');
-                
-                } catch(e){
-                       alert(e);
-                } 
 		if (com.appspot.model.account == "" || com.appspot.model.account == null){
                         this.sendAlert("chrome://instaright/skin/instapaper_mod.png",   
-                                        alert_instaright, alert_invalid_mail);
+                                        this.alert_instaright, this.alert_invalid_mail);
 			return;
 		}
 		if (!gContextMenu) { // Mysterious error console
@@ -228,16 +304,16 @@ com.appspot.instaright={
 			url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
                         title = content.document.title;
 		} else {
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png",alert_instaright, alert_save_disabled);
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png",this.alert_instaright, this.alert_save_disabled);
 			return;
 		}
 		if (url == null){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_no_url);
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", this.alert_instaright, this.alert_no_url);
 			this.logErrors("Can't determine link , try another");
 			return;
 		}
 		// text javascript url fix
-		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0 || url.indexOf('about:blank') == 0){
+		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0 || url.indexOf('about:blank') != 0){
 			//add javascript or mailto into description
 			// TODO this can overwrite selected text if mouse is over malto or javascript link
 			textSelected = url;
@@ -250,16 +326,16 @@ com.appspot.instaright={
 		this.sendUrlSynchAjax(url, title, textSelected);
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_success);
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", this.alert_instaright, this.alert_success);
 		}
 		else if (com.appspot.model.ajaxResponse == '400'){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_bad_request);
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", this.alert_instaright, this.alert_bad_request);
 		}
 		else if (com.appspot.model.ajaxResponse == '403'){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_invalid_credential);
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", this.alert_instaright, this.alert_invalid_credential);
 		}
 		else if (com.appspot.model.ajaxResponse == '500'){
-                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", alert_instaright, alert_service_error);
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png", this.alert_instaright, this.alert_service_error);
 		}
 	},
 	getSelectedText:function(){
@@ -312,7 +388,6 @@ com.appspot.instaright={
 							 response = null;
 							 try {
 					                         com.appspot.model.backendResponse=logging.responseText;
-                                                                 //alert('response:'+response);
 							 } catch (e) {
 							 }
 						 }	
