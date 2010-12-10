@@ -51,6 +51,25 @@ com.appspot.model={
                 	com.appspot.instaright.alert_sl = string_bundle.getString('alert_sl');
                 	com.appspot.instaright.alert_ny = string_bundle.getString('alert_ny');
                 	com.appspot.instaright.alert_trophy = string_bundle.getString('alert_trophy');
+                	com.appspot.instaright.alert_hny = string_bundle.getString('alert_hny');
+			
+	                /*alert('com.appspot.instaright.alert_instaright:'+com.appspot.instaright.alert_instaright);
+                	alert('com.appspot.instaright.alert_invalid_mail:'+com.appspot.instaright.alert_invalid_mail);
+                	alert('com.appspot.instaright.alert_save_disabled:'+com.appspot.instaright.alert_save_disabled);
+                	alert('com.appspot.instaright.alert_no_url:'+com.appspot.instaright.alert_no_url);
+                	alert('com.appspot.instaright.alert_success:'+com.appspot.instaright.alert_success);
+                	alert('com.appspot.instaright.alert_bad_request:'+com.appspot.instaright.alert_bad_request);
+                	alert('com.appspot.instaright.alert_invalid_credential:'+com.appspot.instaright.alert_invalid_credential);
+                	alert('com.appspot.instaright.alert_service_error:'+com.appspot.instaright.alert_service_error);
+                	alert('com.appspot.instaright.alert_onek:'+com.appspot.instaright.alert_onek);
+                	alert('com.appspot.instaright.alert_fivek:'+com.appspot.instaright.alert_fivek);
+                	alert('com.appspot.instaright.alert_tenk:'+com.appspot.instaright.alert_tenk);
+                	alert('com.appspot.instaright.alert_thanks:'+com.appspot.instaright.alert_thanks);
+                	alert('com.appspot.instaright.alert_sl:'+com.appspot.instaright.alert_sl);
+                	alert('com.appspot.instaright.alert_ny:'+com.appspot.instaright.alert_ny);
+                	alert('com.appspot.instaright.alert_trophy:'+com.appspot.instaright.alert_trophy);
+                	alert('com.appspot.instaright.alert_hny:'+com.appspot.instaright.alert_hny);
+			*/
 
 		}catch(e){
 		}finally{
@@ -185,8 +204,8 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	//_SERVER:"http://instaright.appspot.com",
-	_SERVER:"http://localhost:8080",
+	_SERVER:"http://instaright.appspot.com",
+	//_SERVER:"http://localhost:8080",
         alertService:null,
         alert_instaright:"",
         alert_invalid_mail:"",
@@ -202,6 +221,7 @@ com.appspot.instaright={
 	alert_tenk:"",
         alert_sl:"",
         alert_ny:"",
+        alert_hny:"",
         alert_trophy:"",
 	alert_status:"",
 	alert_message:"",
@@ -211,6 +231,11 @@ com.appspot.instaright={
 			this.alert_status=this.alert_instaright;
 			this.alert_message=alert_message;
 			this.alert_icon="chrome://instaright/skin/instapaper_mod.png";
+		}
+		else if (com.appspot.model.backendResponse == 'hny'){
+			this.alert_status=this.alert_hny;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/hny.png";
 		}
 		else if (com.appspot.model.backendResponse == '1000'){
 			this.alert_status=this.alert_onek;
