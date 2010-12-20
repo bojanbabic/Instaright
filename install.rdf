@@ -7,7 +7,7 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
 		<em:id>{1d682819-bef2-4a75-8ffa-adf3733f5557}</em:id>
 		<em:name>Instaright!</em:name>		
-		<em:version>0.3.5.6</em:version>
+		<em:version>0.4.0.1</em:version>
 		<em:description>Instapaper links on right-click.</em:description>
 		<em:creator>Bojan Babic</em:creator>
 		<em:homepageURL>http://bojanbabic.blogspot.com</em:homepageURL>

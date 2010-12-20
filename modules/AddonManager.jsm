@@ -1,4 +1,4 @@
-var VERSION="0.3.5.7";
+var VERSION="0.4.0.1";
 var EXPORTED_SYMBOLS= ["version"];
 
 function version(){

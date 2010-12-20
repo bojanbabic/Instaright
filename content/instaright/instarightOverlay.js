@@ -204,7 +204,7 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	_SERVER:"http://instaright.appspot.com",
+	_SERVER:"http://37.latest.instaright.appspot.com",
 	//_SERVER:"http://localhost:8080",
         alertService:null,
         alert_instaright:"",

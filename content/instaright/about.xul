@@ -14,7 +14,7 @@
 <groupbox align="center" orient="horizontal">
 <vbox>
   <text value="Instaright" style="font-weight: bold; font-size: x-large;"/>
-  <text value="ver. 0.3.5.7" />
+  <text value="ver. 0.4.0.1" />
   <separator class="thin"/>
   <text value="&label.created.by;" style="font-weight: bold;"/>
   <text value="Bojan Babic" class="url"
