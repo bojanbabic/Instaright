@@ -20,6 +20,14 @@
   <menuitem id="instaright" label="&label.context;" accesskey="I" 
   insertafter="context-stop" oncommand="com.appspot.instaright.start();"/>
 </popup>
+<statusbar id="status-bar">
+	<statuspanel id="instaright-bar-panel" position="after_start" label="Test" tooltip="Open Instaright preferences" onclick="window.open('chrome://instaright/content/option.xul','','chrome');">
+		<separator class="groove-thin"/>
+		<image id="status-icon" src="chrome://instaright/skin/instapaper_small.png" higth="20" width="20"/>
+		<separator class="groove-thin"/>
+	</statuspanel>
+</statusbar>
 
 </overlay>
+
 
