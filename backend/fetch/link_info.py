@@ -1,4 +1,4 @@
-import sys, urllib2, simplejson, exceptions, os, logging
+import sys, urllib2, simplejson, exceptions, os, logging, datetime
 #TODO create class for all APIes used
 #class GenericApi:
 #        def __init__:
@@ -38,7 +38,7 @@ class LinkHandler(webapp.RequestHandler):
                 reddit_api='http://www.reddit.com/api/info.json?url='+url
                 facebook_api='https://api.facebook.com/method/fql.query?query=select%20%20like_count%20from%20link_stat%20where%20url=%22'+url+'%22&format=json'
                 link = Links.gql('WHERE url = :1', url).get()
-                if link is not None:
+                if link is None:
                         link = Links()
                         link.instapaper_count = Cast.toInt(count,0)
                         link.url = url
@@ -48,6 +48,7 @@ class LinkHandler(webapp.RequestHandler):
                         link.diggs = 0
                         link.delicious_count = 0
                         link.overall_score = 0
+                        link.shared = False
                 else:
                         link.date_updated = datetime.datetime.now().date()
 
@@ -70,7 +71,7 @@ class LinkHandler(webapp.RequestHandler):
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
-                logging.info(json)
+                logging.info("digg callback %s" %json)
 
                 json = self.getData(tweet_meme_api)
                 if json and 'story' in json:

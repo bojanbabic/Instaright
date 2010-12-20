@@ -15,6 +15,18 @@ cron:
   url: /cron?type=count
   schedule: every day 00:30
 
-- description: user aggregations
+- description: user aggregation
   url: /user_consolidation_task
   schedule: every day 03:00
+
+- description: data aggregation
+  url: /data_consolidation_task
+  schedule: every day 01:00
+
+- description: feed link aggregation
+  url: /feed_link_consolidation_task
+  schedule: every day 01:20
+
+- description: short link aggregation
+  url: /short_link_consolidation_task
+  schedule: every day 01:40

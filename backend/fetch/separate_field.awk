@@ -8,6 +8,8 @@ $0=$0",";
         gsub(/"|,|utm_[^\&]*&|utm_[^\&]*$|src=*\&|src=*$/,"",f);
         if (match(f, /^http:/)){
                 print f;
+        }else{
+                print "bad";
         }
         #gsub(sf, "", $0);
 #        }

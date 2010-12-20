@@ -267,9 +267,15 @@ class Links(db.Model):
         created = db.IntegerProperty()
         date_added = db.DateProperty(auto_now_add=True)
         date_updated = db.DateProperty(auto_now_add=True)
+        shared = db.BooleanProperty(default=False)
 
 class UserStats(db.Model):
         instapaper_account=db.StringProperty()
         count=db.IntegerProperty()
         date=db.DateProperty()
-
+class DeliciousImporter(db.Model):
+        instapaper_account=db.StringProperty()
+        instapaper_pass=db.StringProperty()
+        delicious_account=db.StringProperty()
+        success=db.BooleanProperty(default=False)
+        date=db.DateTimeProperty(auto_now_add=True)

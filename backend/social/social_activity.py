@@ -2,12 +2,13 @@
 import datetime, os, simplejson, sys, urllib2, logging, urllib
 
 from google.appengine.ext import webapp
-from google.appengine.api import memcache
+from google.appengine.api import memcache, urlfetch
 from google.appengine.ext import db
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-from models import UserDetails
+from models import UserDetails, Links
+from utils import LinkUtil
 sys.path.append('social')
 import twitter
 
@@ -71,12 +72,73 @@ class TwitterFollowHandler(webapp.RequestHandler):
                 user.twitter_request_sent = True
                 user.put()
 
+class TweetHotLinks(webapp.RequestHandler):
+        def get(self):
+                 api = twitter.Api(
+                                consumer_key='WZ9re48FXCmnaNlN4rbuhg',
+                                consumer_secret='jEQ7gDsE2aR9AXrA6aMZHBvKvvFgurjXoSiYLiyjQ', 
+                                access_token_key='193034839-oI43CpQA6Mf1JC2no0mKwGxgT7wyWdDL6HpSKlMz', 
+                                access_token_secret='q2CP7JR8wNrMNbqgRs9YezZtdMtZO7OgcgTRjCSY'
+                                ) 
+                #print user.screen_name
+                 hotLinks = Links.gql('ORDER by date_added desc, overall_score desc').fetch(100)
+                 ss = Links.gql('ORDER by date_added desc, overall_score desc').fetch(100)
+                 unshared = [ l for l in ss if l.shared == False ]
+                 linkUtil=LinkUtil()
+                 a=[]
+                 for h in unshared:
+                        if "twitter.com" in h.url or "google.com" in h.url or "instapaper.com" in h.url or  "facebook.com" in h.url:
+                                logging.info('filering out %s' %h.url)
+                                continue
+                        short_link = linkUtil.shortenLink(h.url)
+                        tweet = "check out this story: %s " %short_link
+                        if h.facebook_like is not None and h.facebook_like > 0:
+                                tweet+=" #facebook %s" %h.facebook_like
+                        if h.redditups is not None and h.redditups > 0:#reddit ups %s #delicious save %s #instapaper %s #twitter %s
+                                tweet+=" #reddit ups %s" % h.redditups
+                        if h.delicious_count is not None and h.delicious_count > 0:
+                                tweet+=" #delicious save %s" % h.delicious_count
+                        if h.instapaper_count is not None and h.instapaper_count > 0:
+                                tweet+=" #instapaper %s" %h.instapaper_count
+                        if h.tweets is not None and h.tweets > 0:
+                                tweet+=" #twitter %s RTs" %h.tweets
+                        if h.categories is not None and len(h.categories) > 0:
+                                import ast
+                                logging.info('init cat : %s' % str(h.categories))
+                                dicti = ast.literal_eval(h.categories)
+                                if len(dicti) == 0:
+                                        logging.info('no cat. skipping')
+                                        continue
+                                import operator
+                                logging.info('categories:'+str(dicti))
+                                sorteddict = sorted(dicti.iteritems(), key=operator.itemgetter(1))
+                                top_category = sorteddict[len(sorteddict)-1]
+                        if len(tweet) <= 140:
+                                if top_category is not None and top_category[0] not in tweet and len(top_category[0]) + len(tweet) +2 <= 140:
+                                        tweet +=" #%s" %top_category[0]
+                                if getattr(h, 'shared') and h.shared:
+                                        logging.info('already shared %s' %h.url)
+                                        continue
+                                logging.info('tweet: %s' % tweet)
+                                try:
+                                        api.PostUpdate(tweet)
+                                except:
+                                        logging.info('tweeting error %s' % sys.exc_info()[0])
+                                h.shared=True
+                                h.put()
+                        a.append(tweet+"\t"+str(len(tweet)))
+                 self.response.headers['Content-Type'] = 'text/plain'
+                 self.response.out.write('\n'.join(a))
 
 class TwitterReplyHandler(webapp.RequestHandler):
         def get(self, twitter_id):
                 url = 'http://search.twitter.com/search.json?q=instapaper'
-                feed = urllib2.urlopen(url)
-                t_json = simplejson.load(feed)
+                response = urlfetch.fetch(url)
+                if response.status_code != 200:
+                        logging.info('error while fetching twitter content')
+                        self.response.out.write("can't fetch content from twitter %s" %response.status_code)
+                        return
+                t_json= simplejson.loads(response.content)
                 twitts=self.loadTwitts(t_json)
                 texts = '<br>'.join([ '<a href="http://twitter.com/'+t.sender+'">@'+t.sender+'</a>:::'+t.text for t in twitts ])
                 url = 'http://search.twitter.com/search.json?q=firefox+tabs'
@@ -88,7 +150,7 @@ class TwitterReplyHandler(webapp.RequestHandler):
                 self.response.out.write(texts_1)
         def loadTwitts(self, t_json):
                 twitts = []
-                for t in t_json['results']:
+                for t in t_json["results"]:
                         tweet_id = t['id']
                         text = t['text']
                         sender = t['from_user']
@@ -129,6 +191,7 @@ application = webapp.WSGIApplication(
                                         [
                                                 ('/util/twitter/follow/(.*)', TwitterFollowHandler),
                                                 ('/util/twitter/reply/(.*)', TwitterReplyHandler), 
+                                                ('/util/twitter/twit', TweetHotLinks), 
                                                 ('/util/twitter/reset_sent', TwitterResetSendHandler),
                                                 ], debug=True
                                     )

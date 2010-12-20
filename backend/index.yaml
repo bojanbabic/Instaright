@@ -41,6 +41,56 @@ indexes:
   - name: count
     direction: desc
 
+- kind: Links
+  properties:
+  - name: date
+    direction: desc
+  - name: overall_score
+    direction: desc
+
+- kind: Links
+  properties:
+  - name: date_addded
+    direction: desc
+  - name: overall_score
+    direction: desc
+
+- kind: Links
+  properties:
+  - name: date_added
+  - name: overall_score
+    direction: desc
+
+- kind: Links
+  properties:
+  - name: date_added
+  - name: overall_score
+    direction: desc
+  - name: shared
+
+- kind: Links
+  properties:
+  - name: date_added
+  - name: overall_score
+    direction: desc
+  - name: shared
+    direction: desc
+
+- kind: Links
+  properties:
+  - name: date_added
+    direction: desc
+  - name: overall_score
+    direction: desc
+
+- kind: Links
+  properties:
+  - name: shared
+  - name: date_added
+    direction: desc
+  - name: overall_score
+    direction: desc
+
 - kind: SessionModel
   properties:
   - name: __key__
@@ -51,6 +101,11 @@ indexes:
   - name: date
   - name: __key__
     direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: domain
+  - name: date
 
 - kind: SessionModel
   properties:

@@ -15,15 +15,17 @@ class GeneralConsolidation(webapp.RequestHandler):
 		#lower_limit_date = datetime.datetime.strptime('2009-11-15', '%Y-%m-%d').date()
 		dateStr = self.request.get('date',None)
 	        if dateStr is None :
-			logging.info('no date specified')
-			return
-		date = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
+			logging.info('no date specified calc date: yesterday')
+                        date = datetime.datetime.now().date() - datetime.timedelta(days=1)
+                else:
+		        date = datetime.datetime.strptime(dateStr, "%Y-%m-%d").date()
+                logging.info('calculating stats for %s' %date)
 		sessions = SessionModel.getDailyStats(date)
                 if not sessions:
                         logging.info('no sessions for day %s' %date)
                         return
                 for s in sessions:
-	                memcache_key = 'domain_update_key'+dateStr+"_"+str(s.key())
+	                memcache_key = 'domain_update_key'+str(date)+"_"+str(s.key())
                         if memcache.get(memcache_key):
                                 logging.info('already processed key')
                                 continue
@@ -224,14 +226,13 @@ class UserConsolidationTask(webapp.RequestHandler):
                       taskqueue.add(queue_name='user-consolidation', url='/user_consolidation', params={'date':date,'last_cursor':cursor})
                       logging.info('added to queue task')
                 
-#obsolete used one time for overall data aggregation
 class SessionConsolidation_task(webapp.RequestHandler):
         def get(self):
                 date_from = self.request.get('from', None)
                 date_to = self.request.get('to', None)
                 if date_from is None and date_to is None:
                         logging.info('adding task for previuos day')
-	                taskqueue.add(queue_name='user-consolidation', url='/user_consolidation')
+	                taskqueue.add(url='/data_consolidation')
                         return
                 d_from = datetime.datetime.strptime(date_from, '%Y-%m-%d').date()
                 d_to = datetime.datetime.strptime(date_to, '%Y-%m-%d').date()
@@ -246,7 +247,9 @@ class SessionConsolidation_task(webapp.RequestHandler):
 class FeedLinkConsolidation(webapp.RequestHandler):
         def get(self):
                 feedproxy='feedproxy.google.com'
-                feedLinks = SessionModel.gql('WHERE domain= :1', feedproxy).fetch(5000)
+                #00:00:00
+                today = datetime.datetime.now().date()
+                feedLinks = SessionModel.gql('WHERE domain= :1 and date < :2', feedproxy, today).fetch(5000)
                 logging.info('fetched feedproxy links %s' %len(feedLinks))
                 for l in feedLinks:
                         memcache_key='link_transform'+str(l.key())+'_'+str(datetime.datetime.now().date())
@@ -260,7 +263,9 @@ class FeedLinkConsolidation(webapp.RequestHandler):
 class ShortLinkConsolidation(webapp.RequestHandler):
         def get(self):
                 short_bitly='bit.ly'
-                shortLinks = SessionModel.gql('WHERE domain= :1', short_bitly).fetch(5000)
+                #00:00:00
+                today = datetime.datetime.now().date()
+                shortLinks = SessionModel.gql('WHERE domain= :1 and date < :2', short_bitly, today).fetch(5000)
                 #TODO identify other shortners
                 logging.info('fetched short links %s' % len(shortLinks))
                 for l in shortLinks:
@@ -276,11 +281,11 @@ class ShortLinkConsolidation(webapp.RequestHandler):
 application = webapp.WSGIApplication(
                                      [
                                              ('/data_consolidation',GeneralConsolidation), 
-                                             ('/session_consolidation_task', SessionConsolidation_task), 
+                                             ('/data_consolidation_task', SessionConsolidation_task), 
                                              ('/user_consolidation', UserDetailsConsolidation_batch), 
                                              ('/user_consolidation_task', UserConsolidationTask), 
-                                             ('/short_link_consolidation', ShortLinkConsolidation), 
-                                             ('/feed_link_consolidation', FeedLinkConsolidation), 
+                                             ('/short_link_consolidation_task', ShortLinkConsolidation), 
+                                             ('/feed_link_consolidation_task', FeedLinkConsolidation), 
 				             ('/aggregate_data', AggregateDataHandler)
                                              ],debug=True)
 

@@ -82,6 +82,15 @@ class LinkUtil:
                 except:
                         logging.info('could not expand short url %s' %url)
                         return None
+        def shortenLink(self, url):
+                try:
+                       link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(url)+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
+                       data=urllib2.urlopen(link)
+                       json=simplejson.load(data)
+                       short_url = json["data"]["url"]
+                       return short_url
+                except:
+                        logging.info('could not expand short url' %url)
         def updateStats(self, s):
                 dailyStats = DailyDomainStats.gql('WHERE domain = :1 and date = :2', s.domain, s.date).get()
                 if dailyStats is not None:
@@ -128,7 +137,7 @@ class LinkUtil:
                         weeklyStats.domain = s.domain
                         weeklyStats.count = 1
                         weeklyStats.date = date.date()
-                weeklyStats.put()
+                #weeklyStats.put()
                         
                 linkStats = LinkStats.gql('WHERE link = :1', s.url).get()
                 if linkStats is not None:

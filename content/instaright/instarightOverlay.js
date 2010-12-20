@@ -338,7 +338,7 @@ com.appspot.instaright={
 			return;
 		}
 		// text javascript url fix
-		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0 || url.indexOf('about:blank') != 0){
+		if (url.indexOf('javascript') == 0 || url.indexOf('mailto') == 0 || url.indexOf('about:blank') != -1){
 			//add javascript or mailto into description
 			// TODO this can overwrite selected text if mouse is over malto or javascript link
 			textSelected = url;

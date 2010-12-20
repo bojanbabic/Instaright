@@ -291,8 +291,45 @@ class UserStatsDeleteHandler(webapp.RequestHandler):
                         u.delete()
                 logging.info('done')
 
+class ListUserHandler(webapp.RequestHandler):
+        def get(self):
+                prop=self.request.get('property',None)
+                u = UserDetails()
+                users = []
+                buf = []
+                if prop is not None and hasattr(u,prop):
+                        logging.info('property %s' %prop)
+                        if prop == 'mail':
+                                logging.info('fetching users with mail')
+                                users=UserDetails.gql('ORDER by mail desc').fetch(10000)
+                else:
+                        logging.info('missing property')
+                if len(users) > 0:
+                        logging.info('fetched %s' % len(users))
+                        for u in users:
+                                if u.mail is not None:
+                                        buf.append('dn: cn='+u.name+',mail='+u.mail)
+                                        buf.append('objectclass: top')
+                                        buf.append('objectclass: person')
+                                        buf.append('objectclass: organizationalPerson')
+                                        buf.append('objectclass: inetOrgPerson')
+                                        buf.append('objectclass: mozillaAbPersonAlpha')
+                                        buf.append('givenName:'+u.name)
+                                        buf.append('sn:')
+                                        buf.append('cn:'+u.name)
+                                        buf.append('mail:'+u.mail)
+                                        buf.append('modifytimestamp: 0Z')
+                                        buf.append('')
+                                else:
+                                        logging.info('missing mail %s' % u.name)
+                                        
+                                
+                        self.response.headers['Content-type']='text/plain'
+                        self.response.out.write('\n'.join(buf))
+
 app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),
+                                ('/user/list', ListUserHandler),
                                 ('/user/stats/(.*)/delete_all', UserStatsDeleteHandler),
                                 ('/user/stats/(.*)', UserStatsHandler),
                                 #NOTE: never uncomment this

@@ -11,6 +11,7 @@ class LinkSortHandler(webapp.RequestHandler):
                 order = self.request.get('order',None)
                 l = Links()
                 self.response.headers["Content-Type"]='text/plain'
+                logging.info('get links')
                 if order and hasattr(l,order): 
                         if order == 'diggs':
                                 links = Links.gql('ORDER by diggs desc' ).fetch(100)
@@ -35,13 +36,16 @@ class LinkSortHandler(webapp.RequestHandler):
                         else:
                                 links = Links.gql('ORDER by overall_score desc').fetch(100)
                 else:
-                        links = Links.gql('ORDER by overall_score desc').fetch(100)
+                        links = Links.gql('ORDER by date_added desc, overall_score desc').fetch(100)
+                        logging.info('pre link count: %s' %len(links))
                         order = 'overall_score'
                 urls = [ (l.url, str(getattr(l,order)), str(l.date_updated)) for l in links  if l.url != StatsUtil.getDomain(l.url)]
-                template_variables = {'links' : urls }
-        	path= os.path.join(os.path.dirname(__file__), 'templates/top_links.html')
-                self.response.headers["Content-type"] = "text/html"
-        	self.response.out.write(template.render(path,template_variables))
+                logging.info('link count: %s' %len(urls))
+                if order and hasattr(l,order): 
+                        template_variables = {'links' : urls }
+        	        path= os.path.join(os.path.dirname(__file__), 'templates/top_links.html')
+                        self.response.headers["Content-type"] = "text/html"
+        	        self.response.out.write(template.render(path,template_variables))
 
 class LinkTransformHandler(webapp.RequestHandler):
         def post(self):

@@ -179,7 +179,7 @@ class Visualization(webapp.RequestHandler):
 			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
 			return
-		countryStats = [ x for x in countryStats if x.countryCode != 'XX' and x.countryCode != 'EU']
+		countryStats = [ x for x in countryStats if x.countryCode != 'XX' and x.countryCode != 'EU'  ]
 		logging.info('retrieved %s stats' % len(countryStats))
 		description = {"countryCode": ("string", "Country Code"),
 				"count":("number", "Count")}
@@ -196,12 +196,12 @@ class Visualization(webapp.RequestHandler):
 		
 	def cityFeed(self, reqId):
 		logging.info('City stats feed')
-		cityStatsQ= CityStats.gql('WHERE count > 100 ORDER BY count desc ').fetch(40)
+		cityStatsQ= CityStats.gql('WHERE count > 100 ORDER BY count desc ').fetch(80)
 		if cityStatsQ is None: 
 			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
 			return
-		cityStats = [ x for x in cityStatsQ if not "unknown" in x.city.lower()]
+		cityStats = [ x for x in cityStatsQ if not "unknown" in x.city.lower() and x.countryCode != 'US' ]
 		logging.info('retrieved %s stats' % len(cityStats))
 		description = {"city_countryCode": ("string", "City Code"),
 				"count":("number", "Count")}

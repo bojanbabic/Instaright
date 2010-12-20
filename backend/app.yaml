@@ -94,11 +94,15 @@ handlers:
   script: data_consolidation.py
 #  login: admin
 
-- url: /session_consolidation_task
+- url: /data_consolidation_task
   script: data_consolidation.py
 #  login: admin
 
-- url: /feed_link_consolidation
+- url: /feed_link_consolidation_task
+  script: data_consolidation.py
+#  login: admin
+
+- url: /short_link_consolidation_task
   script: data_consolidation.py
 #  login: admin
 
@@ -114,6 +118,18 @@ handlers:
   
 - url: /util/.*
   script: social/social_activity.py
+
+- url: /tools/delicious
+  script: tools/fromdelicious.py
+
+- url: /tools/import/instapaper/task
+  script: tools/fromdelicious.py
+
+- url: /tools/import/delicious
+  script: tools/fromdelicious.py
+
+- url: /tools/import/delicious/task
+  script: tools/fromdelicious.py
 
 - url: /.*
   script: main.py

@@ -23,3 +23,6 @@ queue:
 - name: twitter-follow
   rate: 500/d
   bucket_size: 1
+- name: instapaper-import
+  rate: 500/h
+  bucket_size: 1
