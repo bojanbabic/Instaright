@@ -67,6 +67,7 @@ class Logging(webapp.RequestHandler):
                                 title = None
 			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, short_link=None, feed_link=None, domain=domain, title=title)
 			model.put()
+                        taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':URL, 'domain':domain, 'user':account})
                         logging.info('model: %s' % model.to_xml())
 			logging.info('triggering feed update')
 			#trigger taskqueue that generates feed
@@ -75,8 +76,14 @@ class Logging(webapp.RequestHandler):
 			except:
 				e0, e = sys.exc_info()[0], sys.exc_info()[1]
                                 logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
-			logging.info('reponse new year')
-                        self.response.out.write('hny')
+                        cachedBadge = memcache.get('badge_'+account)
+                        logging.info('looking for badge %s' % 'badge_'+account)
+                        if cachedBadge is not None:
+                                logging.info('response badge %s' %cachedBadge)
+                                self.response.out.write(cachedBadge)
+                        else:
+                                logging.info('no badge found, using default')
+                                self.response.out.write('')
 		except:
 			e0,e = sys.exc_info()[0],  sys.exc_info()[1]
 			logging.error('Error while handling request %s %s' % (e0, e))
@@ -136,12 +143,18 @@ class IndexHandler(webapp.RequestHandler):
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
+
+class YahooVerificationFile(webapp.RequestHandler):
+        def get(self):
+                self.response.out.write('1')
+                
 		
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
                                      ('/deactivate_channels', ChannelHandler),
                                      #('/', Redirect),
+                                     ('/0Ci1tA9HYDgTPNzJLQ.ytA--.html', YahooVerificationFile),
                                      ('/', IndexHandler),
 				     ],
                                      debug=True)

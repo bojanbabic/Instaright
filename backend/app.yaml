@@ -1,5 +1,5 @@
 application: instaright
-version: 37
+version: 38
 runtime: python 
 api_version: 1
 
@@ -121,6 +121,10 @@ handlers:
 
 - url: /tools/delicious
   script: tools/fromdelicious.py
+  login: admin
+
+- url: /tools/delicious/callback
+  script: tools/fromdelicious.py
 
 - url: /tools/import/instapaper/task
   script: tools/fromdelicious.py
@@ -130,6 +134,9 @@ handlers:
 
 - url: /tools/import/delicious/task
   script: tools/fromdelicious.py
+
+- url: /tools/addon/instaright.xpi
+  script: addon.py
 
 - url: /.*
   script: main.py

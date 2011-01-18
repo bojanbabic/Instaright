@@ -26,3 +26,9 @@ queue:
 - name: instapaper-import
   rate: 500/h
   bucket_size: 1
+- name: twit-queue
+  rate: 1/h
+  bucket_size: 1
+- name: badge-queue
+  rate: 200/m
+  bucket_size: 1

@@ -7,7 +7,8 @@ from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
 
-from models import UserDetails, SessionModel, UserStats
+from models import UserDetails, SessionModel, UserStats, UserBadge
+from utils import BadgeUtil
 
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
@@ -327,6 +328,37 @@ class ListUserHandler(webapp.RequestHandler):
                         self.response.headers['Content-type']='text/plain'
                         self.response.out.write('\n'.join(buf))
 
+class UserBadgeTaskHandler(webapp.RequestHandler):
+        def post(self):
+                user=self.request.get('user', None)
+                url=self.request.get('url', None)
+                domain=self.request.get('domain', None)
+                if user is None:
+                        logging.info('unknown user skipping')
+                        return
+                currentBadge = memcache.get('badge_'+user)
+                if currentBadge is not None and (currentBadge == '1' or currentBadge == '2' or currentBadge == '3' or currentBadge == '5'):
+                        logging.info('for user %s already using full day badge: %s' %(user,currentBadge))
+                        return
+                badger=BadgeUtil.getBadger(user, url, domain)
+                if badger is None:
+                        logging.info('no badger initialized. skipping')
+                        return
+                badge=badger.getBadge()
+                if badge is not None:
+                        # midnight timestamp - memcache expiration 
+                        midnight=datetime.datetime.now().date() + datetime.timedelta(days=1)
+                        midnight_ts=time.mktime(midnight.timetuple())
+                        memcache.set('badge_'+user, badge, time=midnight_ts)
+                        logging.info('setting badge cache: %s for user badge_%s valid until midnight %s' % (badge,user,midnight_ts))
+                        existingBadge=UserBadge.gql('WHERE badge = :1 and user = :2 and date = :3', badge, user, datetime.datetime.now().date()).get()
+                        if existingBadge is not None:
+                                return
+                        userBadge=UserBadge()
+                        userBadge.user=user
+                        userBadge.badge=badge
+                        userBadge.put()
+
 app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),
                                 ('/user/list', ListUserHandler),
@@ -337,6 +369,7 @@ app = webapp.WSGIApplication([
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
                                 ('/user/task/update_all', UserUpdate),
+                                ('/user/badge/task', UserBadgeTaskHandler),
                                 ('/user/(.*)/(.*)', UserFormKeyHandler),
                                 ('/user/(.*)', UserHandler),
                                         ], debug =True)

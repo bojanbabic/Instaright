@@ -201,6 +201,8 @@ class UserDetailsConsolidation_batch(webapp.RequestHandler):
                                 user_detail.links_added = user_detail.links_added + 1
                                 user_detail.put()
                         memcache.set(memcache_key_s, s.key())
+                        #IMPORTANT:delete daily badges for user
+                        memcache.delete('badge_'+s.instaright_account)
                 logging.info('done for date %s' % str(date))
 		self.response.out.write('done for date %s' %str(date))
 

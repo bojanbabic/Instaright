@@ -25,7 +25,27 @@ class LinkHandler(webapp.RequestHandler):
                 logging.info('url %s' % url)
                 logging.info('count %s' % count)
                 link = self.getAllData(url, count)
-                link.put()
+                existingLink = Links.gql('WHERE url = :1', url).get()
+                if existingLink is not None:
+                        existingLink.date_updated= link.date_updated
+                        existingLink.influence_score= link.influence_score
+                        existingLink.instapaper_count= link.instapaper_count
+                        existingLink.instaright_count=link.instaright_count
+                        existingLink.redditups=link.redditups
+                        existingLink.redditdowns=link.redditdowns
+                        existingLink.tweets=link.tweets
+                        existingLink.diggs=link.diggs
+                        existingLink.excerpt=link.excerpt
+                        existingLink.categories=link.categories
+                        existingLink.delicious_count=link.delicious_count
+                        existingLink.facebook_like=link.facebook_like
+                        #if increase in score is more then 20%
+                        if  link.overall_score  / existingLink.overall_score >= 1.2:
+                                existingLink.shared=False
+                        existingLink.overall_score=link.overall_score
+                        existingLink.put()
+                else:
+                        link.put()
                 self.response.out.write('put %s\n' % url)
         def get(self):
                 self.response.out.write('get')

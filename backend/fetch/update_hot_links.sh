@@ -8,5 +8,5 @@ if [ ! -f "$HOT_LINKS" ];then
         exit
 fi
 
-head -1000 "$HOT_LINKS" | awk '{print "count="$1"&url="$2}' | while read line;do  curl -d "$line"  http://localhost:8080/link/add ;done 
+head -1000 "$HOT_LINKS" | awk '{print "count="$1"&url="$2}' | while read line;do  curl -d "$line"  http://instaright.appspot.com/link/add ;done 
 

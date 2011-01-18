@@ -30,3 +30,8 @@ cron:
 - description: short link aggregation
   url: /short_link_consolidation_task
   schedule: every day 01:40
+
+- description: hotlink tweets to queue
+  url: /util/twitter/twit
+  schedule: every monday 04:00
+

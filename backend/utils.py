@@ -1,7 +1,7 @@
 import urlparse, urllib,logging, urllib2, datetime, simplejson
 from google.appengine.api import memcache
 from xml.dom import minidom
-from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats
+from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
 DOMAIN='http://instaright.appspot.com'
 class StatsUtil():
 	@staticmethod
@@ -90,7 +90,7 @@ class LinkUtil:
                        short_url = json["data"]["url"]
                        return short_url
                 except:
-                        logging.info('could not expand short url' %url)
+                        logging.info('could not expand short url %s' %url)
         def updateStats(self, s):
                 dailyStats = DailyDomainStats.gql('WHERE domain = :1 and date = :2', s.domain, s.date).get()
                 if dailyStats is not None:
@@ -152,7 +152,146 @@ class LinkUtil:
                         linkStats.link = s.url
                         linkStats.lastUpdatedBy = s.instaright_account
                 linkStats.put()
+
+class BadgeUtil:
+        global DOMAIN_SPECIFIC_BADGES
+        DOMAIN_SPECIFIC_BADGES=['nytimes.com']
+        @staticmethod
+        def getBadger(user, url, domain):
+               trophyBadger=TrophyBadger(user, url, domain)
+               if trophyBadger.getBadge() is not None:
+                        logging.info('initializing trophy badger')
+                        return trophyBadger
+               if domain in DOMAIN_SPECIFIC_BADGES:
+                        logging.info('initializing site specific badger: %s' %domain)
+                        return SiteSpecificBadge(user, url, domain)
+               speedLimitBadger=SpeedLimitBadger(user, url, domain)
+               clubBadger=ClubBadger(user, url, domain)
+               if speedLimitBadger.getBadge() is not None:
+                        logging.info('initializing speed limit badger')
+                        return speedLimitBadger
+               if clubBadger.getBadge() is not None:
+                        logging.info('initializing club badger')
+                        return clubBadger
+               usageBadge=ContinuousUsageBadge(user, url, domain)
+               if usageBadge.getBadge() is not None:
+                        logging.info('initializing usage badger')
+                        return usageBadge
+               return None
                 
+class ContinuousUsageBadge:
+        def __init__(self, user, url, domain):
+                self.user = user
+                self.url = url
+                self.domain = domain
+        def getBadge(self):
+                returnBadge=5
+                existingBadge=UserBadge.gql('WHERE user = :1 and badge = :2', self.user, returnBadge).get()
+                if existingBadge is None:
+                        logging.info('not usage date fetched for %s in last % days' %(self.user, returnBadge))
+                        return None
+                yesterday=datetime.datetime.now().date() - datetime.timedelta(days=1)
+                limit=datetime.datetime.now().date() - datetime.timedelta(days=4)
+                active=True
+                while yesterday >= limit:
+                       s=SessionModel.gql('WHERE date = :1 and instaright_account = :2', yesterday, self.user).get()
+                       if s is None:
+                                logging.info('user %s NOT active for date %s' %(self.user, yesterday))
+                                active=False
+                                return None
+                       else:
+                                logging.info('user %s active for date %s' %(self.user, yesterday))
+                       yesteday-=datetime.timedelta(days=1)
+                if active:        
+                        logging.info('user %s has been active in last %s' %(self.user, returnBadge))
+                        return '5'
+                logging.info('usage badge %s: not initialized' %self.user)
+class SpeedLimitBadger:
+        def __init__(self, user, url, domain):
+                self.user = user
+                self.url = url
+                self.domain = domain
+        def getBadge(self):
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('WHERE date >= :1 and instaright_account = :2', midnight, self.user).count()
+               logging.info('current daily user count : %s -> %s' %(self.user, currentCount))
+               if currentCount >= 105:
+                        return '105'
+               if currentCount >= 65:
+                        return '65'
+               if currentCount >= 55:
+                        return '55'
+               if currentCount >= 25:
+                        return '25'
+               logging.info('speed limit badge %s: not initialized' %self.user)
+               return None
+                
+class SiteSpecificBadge:
+        def __init__(self, user, url, domain):
+                self.user = user
+                self.url = url
+                self.domain = domain
+        def getBadge(self):
+                if self.domain == 'nytimes.com':
+                        return self.getnytbadge()
+                else:
+                        return None
+        def getnytbadge(self):
+               nyt_tresshold=5
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain = :1 and date >= :2 and instaright_account = :3', self.domain, midnight, self.user).count()
+               logging.info('site specific badger(NY): fetched stats %s' % currentCount)
+               if currentCount >= nyt_tresshold:
+                        logging.info('setting ny badge for user %s ' %self.user)
+                        return 'ny'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, nyt_tresshold, currentCount))
+                        return None
+
+class ClubBadger:
+        def __init__(self, user, url, domain):
+                self.user = user
+                self.url = url
+                self.domain = domain
+        def getBadge(self):
+                allForUser=SessionModel.all()
+                allForUser.filter("instaright_account =", self.user)
+                count=allForUser.count(10000)
+                logging.info('club badger: fetched stats %s' % count)
+                if count >= 10000:
+                        return '10000'
+                if count >= 5000:
+                        return '5000'
+                if count >= 1000:
+                        return '1000'
+                logging.info('club badger %s: not initialized' % self.user )
+                return None
+class TrophyBadger:
+        def __init__(self, user, url, domain):
+                self.user = user
+                self.url = url
+                self.domain = domain
+        def getBadge(self):
+                targetdate=datetime.datetime.now().date() - datetime.timedelta(days=1)
+                stats = UserStats.gql('WHERE date = :1 and count > 10 order by count desc', targetdate).fetch(3)
+                logging.info('trophy badger: fetched stats %s' % len(stats))
+		stats = [ s.instapaper_account for s in stats if s is not None ]
+                if stats is None or len(stats) == 0:
+			logging.info('Not enough data for calc badge')
+			return None
+                if stats[0] == self.user:
+			logging.info('User was number ONE user yesterday')
+                        return '1'
+                if stats[1] == self.user:
+			logging.info('User was number TWO user yesterday')
+                        return '2'
+                if stats[2] == self.user:
+			logging.info('User was number THREE user yesterday')
+                        return '3'
+                logging.info('trophy badge %s: not initialized' % self.user )
+                return None
+
+                 
 class Cast:
         @staticmethod
         def toInt(string,default):

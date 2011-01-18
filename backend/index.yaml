@@ -21,6 +21,11 @@ indexes:
   - name: count
     direction: desc
 
+- kind: DeliciousImporter
+  properties:
+  - name: oauth_token
+  - name: oauth_expires_in
+
 - kind: LinkStats
   properties:
   - name: count
@@ -109,9 +114,26 @@ indexes:
 
 - kind: SessionModel
   properties:
+  - name: domain
+  - name: instaright_account
+  - name: date
+
+- kind: SessionModel
+  properties:
+  - name: domain
+  - name: user
+  - name: date
+
+- kind: SessionModel
+  properties:
   - name: instaright_account
   - name: __key__
     direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: instaright_account
+  - name: date
 
 - kind: SessionModel
   properties:

@@ -279,3 +279,10 @@ class DeliciousImporter(db.Model):
         delicious_account=db.StringProperty()
         success=db.BooleanProperty(default=False)
         date=db.DateTimeProperty(auto_now_add=True)
+        oauth_token_secret=db.StringProperty()
+        oauth_token=db.StringProperty()
+        oauth_expires_in=db.DateTimeProperty()
+class UserBadge(db.Model):
+        user=db.StringProperty()
+        badge=db.StringProperty()
+        date=db.DateProperty(auto_now_add=True)

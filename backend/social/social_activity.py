@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime, os, simplejson, sys, urllib2, logging, urllib
+import datetime, os, simplejson, sys, urllib2, logging, urllib, time
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
@@ -74,61 +74,43 @@ class TwitterFollowHandler(webapp.RequestHandler):
 
 class TweetHotLinks(webapp.RequestHandler):
         def get(self):
-                 api = twitter.Api(
+                 not_shared=False
+                 hotLinks = Links.gql('WHERE shared = :1 ORDER by date_added desc, overall_score desc', not_shared).fetch(100)
+                 linkUtil=LinkUtil()
+                 a=[]
+                 for h in hotLinks:
+                        if "twitter.com" in h.url or "google.com" in h.url or "instapaper.com" in h.url or  "facebook.com" in h.url or  "edition.cnn.com" in h.url or "maps.google.com" in h.url:
+                                logging.info('filering out %s' %h.url)
+                                h.delete()
+                                continue
+                        t=Twit()
+                        #randomly choose old or new stlye
+                        ts = int(time.time())
+                        logging.info('time %s' % ts)
+                        if ts % 2 == 0:
+                                t.style=True
+                        t.textFromHotLink(h)
+                        taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
+                        h.shared=True
+                        h.put()
+
+class TweetHotLinksTask(webapp.RequestHandler):
+        def post(self):
+               twit=self.request.get('twit', None)
+               if twit is None:
+                        logging.info('no twit skipping')
+               api = twitter.Api(
                                 consumer_key='WZ9re48FXCmnaNlN4rbuhg',
                                 consumer_secret='jEQ7gDsE2aR9AXrA6aMZHBvKvvFgurjXoSiYLiyjQ', 
                                 access_token_key='193034839-oI43CpQA6Mf1JC2no0mKwGxgT7wyWdDL6HpSKlMz', 
                                 access_token_secret='q2CP7JR8wNrMNbqgRs9YezZtdMtZO7OgcgTRjCSY'
                                 ) 
-                #print user.screen_name
-                 hotLinks = Links.gql('ORDER by date_added desc, overall_score desc').fetch(100)
-                 ss = Links.gql('ORDER by date_added desc, overall_score desc').fetch(100)
-                 unshared = [ l for l in ss if l.shared == False ]
-                 linkUtil=LinkUtil()
-                 a=[]
-                 for h in unshared:
-                        if "twitter.com" in h.url or "google.com" in h.url or "instapaper.com" in h.url or  "facebook.com" in h.url:
-                                logging.info('filering out %s' %h.url)
-                                continue
-                        short_link = linkUtil.shortenLink(h.url)
-                        tweet = "check out this story: %s " %short_link
-                        if h.facebook_like is not None and h.facebook_like > 0:
-                                tweet+=" #facebook %s" %h.facebook_like
-                        if h.redditups is not None and h.redditups > 0:#reddit ups %s #delicious save %s #instapaper %s #twitter %s
-                                tweet+=" #reddit ups %s" % h.redditups
-                        if h.delicious_count is not None and h.delicious_count > 0:
-                                tweet+=" #delicious save %s" % h.delicious_count
-                        if h.instapaper_count is not None and h.instapaper_count > 0:
-                                tweet+=" #instapaper %s" %h.instapaper_count
-                        if h.tweets is not None and h.tweets > 0:
-                                tweet+=" #twitter %s RTs" %h.tweets
-                        if h.categories is not None and len(h.categories) > 0:
-                                import ast
-                                logging.info('init cat : %s' % str(h.categories))
-                                dicti = ast.literal_eval(h.categories)
-                                if len(dicti) == 0:
-                                        logging.info('no cat. skipping')
-                                        continue
-                                import operator
-                                logging.info('categories:'+str(dicti))
-                                sorteddict = sorted(dicti.iteritems(), key=operator.itemgetter(1))
-                                top_category = sorteddict[len(sorteddict)-1]
-                        if len(tweet) <= 140:
-                                if top_category is not None and top_category[0] not in tweet and len(top_category[0]) + len(tweet) +2 <= 140:
-                                        tweet +=" #%s" %top_category[0]
-                                if getattr(h, 'shared') and h.shared:
-                                        logging.info('already shared %s' %h.url)
-                                        continue
-                                logging.info('tweet: %s' % tweet)
-                                try:
-                                        api.PostUpdate(tweet)
-                                except:
-                                        logging.info('tweeting error %s' % sys.exc_info()[0])
-                                h.shared=True
-                                h.put()
-                        a.append(tweet+"\t"+str(len(tweet)))
-                 self.response.headers['Content-Type'] = 'text/plain'
-                 self.response.out.write('\n'.join(a))
+               try:
+                        api.PostUpdate(twit)
+                        logging.info('twit: %s' % twit)
+               except:
+                        logging.info('tweeting error %s' % sys.exc_info()[0])
+                
 
 class TwitterReplyHandler(webapp.RequestHandler):
         def get(self, twitter_id):
@@ -174,10 +156,11 @@ class TwitterResetSendHandler(webapp.RequestHandler):
 
 class Twit:
         exclude_elements=['instapaper.com', 'marcoarment', 'via Instapaper', 'App Updates'] 
-        def __init__(self, tweet_id=None, text=None, sender=None):
+        def __init__(self, tweet_id=None, text=None, sender=None, style=False):
                 self.tweet_id = tweet_id
                 self.text = text
                 self.sender = sender
+                self.style=style
         #TODO take smarter approach
         # ie spam filter or machine learninig
         def filter(self):
@@ -185,6 +168,81 @@ class Twit:
                         if e.lower() in self.text.lower():
                                 return False
                 return True
+        def textFromHotLink(self, link):
+                if self.style:
+                        return self.textNewStyle(link)
+                else:
+                        return self.textOldStyle(link)
+        def textOldStyle(self,link):
+                linkUtil=LinkUtil()
+                short_link = linkUtil.shortenLink(link.url)
+                self.text = "check out this story: %s " %short_link
+                if link.facebook_like is not None and link.facebook_like > 0:
+                                self.text+=" #facebook %s" %link.facebook_like
+                if link.redditups is not None and link.redditups > 0:#reddit ups %s #delicious save %s #instapaper %s #twitter %s
+                                self.text+=" #reddit ups %s" % link.redditups
+                if link.delicious_count is not None and link.delicious_count > 0:
+                                self.text+=" #delicious save %s" % link.delicious_count
+                if link.instapaper_count is not None and link.instapaper_count > 0:
+                                self.text+=" #instapaper %s" %link.instapaper_count
+                if link.tweets is not None and link.tweets > 0:
+                                self.text+=" #twitter %s RTs" %link.tweets
+                top_category=None
+                if link.categories is not None and len(link.categories) > 0:
+                                logging.info('init cat : %s' % str(link.categories))
+                                #dicti = ast.literal_eval(link.categories)
+                                dicti = eval(link.categories)
+                                if len(dicti) > 0:
+                                        import operator
+                                        logging.info('categories:'+str(dicti))
+                                        sorteddict = sorted(dicti.iteritems(), key=operator.itemgetter(1))
+                                        top_category = sorteddict[len(sorteddict)-1]
+                if len(self.text) <= 140:
+                                if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
+                                        self.text +=" #%s" %top_category[0]
+                                if link.diggs is not None and link.diggs > 4 and 8 + len(self.text) +2 <= 140:
+                                        self.text +=" #digg %s" % link.diggs
+                logging.info('self.text: %s' % self.text)
+        def textNewStyle(self,link):
+                linkUtil=LinkUtil()
+                logging.info('new style')
+                if not link.title or link.title is None:
+                        logging.info('title not known going back to old style')
+                        self.textOldStyle(link)
+                if link.categories is not None and len(link.categories) > 0:
+                        logging.info('init cat : %s' % str(link.categories))
+                        #dicti = ast.literal_eval(link.categories)
+                        dicti = eval(link.categories)
+                        if len(dicti) == 0:
+                               logging.info('no cat. generatingold style')
+                               self.textOldStyle(link)
+                        else:
+                               import operator
+                               logging.info('categories:'+str(dicti))
+                               sorteddict = sorted(dicti.iteritems(), key=operator.itemgetter(1), reverse=True)
+                               top_category = None
+                               top_category1 = None
+                               top_category2 = None
+                               try:
+                                        top_category = sorteddict[0]
+                                        top_category1 = sorteddict[1]
+                                        top_category2 = sorteddict[2]
+                                        logging.info('top cats %s' % sorteddict)
+                               except:
+                                        logging.info('can\'t get all cats')
+                               short_link = linkUtil.shortenLink(link.url)
+                               self.text="#topstory "+link.title[0:50] + "... " +short_link
+                               if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
+                                        self.text += " #%s" % top_category[0]
+                               if top_category1 is not None and top_category1[0] not in self.text and len(top_category1[0]) + len(self.text) +2 <= 140:
+                                        self.text += " #%s" % top_category1[0]
+                               if top_category2 is not None and top_category2[0] not in self.text and len(top_category2[0]) + len(self.text) +2 <= 140:
+                                        self.text += " #%s" % top_category2[0]
+                else:
+                        logging.info('no categories going back to old style')
+                        self.textOldStyle(link)
+                logging.info('self text %s' % self.text)
+                        
 
 
 application = webapp.WSGIApplication(
@@ -192,6 +250,7 @@ application = webapp.WSGIApplication(
                                                 ('/util/twitter/follow/(.*)', TwitterFollowHandler),
                                                 ('/util/twitter/reply/(.*)', TwitterReplyHandler), 
                                                 ('/util/twitter/twit', TweetHotLinks), 
+                                                ('/util/twitter/twit/task', TweetHotLinksTask), 
                                                 ('/util/twitter/reset_sent', TwitterResetSendHandler),
                                                 ], debug=True
                                     )

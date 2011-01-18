@@ -34,7 +34,7 @@ while read line;
         echo "done"
         echo "" 
 done 
-ls $OUTPUT_DIR/*dat | while read line; do cat "$line" | ./separate_field.awk  >> $OUTPUT_DIR/all_links.txt;done
+ls $OUTPUT_DIR/*dat | while read line; do cat "$line" | /home/bojan/work/projects/_ff_extensions/instaright/backend/fetch/separate_field.awk  >> $OUTPUT_DIR/all_links.txt;done
 #sort it
 sort  $OUTPUT_DIR/all_links.txt | uniq -c  | sort -rn  > $OUTPUT_DIR/sorted_links.txt
 exit
