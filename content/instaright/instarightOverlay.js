@@ -18,16 +18,31 @@ com.appspot.model={
 	backendResponse:"",
 	init: function(){
 		var ver = -1; firstrun = true;
-                var current = -100;
+                var cur;
                 var error = false;
                 var timer = Components.classes["@mozilla.org/timer;1"]
                                     .createInstance(Components.interfaces.nsITimer);
 
                 try{
-                        Components.utils.import("resource://modules/AddonManager.jsm");
-                        current = version();
+                        Components.utils.import('resource://gre/modules/AddonManager.jsm');
+                        AddonManager.getAddonByID("{1d682819-bef2-4a75-8ffa-adf3733f5557}", function(addon){
+                               cur=addon.version;
+
+                        });
+                        var thread = Components.classes["@mozilla.org/thread-manager;1"]
+                                        .getService(Components.interfaces.nsIThreadManager)
+                                        .currentThread;
+                        while (!cur){
+                                thread.processNextEvent(true);
+                        }
                 }catch(e){
-                        error=true;
+                        try{
+                                var gExtensionManager = Components.classes["@mozilla.org/extensions/manager;1"]
+                                      .getService(Components.interfaces.nsIExtensionManager);
+                                cur=gExtensionManager.getItemForID("{1d682819-bef2-4a75-8ffa-adf3733f5557}").version;  
+                        }catch(ee){
+                                error=true;
+                        }
                 }
                 if (error){
                         return;
@@ -52,39 +67,22 @@ com.appspot.model={
                 	com.appspot.instaright.alert_ny = string_bundle.getString('alert_ny');
                 	com.appspot.instaright.alert_trophy = string_bundle.getString('alert_trophy');
                 	com.appspot.instaright.alert_hny = string_bundle.getString('alert_hny');
+                	com.appspot.instaright.alert_usage = string_bundle.getString('alert_usage');
 			
-	                /*alert('com.appspot.instaright.alert_instaright:'+com.appspot.instaright.alert_instaright);
-                	alert('com.appspot.instaright.alert_invalid_mail:'+com.appspot.instaright.alert_invalid_mail);
-                	alert('com.appspot.instaright.alert_save_disabled:'+com.appspot.instaright.alert_save_disabled);
-                	alert('com.appspot.instaright.alert_no_url:'+com.appspot.instaright.alert_no_url);
-                	alert('com.appspot.instaright.alert_success:'+com.appspot.instaright.alert_success);
-                	alert('com.appspot.instaright.alert_bad_request:'+com.appspot.instaright.alert_bad_request);
-                	alert('com.appspot.instaright.alert_invalid_credential:'+com.appspot.instaright.alert_invalid_credential);
-                	alert('com.appspot.instaright.alert_service_error:'+com.appspot.instaright.alert_service_error);
-                	alert('com.appspot.instaright.alert_onek:'+com.appspot.instaright.alert_onek);
-                	alert('com.appspot.instaright.alert_fivek:'+com.appspot.instaright.alert_fivek);
-                	alert('com.appspot.instaright.alert_tenk:'+com.appspot.instaright.alert_tenk);
-                	alert('com.appspot.instaright.alert_thanks:'+com.appspot.instaright.alert_thanks);
-                	alert('com.appspot.instaright.alert_sl:'+com.appspot.instaright.alert_sl);
-                	alert('com.appspot.instaright.alert_ny:'+com.appspot.instaright.alert_ny);
-                	alert('com.appspot.instaright.alert_trophy:'+com.appspot.instaright.alert_trophy);
-                	alert('com.appspot.instaright.alert_hny:'+com.appspot.instaright.alert_hny);
-			*/
-
 		}catch(e){
 		}finally{
                         try{
                                 if (firstrun){
                                         this.prefs.setBoolPref("firstrun",false);
-                                        this.prefs.setCharPref("version",current);
+                                        this.prefs.setCharPref("version",cur);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
                                                 com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
                                 }
-                                if (ver != current && !firstrun){
-                                        this.prefs.setCharPref("version",current);
+                                if (ver != cur && !firstrun){
+                                        this.prefs.setCharPref("version",cur);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
                                                 com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
                                         timer.initWithCallback(function(){
@@ -204,7 +202,7 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	_SERVER:"http://37.latest.instaright.appspot.com",
+	_SERVER:"http://instaright.appspot.com",
 	//_SERVER:"http://localhost:8080",
         alertService:null,
         alert_instaright:"",
@@ -226,6 +224,7 @@ com.appspot.instaright={
 	alert_status:"",
 	alert_message:"",
 	alert_icon:"",
+	alert_usage:"",
 	setAlert:function(alert_message){
 		if (com.appspot.model.backendResponse == ''){
 			this.alert_status=this.alert_instaright;
@@ -267,6 +266,11 @@ com.appspot.instaright={
 			this.alert_message=alert_message;
 			this.alert_icon="chrome://instaright/skin/dthird.png";
 		}
+		else if (com.appspot.model.backendResponse == '5'){
+			this.alert_status=this.alert_usage;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/5usage.png";
+		}
 		else if (com.appspot.model.backendResponse == '25'){
 			this.alert_status=this.alert_sl;
 			this.alert_message=alert_message;
@@ -291,6 +295,11 @@ com.appspot.instaright={
 			this.alert_status=this.alert_ny;
 			this.alert_message=alert_message;
 			this.alert_icon="chrome://instaright/skin/ny.png";
+		}
+                else {
+			this.alert_status=this.alert_instaright;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/instapaper_mod.png";
 		}
 	},
         sendAlert:function(badge, alert_title, alert_message){
