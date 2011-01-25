@@ -84,6 +84,9 @@ class ShortLinkHandler(webapp.RequestHandler):
                         logging.info('could not retrieve long link.skipping')
                         return
                 logging.info('expanded url: %s' % long_url)
+                if long_url.startswith('itms://'):
+                        logging.info('Skipping itunes item: %s' % long_url)
+                        return
                 domain = StatsUtil.getDomain(long_url)
                 s.short_url = s.url
                 s.url = long_url

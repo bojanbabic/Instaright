@@ -52,6 +52,9 @@ class CallbackHandler(webapp.RequestHandler):
 			message = Message( title = title, link = link , domain = domain)
                         #TODO possible bottleneck
                         user = SessionModel.gql('WHERE __key__ = :1', db.Key(update.id)).get()
+                        if user is None:
+                                logging.info('can\'t determine user by id: %s' % update.id)
+                                continue
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)
                         logging.info('avatar %s' %avatar)

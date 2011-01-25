@@ -192,7 +192,10 @@ class UserDetailsConsolidation_batch(webapp.RequestHandler):
                                 user_detail.last_active_date = s.date
                                 user_detail.put()
                                 #task queue that gathers info
-                                fetch_task_url = '/user/'+urllib2.quote(s.instaright_account)+'/fetch'
+                                try:
+                                        fetch_task_url = '/user/'+urllib2.quote(s.instaright_account)+'/fetch'
+                                except:
+                                        logging.warn('can\'t fetch info for user %s ' % s.instaright_account) 
                                 logging.info('adding task on url %s' %fetch_task_url)
                                 taskqueue.add(queue_name='user-info', url=fetch_task_url)
                         else:

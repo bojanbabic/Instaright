@@ -1,5 +1,5 @@
 application: instaright
-version: 38
+version: 39
 runtime: python 
 api_version: 1
 
@@ -23,7 +23,7 @@ handlers:
 
 - url: /stats
   script: stats.py
-#  login: admin
+  login: admin
 
 - url: /stats/.*
   script: stats.py
@@ -88,23 +88,23 @@ handlers:
 
 - url: /user_consolidation
   script: data_consolidation.py
-#  login: admin
+  login: admin
 
 - url: /user_consolidation_task
   script: data_consolidation.py
-#  login: admin
+  login: admin
 
 - url: /data_consolidation_task
   script: data_consolidation.py
-#  login: admin
+  login: admin
 
 - url: /feed_link_consolidation_task
   script: data_consolidation.py
-#  login: admin
+  login: admin
 
 - url: /short_link_consolidation_task
   script: data_consolidation.py
-#  login: admin
+  login: admin
 
 - url: /user/.*
   script: users.py

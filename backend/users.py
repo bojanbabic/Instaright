@@ -333,6 +333,8 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                 user=self.request.get('user', None)
                 url=self.request.get('url', None)
                 domain=self.request.get('domain', None)
+                version=self.request.get('version', None)
+                logging.info('version %s' % version)
                 if user is None:
                         logging.info('unknown user skipping')
                         return
@@ -340,7 +342,7 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                 if currentBadge is not None and (currentBadge == '1' or currentBadge == '2' or currentBadge == '3' or currentBadge == '5'):
                         logging.info('for user %s already using full day badge: %s' %(user,currentBadge))
                         return
-                badger=BadgeUtil.getBadger(user, url, domain)
+                badger=BadgeUtil.getBadger(user, url, domain, version)
                 if badger is None:
                         logging.info('no badger initialized. skipping')
                         return

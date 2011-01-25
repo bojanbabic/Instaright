@@ -56,6 +56,9 @@ class Logging(webapp.RequestHandler):
 			account=args[0]
 			URL=urllib2.unquote(args[1])
 			domain=StatsUtil.getDomain(URL)
+                        if URL.startswith('file://'):
+                                logging.info('url not good: %s ' % URL)
+                                return
                         try:
                                 title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
                                 if title == "null":
@@ -65,9 +68,15 @@ class Logging(webapp.RequestHandler):
                                 logging.info('encoding error: %s ::: %s' %(e0, e1))
                                 #older version of plugin
                                 title = None
+                        try:
+			        version=urllib2.unquote(args[3])
+                                int(version[0])
+                        except:
+                                version= None
+                        logging.info('version:%s'  %version)
 			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, short_link=None, feed_link=None, domain=domain, title=title)
 			model.put()
-                        taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':URL, 'domain':domain, 'user':account})
+                        taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':URL, 'domain':domain, 'user':account, 'version': version})
                         logging.info('model: %s' % model.to_xml())
 			logging.info('triggering feed update')
 			#trigger taskqueue that generates feed
@@ -100,11 +109,6 @@ class ErrorHandling(webapp.RequestHandler):
                 except:
                         e,e0 = sys.exc_info()[0], sys.exc_info()[1]
                         logging.error('weird:ERROR while hadling ERROR for %s: ' % self.request.body)
-
-class Redirect(webapp.RequestHandler):
-	def get(self):
-		url = 'http://bojanbabic.blogspot.com'
-		return self.response.out.write('<script language="javascript">top.location.href="' + url + '"</script>')
 
 class IndexHandler(webapp.RequestHandler):
 	def get(self):
@@ -147,13 +151,21 @@ class IndexHandler(webapp.RequestHandler):
 class YahooVerificationFile(webapp.RequestHandler):
         def get(self):
                 self.response.out.write('1')
+
+class PrivacyPolicyHandler(webapp.RequestHandler):
+        def get(self):
+		template_variables = []
+		path= os.path.join(os.path.dirname(__file__), 'templates/privacy_policy.html')
+                self.response.headers["Content-Type"] = "text/html; charset=utf-8"
+		self.response.out.write(template.render(path,template_variables))
+                
                 
 		
 application = webapp.WSGIApplication(
                                      [('/rpc', Logging),
                                      ('/error', ErrorHandling),
                                      ('/deactivate_channels', ChannelHandler),
-                                     #('/', Redirect),
+                                     ('/privacy_policy.html', PrivacyPolicyHandler),
                                      ('/0Ci1tA9HYDgTPNzJLQ.ytA--.html', YahooVerificationFile),
                                      ('/', IndexHandler),
 				     ],

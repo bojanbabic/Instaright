@@ -16,6 +16,7 @@ com.appspot.model={
 	targetUrl:"",
 	ajaxResponse:"",
 	backendResponse:"",
+        currentVersion:"",
 	init: function(){
 		var ver = -1; firstrun = true;
                 var cur;
@@ -24,7 +25,6 @@ com.appspot.model={
                                     .createInstance(Components.interfaces.nsITimer);
 
                 try{
-                        Components.utils.import('resource://gre/modules/AddonManager.jsm');
                         AddonManager.getAddonByID("{1d682819-bef2-4a75-8ffa-adf3733f5557}", function(addon){
                                cur=addon.version;
 
@@ -35,11 +35,14 @@ com.appspot.model={
                         while (!cur){
                                 thread.processNextEvent(true);
                         }
+                        alert(cur);
+                        this.currentVersion=cur;
                 }catch(e){
                         try{
                                 var gExtensionManager = Components.classes["@mozilla.org/extensions/manager;1"]
                                       .getService(Components.interfaces.nsIExtensionManager);
                                 cur=gExtensionManager.getItemForID("{1d682819-bef2-4a75-8ffa-adf3733f5557}").version;  
+                                this.currentVersion=cur;
                         }catch(ee){
                                 error=true;
                         }
@@ -68,7 +71,10 @@ com.appspot.model={
                 	com.appspot.instaright.alert_trophy = string_bundle.getString('alert_trophy');
                 	com.appspot.instaright.alert_hny = string_bundle.getString('alert_hny');
                 	com.appspot.instaright.alert_usage = string_bundle.getString('alert_usage');
-			
+                	com.appspot.instaright.alert_movie = string_bundle.getString('alert_video');
+                	com.appspot.instaright.alert_economy = string_bundle.getString('alert_economy');
+                	com.appspot.instaright.alert_gadget = string_bundle.getString('alert_gadget');
+                	com.appspot.instaright.alert_news = string_bundle.getString('alert_news');
 		}catch(e){
 		}finally{
                         try{
@@ -90,7 +96,7 @@ com.appspot.model={
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
                                 }
                         } catch(e){
-				alert('ee:'+e);
+			//	alert('ee:'+e);
                         }
 		}
 		window.removeEventListener("load", function(){ com.appspot.model.init(); }, true);
@@ -202,8 +208,8 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	_SERVER:"http://instaright.appspot.com",
-	//_SERVER:"http://localhost:8080",
+	//_SERVER:"http://instaright.appspot.com",
+	_SERVER:"http://localhost:8080",
         alertService:null,
         alert_instaright:"",
         alert_invalid_mail:"",
@@ -225,6 +231,9 @@ com.appspot.instaright={
 	alert_message:"",
 	alert_icon:"",
 	alert_usage:"",
+	alert_economy:"",
+	alert_movie:"",
+	alert_gadget:"",
 	setAlert:function(alert_message){
 		if (com.appspot.model.backendResponse == ''){
 			this.alert_status=this.alert_instaright;
@@ -295,6 +304,26 @@ com.appspot.instaright={
 			this.alert_status=this.alert_ny;
 			this.alert_message=alert_message;
 			this.alert_icon="chrome://instaright/skin/ny.png";
+		}
+		else if (com.appspot.model.backendResponse == 'robot'){
+			this.alert_status=this.alert_gadget;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/robot.png";
+		}
+		else if (com.appspot.model.backendResponse == 'yen'){
+			this.alert_status=this.alert_economy;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/yen.png";
+		}
+		else if (com.appspot.model.backendResponse == 'movie'){
+			this.alert_status=this.alert_movie;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/movie.png";
+		}
+		else if (com.appspot.model.backendResponse == 'news'){
+			this.alert_status=this.alert_news;
+			this.alert_message=alert_message;
+			this.alert_icon="chrome://instaright/skin/news.png";
 		}
                 else {
 			this.alert_status=this.alert_instaright;
@@ -404,7 +433,6 @@ com.appspot.instaright={
                                  }
 
 				 loggingLocation = this._SERVER+"/rpc";
-                                 response=0;
 
 				 try{
 					 logging = new XMLHttpRequest();
@@ -414,17 +442,19 @@ com.appspot.instaright={
 					 body+="\""+encodeURIComponent(url)+"\"";
 					 body+=",";
 					 body+="\""+encodeURIComponent(title)+"\"";
+					 body+=",";
+					 body+="\""+encodeURIComponent(com.appspot.model.currentVersion)+"\"";
 					 body+="]";
 
 					 logging.open('POST', loggingLocation, true);
 					 logging.onreadystatechange = function() {
-						 if(logging.readyState == 4 && logging.status == 200) {
-							 response = null;
-							 try {
+                                                 // catching 0x80004005 (NS ERROR FAILURE) if connection drops unexpectacly
+						 try {
+						        if(logging.readyState == 4 && logging.status == 200) {
 					                         com.appspot.model.backendResponse=logging.responseText;
-							 } catch (e) {
-							 }
-						 }	
+						        }	
+					         } catch (e) {
+						 }
 					 }
 					 logging.send(body);
 					 http = new XMLHttpRequest();
@@ -438,7 +468,7 @@ com.appspot.instaright={
 				 }catch(e){
 					 // google app engine for error handling
 					 try{
-						 this.logErrors(e);
+						 this.logErrors("addon version:" + com.appspot.model.currentVersion + " " +e);
 					 }catch(e){
 					 }
 				 }

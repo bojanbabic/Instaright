@@ -75,7 +75,7 @@ class TwitterFollowHandler(webapp.RequestHandler):
 class TweetHotLinks(webapp.RequestHandler):
         def get(self):
                  not_shared=False
-                 hotLinks = Links.gql('WHERE shared = :1 ORDER by date_added desc, overall_score desc', not_shared).fetch(100)
+                 hotLinks = Links.gql('WHERE shared = :1 ORDER by date_added desc, overall_score desc', not_shared).fetch(30)
                  linkUtil=LinkUtil()
                  a=[]
                  for h in hotLinks:
@@ -84,11 +84,7 @@ class TweetHotLinks(webapp.RequestHandler):
                                 h.delete()
                                 continue
                         t=Twit()
-                        #randomly choose old or new stlye
-                        ts = int(time.time())
-                        logging.info('time %s' % ts)
-                        if ts % 2 == 0:
-                                t.style=True
+                        t.style=True
                         t.textFromHotLink(h)
                         taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
                         h.shared=True
@@ -170,8 +166,10 @@ class Twit:
                 return True
         def textFromHotLink(self, link):
                 if self.style:
+                        logging.info('picking new style')
                         return self.textNewStyle(link)
                 else:
+                        logging.info('picking old style')
                         return self.textOldStyle(link)
         def textOldStyle(self,link):
                 linkUtil=LinkUtil()

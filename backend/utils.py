@@ -155,40 +155,46 @@ class LinkUtil:
 
 class BadgeUtil:
         global DOMAIN_SPECIFIC_BADGES
-        DOMAIN_SPECIFIC_BADGES=['nytimes.com']
+        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','economist.com','lifehacker.com','gizmodo.com',
+                                'news.google.com','guardian.co.uk']
         @staticmethod
-        def getBadger(user, url, domain):
-               trophyBadger=TrophyBadger(user, url, domain)
+        def getBadger(user, url, domain, version):
+               trophyBadger=TrophyBadger(user, url, domain, version)
+               logging.info('getting proper badger for %s and domain %s' %( user, domain))
                if trophyBadger.getBadge() is not None:
                         logging.info('initializing trophy badger')
                         return trophyBadger
                if domain in DOMAIN_SPECIFIC_BADGES:
                         logging.info('initializing site specific badger: %s' %domain)
-                        return SiteSpecificBadge(user, url, domain)
-               speedLimitBadger=SpeedLimitBadger(user, url, domain)
-               clubBadger=ClubBadger(user, url, domain)
+                        return SiteSpecificBadge(user, url, domain, version)
+               speedLimitBadger=SpeedLimitBadger(user, url, domain, version)
+               clubBadger=ClubBadger(user, url, domain, version)
                if speedLimitBadger.getBadge() is not None:
                         logging.info('initializing speed limit badger')
                         return speedLimitBadger
                if clubBadger.getBadge() is not None:
                         logging.info('initializing club badger')
                         return clubBadger
-               usageBadge=ContinuousUsageBadge(user, url, domain)
+               usageBadge=ContinuousUsageBade(user, url, domain, version)
                if usageBadge.getBadge() is not None:
                         logging.info('initializing usage badger')
                         return usageBadge
                return None
                 
-class ContinuousUsageBadge:
-        def __init__(self, user, url, domain):
+class ContinuousUsageBade:
+        def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
                 self.domain = domain
+                self.version=version
         def getBadge(self):
                 returnBadge=5
                 existingBadge=UserBadge.gql('WHERE user = :1 and badge = :2', self.user, returnBadge).get()
-                if existingBadge is None:
-                        logging.info('not usage date fetched for %s in last % days' %(self.user, returnBadge))
+                if existingBadge is  not None:
+                        logging.info('Already assigned 5 day usage badge. Skipping.')
+                        return None
+                if self.version is None:
+                        logging.info('Older version of addon not usage badge defined!')
                         return None
                 yesterday=datetime.datetime.now().date() - datetime.timedelta(days=1)
                 limit=datetime.datetime.now().date() - datetime.timedelta(days=4)
@@ -207,10 +213,11 @@ class ContinuousUsageBadge:
                         return '5'
                 logging.info('usage badge %s: not initialized' %self.user)
 class SpeedLimitBadger:
-        def __init__(self, user, url, domain):
+        def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
                 self.domain = domain
+                self.version=version
         def getBadge(self):
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('WHERE date >= :1 and instaright_account = :2', midnight, self.user).count()
@@ -227,32 +234,87 @@ class SpeedLimitBadger:
                return None
                 
 class SiteSpecificBadge:
-        def __init__(self, user, url, domain):
+        def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
                 self.domain = domain
+                self.version=version
         def getBadge(self):
-                if self.domain == 'nytimes.com':
+                if self.domain == 'nytimes.com' or self.domain == 'newyorker.com':
                         return self.getnytbadge()
+                if (self.domain == 'youtube.com' or self.domain == 'vimeo.com') and Version.validateVersion(self.version, 'movie'):
+                        return self.getmoviebadge()
+                if self.domain == 'economist.com' and Version.validateVerion(self.version, 'yen'): 
+                        return self.geteconomybadge()
+                if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com') and Version.validateVersion(self.version, 'robot'):
+                        return self.getgadgetbadge()
+                if (self.domain == 'news.google.com' or self.domain == 'guardian.co.uk') and Version.validateVersion(self.version, 'news'):
+                        return self.getnewsbadge()
                 else:
+                        logging.info('no domain specific badge initialized or no addon version')
                         return None
         def getnytbadge(self):
-               nyt_tresshold=5
+               ny_tresshold=8
                midnight = datetime.datetime.now().date()
-               currentCount=SessionModel.gql('where domain = :1 and date >= :2 and instaright_account = :3', self.domain, midnight, self.user).count()
-               logging.info('site specific badger(NY): fetched stats %s' % currentCount)
-               if currentCount >= nyt_tresshold:
+               nyTotal=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'nytimes.com', 'newyorker.com', midnight, self.user).count()
+               logging.info('site specific badger(NY): fetched stats %s' % nyTotal)
+               if nyTotal >= ny_tresshold:
                         logging.info('setting ny badge for user %s ' %self.user)
                         return 'ny'
                else:
-                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, nyt_tresshold, currentCount))
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, ny_tresshold, nyTotal))
+                        return None
+        def getmoviebadge(self):
+               movie_tresshold=1
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'youtube.com', 'vimeo.com', midnight, self.user).count()
+               logging.info('site specific badger(movie): fetched stats %s' % currentCount)
+               if currentCount >= movie_tresshold:
+                        logging.info('setting movie badge for user %s ' %self.user)
+                        return 'movie'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, movie_tresshold, currentCount))
+                        return None
+        def geteconomybadge(self):
+               economy_tresshold=5
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain = :1 and date >= :2 and instaright_account = :3', self.domain, midnight, self.user).count()
+               logging.info('site specific badger(economy): fetched stats %s' % currentCount)
+               if currentCount >= economy_tresshold:
+                        logging.info('setting economy badge for user %s ' %self.user)
+                        return 'yen'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, economy_tresshold, currentCount))
+                        return None
+        def getgadgetbadge(self):
+               gadget_tresshold=1
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'lifehacker.com', 'gizmodo.com', midnight, self.user).count()
+               logging.info('site specific badger(gadget): fetched stats %s' % currentCount)
+               if currentCount >= gadget_tresshold:
+                        logging.info('setting gadget badge for user %s ' %self.user)
+                        return 'robot'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, gadget_tresshold, currentCount))
+                        return None
+        def getnewsbadge(self):
+               news_tresshold=8
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'news.google.com', 'guardian.co.uk', midnight, self.user).count()
+               logging.info('site specific badger(news): fetched stats %s' % currentCount)
+               if currentCount >= news_tresshold:
+                        logging.info('setting news badge for user %s ' %self.user)
+                        return 'news'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, news_tresshold, currentCount))
                         return None
 
 class ClubBadger:
-        def __init__(self, user, url, domain):
+        def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
                 self.domain = domain
+                self.version=version
         def getBadge(self):
                 allForUser=SessionModel.all()
                 allForUser.filter("instaright_account =", self.user)
@@ -267,10 +329,11 @@ class ClubBadger:
                 logging.info('club badger %s: not initialized' % self.user )
                 return None
 class TrophyBadger:
-        def __init__(self, user, url, domain):
+        def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
                 self.domain = domain
+                self.version=version
         def getBadge(self):
                 targetdate=datetime.datetime.now().date() - datetime.timedelta(days=1)
                 stats = UserStats.gql('WHERE date = :1 and count > 10 order by count desc', targetdate).fetch(3)
@@ -300,3 +363,36 @@ class Cast:
                 except ValueError:
                         return default
                 
+BADGES_VERSION={'0.4.0.4':['news','yen','movie', 'robot']}
+TRESHOLD_VERSION='0.4.0.4'
+class Version:
+        @staticmethod
+        def validateVersion(version,badge):
+                if version is None:
+                        return False
+                compRes=Version.compareVersions(version, TRESHOLD_VERSION)
+                # all versions after 0.4.0.4 should be able to handle all badges
+                if compRes >= 0:
+                        logging.info('valid version allowing badge %s' % badge)
+                        return True
+                badges=BADGES_VERSION[version]
+                if badges is not None and badge in badges:
+                        logging.info('valid badge %s for version %s' %( bVersions[version], version))
+                        return True
+                else:
+                        logging.info('can\'t find badges for %s' % version)
+                
+        @staticmethod
+        def compareVersions(v1, v2):
+                if v1 is None and v2 is not None:
+                        return -1
+                if v1 is not None and v2 is None:
+                        return 1
+                if v1 is None and v2 is None:
+                        return 0
+                v1Tokens=v1.split('.')
+                v2Tokens=v2.split('.')
+                for x,y in zip(v1, v2):
+                        if x < y: return -1
+                        if x > y: return 1
+                return 0
