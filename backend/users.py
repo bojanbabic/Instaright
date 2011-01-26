@@ -334,10 +334,11 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                 url=self.request.get('url', None)
                 domain=self.request.get('domain', None)
                 version=self.request.get('version', None)
-                logging.info('version %s' % version)
                 if user is None:
                         logging.info('unknown user skipping')
                         return
+                if version is not None and len(version) == 0:
+                        version = None
                 currentBadge = memcache.get('badge_'+user)
                 if currentBadge is not None and (currentBadge == '1' or currentBadge == '2' or currentBadge == '3' or currentBadge == '5'):
                         logging.info('for user %s already using full day badge: %s' %(user,currentBadge))

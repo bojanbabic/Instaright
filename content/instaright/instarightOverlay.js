@@ -442,8 +442,8 @@ com.appspot.instaright={
 					 body+="\""+encodeURIComponent(url)+"\"";
 					 body+=",";
 					 body+="\""+encodeURIComponent(title)+"\"";
-					 body+=",";
-					 body+="\""+encodeURIComponent(com.appspot.model.currentVersion)+"\"";
+					 //body+=",";
+					 //body+="\""+encodeURIComponent(com.appspot.model.currentVersion)+"\"";
 					 body+="]";
 
 					 logging.open('POST', loggingLocation, true);

@@ -160,11 +160,11 @@ class BadgeUtil:
         @staticmethod
         def getBadger(user, url, domain, version):
                trophyBadger=TrophyBadger(user, url, domain, version)
-               logging.info('getting proper badger for %s and domain %s' %( user, domain))
+               logging.info('getting proper badger for %s and domain %s (version %s)' %( user, domain , version))
                if trophyBadger.getBadge() is not None:
                         logging.info('initializing trophy badger')
                         return trophyBadger
-               if domain in DOMAIN_SPECIFIC_BADGES:
+               if domain in DOMAIN_SPECIFIC_BADGES and version is not None:
                         logging.info('initializing site specific badger: %s' %domain)
                         return SiteSpecificBadge(user, url, domain, version)
                speedLimitBadger=SpeedLimitBadger(user, url, domain, version)
@@ -244,7 +244,7 @@ class SiteSpecificBadge:
                         return self.getnytbadge()
                 if (self.domain == 'youtube.com' or self.domain == 'vimeo.com') and Version.validateVersion(self.version, 'movie'):
                         return self.getmoviebadge()
-                if self.domain == 'economist.com' and Version.validateVerion(self.version, 'yen'): 
+                if self.domain == 'economist.com' and Version.validateVersion(self.version, 'yen'): 
                         return self.geteconomybadge()
                 if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com') and Version.validateVersion(self.version, 'robot'):
                         return self.getgadgetbadge()
@@ -369,7 +369,9 @@ class Version:
         @staticmethod
         def validateVersion(version,badge):
                 if version is None:
+                        logging.info('Older version of addon!')
                         return False
+                logging.info('checking version %s ' % version)
                 compRes=Version.compareVersions(version, TRESHOLD_VERSION)
                 # all versions after 0.4.0.4 should be able to handle all badges
                 if compRes >= 0:
@@ -381,6 +383,8 @@ class Version:
                         return True
                 else:
                         logging.info('can\'t find badges for %s' % version)
+                logging.info('Older version of addon!')
+                return False
                 
         @staticmethod
         def compareVersions(v1, v2):

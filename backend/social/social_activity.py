@@ -182,7 +182,7 @@ class Twit:
                 if link.delicious_count is not None and link.delicious_count > 0:
                                 self.text+=" #delicious save %s" % link.delicious_count
                 if link.instapaper_count is not None and link.instapaper_count > 0:
-                                self.text+=" #instapaper %s" %link.instapaper_count
+                                self.text+=" #instaright %s" %link.instapaper_count
                 if link.tweets is not None and link.tweets > 0:
                                 self.text+=" #twitter %s RTs" %link.tweets
                 top_category=None

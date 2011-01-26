@@ -72,8 +72,7 @@ class Logging(webapp.RequestHandler):
 			        version=urllib2.unquote(args[3])
                                 int(version[0])
                         except:
-                                version= None
-                        logging.info('version:%s'  %version)
+                                version=""
 			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, short_link=None, feed_link=None, domain=domain, title=title)
 			model.put()
                         taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':URL, 'domain':domain, 'user':account, 'version': version})

@@ -1,0 +1,41 @@
+Privacy Policy
+
+Instaright respects your privacy and recognizes your need for appropriate protection and management of your personal information, such as your name, email address and mailing address. Please read this Privacy Policy carefully to understand how your personal information is collected and used by us. Contact us with any questions you may have by emailing gbabun@gmail.com. We’re always happy to hear from you.
+How Instaright Works
+
+The Instaright website and Firefox addon enable you to send links to 3rd party services ( Instapaper ... ) and get entertainment recommendations based on links you added to 3rd party services, what your friends like and what’s popular now. The Instaright software saves the items that you send to 3rd party services ( Instapaper ... ) and recommends to you other things that you may be interested in. You can share your opinion and leave a comment, posting information to be displayed publicly under your user name. You can get free stickers and, from time to time, additional offers and rewards. 
+
+By using Instaright you build a library of your entertainment taste preferences. That library is part of Instaright service. To provide you this service, Instaright needs to keep track of what you send to 3rd party services ( Instapaper ... ). By its nature, the Instaright service needs to make use of information about you. Any use we make of your information is subject to the terms of this privacy policy. If you use Instaright, you agree to allow us to use your personal information in accordance with this Privacy Policy.
+
+Personal information collected by Instaright is information voluntarily provided to us by you when you download Firefox addon or create account. Currently, information that we save about you includes your user id and supplements information with information available online based on user id. 
+
+Instaright stores links you send to 3rd party services ( ie. Instapaper ... ) and comments that you provide us with. 
+
+The Instaright website use cookies. A cookie is a small string of text that a website can send to your browser, for the purpose of enhancing your visit to the website. A cookie cannot retrieve any other data from your hard drive, pass on computer viruses. We use cookies to personalize your site visit, securely store your ID and password, and identify which parts of a site have been visited or keep track of other information that you voluntarily provide. You can set your computer settings to alert you when a cookie is being placed. You may also clear all cookies saved to your computer by using the relevant selection in your internet browser.
+
+Information collected about your Internet usage and information you post, is displayed to the public, together with your chosen user name, according to the user account settings selected by you when you join Instaright or update your account. Your profile by default is visible on the Instaright website.
+
+Instaright does not sell, trade or rent your personal information to others. We will not disclose your personal information to others without your express permission, or as otherwise permitted by this Privacy Policy. 
+
+The only way for third party applications or services to access your information is by you giving them explicit permission to do so. When you give permission to share your information with other websites (eg., when you agree to a pop up requesting you to allow another application to access your account information), Instaright uses standard OAuth (open authorization) technology to allow us to share information about you that is stored by us without sharing your security credentials. You only authenticate on our site. The only way a third party is permitted to access your info is by using standard OAuth protocol.
+
+We will also use your personal information to contact you from time to time by email: regarding updates to our policies and to Instaright software; to promote certain services; to provide you stickers or other rewards or information about how to obtain them. The Instaright service includes a weekly digest of new activity. Currently, you may not elect to turn off the digest. You may choose to unsubscribe from our emails by using the “unsubscribe” link on the bottom of the email.
+
+Your information will be accessed by Instaright employees as necessary to provide customer support and troubleshoot problems.
+
+We may also release personal information when we believe release is appropriate to comply with the law, to enforce or apply our Conditions of Use and other agreements, or to protect the rights of Instaright or others. Your personal information is, of course, subject to disclosure pursuant to judicial or other government subpoenas, warrants or orders.
+
+When you provide us with your email, mailing address or other personal information, these are stored in our secure database in encrypted format. When your personal information is sent between the web browser and the server, it is also encrypted using modern encryption standards in order prevent unauthorized parties from viewing such information while it is being transferred.
+
+Your credentials are never shared with any Instaright partners; you only authenticate on the Instaright site or Firefox addon.
+
+Access by you to your personal information is available through a password and unique user ID selected by you. Your password is encrypted. We strongly recommend that you do not divulge your password to anyone.
+
+Instaright is committed to the protection and preservation of children’s privacy. Parents and guardians of any child under 13 have the right to consent to Instaright collection and use of personal information from their child without consenting to its disclosure to third parties. Parents have the right to review personal information collected from their child and also the right to have such information, or any portion of it, deleted. To exercise these rights, or to request deletion of your child’s Instaright account and related data, email gbabun@gmail.com.
+
+Instaright may suggest links to various webpages that the software determines may be of interest to you. We do not have control over third-party websites and applications, or their information collection practices. The practices of third-party websites are not covered by this Privacy Policy. We recommend that you consult the privacy policies of the third-party websites and applications or contact their providers directly for information about their privacy practices. Instaright assumes no liability for the practices of third-party websites and applications.
+
+Because the Internet is constantly evolving, so are our policies. By downloading addon or creating account, you agree to the terms of this Privacy Policy as it may be amended from time to time. Any updates to this Privacy Policy will be posted here. It is your responsibility and you agree to check back to view the policy at this site from time to time. We may also notify you of material changes by sending you an email.
+Do you have questions or concerns?
+
+If you have any questions regarding this Privacy Policy or our information practices, or any concerns about the security of your personal information, please contact Instaright at gbabun@gmai.com. We will respond to you promptly.
