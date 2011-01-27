@@ -155,7 +155,7 @@ class LinkUtil:
 
 class BadgeUtil:
         global DOMAIN_SPECIFIC_BADGES
-        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','economist.com','lifehacker.com','gizmodo.com',
+        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','blip.tv','economist.com','lifehacker.com','gizmodo.com',
                                 'news.google.com','guardian.co.uk']
         @staticmethod
         def getBadger(user, url, domain, version):
@@ -242,7 +242,7 @@ class SiteSpecificBadge:
         def getBadge(self):
                 if self.domain == 'nytimes.com' or self.domain == 'newyorker.com':
                         return self.getnytbadge()
-                if (self.domain == 'youtube.com' or self.domain == 'vimeo.com') and Version.validateVersion(self.version, 'movie'):
+                if (self.domain == 'youtube.com' or self.domain == 'vimeo.com' or self.domain == 'blip.tv') and Version.validateVersion(self.version, 'movie'):
                         return self.getmoviebadge()
                 if self.domain == 'economist.com' and Version.validateVersion(self.version, 'yen'): 
                         return self.geteconomybadge()

@@ -1,4 +1,3 @@
-cd $HOME/work/projects/_ff_extensions/instaright/
 version=`grep "em:version" install.rdf  | sed -E  "s/.*>(.*)<.*/\\1/" `
 cat content/instaright/about.xul | sed -e "s/value=\"ver\.\ .*\"/value=\"ver\.\ $version\"/"  > content/instaright/about.xul.new
 mv content/instaright/about.xul.new content/instaright/about.xul

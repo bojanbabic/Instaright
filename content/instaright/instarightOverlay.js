@@ -35,7 +35,6 @@ com.appspot.model={
                         while (!cur){
                                 thread.processNextEvent(true);
                         }
-                        alert(cur);
                         this.currentVersion=cur;
                 }catch(e){
                         try{
@@ -208,8 +207,8 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	//_SERVER:"http://instaright.appspot.com",
-	_SERVER:"http://localhost:8080",
+	_SERVER:"http://instaright.appspot.com",
+	//_SERVER:"http://localhost:8080",
         alertService:null,
         alert_instaright:"",
         alert_invalid_mail:"",
