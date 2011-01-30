@@ -7,3 +7,4 @@ cat modules/AddonManager.jsm | sed -E "s/VERSION=.*/VERSION=\"$version\";/" > mo
 mv modules/AddonManager.jsm.new modules/AddonManager.jsm
 zip -vr instaright.zip chrome/ install.js  install.rdf chrome.manifest defaults/ privacy_policy.txt  -x "*.svn*"
 mv instaright.zip instaright.xpi
+cp instaright.xpi backend/tools/addon
