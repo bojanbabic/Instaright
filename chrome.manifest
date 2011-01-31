@@ -3,6 +3,7 @@ skin          instaright	classic/1.0		jar:chrome/instaright.jar!/skin/classic/in
 resource	  instaright	jar:chrome/instaright.jar!/content/instaright/
 overlay		  chrome://browser/content/browser.xul		chrome://instaright/content/instarightOverlay.xul
 overlay		  chrome://navigator/content/navigator.xul	chrome://instaright/content/instarightOverlay.xul
+locale  instaright  de		jar:chrome/instaright.jar!/locale/de-DE/
 locale  instaright  de-DE	jar:chrome/instaright.jar!/locale/de-DE/
 locale  instaright  sr		jar:chrome/instaright.jar!/locale/sr-RS/
 locale  instaright  en-US	jar:chrome/instaright.jar!/locale/en-US/
