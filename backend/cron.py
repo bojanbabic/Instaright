@@ -77,6 +77,9 @@ class CronTask(webapp.RequestHandler):
 			stats=StatsModel()
 			if dailyData:
 				stats.totalDailyNumber=len(dailyData)
+				users = [ d.instaright_account for d in dailyData if d.instaright_account is not None ]
+				user_set = set(users)
+				stats.totalUserNumber = len(user_set)
 			stats.date=targetDate
 			stats.put()
 			logging.info('Link volume for %s : %s' % (tDate , stats.totalDailyNumber ))

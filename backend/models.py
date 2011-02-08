@@ -148,6 +148,7 @@ class SessionModel(db.Model):
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty()
 	totalDailyNumber=db.IntegerProperty()
+	totalUserNumber=db.IntegerProperty()
 	date=db.DateProperty(auto_now_add=True)
 
 class DailyDomainStats(db.Model):
