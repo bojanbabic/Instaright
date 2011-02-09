@@ -13,6 +13,7 @@ from utils import StatsUtil
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty(default=0)
 	totalDailyNumber=db.IntegerProperty(default=0)
+        totalUserNumber=db.IntegerProperty(default=0)
 	date=db.DateProperty(auto_now_add=True)
 
 class DailyDomainStats(db.Model):
@@ -82,7 +83,7 @@ class CronTask(webapp.RequestHandler):
 				stats.totalUserNumber = len(user_set)
 			stats.date=targetDate
 			stats.put()
-			logging.info('Link volume for %s : %s' % (tDate , stats.totalDailyNumber ))
+			logging.info('Link volume for %s : link= %s users=%s' % (tDate , stats.totalDailyNumber , stats.totalUserNumber ))
 		except:
 			e = sys.exc_info()[1]
 			logging.error('Error while running stats cron task. %s' % e)

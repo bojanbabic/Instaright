@@ -155,8 +155,7 @@ class LinkUtil:
 
 class BadgeUtil:
         global DOMAIN_SPECIFIC_BADGES
-        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','blip.tv','economist.com','lifehacker.com','gizmodo.com',
-                                'news.google.com','guardian.co.uk']
+        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','blip.tv','economist.com','finance.yahoo.com','ft.com','foxbusiness.com','lifehacker.com','gizmodo.com', 'engadget.com','news.google.com','guardian.co.uk', 'reuters.com']
         @staticmethod
         def getBadger(user, url, domain, version):
                trophyBadger=TrophyBadger(user, url, domain, version)
@@ -244,11 +243,11 @@ class SiteSpecificBadge:
                         return self.getnytbadge()
                 if (self.domain == 'youtube.com' or self.domain == 'vimeo.com' or self.domain == 'blip.tv') and Version.validateVersion(self.version, 'movie'):
                         return self.getmoviebadge()
-                if self.domain == 'economist.com' and Version.validateVersion(self.version, 'yen'): 
+                if (self.domain == 'economist.com' or self.domain == 'ft.com' or self.domain == 'finance.yahoo.com' or self.domain == 'foxbusiness.com') and Version.validateVersion(self.version, 'yen'): 
                         return self.geteconomybadge()
-                if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com') and Version.validateVersion(self.version, 'robot'):
+                if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com' or self.domain == 'engadget.com') and Version.validateVersion(self.version, 'robot'):
                         return self.getgadgetbadge()
-                if (self.domain == 'news.google.com' or self.domain == 'guardian.co.uk') and Version.validateVersion(self.version, 'news'):
+                if (self.domain == 'news.google.com' or self.domain == 'guardian.co.uk' or self.domain == 'reuters.com') and Version.validateVersion(self.version, 'news'):
                         return self.getnewsbadge()
                 else:
                         logging.info('no domain specific badge initialized or no addon version')
@@ -265,7 +264,7 @@ class SiteSpecificBadge:
                         logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, ny_tresshold, nyTotal))
                         return None
         def getmoviebadge(self):
-               movie_tresshold=1
+               movie_tresshold=6
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'youtube.com', 'vimeo.com', midnight, self.user).count()
                logging.info('site specific badger(movie): fetched stats %s' % currentCount)
@@ -287,7 +286,7 @@ class SiteSpecificBadge:
                         logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, economy_tresshold, currentCount))
                         return None
         def getgadgetbadge(self):
-               gadget_tresshold=1
+               gadget_tresshold=8
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'lifehacker.com', 'gizmodo.com', midnight, self.user).count()
                logging.info('site specific badger(gadget): fetched stats %s' % currentCount)

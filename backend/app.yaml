@@ -1,12 +1,12 @@
 application: instaright
-version: 39
+version: 40
 runtime: python 
 api_version: 1
 
 handlers:
 - url: /cron
   script: cron.py
-  login: admin
+#  login: admin
 
 - url: /scripts
   static_dir: scripts

@@ -79,7 +79,7 @@ class TweetHotLinks(webapp.RequestHandler):
                  linkUtil=LinkUtil()
                  a=[]
                  for h in hotLinks:
-                        if "twitter.com" in h.url or "google.com" in h.url or "instapaper.com" in h.url or  "facebook.com" in h.url or  "edition.cnn.com" in h.url or "maps.google.com" in h.url:
+                        if "twitter.com" in h.url or "google.com" in h.url or "instapaper.com" in h.url or  "facebook.com" in h.url or  "edition.cnn.com" in h.url or "maps.google.com" in h.url or "wikipedia.com" in h.url:
                                 logging.info('filering out %s' %h.url)
                                 h.delete()
                                 continue
@@ -229,7 +229,7 @@ class Twit:
                                except:
                                         logging.info('can\'t get all cats')
                                short_link = linkUtil.shortenLink(link.url)
-                               self.text="#topstory "+link.title[0:50] + "... " +short_link
+                               self.text=""+link.title[0:59] + "... " +short_link
                                if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
                                         self.text += " #%s" % top_category[0]
                                if top_category1 is not None and top_category1[0] not in self.text and len(top_category1[0]) + len(self.text) +2 <= 140:
