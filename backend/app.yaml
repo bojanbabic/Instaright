@@ -1,12 +1,12 @@
 application: instaright
-version: 40
+version: 43
 runtime: python 
 api_version: 1
 
 handlers:
 - url: /cron
   script: cron.py
-#  login: admin
+  login: admin
 
 - url: /scripts
   static_dir: scripts
@@ -17,6 +17,9 @@ handlers:
 - url: /remote_api
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
   login: admin
+
+- url: /profiler/stats.*
+  script: $PYTHON_LIB/google/appengine/ext/appstats/ui.py
 
 - url: /visual
   script: visualization.py
@@ -48,6 +51,10 @@ handlers:
   script: data_consolidation.py
 #  login: admin
 
+- url: /article/task
+  script: main.py
+  login: admin
+
 - url: /article/(.*)
   script: articles.py
 
@@ -55,6 +62,9 @@ handlers:
   script: articles.py
 
 - url: /callback
+  script: pshb_callback.py
+
+- url: /message/.*
   script: pshb_callback.py
 
 - url: /memcache_test
@@ -119,6 +129,9 @@ handlers:
 - url: /util/.*
   script: social/social_activity.py
 
+- url: /badges/.*
+  script: badges.py
+
 - url: /tools/delicious
   script: tools/fromdelicious.py
   login: admin
@@ -143,3 +156,8 @@ handlers:
 
 inbound_services:
   - xmpp_message
+
+admin_console:
+ pages:
+ - name: Appstats
+   url: /profiler/stats

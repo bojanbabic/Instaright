@@ -127,9 +127,9 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 		return domains
 	def send_message(self, subscribers, message):
 		for s in subscribers:
-			if s.domain == message.domain or s.domain == 'all':
+			if s['d'] == message.domain or s['d'] == 'all':
 				msg = ' %s ( %s )' %( message.title, message.link)
-				xmpp.send_message(s.subscriber.address, msg)
+				xmpp.send_message(s['a'], msg)
 			else:
 				logging.info('skipping: domain missmatch')
 

@@ -1,8 +1,7 @@
-import logging, datetime ,os, urllib2, urllib, Queue
-from google.appengine.ext import webapp
-from google.appengine.ext import db
-from google.appengine.api import xmpp
-from google.appengine.api import memcache
+import logging, datetime ,os, urllib2, urllib, Queue, simplejson
+from google.appengine.ext import webapp, db
+from google.appengine.api import xmpp, memcache
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import  BroadcastMessage
@@ -37,30 +36,38 @@ class CallbackHandler(webapp.RequestHandler):
                 memcache.delete(memcache_key)
 		
 		#root = ElementTree.fromstring(data)
-		broadcaster = BroadcastMessage()
 		logging.info('recieved:callback ' )
 		subscribers = Subscription.gql('WHERE active = True and mute = False').fetch(100)
 		subscribers_address = [ s.subscriber.address for s in subscribers ]
 		logging.info(' trying to send messages to following addresses %s ' %(','.join(subscribers_address)))
-                userUtil = UserUtil()
 		for update in feed.entries:
-			logging.info(' %s ' %update)
-			title = update.title
-			link = update.link
-			domain = update.domain
-			logging.info('domain : %s' % domain)
+			logging.info('adding message to broadcast queue %s ' %update)
+			taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':update.id, 'title':update.title, 'link':update.link, 'domain':update.domain, 'updated': update.updated,'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+
+class BroadcastMessageTask(webapp.RequestHandler):
+        def post(self):
+		        broadcaster = BroadcastMessage()
+                        userUtil = UserUtil()
+			title = self.request.get('title', None)
+			link = self.request.get('link', None)
+			domain = self.request.get('domain', None)
+                        user_id = self.request.get('user_id', None)
+                        updated = self.request.get('updated', None)
+                        subscribers = simplejson.loads(self.request.get('subscribers', None))
+
 			message = Message( title = title, link = link , domain = domain)
-                        #TODO possible bottleneck
-                        user = SessionModel.gql('WHERE __key__ = :1', db.Key(update.id)).get()
+
+                        user = SessionModel.gql('WHERE __key__ = :1', db.Key(user_id)).get()
                         if user is None:
                                 logging.info('can\'t determine user by id: %s' % update.id)
-                                continue
+                                return
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)
                         logging.info('avatar %s' %avatar)
-                        messageAsJSON = [{'u':{'id':update.id, 't':update.title,'l':update.link,'d':update.domain,'a':avatar, 'u':update.updated}}]
+                        messageAsJSON = [{'u':{'id':user_id, 't':title,'l':link,'d':domain,'a':avatar, 'u':updated}}]
 			broadcaster.send_message(messageAsJSON)
 			xmpp_handler.send_message(subscribers, message)
+                                       
 class RealTimeUpdateHandler(webapp.RequestHandler):
 	def get(self):
 		try:
@@ -76,7 +83,8 @@ class Message(object):
 		
 application = webapp.WSGIApplication(
                                      [
-                                     	('/callback', CallbackHandler)
+                                     	('/callback', CallbackHandler),
+                                        ('/message/broadcast/task', BroadcastMessageTask),
 				     ],
                                      debug=True)
 

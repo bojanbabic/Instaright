@@ -32,3 +32,9 @@ queue:
 - name: badge-queue
   rate: 200/m
   bucket_size: 1
+- name: message-broadcast-queue
+  rate: 50/s
+  bucket_size: 10
+- name: article-queue
+  rate: 50/s
+  bucket_size: 10

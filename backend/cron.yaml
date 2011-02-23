@@ -33,5 +33,5 @@ cron:
 
 - description: hotlink tweets to queue
   url: /util/twitter/twit
-  schedule: every monday 04:00
+  schedule: every monday 08:00
 

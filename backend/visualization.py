@@ -152,20 +152,22 @@ class Visualization(webapp.RequestHandler):
 			logging.error('Error while fetching weekly feed %s' % e)
 
 	def linkVolume(self, reqId):
-		logging.info('Link volume for last 30 days')
-		linkCount = StatsModel.gql('ORDER by date desc').fetch(31)
+		logging.info('Link volume for last 2 weeks')
+		linkCount = StatsModel.gql('ORDER by date desc').fetch(15)
 		if linkCount is None: 
 			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
 			return
 		logging.info('retrieved %s stats' % len(linkCount))
 		description = {"date": ("string", "Date"),
-				"link_volume":("number", "Link volume")}
-		columnnames = [ "date", "link_volume" ]
+				"link_volume":("number", "Link volume"),
+				"user_volume":("number", "Active Users")
+                                }
+		columnnames = [ "date", "link_volume" , "user_volume" ]
 		data_table = gviz_api.DataTable(description)
 		lnkCnt = []
 		for linkCnt in linkCount:
-			entry = {"date": linkCnt.date, "link_volume":linkCnt.totalDailyNumber}
+			entry = {"date": linkCnt.date, "link_volume":linkCnt.totalDailyNumber, "user_volume":linkCnt.totalUserNumber}
 			lnkCnt.append(entry)
 		data_table.LoadData(lnkCnt)
 		

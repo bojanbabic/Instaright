@@ -48,44 +48,26 @@ class ChannelHandler(webapp.RequestHandler):
 
 		
 
-class Logging(webapp.RequestHandler):
+class MainHandler(webapp.RequestHandler):
 	def post(self):
 		try:
 			args=simplejson.loads(self.request.body)
-                        logging.info('args:%s' % args)
-			account=args[0]
-			URL=urllib2.unquote(args[1])
-			domain=StatsUtil.getDomain(URL)
-                        if URL.startswith('file://'):
-                                logging.info('url not good: %s ' % URL)
-                                return
-                        try:
-                                title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
-                                if title == "null":
-                                        title = None
-                        except:
-                                e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
-                                logging.info('encoding error: %s ::: %s' %(e0, e1))
-                                #older version of plugin
-                                title = None
-                        try:
-			        version=urllib2.unquote(args[3])
-                                int(version[0])
-                        except:
-                                version=""
-			model=SessionModel(user_agent=self.request.headers['User-agent'], ip = self.request.remote_addr, instaright_account=account, date=datetime.datetime.now(), url=URL, short_link=None, feed_link=None, domain=domain, title=title, version=version)
-			model.put()
-                        taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':URL, 'domain':domain, 'user':account, 'version': version})
-                        logging.info('model: %s' % model.to_xml())
+                       
+                        logging.info('Received args:%s' % args)
+                         
+                        taskqueue.add(queue_name='article-queue', url='/article/task', params={'args': self.request.body})
+
 			logging.info('triggering feed update')
-			#trigger taskqueue that generates feed
 			try:
 				pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
 			except:
 				e0, e = sys.exc_info()[0], sys.exc_info()[1]
                                 logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
-                        cachedBadge = memcache.get('badge_'+account)
-                        logging.info('looking for badge %s' % 'badge_'+account)
+
+                        user = StatsUtil.getUser(args)
+
+                        cachedBadge = memcache.get('badge_'+user)
+                        logging.info('looking for badge %s' % 'badge_'+user)
                         if cachedBadge is not None:
                                 logging.info('response badge %s' %cachedBadge)
                                 self.response.out.write(cachedBadge)
@@ -98,6 +80,37 @@ class Logging(webapp.RequestHandler):
 		
 	def get(self):
 		return self.response.out.write('<script language="javascript">top.location.href="/"</script>')
+
+class MainTaskHandler(webapp.RequestHandler):
+        def post(self):
+                args = simplejson.loads(self.request.get('args', None))
+                logging.info(args)
+                if args is None:
+                        logging.info('missing arg from user rpc body')
+                        return
+
+		account=args[0]
+		url=urllib2.unquote(args[1])
+		domain=StatsUtil.getDomain(url)
+                title = StatsUtil.getTitle(args[2])
+                version = StatsUtil.getVersion(args[3])
+
+                model = SessionModel()
+                model.user_agent = self.request.headers['User-agent']
+                model.ip = self.request.remote_addr
+                model.instaright_account = account
+                model.date = datetime.datetime.now()
+                model.url = url
+                model.short_link = None
+                model.feed_link = None
+                model.title = title
+                model.version = version
+
+		model.put()
+                logging.info('model: %s' % model.to_xml())
+
+                taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':account, 'version': version})
+                
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):
                 try:
@@ -111,11 +124,6 @@ class ErrorHandling(webapp.RequestHandler):
 
 class IndexHandler(webapp.RequestHandler):
 	def get(self):
-                memcache_key_hotlinks='hot_links_'+str(datetime.datetime.now().date())
-                hotlinks = memcache.get(memcache_key_hotlinks)
-                if not hotlinks:
-                        hotlinks = Links.gql('ORDER by overall_score DESC').fetch(5)
-                        memcache.set(memcache_key_hotlinks, hotlinks)
 		user = users.get_current_user()
 		uuid_cookie = self.request.cookies.get('user_uuid')
 		if uuid_cookie:
@@ -142,7 +150,7 @@ class IndexHandler(webapp.RequestHandler):
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
 		template_variables = []
-                template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id, 'hotlinks': hotlinks}
+                template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id, 'hotlinks': None}
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
@@ -161,7 +169,8 @@ class PrivacyPolicyHandler(webapp.RequestHandler):
                 
 		
 application = webapp.WSGIApplication(
-                                     [('/rpc', Logging),
+                                     [('/rpc', MainHandler),
+                                     ('/article/task', MainTaskHandler),
                                      ('/error', ErrorHandling),
                                      ('/deactivate_channels', ChannelHandler),
                                      ('/privacy_policy.html', PrivacyPolicyHandler),

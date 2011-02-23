@@ -1,11 +1,11 @@
-import urlparse, urllib,logging, urllib2, datetime, simplejson
+import urlparse, urllib,logging, urllib2, datetime, simplejson, sys
 from google.appengine.api import memcache
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
 DOMAIN='http://instaright.appspot.com'
 class StatsUtil():
-	@staticmethod
-	def getDomain(url):
+	@classmethod
+	def getDomain(cls, url):
 		urlobject=urlparse.urlparse(url)
 		try:
 			domain = urlobject.netloc
@@ -21,8 +21,56 @@ class StatsUtil():
 			domain = domain.replace('www.','')
 		return domain
 	
-	@staticmethod
-	def ipResolverAPI(ip):
+        @classmethod
+        def getTitle(cls, reqTitle):
+                title = None
+                try:
+                    title = urllib2.unquote(reqTitle.encode('ascii')).decode('utf-8')
+                    if title == "null":
+                            raise Exception('null title from request')
+                except:
+                    e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                    logging.info('title value error: %s ::: %s' %(e0, e1))
+                return title
+
+        @classmethod
+        def getVersion(cls, reqVersion):
+                version = ""
+                try:
+		        version=urllib2.unquote(reqVersion)
+                        int(version[0])
+                except:
+                        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                        logging.info('version error: %s ::: %s' %(e0, e1))
+                return version
+
+        @classmethod
+        def checkUrl(cls, args):
+                url = cls.getUrl(args)
+                if url is None:
+                       return False
+                if url.startswith('file://'):
+                        logging.info('url not good: %s ' % url)
+                        return False
+                return True
+
+        @classmethod
+        def getUrl(cls, args):
+                try:
+                        return urllib2.unquote(args[1])
+                except:
+                        return None
+
+        @classmethod
+        def getUser(cls, args):
+                try:
+                        return args[0]
+                except:
+                        return None
+
+
+	@classmethod
+	def ipResolverAPI(cls, ip):
 		data = []
                 try:
 		        apiCall="http://api.hostip.info/get_xml.php?ip="+ip
@@ -155,7 +203,8 @@ class LinkUtil:
 
 class BadgeUtil:
         global DOMAIN_SPECIFIC_BADGES
-        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','blip.tv','economist.com','finance.yahoo.com','ft.com','foxbusiness.com','lifehacker.com','gizmodo.com', 'engadget.com','news.google.com','guardian.co.uk', 'reuters.com']
+        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','blip.tv','economist.com','finance.yahoo.com','ft.com','foxbusiness.com','lifehacker.com','gizmodo.com', 'engadget.com','news.google.com','guardian.co.uk', 'reuters.com', 'imdb.com', 'spiegel.de','nymag.com' , 'yahoo.news.com', 'howtogeek.com','business.nikkeibp.co.jp', 'time.com', 'online.wsj.com']
+
         @staticmethod
         def getBadger(user, url, domain, version):
                trophyBadger=TrophyBadger(user, url, domain, version)
@@ -239,15 +288,15 @@ class SiteSpecificBadge:
                 self.domain = domain
                 self.version=version
         def getBadge(self):
-                if self.domain == 'nytimes.com' or self.domain == 'newyorker.com':
+                if self.domain == 'nytimes.com' or self.domain == 'newyorker.com' or self.domain == 'nymag.com' or self.domain == 'nybooks.com':
                         return self.getnytbadge()
-                if (self.domain == 'youtube.com' or self.domain == 'vimeo.com' or self.domain == 'blip.tv') and Version.validateVersion(self.version, 'movie'):
+                if (self.domain == 'youtube.com' or self.domain == 'vimeo.com' or self.domain == 'blip.tv' or self.domain == 'imdb.com' or self.domain == 'netflix.com' or self.domain == 'movies.netflix.com') and Version.validateVersion(self.version, 'movie'):
                         return self.getmoviebadge()
-                if (self.domain == 'economist.com' or self.domain == 'ft.com' or self.domain == 'finance.yahoo.com' or self.domain == 'foxbusiness.com') and Version.validateVersion(self.version, 'yen'): 
+                if (self.domain == 'economist.com' or self.domain == 'ft.com' or self.domain == 'finance.yahoo.com' or self.domain == 'foxbusiness.com' or self.domain == 'business.nikkeibp.co.jp') and Version.validateVersion(self.version, 'yen'): 
                         return self.geteconomybadge()
-                if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com' or self.domain == 'engadget.com') and Version.validateVersion(self.version, 'robot'):
+                if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com' or self.domain == 'engadget.com' or self.domain == 'howtogeek.com') and Version.validateVersion(self.version, 'robot'):
                         return self.getgadgetbadge()
-                if (self.domain == 'news.google.com' or self.domain == 'guardian.co.uk' or self.domain == 'reuters.com') and Version.validateVersion(self.version, 'news'):
+                if (self.domain == 'news.google.com' or  self.domain == 'yahoo.news.com' or self.domain == 'guardian.co.uk' or self.domain == 'reuters.com' or self.domain == 'spiegel.de' or self.domain == 'time.com' or self.domain == 'online.wsj.com' or self.domain == 'cnn.com') and Version.validateVersion(self.version, 'news'):
                         return self.getnewsbadge()
                 else:
                         logging.info('no domain specific badge initialized or no addon version')
