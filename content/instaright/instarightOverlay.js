@@ -415,9 +415,12 @@ com.appspot.instaright={
         },
 
 	sendUrlSynchAjax:function(url, title, textSelected){
+
 				 lInfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
+
 				 // there is nasty bug that when user removes passwprd , password info stays untill ff is restarted
 				 // but it doen't effect user experience
+
 				 if ( lInfo != null){
 					com.appspot.model.password = lInfo.password;//document.getElementById("accountPassword").value;
 				 } 
@@ -467,7 +470,7 @@ com.appspot.instaright={
 				 }catch(e){
 					 // google app engine for error handling
 					 try{
-						 this.logErrors("addon version:" + com.appspot.model.currentVersion + " " +e);
+						 this.logErrors("addon version:" + com.appspot.model.currentVersion + " " +e ' request:'+body);
 					 }catch(e){
 					 }
 				 }
