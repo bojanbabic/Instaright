@@ -1,0 +1,43 @@
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking instaright.appspot.com (be patient).....done
+
+
+Server Software:        Google
+Server Hostname:        instaright.appspot.com
+Server Port:            80
+
+Document Path:          /
+Document Length:        29487 bytes
+
+Concurrency Level:      3
+Time taken for tests:   24.946 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      2978000 bytes
+HTML transferred:       2948700 bytes
+Requests per second:    4.01 [#/sec] (mean)
+Time per request:       748.367 [ms] (mean)
+Time per request:       249.456 [ms] (mean, across all concurrent requests)
+Transfer rate:          116.58 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:      111  131  39.4    131     509
+Processing:   479  615 206.9    555    2104
+Waiting:      251  333 176.3    282    1829
+Total:        593  746 212.3    688    2239
+
+Percentage of the requests served within a certain time (ms)
+  50%    688
+  66%    714
+  75%    752
+  80%    788
+  90%    954
+  95%   1144
+  98%   1352
+  99%   2239
+ 100%   2239 (longest request)
