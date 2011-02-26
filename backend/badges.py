@@ -16,12 +16,15 @@ class TopBadgeHandler(webapp.RequestHandler):
 class BadgeStatsHandler(webapp.RequestHandler):
         def get(self, _date):
                 dt = datetime.datetime.strptime(_date, '%Y-%m-%d').date()
+                if dt is None:
+                        dt = dateime.datetime.now().date() 
                 logging.info('checking badges for date: %s' % str(dt) )
                 stats = UserBadge.gql('WHERE date = :1 ', dt).fetch(1000)
                 if not stats:
                         self.response.out.write('no badges found for date %s Retreived no data' % _date)
                         return
                 badges = [ (s.user, s.badge) for s in stats ]
+
                 template_variables = {'badges' : badges }
         	path= os.path.join(os.path.dirname(__file__), 'templates/badges.html')
                 self.response.headers["Content-type"] = "text/html"

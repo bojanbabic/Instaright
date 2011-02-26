@@ -1,0 +1,32 @@
+<html>
+        <head>
+                <link rel="stylesheet" type="text/css" href="../css/style.css" />
+                <script type="text/javascript" src="/static/javascript/util.js"></script>
+                <script type="text/javascript" src="/static/javascript/chart.js"></script>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+                <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+                <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+                <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+                <script type="text/javascript">
+                        google.load('visualization', '1', {packages: ['imagechart']});
+                        google.load('jquery', '1.4.2');
+                </script>
+                <script type="text/javascript">
+                        google.setOnLoadCallback(drawVisualization(6,null, "{{ user.instapaper_account }}"));
+                        google.load(drawVisualization);
+                </script>
+        </head>
+        <body>
+                <div class="links">
+                        <table >
+                        <tbody>
+                        <p>Badges:</p>
+                        {% for b in badges %}
+                        <tr><td><p style="padding: 2px;"><a href="/user/{{ b.0 }}" target="_new">{{ b.0 }}</a></p></td><td>{{ b.1 }}</td></tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+                </div>
+        </body>
+</html>

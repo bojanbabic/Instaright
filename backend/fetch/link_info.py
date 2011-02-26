@@ -40,13 +40,14 @@ class LinkHandler(webapp.RequestHandler):
                         existingLink.delicious_count=link.delicious_count
                         existingLink.facebook_like=link.facebook_like
                         #if increase in score is more then 20%
-                        if  link.overall_score  / existingLink.overall_score >= 1.2:
+                        if  existingLink.overall_score == 0 or link.overall_score  / existingLink.overall_score >= 1.2:
                                 existingLink.shared=False
                         existingLink.overall_score=link.overall_score
                         existingLink.put()
                 else:
                         link.put()
-                self.response.out.write('put %s\n' % url)
+                logging.info('url %s : influence_score %s, instapaper_count %s, redditups %s, redditdowns %s, tweets %s, diggs %s, delicious count %s facebook like %s' %(url, link.influence_score , link.instapaper_count, link.redditups, link.redditdowns, link.tweets, link.diggs, link.delicious_count, link.facebook_like))
+                self.response.out.write('put %s \n ' %url)
         def get(self):
                 self.response.out.write('get')
 
@@ -72,6 +73,7 @@ class LinkHandler(webapp.RequestHandler):
                 else:
                         link.date_updated = datetime.datetime.now().date()
 
+                logging.info('trying to fetch topsi info')
                 json = self.getData(topsy_api)
                 if json:
                         try:
@@ -81,6 +83,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
+                logging.info('trying to fetch digg info')
                 json =self.getData(digg_api)
                 if json:
                         try:
@@ -91,8 +94,8 @@ class LinkHandler(webapp.RequestHandler):
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
-                logging.info("digg callback %s" %json)
 
+                logging.info('trying to fetch tweet_meme info')
                 json = self.getData(tweet_meme_api)
                 if json and 'story' in json:
                         try:
@@ -105,6 +108,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
+                logging.info('trying to fetch delicious info')
                 json =self.getData(delicious_api)
                 if json:
                         try:
@@ -118,6 +122,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
+                logging.info('trying to fetch reddit info')
                 json = self.getData(reddit_api)
                 if json and 'data' in json:
                         try:
@@ -134,6 +139,7 @@ class LinkHandler(webapp.RequestHandler):
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
+                logging.info('trying to fetch facebook info')
                 json = self.getData(facebook_api)
                 if json:
                         try:
@@ -152,7 +158,8 @@ class LinkHandler(webapp.RequestHandler):
                         json = simplejson.load(dta)
                         return json
                 except:
-                        sys.stderr.write('error getting link: %s' %url)
+                        e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
+                        logging.error('error %s %s, while getting link %s'  %( e0, e1, url))
                         return None
 
 application = webapp.WSGIApplication(

@@ -1,0 +1,48 @@
+/*-----------------------------------------------------------------------------------------------*/
+/*                                      SIMPLE jQUERY TOOLTIP                                    */
+/*                                      VERSION: 1.1                                             */
+
+
+/*-----------------------------------------------------------------------------------------------*/
+/*                                            TOOLTIP                                            */
+/*-----------------------------------------------------------------------------------------------*/
+
+.toolTip { /* This is the hook that the jQuery script will use */
+	padding-right: 20px; /* This is need to make sure that the help icon is always visible */
+	background: transparent url(/static/images/help.png) no-repeat right;
+	color: #3366FF;
+	cursor: help; 
+	position: relative; /* This contains the .toolTipWrapper div that is absolutely positioned  */
+}
+
+	.toolTipWrapper { /* The wrapper holds its insides together */
+		width: 175px;
+		position: absolute; /* Absolute will make the tooltip float above other content in the page */
+		top: 20px;
+		display: none; /* It has to be displayed none so that the jQuery fadein and fadeout functions will work */
+		color: #FFFFFF;
+		font-size: 10pt; /* A font size is needed to maintain consistancy */
+                font-family:Arial,Helvetica,Verdana,sans-serif;
+                text-shadow: 1px 1px #719E03;
+	}
+	
+		.toolTipTop { /* Top section of the tooltip */
+			width: 175px;
+			height: 30px;
+			background: transparent url(/static/images/bubbleTop.gif) no-repeat;
+		}
+
+		.toolTipMid { /* Middle section of the tooltip */
+			padding: 8px 15px;
+			background: #A1D40A url(/static/images/bubbleMid.gif) repeat-x top;
+		}
+		
+		.toolTipBtm { /* Bottom Section of the tooltip */
+			height: 13px;
+			background: transparent url(/static/images/bubbleBtm.gif) no-repeat;
+		}
+		
+		
+		
+		
+		

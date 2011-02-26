@@ -22,10 +22,10 @@ class StatsUtil():
 		return domain
 	
         @classmethod
-        def getTitle(cls, reqTitle):
+        def getTitle(cls, args):
                 title = None
                 try:
-                    title = urllib2.unquote(reqTitle.encode('ascii')).decode('utf-8')
+                    title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
                     if title == "null":
                             raise Exception('null title from request')
                 except:
@@ -34,10 +34,10 @@ class StatsUtil():
                 return title
 
         @classmethod
-        def getVersion(cls, reqVersion):
+        def getVersion(cls, args):
                 version = ""
                 try:
-		        version=urllib2.unquote(reqVersion)
+		        version=urllib2.unquote(args[3])
                         int(version[0])
                 except:
                         e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
@@ -49,7 +49,7 @@ class StatsUtil():
                 url = cls.getUrl(args)
                 if url is None:
                        return False
-                if url.startswith('file://'):
+                if url.startswith('file://') or url.startswith('chrome://'):
                         logging.info('url not good: %s ' % url)
                         return False
                 return True

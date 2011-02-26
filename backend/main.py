@@ -54,15 +54,16 @@ class MainHandler(webapp.RequestHandler):
 			args=simplejson.loads(self.request.body)
                        
                         logging.info('Received args:%s' % args)
-                         
-                        taskqueue.add(queue_name='article-queue', url='/article/task', params={'args': self.request.body})
+
+                        if not StatsUtil.checkUrl(args):
+                                logging.info('skipping since url is not good!')
+                                return
+                        try:
+                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'args': self.request.body})
+                        except TransientError:
+                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'args': self.request.body})
 
 			logging.info('triggering feed update')
-			try:
-				pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
-			except:
-				e0, e = sys.exc_info()[0], sys.exc_info()[1]
-                                logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
 
                         user = StatsUtil.getUser(args)
 
@@ -89,18 +90,19 @@ class MainTaskHandler(webapp.RequestHandler):
                         logging.info('missing arg from user rpc body')
                         return
 
-		account=args[0]
-		url=urllib2.unquote(args[1])
+		user=StatsUtil.getUser(args)
+		url=StatsUtil.getUrl(args)
 		domain=StatsUtil.getDomain(url)
-                title = StatsUtil.getTitle(args[2])
-                version = StatsUtil.getVersion(args[3])
+                title = StatsUtil.getTitle(args)
+                version = StatsUtil.getVersion(args)
 
                 model = SessionModel()
                 model.user_agent = self.request.headers['User-agent']
                 model.ip = self.request.remote_addr
-                model.instaright_account = account
+                model.instaright_account = user
                 model.date = datetime.datetime.now()
                 model.url = url
+                model.domain = domain
                 model.short_link = None
                 model.feed_link = None
                 model.title = title
@@ -109,7 +111,14 @@ class MainTaskHandler(webapp.RequestHandler):
 		model.put()
                 logging.info('model: %s' % model.to_xml())
 
-                taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':account, 'version': version})
+                taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
+
+                logging.info('pubsubhubbub feed update')
+		try:
+		        pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
+		except:
+		        e0, e = sys.exc_info()[0], sys.exc_info()[1]
+                        logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
                 
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):
