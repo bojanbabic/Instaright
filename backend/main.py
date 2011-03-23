@@ -112,6 +112,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 logging.info('model: %s' % model.to_xml())
 
                 taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
+                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url })
 
                 logging.info('pubsubhubbub feed update')
 		try:

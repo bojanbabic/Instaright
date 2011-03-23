@@ -27,7 +27,7 @@ queue:
   rate: 500/h
   bucket_size: 1
 - name: twit-queue
-  rate: 1/h
+  rate: 10/h
   bucket_size: 1
 - name: badge-queue
   rate: 200/m
@@ -36,5 +36,8 @@ queue:
   rate: 50/s
   bucket_size: 10
 - name: article-queue
+  rate: 50/s
+  bucket_size: 10
+- name: link-queue
   rate: 50/s
   bucket_size: 10

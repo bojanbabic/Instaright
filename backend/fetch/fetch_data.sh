@@ -1,4 +1,5 @@
 #!/bin/bash
+SCRIPT_DIR=/home/bojanbabic/work/instaright/backend/fetch
 OUTPUT_DIR=$1
 if [ $# != 1 ];then
         echo "provide directory for results"
@@ -30,11 +31,11 @@ while read line;
         fi
         #form_key = `curl http://localhost:8080/user/$line/form_key`
         curl -s -L -H "User-Agent:Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.10) Gecko/20100914 Firefox/3.6.10 (.NET CLR 3.5.30729);" -H "Connection:close;" -H "Content-Type: application/x-www-form-urlencoded;" -d "form_key=$form_key"  http://www.instapaper.com/export/csv -b /tmp/$line"_cookie.txt" > "$OUTPUT_DIR/$line.dat"
-        sleep $[($RANDOM % 5) +1 ]
+        sleep $[($RANDOM % 3) +1 ]
         echo "done"
         echo "" 
 done 
-ls $OUTPUT_DIR/*dat | while read line; do cat "$line" | /home/bojan/work/projects/_ff_extensions/instaright/backend/fetch/separate_field.awk  >> $OUTPUT_DIR/all_links.txt;done
+ls $OUTPUT_DIR/*dat | while read line; do cat "$line" | $SCRIPT_DIR/separate_field.awk  >> $OUTPUT_DIR/all_links.txt;done
 #sort it
 sort  $OUTPUT_DIR/all_links.txt | uniq -c  | sort -rn  > $OUTPUT_DIR/sorted_links.txt
 exit

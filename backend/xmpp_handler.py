@@ -22,7 +22,7 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 		options.append('/unsubscribe -> unsubscribe from all subscriptions')
 		options.append('/mute -> temporary mute all subscriptions')
 		options.append('/unmute -> unmute all muted subscriptions')
-		options.append('/topdomains -> will help you to follow trending domains')
+		#options.append('/topdomains -> will help you to follow trending domains')
 		options.append('... keep on playing::~instaR!ght~')
 		
 		message.reply('\n'.join(options))
@@ -120,7 +120,7 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 			logging.info('Not enough data')
 			return None
 		domains = [ w.domain for w in weekly_stats if w.count > 10 ]
-		default_domain = ' ... for more domains visit: http://instaright.appspot.com/stats'
+		default_domain = ' ... for more domains visit: http://www.instaright.com/stats'
 		domains.append(default_domain)
 		logging.info('returning and storing top domain info in cache')
 		memcache.set(memcache_top_domains_key, domains)

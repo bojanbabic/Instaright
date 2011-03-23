@@ -1,5 +1,5 @@
 application: instaright
-version: 43
+version: 45
 runtime: python 
 api_version: 1
 
@@ -121,6 +121,9 @@ handlers:
 #  login: admin
 
 - url: /link/add
+  script: fetch/link_info.py
+
+- url: /link/traction/task
   script: fetch/link_info.py
 
 - url: /link/.*

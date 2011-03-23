@@ -251,7 +251,7 @@ class UserDetails(db.Model):
 		return results
 
 class Links(db.Model):
-        url=db.StringProperty()
+        url=db.TextProperty()
         all_score=db.IntegerProperty()
         influence_score = db.IntegerProperty()
         instapaper_count=db.IntegerProperty()

@@ -175,15 +175,15 @@ class Twit:
                 linkUtil=LinkUtil()
                 short_link = linkUtil.shortenLink(link.url)
                 self.text = "check out this story: %s " %short_link
-                if link.facebook_like is not None and link.facebook_like > 0:
+                if link.facebook_like is not None and link.facebook_like > 5:
                                 self.text+=" #facebook %s" %link.facebook_like
-                if link.redditups is not None and link.redditups > 0:#reddit ups %s #delicious save %s #instapaper %s #twitter %s
+                if link.redditups is not None and link.redditups > 5:#reddit ups %s #delicious save %s #instapaper %s #twitter %s
                                 self.text+=" #reddit ups %s" % link.redditups
-                if link.delicious_count is not None and link.delicious_count > 0:
+                if link.delicious_count is not None and link.delicious_count > 5:
                                 self.text+=" #delicious save %s" % link.delicious_count
-                if link.instapaper_count is not None and link.instapaper_count > 0:
+                if link.instapaper_count is not None and link.instapaper_count > 5:
                                 self.text+=" #instaright %s" %link.instapaper_count
-                if link.tweets is not None and link.tweets > 0:
+                if link.tweets is not None and link.tweets > 5:
                                 self.text+=" #twitter %s RTs" %link.tweets
                 top_category=None
                 if link.categories is not None and len(link.categories) > 0:
@@ -206,7 +206,7 @@ class Twit:
                 logging.info('new style')
                 if not link.title or link.title is None:
                         logging.info('title not known going back to old style')
-                        self.textOldStyle(link)
+                        return self.textOldStyle(link)
                 if link.categories is not None and len(link.categories) > 0:
                         logging.info('init cat : %s' % str(link.categories))
                         #dicti = ast.literal_eval(link.categories)

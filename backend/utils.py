@@ -2,7 +2,7 @@ import urlparse, urllib,logging, urllib2, datetime, simplejson, sys
 from google.appengine.api import memcache
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
-DOMAIN='http://instaright.appspot.com'
+DOMAIN='http://instaright.com'
 class StatsUtil():
 	@classmethod
 	def getDomain(cls, url):
@@ -49,7 +49,7 @@ class StatsUtil():
                 url = cls.getUrl(args)
                 if url is None:
                        return False
-                if url.startswith('file://') or url.startswith('chrome://'):
+                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about://'):
                         logging.info('url not good: %s ' % url)
                         return False
                 return True
@@ -132,6 +132,7 @@ class LinkUtil:
                         return None
         def shortenLink(self, url):
                 try:
+                       url = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+url;
                        link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(url)+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
                        data=urllib2.urlopen(link)
                        json=simplejson.load(data)

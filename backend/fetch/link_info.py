@@ -12,8 +12,12 @@ from models import Links
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.api.labs import taskqueue
                 
+sys.path.append('../social')
+from social_activity import Twit
 class LinkHandler(webapp.RequestHandler):
+
         def post(self):
                 count = self.request.get('count',None)
                 url = self.request.get('url',None)
@@ -25,6 +29,10 @@ class LinkHandler(webapp.RequestHandler):
                 logging.info('url %s' % url)
                 logging.info('count %s' % count)
                 link = self.getAllData(url, count)
+		self.update_link(url, link)
+                self.response.out.write('put %s \n ' %url)
+
+	def update_link(self, url, link):
                 existingLink = Links.gql('WHERE url = :1', url).get()
                 if existingLink is not None:
                         existingLink.date_updated= link.date_updated
@@ -47,7 +55,7 @@ class LinkHandler(webapp.RequestHandler):
                 else:
                         link.put()
                 logging.info('url %s : influence_score %s, instapaper_count %s, redditups %s, redditdowns %s, tweets %s, diggs %s, delicious count %s facebook like %s' %(url, link.influence_score , link.instapaper_count, link.redditups, link.redditdowns, link.tweets, link.diggs, link.delicious_count, link.facebook_like))
-                self.response.out.write('put %s \n ' %url)
+
         def get(self):
                 self.response.out.write('get')
 
@@ -159,12 +167,42 @@ class LinkHandler(webapp.RequestHandler):
                         return json
                 except:
                         e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
-                        logging.error('error %s %s, while getting link %s'  %( e0, e1, url))
+                        logging.info('error %s %s, while getting link %s'  %( e0, e1, url))
                         return None
+
+class LinkTractionTask(webapp.RequestHandler):
+	def post(self):
+
+                url = self.request.get('url',None)
+		if url is None:
+			logging.info('no url detected. skipping...')
+			return
+                count = 1
+                url = urllib2.unquote(url)
+                domain = StatsUtil.getDomain(url)
+                if not domain or len(domain) == 0:
+                        self.response.out.write('not url: %s skipping!\n' %url)
+                        return
+                if "twitter.com" in url or "google.com" in url or "instapaper.com" in url or  "facebook.com" in url or  "edition.cnn.com" in url or "maps.google.com" in url or "wikipedia.com" in url:
+                                logging.info('filering out %s' %url)
+                                return
+		lh = LinkHandler()
+                link = lh.getAllData(url, count)
+		logging.info('link overall score: %s' % link.overall_score)
+
+                existingLink = Links.gql('WHERE url = :1', url).get()
+                
+		if link.overall_score > 500 and existingLink is None:
+                        t=Twit()
+                        t.style=True
+                        t.textFromHotLink(link)
+                        taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
+		lh.update_link(url, link)
 
 application = webapp.WSGIApplication(
                                         [
                                                 ('/link/add', LinkHandler),
+                        			('/link/traction/task',LinkTractionTask),
                                                 ],
                                         debug=True)
 def main():
