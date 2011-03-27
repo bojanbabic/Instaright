@@ -183,7 +183,7 @@ class LinkTractionTask(webapp.RequestHandler):
                 if not domain or len(domain) == 0:
                         self.response.out.write('not url: %s skipping!\n' %url)
                         return
-                if "twitter.com" in url or "google.com" in url or "instapaper.com" in url or  "facebook.com" in url or  "edition.cnn.com" in url or "maps.google.com" in url or "wikipedia.com" in url:
+                if "lifehacker.com" in url or "twitter.com" in url or "google.com" in url or "instapaper.com" in url or  "facebook.com" in url or  "edition.cnn.com" in url or "maps.google.com" in url or "wikipedia.com" in url:
                                 logging.info('filering out %s' %url)
                                 return
 		lh = LinkHandler()
@@ -196,6 +196,7 @@ class LinkTractionTask(webapp.RequestHandler):
                         t=Twit()
                         t.style=True
                         t.textFromHotLink(link)
+			# best time for tweet 1 PM EEST 4 AM EEST 2 AM EEST 2 PM EEST 9 AM PST
                         taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
 		lh.update_link(url, link)
 

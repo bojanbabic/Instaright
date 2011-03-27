@@ -49,7 +49,7 @@ class StatsUtil():
                 url = cls.getUrl(args)
                 if url is None:
                        return False
-                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about://'):
+                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about:'):
                         logging.info('url not good: %s ' % url)
                         return False
                 return True
@@ -449,3 +449,9 @@ class Version:
                         if x < y: return -1
                         if x > y: return 1
                 return 0
+
+#class TaskUtils:
+#	@classmethod
+#	get task_exec_time(cls):
+#		time = datetime.datetime.now()
+		

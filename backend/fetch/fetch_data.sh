@@ -1,5 +1,5 @@
 #!/bin/bash
-SCRIPT_DIR=/home/bojanbabic/work/instaright/backend/fetch
+SCRIPT_DIR=/Users/bojanbabic/work/instaright/backend/fetch
 OUTPUT_DIR=$1
 if [ $# != 1 ];then
         echo "provide directory for results"
