@@ -1,0 +1,1 @@
+15 24 * * 7 mkdir -p /Users/bojanbabic/work/storage/`date "+%d-%m-%Y"` && /bin/sh /Users/bojanbabic/work/instaright/backend/fetch/fetch_data.sh /Users/bojanbabic/work/storage/`date "+%d-%m-%Y"` 2> /Users/bojanbabic/work/storage/`date "+%d-%m-%Y"`
