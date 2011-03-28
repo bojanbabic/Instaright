@@ -16,8 +16,6 @@ from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStat
 
 class VisualStats(webapp.RequestHandler):
 	def get(self):
-		#dailyStats = [ '2010-01-14', '2010-01-13','2010-01-12' ]
-		#weeklyStats = [ '2010-02-16','2010-02-02','2010-01-26', '2010-01-19', '2010-01-12', '2010-01-05','2009-12-29' ]
 		dailyStats = self.latestDailyStats()
 		weeklyStats = self.latestWeeklyStats()
 		template_variables={'dailyStats':dailyStats, 'weeklyStats':weeklyStats, 'userStats':dailyStats}
