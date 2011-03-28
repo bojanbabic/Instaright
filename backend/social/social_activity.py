@@ -216,6 +216,9 @@ class Twit:
                                self.textOldStyle(link)
                         else:
                                import operator
+			       # remove some categories
+			       if 'via:packrati.us' in dicti:
+			       		del dicti['via:packrati.us']
                                logging.info('categories:'+str(dicti))
                                sorteddict = sorted(dicti.iteritems(), key=operator.itemgetter(1), reverse=True)
                                top_category = None

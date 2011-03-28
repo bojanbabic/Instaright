@@ -5,11 +5,11 @@
         <script type="text/javascript">var tinyMCE,_sf_startpt=(new Date()).getTime();</script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
         <script src="/static/javascript/jquery.form.js"></script>
-        <script src="/static/javascript/validate.js"></script>
         <script src="/static/javascript/tooltip.js"></script>
         <script type="text/javascript" src="http://github.com/malsup/form/raw/master/jquery.form.js?v2.44"></script>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="http://dev.jquery.com/view/trunk/plugins/validate/jquery.validate.js"></script>
 
         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -28,8 +28,8 @@
         
         <script type="text/javascript" charset="utf-8">
                 $(document).ready(function(){
-		        $('#iuser').focus();
-                        //$('#import_form').validate();
+		        $("#duser").focus();
+                        //$("#import_form").validate();
                         $('#import_form').ajaxForm({ 
                                         target: '#response', 
  
@@ -76,15 +76,8 @@
         <form action="/tools/import/delicious" method="post" id="import_form">
             
            <div style="display: block;"> 
-            {% if not token %}
-                <!--label for="duser">Delicious Account <span class="toolTip" title="Use your yahoo user name. ie. if your yahoo mail is instaright@yahoo.com then your account is instaright">&nbsp;</span></label>
-                <div style="margin-bottom: 20px;"><input type="text" name="duser" id="duser" class="required text_field" value=""/></div-->
-                <label><a href="{{ yahoo_login_url }}">Login with Yahoo Account</a></label>
-            {% else %}
-                <label>Logged in</label>
-                <input type="hidden" name="token" id="token" value="{{ token }}"/>
-                <input type="hidden" name="oauth_token_secret" id="oauth_token_secret" value="{{ oauth_token_secret }}"/>
-            {% endif %}
+            <label for="duser">Delicious Account<span class="toolTip" title="If your yahoo email is instaright@yahoo.com your delicious account is instaright">&nbsp;&nbsp;</span></label>
+            <div style="margin-bottom: 20px;"><input type="text" name="duser" id="duser" class="required text_field" value=""/></div>
             <label for="iuser">Instapaper Account</label>
             <div style="margin-bottom: 20px;"><input type="text" name="iuser" id="iuser" class="required text_field" value=""/></div>
             <label for="ipass">Password <span class="toolTip" title="Only if you have set your instapaper password">&nbsp;</span></label>

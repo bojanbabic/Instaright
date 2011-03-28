@@ -49,7 +49,7 @@ class StatsUtil():
                 url = cls.getUrl(args)
                 if url is None:
                        return False
-                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about:'):
+                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about:') or url.startswith('ed2k:'):
                         logging.info('url not good: %s ' % url)
                         return False
                 return True

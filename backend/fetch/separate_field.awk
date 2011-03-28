@@ -9,7 +9,7 @@ $0=$0",";
         if (match(f, /^http:/)){
                 print f;
         }else{
-                print "bad";
+                print "bad ", f;
         }
         #gsub(sf, "", $0);
 #        }
