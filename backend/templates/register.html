@@ -1,35 +1,53 @@
 <html>
-<title>Register new Instaright Account</title>
+<head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/landing_form.css" />
+       
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width = 900"/>
+        <meta name="keywords" content="Instaright bookmarks, instaright realtime social bookmarks login, creat account instaright"/>
+        
+        <title>Import Delicious Bookmarks</title>
+        
+<title>Login with existing account</title>
+</head>
 <body>
-<div style="border:1px solid #fff;width:498px;margin:0 auto;padding:30px">
+<div style="border:1px solid #fff;width:298px;margin:0 auto;padding:30px; margin-left: 50px;">
+<p class="howdy">Howdy! Claim your identity with one of following services</p>
+<table>
+<tbody>
+<tr>
+<td><a href="/oauth/twitter/login"><img style="boarder: medium none" width="80" height="80" title="Join Instaright Web App with your Twitter account" alt="Twitter" src="static/images/twitter-button.png"/></a></td>
+<td><a href="{{ google_login_url }}"><img style="boarder: medium none" width="80" height="80" title="Join Instaright Web App with your Google account" alt="Google" src="static/images/google-button.png"/></a></td>
 
-<p><a href="/oauth/twitter/login">Login via Twitter</a></p>
-<p><a href="/oauth/google/login">Login via Google</a></p>
-<div id="fb-root"></div>
-<script src="http://connect.facebook.net/en_US/all.js">
-</script>
-<script>
-FB.init({ 
-appId:'180962951948062', cookie:true, 
-status:true, xfbml:true 
-});
-</script>
-<fb:registration
-fields="[{'name':'name'}, {'name':'email'},
-{'name':'iusername','description':'Instaright username',
-        'type':'text'}, {'name':'password','description':'Instaright password', 'no_submit':true}
-        ]" onvalidate="validateAndSave" redirect-uri="http://instaright.appspot.com/account">
-        </fb:registration>
-        <script>
-        function validateAndSave(form){
-                if (!form.password){
-                        return ({"password":"Type a password"});
-                }
-                var dt = new Date(), expiryTime = dt.setTime( dt.getTime() + 1000 * 5 );
-                document.cookie= 'password='+form.password + ';expires='+ expiryTime.toGMTString();
-                return {};
-        }
-</script>
+<td>
+
+
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '180962951948062', status: true, cookie: true,
+                 xfbml: true});
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+	<a href="javascript:fblogin();"> <img style="boarder: medium none" width="80" height="80" title="Join Instaright Web App with your Facebook account" alt="Facebook" src="static/images/facebook-button.png" /> </a>
+	<script>
+		function fblogin(){
+			FB.login(function(response){
+				window.location.reload();
+			}, {perms:'read_stream,publish_stream, email'});
+		}
+	</script>
+</td>
+</tbody>
+</table>
 
 </div>
 

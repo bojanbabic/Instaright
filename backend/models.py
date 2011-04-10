@@ -194,6 +194,8 @@ class Subscription(db.Model):
 	mute = db.BooleanProperty()
 class UserSessionFE(db.Model):
 	user = db.UserProperty()
+	screen_name = db.StringProperty()
+	auth_service = db.StringProperty()
 	user_uuid = db.StringProperty()
 	last_updatetime = db.DateTimeProperty(auto_now_add = True)
 	active = db.BooleanProperty()
@@ -219,6 +221,7 @@ class UserDetails(db.Model):
         google_reader = db.LinkProperty()
         google_profile = db.LinkProperty()
         twitter = db.LinkProperty()
+	klout_score=db.IntegerProperty()
         flickr = db.LinkProperty()
         youtube = db.LinkProperty()
         hi5 = db.LinkProperty()

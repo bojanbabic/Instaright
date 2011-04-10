@@ -10,6 +10,8 @@ from google.appengine.ext.webapp import template
 from models import UserDetails, SessionModel, UserStats, UserBadge
 from utils import BadgeUtil
 
+KLOUT_API_KEY='z9kqxgrwa5te3yuheaevyhxn'
+
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
 		#try:
@@ -106,62 +108,74 @@ class UserHandler(webapp.RequestHandler):
 		if user_detail is None:
 			user_detail = UserDetails()
 		if user_detail.mail is None:
+			logging.info('updating user details setting user mail %s' % user)
 			user_detail.mail = user
 
                 #PREPARE for request
                 time_milis = time.time() * 1000
                 logging.info("user encoded %s" % user)
-                RAPPORTIVE_LINK = "https://rapportive.com/lookup/email?q=%s&client_stamp=%d" %( user, time_milis)
+                RAPPORTIVE_LINK = "https://rapportive.com/contacts/email/%s" % user
+		logging.info('fetchin url:%s' %RAPPORTIVE_LINK)
 		#TILL here
                 try:
                         response = urlfetch.fetch(RAPPORTIVE_LINK)
                 except:
-                        e, e1 = sys.exc_info()[0], sys.exc_info()[1]
-                        logging.error('error: %s, %s' %(e, e1))
-                        return user_detail
+                        logging.info('error downloading rapportive info. reTRYing')
+			try:
+                        	response = urlfetch.fetch(RAPPORTIVE_LINK)
+			except:
+                        	e, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                        	return user_detail
                 if response.status_code == 200:
-			#stupid hack with double loads ?!?
-                        json_string_response = simplejson.loads(simplejson.dumps(response.content))
-                        json= simplejson.loads(json_string_response)
-                        html = json["html"]
-                        bHtml = BeautifulSoup.BeautifulSoup(html)
-                        divVals = []
-                        name = None
-                        try:
-                                name = bHtml.find('h1').contents[0]
-                        except:
-                                logging.info('Can\'t retrieve name from: %s' % bHtml.find('h1'))
 
-                        if name is None or unicode(name).startswith('Thanks') or unicode(name).startswith('Sorry'):
+                        json_string_response = simplejson.loads(simplejson.dumps(response.content))
+                        json = simplejson.loads(json_string_response)
+                        name = json["contact"]["name"]
+
+                        if name is None or len(name) < 1 or unicode(name).startswith('Thanks') or unicode(name).startswith('Sorry'):
+				logging.info('did not find name for account %s' % user)
                                 return user_detail
                         
                         logging.info('name: %s' % unicode(name))
                         user_detail.name = unicode(name)
-                        memberships = bHtml.findAll('a', {'class':'membership-link'})
+                        memberships = json["contact"]["memberships"] 
                         memships = {}
                         for m in memberships:
                                 service_name = m['site_name'].lower().replace(' ','_').replace('.','_')
-                                memships[service_name]=m['href']
+                                memships[service_name]=m['profile_url']
 				try:
-                                	setattr(user_detail, service_name, m['href'])
+                                	setattr(user_detail, service_name, m['profile_url'])
+					logging.info('service %s profile %s' % (service_name, m['profile_url']))
                                         if service_name == 'twitter':
-                                                # send twitter request 
-                                                screen_name = str(m['href']).replace('http://twitter.com/')
-                                                taskqueue.add(url='/utils/twitter/follow/'+screen_name, queue_name='twitter-follow')
+                                                # send twitter request and need to put since we need key for follow
+						user_detail.put()
+                                                taskqueue.add(url='/util/twitter/follow/'+str(user_detail.key()), queue_name='twitter-follow')
 				except:
-					logging.error('can\'t find attribute %s in UserDetail' % service_name)
+					logging.error('memberships error %s ::: more details %s ' % (sys.exc_info()[0], sys.exc_info()[1]))
 
                         user_detail.social_data = simplejson.dumps(memships)
-                        occupations = bHtml.find('ul', {'class':'occupations'}).findAll('li')
+                        occupations = json["contact"]["occupations"]
                         occups = []
                         for o in occupations:
-                                tmp_o = ''.join(o.findAll(text=True)).strip()
+                                tmp_o = o['job_title'] + " ^_^ " + o['company']
                                 occups.append(tmp_o)
-                        user_detail.occupations = ''.join(occups)
-                        avatar = bHtml.find('table', {'class':'basics'}).find('img',image_url=True)['image_url']
-                        logging.info('avatar %s' % avatar)
+                        user_detail.occupations = '; '.join(occups)
+			logging.info('occupations %s' %user_detail.occupations)
+			avatar = None
+			try:
+                        	avatar = json["contact"]["images"][0]["url"]
+                        	logging.info('avatar %s' % avatar)
+			except:
+				logging.info('no image info cause of %s' % sys.exc_info()[0])
                         if avatar is not None and len(avatar) > 0:
                                 user_detail.avatar = avatar
+			location = None
+			try:
+				location = json["contact"]["location"]
+			except:
+				logging.info('no location info cause of %' %sys.exc_info()[0])
+			if location is not None and len(location):
+				user_detail.location = location
                 return user_detail
 
 class UserDeleteHandler(webapp.RequestHandler):
@@ -361,6 +375,47 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                         userBadge.user=user
                         userBadge.badge=badge
                         userBadge.put()
+class UserUtil(object):
+
+	@classmethod
+	def getKloutScore(cls, user):
+		score = None
+		logging.info('klout score for %s' % user)
+		userDetails=UserDetails.gql('WHERE instapaper_account = :1' , user).get()
+		if userDetails is None or userDetails.twitter is None:
+                	userhandler = UserHandler()
+                	logging.info(' trying get more info for user %s' % user)
+                	userDetails = userhandler.gather_info(user)
+			if userDetails is not None:
+				logging.info('saving user info %s' %userDetails.mail)
+				userDetails.put()
+		if userDetails is None or userDetails.twitter is None:
+			logging.info('no twitter account for user %s . aborting' % user)
+			return
+			
+                screen_name = str(userDetails.twitter).replace('http://twitter.com/', '')
+		#KLOUT_SCORE_URL='http://api.klout.com/1/klout.json?key=%s&users=%s' %(KLOUT_API_KEY, 'bojanbabic')
+		KLOUT_SCORE_URL='http://api.klout.com/1/klout.json?key=%s&users=%s' %(KLOUT_API_KEY, screen_name)
+		response = None
+		try:
+                        response = urlfetch.fetch(KLOUT_SCORE_URL)
+		except:
+			logging.info('error fetching url %s' % KLOUT_SCORE_URL)
+		if response is None or response.status_code != 200:
+               		logging.info('unexpected response') 
+			return
+		logging.info('klout api response %s' % response.content)
+		json = eval(response.content)
+		try:
+			score = json["users"][0]["kscore"]
+		except:
+                        e, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                        logging.error('error: %s, %s' %(e, e1))
+		if score is not None:
+			userDetails.klout_score=int(score)
+			userDetails.put()
+		return score
+		
 
 app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),

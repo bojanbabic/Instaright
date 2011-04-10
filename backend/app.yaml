@@ -1,5 +1,5 @@
 application: instaright
-version: 45
+version: 46
 runtime: python 
 api_version: 1
 
@@ -7,6 +7,9 @@ handlers:
 - url: /cron
   script: cron.py
   login: admin
+
+- url: /account
+  script: account.py
 
 - url: /scripts
   static_dir: scripts
@@ -89,6 +92,9 @@ handlers:
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
 
+- url: /oauth/.*
+  script: oauth_handler.py
+
 - url: /robots.txt
   static_files: static/robots.txt
   upload: static/robots.txt
@@ -137,7 +143,7 @@ handlers:
 
 - url: /tools/delicious
   script: tools/fromdelicious.py
-  login: admin
+#  login: admin
 
 - url: /tools/delicious/callback
   script: tools/fromdelicious.py
@@ -153,6 +159,12 @@ handlers:
 
 - url: /tools/addon/instaright.xpi
   script: addon.py
+
+- url: /test.*
+  script: gaeunit.py
+
+- url: /example
+  script: example.py
 
 - url: /.*
   script: main.py

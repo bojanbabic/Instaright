@@ -1,20 +1,29 @@
-import urlparse, urllib,logging, urllib2, datetime, simplejson, sys
+import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, facebook
 from google.appengine.api import memcache
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
+from google.appengine.api import users
+
+from oauth_handler import OAuthHandler, OAuthClient
+
 DOMAIN='http://instaright.com'
-class StatsUtil():
+key='180962951948062'
+secret='9ae7202531b3b813baf1bca1fcea6178'
+
+
+class StatsUtil(object):
 	@classmethod
 	def getDomain(cls, url):
-		urlobject=urlparse.urlparse(url)
+		domain = None
 		try:
+			urlobject=urlparse.urlparse(url)
 			domain = urlobject.netloc
 		except:
 			e0,e = sys.exc_info()[0], sys.exc_info()[1]
 			logging.info('domain was not fetched due to: %s , %s' %(e0, e)) 
 			
 		# domain should not contain spaces
-		if not domain or domain.find(' ') != -1:
+		if domain is None or domain.find(' ') != -1:
 			return None
 		#strip www.
 		if domain.startswith('www.'):
@@ -49,7 +58,7 @@ class StatsUtil():
                 url = cls.getUrl(args)
                 if url is None:
                        return False
-                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about:') or url.startswith('ed2k:'):
+                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about:') or url.startswith('ed2k:') or url.startswith('liberator:') or url.startswith('irc:'):
                         logging.info('url not good: %s ' % url)
                         return False
                 return True
@@ -128,7 +137,7 @@ class LinkUtil:
                         long_url=json["data"]["expand"][0]["long_url"]
                         return long_url
                 except:
-                        logging.info('could not expand short url %s' %url)
+                        logging.info('could not shorten url %s' %url)
                         return None
         def shortenLink(self, url):
                 try:
@@ -450,8 +459,57 @@ class Version:
                         if x > y: return 1
                 return 0
 
-#class TaskUtils:
-#	@classmethod
-#	get task_exec_time(cls):
-#		time = datetime.datetime.now()
+class LoginUtil():
+
+        @classmethod
+        def create_urls(cls, federated_domains):
+                login_div='<div>'
+                for d in federated_domains:
+                        d_name = d.split('.')[0]
+                        d_url = d.lower()
+                        login_div += '<p><a href="%s">%s</a></p>' %( users.create_login_url(federated_identity = d_url), d_name)
+                login_div +='</div>'
+                return login_div
+
+	def getUserDetails(self, request_handler):
 		
+		google_login_url = users.create_login_url('/') 
+	        twitter_logout_url = '/oauth/twitter/logout'
+
+        	twitter_user = OAuthClient('twitter', request_handler)
+        	logged=False
+        	logout_url=None
+        	screen_name=None
+		auth_service=None
+		google_user = users.get_current_user()
+        	facebook_user = facebook.get_user_from_cookie(request_handler.request.cookies, key, secret)
+        	if google_user:
+                	logged=True
+                	screen_name=google_user.nickname()
+			auth_service='google'
+                	logout_url = users.create_logout_url('/')
+        	elif twitter_user.get_cookie():
+                	info = twitter_user.get('/account/verify_credentials')
+                	#friends = client.get('/friends/ids')
+                	#info = client.get('/followers/ids')
+                	#logging.info('friends %s' % simplejson.dumps(friends))
+                	#logging.info('followers %s' % simplejson.dumps(followers))
+                	screen_name = "%s" % info['screen_name']
+			auth_service='twitter'
+                	logout_url=twitter_logout_url
+			logging.info('twitter logout url %s' % logout_url)
+        	elif facebook_user:
+			logging.info('facebook cookie %s' % facebook_user)
+                	graph = facebook.GraphAPI(facebook_user["access_token"])
+			try:
+                		profile = graph.get_object("me")
+                		friends = graph.get_connections("me", "friends")
+				logging.info('friends %s' % friends)
+                		screen_name = profile["name"]
+				auth_service='facebook'
+				logout_url='javascript:FB.logout(function(response){window.location.reload();});'
+			except:
+				logging.info('error validating token')
+		logging.info('user auth with %s: %s' %(auth_service, screen_name))
+		user_details = {'screen_name':screen_name, 'logout_url':logout_url, 'auth_service':auth_service}
+		return user_details

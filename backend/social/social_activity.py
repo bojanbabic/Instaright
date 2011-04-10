@@ -29,9 +29,9 @@ class TwitterFollowHandler(webapp.RequestHandler):
                 users = memcache.get(memcache_key)
                 if not users:
                         all_users = UserDetails.getAll()
-                        users_with_python = [ u for u in all_users if u.twitter is not None ] #and ((hasattr(u, 'twitter_request_sent') and u.twitter_request_sent == False) or (not hasattr(u, 'twitter_request_sent')) ]
+                        users_with_twitter = [ u for u in all_users if u.twitter is not None ] #and ((hasattr(u, 'twitter_request_sent') and u.twitter_request_sent == False) or (not hasattr(u, 'twitter_request_sent')) ]
                         memcache.set(memcache_key, users)
-                        users = users_with_python
+                        users = users_with_twitter
                 if not users or len(users) == 0:
                         logging.info('currently, no users on twitter')
                         return
@@ -49,8 +49,8 @@ class TwitterFollowHandler(webapp.RequestHandler):
                 #print user.screen_name
                 key = db.Key(user_account_key)
                 user = UserDetails.gql('WHERE __key__ = :1' , key).get()
-                if not user:
-                        logging.info('no user with name %s' % user.instapaper_account)
+                if user is None:
+                        logging.info('no user with key %s' % user_account_key)
                         return 
                 if not user.twitter:
                         logging.info('user %s has not twitter account' % user.instapaper_account)
@@ -93,8 +93,10 @@ class TweetHotLinks(webapp.RequestHandler):
 class TweetHotLinksTask(webapp.RequestHandler):
         def post(self):
                twit=self.request.get('twit', None)
-               if twit is None:
+               if twit is None or twit == 'None' or 'story: None' in twit:
                         logging.info('no twit skipping')
+			return
+	       logging.info('twitting new story: %s' % twit)
                api = twitter.Api(
                                 consumer_key='WZ9re48FXCmnaNlN4rbuhg',
                                 consumer_secret='jEQ7gDsE2aR9AXrA6aMZHBvKvvFgurjXoSiYLiyjQ', 
@@ -174,17 +176,20 @@ class Twit:
         def textOldStyle(self,link):
                 linkUtil=LinkUtil()
                 short_link = linkUtil.shortenLink(link.url)
+		if short_link is None:
+			self.text=None
+			return
                 self.text = "check out this story: %s " %short_link
                 if link.facebook_like is not None and link.facebook_like > 5:
-                                self.text+=" #facebook %s" %link.facebook_like
+                                self.text+=" #facebooklikes %s" %link.facebook_like
                 if link.redditups is not None and link.redditups > 5:#reddit ups %s #delicious save %s #instapaper %s #twitter %s
                                 self.text+=" #reddit ups %s" % link.redditups
                 if link.delicious_count is not None and link.delicious_count > 5:
-                                self.text+=" #delicious save %s" % link.delicious_count
+                                self.text+=" #delicious saves %s" % link.delicious_count
                 if link.instapaper_count is not None and link.instapaper_count > 5:
                                 self.text+=" #instaright %s" %link.instapaper_count
                 if link.tweets is not None and link.tweets > 5:
-                                self.text+=" #twitter %s RTs" %link.tweets
+                                self.text+=" #twitter %s #RTs" %link.tweets
                 top_category=None
                 if link.categories is not None and len(link.categories) > 0:
                                 logging.info('init cat : %s' % str(link.categories))
@@ -232,6 +237,9 @@ class Twit:
                                except:
                                         logging.info('can\'t get all cats')
                                short_link = linkUtil.shortenLink(link.url)
+			       if short_link is None:
+					self.text=None
+					return
                                self.text=""+link.title[0:59] + "... " +short_link
                                if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
                                         self.text += " #%s" % top_category[0]

@@ -3,69 +3,44 @@ import sys, os, urllib2, datetime, logging, cgi, uuid
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
-from google.appengine.api import channel 
-from google.appengine.api.labs import taskqueue
-from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
-from utils import StatsUtil, LoginUtil
+from utils import LoginUtil
 
 from models import UserSessionFE, SessionModel, Links
 from oauth_handler import OAuthHandler, OAuthClient
+from main import UserMessager
+import facebook
+
+key='180962951948062'
+secret='9ae7202531b3b813baf1bca1fcea6178'
 
 class AccountHandler(webapp.RequestHandler):
     def get(self):
 
-        client = OAuthClient('twitter', self)
-        gdata = OAuthClient('google', self, scope='http://www.google.com/calendar/feeds')
+	uu = LoginUtil()
+	user_details = uu.getUserDetails(self)
+	screen_name = user_details["screen_name"]
+	logout_url = user_details["logout_url"]
 
-        write = self.response.out.write; 
+	google_login_url = users.create_login_url('/') 
 
-        if not client.get_cookie():
-            write('<a href="/oauth/twitter/login">Login via Twitter</a><br>')
-        if not gdata.get_cookie():
-            write('<a href="/oauth/google/login">Login via Google</a><br>')
-            write( """
-            <div id="fb-root"></div>
-                  <script src="http://connect.facebook.net/en_US/all.js">
-                  </script>
-                  <script>
-                  FB.init({ 
-                  appId:'180962951948062', cookie:true, 
-                  status:true, xfbml:true 
-                  });
-                  </script>
-                  <fb:registration
-                  fields="[{'name':'name'}, {'name':'email'},
-                  {'name':'iusername','description':'Instaright username',
-                  'type':'text'}, {'name':'password','description':'Instaright password', 'no_submit':true}
-                  ]" onvalidate="validateAndSave" redirect-uri="http://instaright.appspot.com/account">
-                  </fb:registration>
-                  <script>
-                        function validateAndSave(form){
-                                        if (!form.password){
-                                                return ({"password":"Type a password"});
-                                        }
-                                        var dt = new Date(), expiryTime = dt.setTime( dt.getTime() + 1000 * 5 );
-                                        document.cookie= 'password='+form.password + ';expires='+ expiryTime.toGMTString();
-                                        return {};
-                        }
-                  </script>
-                """)
-        if client.get_cookie():
-                write('<a href="/oauth/twitter/logout">Logout from Twitter</a><br /><br />')
-
-                info = client.get('/account/verify_credentials')
-
-                write("<strong>Screen Name:</strong> %s<br />" % info['screen_name'])
-                write("<strong>Location:</strong> %s<br />" % info['location'])
-
-                rate_info = client.get('/account/rate_limit_status')
-
-                write("<strong>API Rate Limit Status:</strong> %r" % rate_info)
-        if gdata.get_cookie():
-                write("<b>Logged in with google</b>")
+        if screen_name is None:
+                template_variables = { 'google_login_url': google_login_url }
+                #path = os.path.join(os.path.dirname(__file__), 'templates/login.html')
+                path = os.path.join(os.path.dirname(__file__), 'templates/register.html')
+                self.response.headers["Contant-Type"]= "text/html; charset=utf-8"
+                self.response.out.write(template.render(path,template_variables))
+        else:
+		#user_uuid = uuid.uuid4()
+		#userMessager = UserMessager(str(user_uuid))
+		#channel_id = userMessager.create_channel()
+                #template_variables = {'user':screen_name, 'login_url':None, 'logout_url': logout_url, 'channel_id':channel_id, 'hotlinks': None}
+		#path= os.path.join(os.path.dirname(__file__), 'index.html')
+                #self.response.headers["Content-Type"] = "text/html; charset=utf-8"
+		#self.response.out.write(template.render(path,template_variables))
+		self.redirect('/')
 
 application=webapp.WSGIApplication([
                              ('/account', AccountHandler),

@@ -203,7 +203,7 @@ class Visualization(webapp.RequestHandler):
 			logging.info('Not enough data for graph')
 			self.repsonse.out.write('Not enough data for graph')
 			return
-		cityStats = [ x for x in cityStatsQ if not "unknown" in x.city.lower() and x.countryCode != 'US' ]
+		cityStats = [ x for x in cityStatsQ if not "unknown" in x.city.lower() and x.countryCode != 'US' and x.countryCode != 'XX' ]
 		logging.info('retrieved %s stats' % len(cityStats))
 		description = {"city_countryCode": ("string", "City Code"),
 				"count":("number", "Count")}

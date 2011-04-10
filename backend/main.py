@@ -1,6 +1,9 @@
 import sys, os, urllib2, datetime, logging, cgi, uuid
 import pubsubhubbub_publish as pshb
 
+from utils import StatsUtil
+from utils import LoginUtil
+
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
@@ -10,7 +13,7 @@ from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
-from utils import StatsUtil
+from google.appengine.ext.db import BadValueError
 
 from models import UserSessionFE, SessionModel, Links
 
@@ -96,23 +99,26 @@ class MainTaskHandler(webapp.RequestHandler):
                 title = StatsUtil.getTitle(args)
                 version = StatsUtil.getVersion(args)
 
-                model = SessionModel()
-                model.user_agent = self.request.headers['User-agent']
-                model.ip = self.request.remote_addr
-                model.instaright_account = user
-                model.date = datetime.datetime.now()
-                model.url = url
-                model.domain = domain
-                model.short_link = None
-                model.feed_link = None
-                model.title = title
-                model.version = version
+		try:
+	                model = SessionModel()
+                	model.user_agent = self.request.headers['User-agent']
+                	model.ip = self.request.remote_addr
+                	model.instaright_account = user
+                	model.date = datetime.datetime.now()
+                	model.url = url
+                	model.domain = domain
+                	model.short_link = None
+                	model.feed_link = None
+                	model.title = title
+                	model.version = version
+			model.put()
+		except BadValueError:
+			logging.info('bad value url %s' % url)
 
-		model.put()
                 logging.info('model: %s' % model.to_xml())
 
                 taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
-                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url })
+                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user })
 
                 logging.info('pubsubhubbub feed update')
 		try:
@@ -134,14 +140,22 @@ class ErrorHandling(webapp.RequestHandler):
 
 class IndexHandler(webapp.RequestHandler):
 	def get(self):
-		user = users.get_current_user()
+
+		uu = LoginUtil()
+		user_details = uu.getUserDetails(self)
+		screen_name = user_details["screen_name"]
+		logout_url = user_details["logout_url"]
+		auth_service = user_details["auth_service"]
+
 		uuid_cookie = self.request.cookies.get('user_uuid')
+
 		if uuid_cookie:
 			#Connect uuid with registered user
 			logging.info('reusing uuid: %s' % uuid_cookie)
 			user_uuid = uuid_cookie
 			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
-			userSession.user = user
+			userSession.screen_name = screen_name
+			userSession.auth_service = auth_service
 			userSession.put()
 		else:
 			user_uuid = uuid.uuid4()
@@ -152,7 +166,8 @@ class IndexHandler(webapp.RequestHandler):
 
 			self.response.headers.add_header('Set-Cookie', 'user_uuid=%s; expires=%s; path=/' %( user_uuid, exp_format))
 			userSession = UserSessionFE()
-			userSession.user = user
+			userSession.screen_name = screen_name
+			userSession.auth_service = auth_service
 			userSession.user_uuid = str(user_uuid)
 			userSession.active=True
 			userSession.put()
@@ -160,7 +175,7 @@ class IndexHandler(webapp.RequestHandler):
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
 		template_variables = []
-                template_variables = {'user':user, 'login_url':login_url, 'channel_id':channel_id, 'hotlinks': None}
+                template_variables = {'user':screen_name, 'login_url':login_url, 'logout_url':logout_url, 'channel_id':channel_id, 'hotlinks': None}
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))

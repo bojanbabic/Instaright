@@ -8,14 +8,22 @@ import sys, urllib2, simplejson, exceptions, os, logging, datetime
 #print os.environ['INSTAPAPER']
 #sys.path.append('..')
 from utils import StatsUtil,Cast
+from users import UserUtil
 from models import Links
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api.labs import taskqueue
+from google.appengine.ext.db import BadValueError
                 
 sys.path.append('../social')
 from social_activity import Twit
+
+FB_FACTOR = 5
+TW_FACTOR = 3
+TWIT_MARGIN = 500
+KLOUT_CORRECTION=30
+
 class LinkHandler(webapp.RequestHandler):
 
         def post(self):
@@ -66,7 +74,11 @@ class LinkHandler(webapp.RequestHandler):
                 digg_api='http://services.digg.com/1.0/endpoint?method=story.getAll&link='+url+'&type=json'
                 reddit_api='http://www.reddit.com/api/info.json?url='+url
                 facebook_api='https://api.facebook.com/method/fql.query?query=select%20%20like_count%20from%20link_stat%20where%20url=%22'+url+'%22&format=json'
-                link = Links.gql('WHERE url = :1', url).get()
+		link = None
+		try:
+                	link = Links.gql('WHERE url = :1', url).get()
+		except BadValueError:
+			logging.info('url property too long')
                 if link is None:
                         link = Links()
                         link.instapaper_count = Cast.toInt(count,0)
@@ -81,6 +93,8 @@ class LinkHandler(webapp.RequestHandler):
                 else:
                         link.date_updated = datetime.datetime.now().date()
 
+		#relaxation 
+		link.relaxation = 0
                 logging.info('trying to fetch topsi info')
                 json = self.getData(topsy_api)
                 if json:
@@ -109,10 +123,13 @@ class LinkHandler(webapp.RequestHandler):
                         try:
                                 link.tweets=Cast.toInt(json['story']['url_count'],0)
                                 link.title=json['story']['title']
-                                link.excerpt = db.Text(unicode(json['story']['excerpt']))
+			 	if 'excerpt' in json['story']:	
+					logging.info('getting excerpt');
+                                	link.excerpt = db.Text(unicode(json['story']['excerpt']))
                                 if link.tweets is not None:
-                                        link.overall_score += link.tweets
+                                        link.overall_score += TW_FACTOR * link.tweets
                         except KeyError:
+				link.relaxation = link.relaxation + 1
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
@@ -145,6 +162,7 @@ class LinkHandler(webapp.RequestHandler):
                                      if link.redditdowns is not None:
                                                 link.overall_score -= link.redditdowns
                         except KeyError:
+				link.relaxation = link.relaxation + 1
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
                 logging.info('trying to fetch facebook info')
@@ -153,10 +171,10 @@ class LinkHandler(webapp.RequestHandler):
                         try:
                                 link.facebook_like=Cast.toInt(json[0]['like_count'], 0)
                                 if link.facebook_like is not None:
-                                        link.overall_score += link.facebook_like
+                                        link.overall_score += FB_FACTOR * link.facebook_like
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
-                                logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
+                                logging.info('request: %s == more info: key error [[%s, %s]] in %s' %(facebook_api, e0, e1, json))
 
                 return link
 
@@ -166,9 +184,15 @@ class LinkHandler(webapp.RequestHandler):
                         json = simplejson.load(dta)
                         return json
                 except:
-                        e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
-                        logging.info('error %s %s, while getting link %s'  %( e0, e1, url))
-                        return None
+                        logging.info('error while getting link %s reTRYing'  % url)
+                	try:
+                        	dta = urllib2.urlopen(url)
+                        	json = simplejson.load(dta)
+                        	return json
+                	except:
+                        	e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
+                        	logging.info('error %s %s, while getting link %s'  %( e0, e1, url))
+                        	return None
 
 class LinkTractionTask(webapp.RequestHandler):
 	def post(self):
@@ -177,25 +201,44 @@ class LinkTractionTask(webapp.RequestHandler):
 		if url is None:
 			logging.info('no url detected. skipping...')
 			return
+		user = self.request.get('user', None)
+		
                 count = 1
                 url = urllib2.unquote(url)
                 domain = StatsUtil.getDomain(url)
                 if not domain or len(domain) == 0:
                         self.response.out.write('not url: %s skipping!\n' %url)
                         return
-                if "lifehacker.com" in url or "twitter.com" in url or "google.com" in url or "instapaper.com" in url or  "facebook.com" in url or  "edition.cnn.com" in url or "maps.google.com" in url or "wikipedia.com" in url:
+                if "lifehacker.com" in url or "twitter.com" in url or "google.com" in url or "instapaper.com" in url or  "facebook.com" in url or  "edition.cnn.com" in url or "maps.google.com" in url or "wikipedia.org" in url or "yahoo.com" in url or "doubleclick.net" in url or "instaright.com" in url:
                                 logging.info('filering out %s' %url)
                                 return
 		lh = LinkHandler()
                 link = lh.getAllData(url, count)
 		logging.info('link overall score: %s' % link.overall_score)
 
-                existingLink = Links.gql('WHERE url = :1', url).get()
+		existingLink = None
+		try:
+	                existingLink = Links.gql('WHERE url = :1', url).get()
+		except BadValueError:
+			logging.info('bad value url %s' % url)
+		#if hasattr(link, 'relaxation') and link.relaxation > 0:
+		#	twit_margin = twit_margin - 100 * link.relaxation
+		#	logging.info('margin relaxation: %s' % twit_margin)
+		klout_score = UserUtil.getKloutScore(user)
+		share_margin = TWIT_MARGIN
+		if klout_score is not None:
+			link.overall_score = link.overall_score * int(klout_score)
+			logging.info('adjusted overall score %s' % link.overall_score)
+			share_margin = share_margin * KLOUT_CORRECTION
+			logging.info('adjusting twit margin: %s' % share_margin)
                 
-		if link.overall_score > 500 and existingLink is None:
+		if link.overall_score > share_margin and existingLink is None:
                         t=Twit()
                         t.style=True
                         t.textFromHotLink(link)
+			if t.text is None:
+				logging.info('twit did not have body. aborting')
+				return
 			# best time for tweet 1 PM EEST 4 AM EEST 2 AM EEST 2 PM EEST 9 AM PST
                         taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
 		lh.update_link(url, link)
