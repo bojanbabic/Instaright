@@ -239,6 +239,10 @@ class UserDetails(db.Model):
         links_added = db.IntegerProperty(default=0)
         info_updated = db.DateTimeProperty(auto_now_add=True)
         twitter_request_sent = db.BooleanProperty()
+	twitter_followers=db.TextProperty()
+	twitter_following=db.TextProperty()
+	facebook_id=db.StringProperty()
+	facebook_friends=db.TextProperty()
         
 	@staticmethod
 	def getAll():

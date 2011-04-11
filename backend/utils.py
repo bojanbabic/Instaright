@@ -486,30 +486,77 @@ class LoginUtil():
         	if google_user:
                 	logged=True
                 	screen_name=google_user.nickname()
+			existing_user= UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
+			if existing_user is None:
+				existing_user = UserDetails()
+				existing_user.mail=google_user.email()
+				existing_user.put()
 			auth_service='google'
                 	logout_url = users.create_logout_url('/')
         	elif twitter_user.get_cookie():
-                	info = twitter_user.get('/account/verify_credentials')
-                	#friends = client.get('/friends/ids')
-                	#info = client.get('/followers/ids')
-                	#logging.info('friends %s' % simplejson.dumps(friends))
-                	#logging.info('followers %s' % simplejson.dumps(followers))
-                	screen_name = "%s" % info['screen_name']
-			auth_service='twitter'
-                	logout_url=twitter_logout_url
-			logging.info('twitter logout url %s' % logout_url)
+			try:
+				info = twitter_user.get('/account/verify_credentials')
+                		following = twitter_user.get('/friends/ids')
+                		followers = twitter_user.get('/followers/ids')
+                		logging.info('following %s' % simplejson.dumps(following))
+                		logging.info('followers %s' % simplejson.dumps(followers))
+                		screen_name = "%s" % info['screen_name']
+				profile_image_url = "%s" %info['profile_image_url']
+				existing_user = UserDetails.gql('WHERE twitter = \'http://twitter.com/%s\'' % screen_name).get()
+				if existing_user is None:
+					logging.info('new twitter user login %s' % screen_name)
+					ud=UserDetails()
+					ud.twitter_followers=simplejson.dumps(followers)
+					ud.twitter_following=simplejson.dumps(following)
+					ud.twitter='http://twitter.com/%s' %screen_name
+					ud.avatar = profile_image_url
+					ud.put()
+				else:
+					logging.info('existing twitter user login %s' % screen_name)
+					existing_user.twitter_followers=simplejson.dumps(followers)
+					existing_user.twitter_following=simplejson.dumps(following)
+					if existing_user.avatar is None:
+						existing_user.avatar = profile_image_url
+					existing_user.put()
+				auth_service='twitter'
+                		logout_url=twitter_logout_url
+				logging.info('twitter logout url %s' % logout_url)
+			except:
+				e0,e = sys.exc_info()[0], sys.exc_info()[1]
+				logging.info('error handling twitter login %s ----- %s' %(e0,e))
         	elif facebook_user:
 			logging.info('facebook cookie %s' % facebook_user)
                 	graph = facebook.GraphAPI(facebook_user["access_token"])
 			try:
                 		profile = graph.get_object("me")
+				profile_link=profile["link"]
+				profile_id=profile["id"]
                 		friends = graph.get_connections("me", "friends")
 				logging.info('friends %s' % friends)
                 		screen_name = profile["name"]
 				auth_service='facebook'
+				existing_user=UserDetails.gql('WHERE facebook = \'%s\'' % profile_link).get()
+				if existing_user is not None:
+					logging.info('existing facebook logging %s' % profile_link)
+					existing_user.facebook=profile_link
+					existing_user.facebook_friends=simplejson.dumps(friends)
+					existing_user.facebook_id=profile_id
+					if existing_user.avatar is None:
+						existing_user.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
+					existing_user.put()
+				else:
+					logging.info('new facebook logging %s' % profile_link)
+					ud=UserDetails()
+					ud.facebook=profile_link
+					ud.facebook_friends=simplejson.dumps(friends)
+					ud.facebook_id=profile_id
+					ud.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
+					ud.put()
+					
 				logout_url='javascript:FB.logout(function(response){window.location.reload();});'
 			except:
-				logging.info('error validating token')
+				e0,e = sys.exc_info()[0], sys.exc_info()[1]
+				logging.info('error validating token %s === more info: %s' %(e0,e))
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
 		user_details = {'screen_name':screen_name, 'logout_url':logout_url, 'auth_service':auth_service}
 		return user_details
