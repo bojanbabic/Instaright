@@ -202,7 +202,6 @@ def get_user_from_cookie(cookies, app_id, app_secret):
     http://github.com/facebook/connect-js/. Read more about Facebook
     authentication at http://developers.facebook.com/docs/authentication/.
     """
-    logging.info('cookies:%s'%cookies)
     
     cookie = cookies.get("fbs_" + app_id, "")
     if not cookie: return None

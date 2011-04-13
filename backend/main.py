@@ -15,7 +15,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from django.utils import simplejson
 from google.appengine.ext.db import BadValueError
 
-from models import UserSessionFE, SessionModel, Links
+from models import UserSessionFE, SessionModel, Links, UserDetails
 
 class UserMessager:
 	def __init__(self, user_uid):
@@ -142,40 +142,68 @@ class IndexHandler(webapp.RequestHandler):
 	def get(self):
 
 		uu = LoginUtil()
-		user_details = uu.getUserDetails(self)
-		screen_name = user_details["screen_name"]
-		logout_url = user_details["logout_url"]
-		auth_service = user_details["auth_service"]
+		userSession = None
+		screen_name=None
+		auth_service=None
+		used_data_from_session = False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
+		logout_cookie = self.request.cookies.get('user_logged_out')
 
+		# try to get user name by cookie or from login
 		if uuid_cookie:
 			#Connect uuid with registered user
 			logging.info('reusing uuid: %s' % uuid_cookie)
 			user_uuid = uuid_cookie
 			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
-			userSession.screen_name = screen_name
-			userSession.auth_service = auth_service
-			userSession.put()
+			if userSession is not None and userSession.user_details is not None:
+				#TODO check why never reached
+				ud = UserDetails.gql('WHERE __key__ = :1', userSession.user_details).get()
+
+				if ud is None:
+					logging.error('missing proper db entry for cookie %s' % uuid_cookie)
+				else:
+					user_data = ud.getUserInfo()
+					screen_name = user_data["screen_name"]
+					user_data_from_session = True
+					logging.info('using screen name %s from session %s' %(screen_name, user_uuid))
+			# sanity check
+			if userSession is None:
+				logging.info('smth wicked ')
+				userSession = UserSessionFE()
 		else:
 			user_uuid = uuid.uuid4()
-			logging.info('generated uuid: %s' % user_uuid)
-                        expires = datetime.datetime.now() + datetime.timedelta(minutes=5)
+			logging.info('generated new uuid: %s' % user_uuid)
+                        expires = datetime.datetime.now() + datetime.timedelta(minutes=60)
                         exp_format = datetime.datetime.strftime(expires, '%a, %d-%b-%Y %H:%M:%S GMT')
                         logging.info('expr date %s' %exp_format)
-
 			self.response.headers.add_header('Set-Cookie', 'user_uuid=%s; expires=%s; path=/' %( user_uuid, exp_format))
+
 			userSession = UserSessionFE()
-			userSession.screen_name = screen_name
-			userSession.auth_service = auth_service
 			userSession.user_uuid = str(user_uuid)
+
+		# not pretty but working
+		if logout_cookie:
+			logging.info('found logout cookie. reseting screen_name')
+			screen_name = None
+		else:
+			user_details = uu.getUserDetails(self)
+			screen_name = user_details["screen_name"]
+			auth_service = user_details["auth_service"]
+			user_details_key = user_details["user_details_key"]
+
 			userSession.active=True
-			userSession.put()
+			userSession.user_details = user_details_key
+			
+		userSession.screen_name = screen_name
+		userSession.auth_service = auth_service
+		userSession.put()
+
 		userMessager = UserMessager(str(user_uuid))
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
 		template_variables = []
-                template_variables = {'user':screen_name, 'login_url':login_url, 'logout_url':logout_url, 'channel_id':channel_id, 'hotlinks': None}
+                template_variables = {'user':screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None}
 		path= os.path.join(os.path.dirname(__file__), 'index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
@@ -194,13 +222,14 @@ class PrivacyPolicyHandler(webapp.RequestHandler):
                 
 		
 application = webapp.WSGIApplication(
-                                     [('/rpc', MainHandler),
-                                     ('/article/task', MainTaskHandler),
-                                     ('/error', ErrorHandling),
-                                     ('/deactivate_channels', ChannelHandler),
-                                     ('/privacy_policy.html', PrivacyPolicyHandler),
-                                     ('/0Ci1tA9HYDgTPNzJLQ.ytA--.html', YahooVerificationFile),
-                                     ('/', IndexHandler),
+                                     [
+					('/rpc', MainHandler),
+					('/article/task', MainTaskHandler),
+                                     	('/error', ErrorHandling),
+                                     	('/deactivate_channels', ChannelHandler),
+                                     	('/privacy_policy.html', PrivacyPolicyHandler),
+                                     	('/0Ci1tA9HYDgTPNzJLQ.ytA--.html', YahooVerificationFile),
+                                     	('/', IndexHandler),
 				     ],
                                      debug=True)
 

@@ -478,9 +478,11 @@ class LoginUtil():
 
         	twitter_user = OAuthClient('twitter', request_handler)
         	logged=False
-        	logout_url=None
         	screen_name=None
 		auth_service=None
+		# used to connect user details with session
+		user_details_key=None
+
 		google_user = users.get_current_user()
         	facebook_user = facebook.get_user_from_cookie(request_handler.request.cookies, key, secret)
         	if google_user:
@@ -492,14 +494,12 @@ class LoginUtil():
 				existing_user.mail=google_user.email()
 				existing_user.put()
 			auth_service='google'
-                	logout_url = users.create_logout_url('/')
+			user_details_key=existing_user.key()
         	elif twitter_user.get_cookie():
 			try:
 				info = twitter_user.get('/account/verify_credentials')
                 		following = twitter_user.get('/friends/ids')
                 		followers = twitter_user.get('/followers/ids')
-                		logging.info('following %s' % simplejson.dumps(following))
-                		logging.info('followers %s' % simplejson.dumps(followers))
                 		screen_name = "%s" % info['screen_name']
 				profile_image_url = "%s" %info['profile_image_url']
 				existing_user = UserDetails.gql('WHERE twitter = \'http://twitter.com/%s\'' % screen_name).get()
@@ -519,44 +519,52 @@ class LoginUtil():
 						existing_user.avatar = profile_image_url
 					existing_user.put()
 				auth_service='twitter'
-                		logout_url=twitter_logout_url
-				logging.info('twitter logout url %s' % logout_url)
+				user_details_key=existing_user.key()
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
-				logging.info('error handling twitter login %s ----- %s' %(e0,e))
         	elif facebook_user:
-			logging.info('facebook cookie %s' % facebook_user)
                 	graph = facebook.GraphAPI(facebook_user["access_token"])
 			try:
                 		profile = graph.get_object("me")
 				profile_link=profile["link"]
 				profile_id=profile["id"]
                 		friends = graph.get_connections("me", "friends")
-				logging.info('friends %s' % friends)
                 		screen_name = profile["name"]
-				auth_service='facebook'
 				existing_user=UserDetails.gql('WHERE facebook = \'%s\'' % profile_link).get()
 				if existing_user is not None:
 					logging.info('existing facebook logging %s' % profile_link)
 					existing_user.facebook=profile_link
 					existing_user.facebook_friends=simplejson.dumps(friends)
+					existing_user.facebook_profile=profile["name"]
 					existing_user.facebook_id=profile_id
 					if existing_user.avatar is None:
 						existing_user.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
 					existing_user.put()
 				else:
 					logging.info('new facebook logging %s' % profile_link)
-					ud=UserDetails()
-					ud.facebook=profile_link
-					ud.facebook_friends=simplejson.dumps(friends)
-					ud.facebook_id=profile_id
-					ud.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
-					ud.put()
-					
-				logout_url='javascript:FB.logout(function(response){window.location.reload();});'
+					existing_user=UserDetails()
+					existing_user.facebook=profile_link
+					existing_user.facebook_profile=profile["name"]
+					existing_user.facebook_friends=simplejson.dumps(friends)
+					existing_user.facebook_id=profile_id
+					existing_user.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
+					existing_user.put()
+				auth_service='facebook'
+				user_details_key=existing_user.key()
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
 				logging.info('error validating token %s === more info: %s' %(e0,e))
+		
+		log_out_cookie = request_handler.request.cookies.get('user_logged_out')
+		path=request_handler.request.path
+		logging.info('path: %s' %path)
+		#reset logout cookie in case of /account url
+		if log_out_cookie and path == '/account':
+			logging.info('deleting logout cookie')
+                        expires = datetime.datetime.now()
+                        exp_format = datetime.datetime.strftime(expires, '%a, %d-%b-%Y %H:%M:%S GMT')
+			request_handler.response.headers.add_header('Set-Cookie', 'user_logged_out=%s; expires=%s; path=/' %( '0', exp_format))
+			
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
-		user_details = {'screen_name':screen_name, 'logout_url':logout_url, 'auth_service':auth_service}
+		user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key}
 		return user_details

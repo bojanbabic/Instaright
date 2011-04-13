@@ -42,23 +42,18 @@ class Visualization(webapp.RequestHandler):
                         self.userFeed(targetdate, user, reqId)
 		else:
 			self.response.out.write('Not yet implementd')
-	def dailyFeed(self,targetdate,reqId):
+	def dailyFeed(self,tdate,reqId):
 		try:
-			if not targetdate:
+			if not tdate:
 				today = datetime.date.today()
 				yesterday=datetime.date.today() - datetime.timedelta(days=1)
 				targetdate=yesterday
 			else:
 				try:
-					year=targetdate[:4]
-					month=targetdate[5:7]
-					day=targetdate[8:10]
-					logging.info('year %s month %s day %s' %(year, month, day))
-					#targetdate=datetime.date(year,month, day)
-					targetdate=datetime.date(int(year),int(month), int(day))
+					targetdate=datetime.datetime.strptime(tdate, '%Y-%m-%d').date()
 				except:
 					e = sys.exc_info()[1]
-					logging.error('error formating date %s =>  %s' %(targetdate, e))
+					logging.error('error formating date %s =>  %s' %(tdate, e))
 					targetdate=datetime.date.today() - datetime.timedelta(days=1)
 					
 			logging.info('Fetching stats for %s' % targetdate)
@@ -106,24 +101,19 @@ class Visualization(webapp.RequestHandler):
 			e0 = sys.exc_info()[0]
 			e = sys.exc_info()[1]
 			logging.error('Error visualizing stats %s %s' % (e0 , e) )
-	def weeklyFeed(self,targetdate, reqId):
+	def weeklyFeed(self,tdate, reqId):
 		try:
-			if not targetdate:
+			if not tdate:
 				s="<?xml version=\"1.0\" encoding=\"UTF-8\"?><daily_stats>"
 				s+="</daily_stats>"
 				self.response.out.write(s)
 				return
 			else:
 				try:
-					year=targetdate[:4]
-					month=targetdate[5:7]
-					day=targetdate[8:10]
-					logging.info('year %s month %s day %s' %(year, month, day))
-					#targetdate=datetime.date(year,month, day)
-					targetdate=datetime.date(int(year),int(month), int(day))
+					targetdate=datetime.datetime.strptime(tdate, '%Y-%m-%d').date()
 				except:
 					e = sys.exc_info()[1]
-					logging.error('error formating date %s =>  %s' %(targetdate, e))
+					logging.error('error formating date %s =>  %s' %(tdate, e))
 					targetdate=datetime.date.today() - datetime.timedelta(days=1)
 					
 			logging.info('Fetching stats for %s' % targetdate)
@@ -251,12 +241,7 @@ class Visualization(webapp.RequestHandler):
 			targetdate=yesterday
 		else:
 		        try:
-		                year=targetdate[:4]
-			        month=targetdate[5:7]
-			        day=targetdate[8:10]
-			        logging.info('year %s month %s day %s' %(year, month, day))
-			        #targetdate=datetime.date(year,month, day)
-			        targetdate=datetime.date(int(year),int(month), int(day))
+			        targetdate=datetime.datetime.strptime(targetdate, '%Y-%m-%d').date()
 			except:
 			        e = sys.exc_info()[1]
 			        logging.error('error formating date %s =>  %s' %(targetdate, e))

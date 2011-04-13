@@ -61,7 +61,18 @@ class LinkHandler(webapp.RequestHandler):
                         existingLink.overall_score=link.overall_score
                         existingLink.put()
                 else:
-                        link.put()
+			#greater probability for db timeout of new links
+			try:
+				while True:
+					timeout_ms = 100
+					try:
+                        			link.put()
+						break
+					except datastore_errors.Timeout:
+						thread.sleep(timeout_ms)
+						timeout_ms *= 2
+			except apiproxy_errors.DeadlineExceededError:
+				logging.info('run out of retries for writing to db')
                 logging.info('url %s : influence_score %s, instapaper_count %s, redditups %s, redditdowns %s, tweets %s, diggs %s, delicious count %s facebook like %s' %(url, link.influence_score , link.instapaper_count, link.redditups, link.redditdowns, link.tweets, link.diggs, link.delicious_count, link.facebook_like))
 
         def get(self):

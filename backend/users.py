@@ -175,7 +175,7 @@ class UserHandler(webapp.RequestHandler):
 			except:
 				logging.info('no location info cause of %' %sys.exc_info()[0])
 			if location is not None and len(location):
-				user_detail.location = location
+				user_detail.location = location.replace('\\n',' ')
                 return user_detail
 
 class UserDeleteHandler(webapp.RequestHandler):

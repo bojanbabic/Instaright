@@ -192,18 +192,13 @@ class Subscription(db.Model):
 	activationDate = db.DateTimeProperty(auto_now_add=True)
 	active = db.BooleanProperty()
 	mute = db.BooleanProperty()
-class UserSessionFE(db.Model):
-	user = db.UserProperty()
-	screen_name = db.StringProperty()
-	auth_service = db.StringProperty()
-	user_uuid = db.StringProperty()
-	last_updatetime = db.DateTimeProperty(auto_now_add = True)
-	active = db.BooleanProperty()
 class IMInvite(db.Model):
         im = db.StringProperty()
         date = db.DateTimeProperty(auto_now_add = True)
         subscribed = db.BooleanProperty()
 class UserDetails(db.Model):
+	instaright_account=db.StringProperty()
+	instaright_pswd=db.StringProperty()
         instapaper_account=db.StringProperty()
         mail =db.StringProperty()
         name =db.StringProperty()
@@ -211,7 +206,7 @@ class UserDetails(db.Model):
         #key for download articles
         form_key=db.StringProperty()
         avatar = db.LinkProperty()
-        occupations = db.StringProperty()
+        occupations = db.TextProperty()
         location= db.StringProperty()
         facebook = db.LinkProperty()
         bebo = db.LinkProperty()
@@ -243,9 +238,10 @@ class UserDetails(db.Model):
 	twitter_following=db.TextProperty()
 	facebook_id=db.StringProperty()
 	facebook_friends=db.TextProperty()
+	facebook_profile=db.StringProperty()
         
-	@staticmethod
-	def getAll():
+	@classmethod
+	def getAll(cls):
 		data=UserDetails.gql('ORDER by __key__').fetch(1000)
 		if not data:
 			return None
@@ -256,6 +252,20 @@ class UserDetails(db.Model):
 			lastKey=data[-1].key()
 			results.extend(data)
 		return results
+
+	def getUserInfo(self):
+		screen_name= None
+		avatar = None
+		if self.name is not None:
+			screen_name = self.name
+		elif self.facebook is not None and self.facebook_profile is not None:
+			screen_name = self.facebook_profile
+		elif self.twitter is not None:
+			screen_name = self.twitter.replace('http://twitter.com/','')
+		if self.avatar is not None:
+			avatar = self.avatar
+		user_info={'screen_name':screen_name, 'avatar': avatar}
+		return user_info
 
 class Links(db.Model):
         url=db.TextProperty()
@@ -295,3 +305,11 @@ class UserBadge(db.Model):
         user=db.StringProperty()
         badge=db.StringProperty()
         date=db.DateProperty(auto_now_add=True)
+class UserSessionFE(db.Model):
+	user = db.UserProperty()
+	screen_name = db.StringProperty()
+	auth_service = db.StringProperty()
+	user_uuid = db.StringProperty()
+	last_updatetime = db.DateTimeProperty(auto_now_add = True)
+	active = db.BooleanProperty()
+	user_details = db.ReferenceProperty(UserDetails)
