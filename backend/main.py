@@ -111,14 +111,22 @@ class MainTaskHandler(webapp.RequestHandler):
                 	model.feed_link = None
                 	model.title = title
                 	model.version = version
-			model.put()
-                	logging.info('model: %s' % model.to_xml())
-		except BadValueError:
-			logging.info('bad value url %s' % url)
+			while True:
+				timeout_ms= 100
+				try:
+					model.put()
+					break
+				except datastore_errors.Timeout:
+					logging.info('model save timeout retrying in %s' % timeout_ms)
+					thread.sleep(timeout_ms)
+					timeout_ms *= 2
+                	logging.info('model saved: %s' % model.to_xml())
+		except BadValueError, apiproxy_errors.DeadlineExceededError:
+			logging.info('error while saving url %s' % url)
 
 
                 taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
-                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user })
+                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
 
                 logging.info('pubsubhubbub feed update')
 		try:

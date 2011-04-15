@@ -1,8 +1,11 @@
-import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, facebook
+import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, facebook, os
 from google.appengine.api import memcache
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
 from google.appengine.api import users
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import pytz
 
 from oauth_handler import OAuthHandler, OAuthClient
 
@@ -568,3 +571,29 @@ class LoginUtil():
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
 		user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key}
 		return user_details
+
+class TaskUtil(object):
+	@classmethod
+	def execution_time(cls):
+		
+		# best time for tweet 1 PM EEST 4 AM EEST 2 AM EEST 2 PM EEST 9 AM PST( 7 PM EEST)
+		(year, month, day, hour, min, sec)=datetime.datetime.now().timetuple()[:6]
+		logging.info('calculating tweet execution time. now %s' % str(datetime.datetime.now()))
+		ss_1=datetime.datetime(year, month, day, 0, 0, 0)
+		ss_2=datetime.datetime(year, month, day, 5, 0, 0)
+		ss_3=datetime.datetime(year, month, day, 10, 0, 0)
+		ss_4=datetime.datetime(year, month, day, 15, 0, 0)
+		ss_5=datetime.datetime(year, month, day, 22, 0, 0)
+		now=datetime.datetime.now()
+		if now < ss_1:
+			return ss_1
+		if now < ss_2:
+			return ss_2
+		if now < ss_3:
+			return ss_3
+		if now < ss_4:
+			return ss_4
+		if now < ss_5:
+			return ss_5
+		else:
+			return ss_1

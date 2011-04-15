@@ -166,10 +166,10 @@ class Twit:
                         if e.lower() in self.text.lower():
                                 return False
                 return True
-        def textFromHotLink(self, link):
+        def textFromHotLink(self, link, link_title=None):
                 if self.style:
                         logging.info('picking new style')
-                        return self.textNewStyle(link)
+                        return self.textNewStyle(link, link_title)
                 else:
                         logging.info('picking old style')
                         return self.textOldStyle(link)
@@ -206,10 +206,10 @@ class Twit:
                                 if link.diggs is not None and link.diggs > 4 and 8 + len(self.text) +2 <= 140:
                                         self.text +=" #digg %s" % link.diggs
                 logging.info('self.text: %s' % self.text)
-        def textNewStyle(self,link):
+        def textNewStyle(self,link, title_from_url=None):
                 linkUtil=LinkUtil()
-                logging.info('new style')
-                if not link.title or link.title is None:
+                logging.info('new style title %s' %title_from_url)
+                if (not link.title or link.title is None) and title_from_url is None:
                         logging.info('title not known going back to old style')
                         return self.textOldStyle(link)
                 if link.categories is not None and len(link.categories) > 0:
@@ -217,8 +217,13 @@ class Twit:
                         #dicti = ast.literal_eval(link.categories)
                         dicti = eval(link.categories)
                         if len(dicti) == 0:
-                               logging.info('no cat. generatingold style')
-                               self.textOldStyle(link)
+				if title_from_url is not None and len(title_from_url) > 10:
+                        		logging.info('trying from title to get twit text')
+                                	short_link = linkUtil.shortenLink(link.url)
+					self.text = title_from_url[0:80] + " .... " + shortLink + " #recommended"
+				else:
+                               		logging.info('no cat. generating old style')
+                               		self.textOldStyle(link)
                         else:
                                import operator
 			       # remove some categories
@@ -248,8 +253,13 @@ class Twit:
                                if top_category2 is not None and top_category2[0] not in self.text and len(top_category2[0]) + len(self.text) +2 <= 140:
                                         self.text += " #%s" % top_category2[0]
                 else:
-                        logging.info('no categories going back to old style')
-                        self.textOldStyle(link)
+			if title_from_url is not None and len(title_from_url) > 20:
+                        	logging.info('trying from title to get twit text')
+                                short_link = linkUtil.shortenLink(link.url)
+				self.text = title_from_url[0:80] + " .... " + shortLink + " #recommended"
+			else:
+                        	logging.info('no categories going back to old style')
+                        	self.textOldStyle(link)
                 logging.info('self text %s' % self.text)
                         
 

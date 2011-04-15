@@ -1,4 +1,4 @@
-import sys, urllib2, simplejson, exceptions, os, logging, datetime
+import sys, urllib2, simplejson, exceptions, os, logging, datetime, time
 #TODO create class for all APIes used
 #class GenericApi:
 #        def __init__:
@@ -7,7 +7,7 @@ import sys, urllib2, simplejson, exceptions, os, logging, datetime
 #        def getInfo(self):
 #print os.environ['INSTAPAPER']
 #sys.path.append('..')
-from utils import StatsUtil,Cast
+from utils import StatsUtil,Cast, TaskUtil
 from users import UserUtil
 from models import Links
 from google.appengine.ext import webapp
@@ -41,7 +41,11 @@ class LinkHandler(webapp.RequestHandler):
                 self.response.out.write('put %s \n ' %url)
 
 	def update_link(self, url, link):
-                existingLink = Links.gql('WHERE url = :1', url).get()
+		existingLink=None
+		try:
+                	existingLink = Links.gql('WHERE url = :1', url).get()
+		except BadValueError:
+			logging.info('bad value for url %s' % url)
                 if existingLink is not None:
                         existingLink.date_updated= link.date_updated
                         existingLink.influence_score= link.influence_score
@@ -213,6 +217,8 @@ class LinkTractionTask(webapp.RequestHandler):
 			logging.info('no url detected. skipping...')
 			return
 		user = self.request.get('user', None)
+		title = self.request.get('title', None)
+		logging.info('title %s' % title)
 		
                 count = 1
                 url = urllib2.unquote(url)
@@ -248,10 +254,12 @@ class LinkTractionTask(webapp.RequestHandler):
                         t.style=True
                         t.textFromHotLink(link)
 			if t.text is None:
-				logging.info('twit did not have body. aborting')
+				logging.info('twit with no body. aborting')
 				return
-			# best time for tweet 1 PM EEST 4 AM EEST 2 AM EEST 2 PM EEST 9 AM PST
-                        taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
+			execute_time=TaskUtil.execution_time()
+			logging.info('scheduling tweet for %s' %str(execute_time))
+			
+                        taskqueue.add(url='/util/twitter/twit/task', eta=execute_time, queue_name='twit-queue', params={'twit':t.text})
 		lh.update_link(url, link)
 
 application = webapp.WSGIApplication(
