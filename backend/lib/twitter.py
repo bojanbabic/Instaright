@@ -67,7 +67,7 @@ try:
 except ImportError:
   from md5 import md5
 
-#sys.path.append('oauth2')
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import oauth2 as oauth
 
 

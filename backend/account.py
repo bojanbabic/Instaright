@@ -9,9 +9,12 @@ from django.utils import simplejson
 from utils import LoginUtil
 
 from models import UserSessionFE, SessionModel, Links
-from oauth_handler import OAuthHandler, OAuthClient
 from main import UserMessager
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib')) 
+
 import facebook
+from oauth_handler import OAuthHandler, OAuthClient
 
 key='180962951948062'
 secret='9ae7202531b3b813baf1bca1fcea6178'

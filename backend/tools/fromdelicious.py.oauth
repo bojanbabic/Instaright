@@ -1,4 +1,4 @@
-import datetime, time, urllib2, urllib, logging, simplejson, os, BeautifulSoup, sys, base64
+import datetime, time, urllib2, urllib, logging, simplejson, os, sys, base64
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 from google.appengine.ext.webapp.util import run_wsgi_app

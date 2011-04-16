@@ -1,5 +1,6 @@
 import unittest, logging
 from google.appengine.api import urlfetch
+from users import UserUtil
 
 
 class AppEngineAPITest(unittest.TestCase):
@@ -9,7 +10,6 @@ class AppEngineAPITest(unittest.TestCase):
         self.assertEquals(15, response.content.find('<html>'))
 class KloutScoreTest(unittest.TestCase):
     def testKloutScore(self):
-	from users import UserUtil
 	user='gbabun@gmail.com'
 	score = UserUtil.getKloutScore(user)
 	logging.info('got score %s for %s ' %(score, user))

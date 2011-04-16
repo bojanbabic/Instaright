@@ -1,4 +1,4 @@
-import sys, os, time, datetime, cgi, logging, gviz_api, re, math
+import sys, os, time, datetime, cgi, logging, re, math
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -10,6 +10,9 @@ from urlparse import urlparse
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
 from models import CountryStats, CityStats, SessionModel, UserStats
 from xmpp_handler import XMPPHandler
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import gviz_api
 
 class Visualization(webapp.RequestHandler):
 	def get(self):

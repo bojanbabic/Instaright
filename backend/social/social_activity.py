@@ -9,7 +9,10 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from models import UserDetails, Links
 from utils import LinkUtil
+
 sys.path.append('social')
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+
 import twitter
 
 tweet_replies = [ 

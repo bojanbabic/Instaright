@@ -1,11 +1,11 @@
-import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, facebook, os
+import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, os
 from google.appengine.api import memcache
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
 from google.appengine.api import users
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
-
+import facebook
 from oauth_handler import OAuthHandler, OAuthClient
 
 DOMAIN='http://instaright.com'

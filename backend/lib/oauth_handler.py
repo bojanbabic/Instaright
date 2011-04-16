@@ -161,8 +161,11 @@ class OAuthClient(object):
         proxy_id = self.get_cookie()
 
         if proxy_id:
+	    if self.service == 'twitter':
+	    	self.handler.redirect(self.handler.request.get("return_to", '/'))
             return "FOO%rFF" % proxy_id
             self.expire_cookie()
+
 
         return self.get_request_token()
 

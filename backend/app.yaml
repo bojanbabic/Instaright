@@ -93,7 +93,7 @@ handlers:
   upload: static/images/favicon.ico
 
 - url: /oauth/.*
-  script: oauth_handler.py
+  script: lib/oauth_handler.py
 
 - url: /robots.txt
   static_files: static/robots.txt

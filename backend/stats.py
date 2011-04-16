@@ -1,6 +1,6 @@
-import sys, os, time, datetime, cgi, logging, gviz_api
+import sys, os, time, datetime, cgi, logging
 #import multiprocessing
-
+ 
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -13,6 +13,9 @@ from google.appengine.ext.webapp import template
 
 from models import SessionModel, CityStats, CountryStats
 from cron import StatsModel, DailyDomainStats, WeeklyDomainStats, YearDomainStats
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import gviz_api
 
 class VisualStats(webapp.RequestHandler):
 	def get(self):
