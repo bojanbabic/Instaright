@@ -252,7 +252,7 @@ class LinkTractionTask(webapp.RequestHandler):
 		if link.overall_score > share_margin and existingLink is None:
                         t=Twit()
                         t.style=True
-                        t.textFromHotLink(link)
+                        t.textFromHotLink(link, title)
 			if t.text is None:
 				logging.info('twit with no body. aborting')
 				return

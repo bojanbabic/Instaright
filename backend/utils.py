@@ -5,7 +5,6 @@ from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, 
 from google.appengine.api import users
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
-import pytz
 
 from oauth_handler import OAuthHandler, OAuthClient
 

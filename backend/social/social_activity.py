@@ -208,7 +208,9 @@ class Twit:
                 logging.info('self.text: %s' % self.text)
         def textNewStyle(self,link, title_from_url=None):
                 linkUtil=LinkUtil()
+                short_link = linkUtil.shortenLink(link.url)
                 logging.info('new style title %s' %title_from_url)
+
                 if (not link.title or link.title is None) and title_from_url is None:
                         logging.info('title not known going back to old style')
                         return self.textOldStyle(link)
@@ -219,8 +221,7 @@ class Twit:
                         if len(dicti) == 0:
 				if title_from_url is not None and len(title_from_url) > 10:
                         		logging.info('trying from title to get twit text')
-                                	short_link = linkUtil.shortenLink(link.url)
-					self.text = title_from_url[0:80] + " .... " + shortLink + " #recommended"
+					self.text = title_from_url[0:80] + " .... " + short_link + " #recommended"
 				else:
                                		logging.info('no cat. generating old style')
                                		self.textOldStyle(link)
@@ -241,7 +242,6 @@ class Twit:
                                         logging.info('top cats %s' % sorteddict)
                                except:
                                         logging.info('can\'t get all cats')
-                               short_link = linkUtil.shortenLink(link.url)
 			       if short_link is None:
 					self.text=None
 					return
@@ -256,7 +256,7 @@ class Twit:
 			if title_from_url is not None and len(title_from_url) > 20:
                         	logging.info('trying from title to get twit text')
                                 short_link = linkUtil.shortenLink(link.url)
-				self.text = title_from_url[0:80] + " .... " + shortLink + " #recommended"
+				self.text = title_from_url[0:80] + " .... " + short_link + " #recommended"
 			else:
                         	logging.info('no categories going back to old style')
                         	self.textOldStyle(link)
