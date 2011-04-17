@@ -1,4 +1,4 @@
-import datetime, time, urllib, logging, simplejson, os, sys
+import datetime, time, urllib, logging, simplejson, os, sys, ConfigParser
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -10,7 +10,9 @@ from google.appengine.ext.webapp import template
 from models import UserDetails, SessionModel, UserStats, UserBadge
 from utils import BadgeUtil
 
-KLOUT_API_KEY='z9kqxgrwa5te3yuheaevyhxn'
+config=ConfigParser.ConfigParser()
+config.read('properties/general.ini')
+klout_api_key=config.get('social','klout_api_key')
 
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
@@ -378,6 +380,22 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
 class UserUtil(object):
 
 	@classmethod
+        def getAvatar(cls,instapaper_account):
+		memcache_key='avatar_'+instapaper_account
+		cached_avatar = memcache.get(memcache_key)
+		if cached_avatar:
+                        logging.info('getting avatar from cache: %s for user %s' %(cached_avatar, instapaper_account))
+			return cached_avatar
+		userDetails = UserDetails.gql('WHERE instapaper_account = :1', instapaper_account).get()
+		if userDetails and userDetails.avatar is not None:
+                        logging.info('%s avatar %s' % (instapaper_account, userDetails.avatar))
+			memcache.set(memcache_key, userDetails.avatar)
+			return userDetails.avatar
+		else:
+			return '/static/images/noavatar.png'
+
+
+	@classmethod
 	def getKloutScore(cls, user):
 		score = None
 		logging.info('klout score for %s' % user)
@@ -394,8 +412,7 @@ class UserUtil(object):
 			return
 			
                 screen_name = str(userDetails.twitter).replace('http://twitter.com/', '')
-		#KLOUT_SCORE_URL='http://api.klout.com/1/klout.json?key=%s&users=%s' %(KLOUT_API_KEY, 'bojanbabic')
-		KLOUT_SCORE_URL='http://api.klout.com/1/klout.json?key=%s&users=%s' %(KLOUT_API_KEY, screen_name)
+		KLOUT_SCORE_URL='http://api.klout.com/1/klout.json?key=%s&users=%s' %(klout_api_key, screen_name)
 		response = None
 		try:
                         response = urlfetch.fetch(KLOUT_SCORE_URL)

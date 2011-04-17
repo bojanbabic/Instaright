@@ -1,4 +1,4 @@
-import sys, urllib2, simplejson, exceptions, os, logging, datetime, time
+import sys, urllib2, simplejson, exceptions, os, logging, datetime, time, urllib
 #TODO create class for all APIes used
 #class GenericApi:
 #        def __init__:
@@ -7,7 +7,7 @@ import sys, urllib2, simplejson, exceptions, os, logging, datetime, time
 #        def getInfo(self):
 #print os.environ['INSTAPAPER']
 #sys.path.append('..')
-from utils import StatsUtil,Cast, TaskUtil
+from utils import StatsUtil,Cast, TaskUtil, ConfigParser
 from users import UserUtil
 from models import Links
 from google.appengine.ext import webapp
@@ -19,12 +19,13 @@ from google.appengine.ext.db import BadValueError
 sys.path.append('../social')
 from social_activity import Twit
 
-FB_FACTOR = 5
-TW_FACTOR = 3
-TWIT_MARGIN = 500
-KLOUT_CORRECTION=30
-
 class LinkHandler(webapp.RequestHandler):
+	def __init__(self):
+		config=ConfigParser.ConfigParser()
+		config.read('../properties/general.ini')
+		self.fb_factor=int(config.get('social', 'fb_factor'))
+		self.tw_factor=int(config.get('social', 'tw_factor'))
+		self.tw_margin=int(config.get('social', 'tw_margin'))
 
         def post(self):
                 count = self.request.get('count',None)
@@ -83,11 +84,12 @@ class LinkHandler(webapp.RequestHandler):
                 self.response.out.write('get')
 
         def getAllData(self,url, count):
-                topsy_api='http://otter.topsy.com/stats.json?url='+url
-                tweet_meme_api='http://api.tweetmeme.com/url_info.json?url='+url
-                delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url='+url+'&type=json'
-                digg_api='http://services.digg.com/1.0/endpoint?method=story.getAll&link='+url+'&type=json'
-                reddit_api='http://www.reddit.com/api/info.json?url='+url
+		url=urllib.quote(url)
+                topsy_api='http://otter.topsy.com/stats.json?url=%s' % url
+                tweet_meme_api='http://api.tweetmeme.com/url_info.json?url=%s' %url
+                delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url=%s&type=json' % url
+                digg_api='http://services.digg.com/1.0/endpoint?method=story.getAll&link=%s&type=json' %url
+                reddit_api='http://www.reddit.com/api/info.json?url=%s'
                 facebook_api='https://api.facebook.com/method/fql.query?query=select%20%20like_count%20from%20link_stat%20where%20url=%22'+url+'%22&format=json'
 		link = None
 		try:
@@ -110,7 +112,7 @@ class LinkHandler(webapp.RequestHandler):
 
 		#relaxation 
 		link.relaxation = 0
-                logging.info('trying to fetch topsi info')
+                logging.info('trying to fetch topsi info %s' %topsy_api)
                 json = self.getData(topsy_api)
                 if json:
                         try:
@@ -120,7 +122,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
-                logging.info('trying to fetch digg info')
+                logging.info('trying to fetch digg info %s' %digg_api)
                 json =self.getData(digg_api)
                 if json:
                         try:
@@ -132,7 +134,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
-                logging.info('trying to fetch tweet_meme info')
+                logging.info('trying to fetch tweet_meme info %s ' % tweet_meme_api )
                 json = self.getData(tweet_meme_api)
                 if json and 'story' in json:
                         try:
@@ -142,13 +144,13 @@ class LinkHandler(webapp.RequestHandler):
 					logging.info('getting excerpt');
                                 	link.excerpt = db.Text(unicode(json['story']['excerpt']))
                                 if link.tweets is not None:
-                                        link.overall_score += TW_FACTOR * link.tweets
+                                        link.overall_score += self.tw_factor * link.tweets
                         except KeyError:
 				link.relaxation = link.relaxation + 1
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
-                logging.info('trying to fetch delicious info')
+                logging.info('trying to fetch delicious info %s ' % delicious_api)
                 json =self.getData(delicious_api)
                 if json:
                         try:
@@ -162,7 +164,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
-                logging.info('trying to fetch reddit info')
+                logging.info('trying to fetch reddit info %s' % reddit_api)
                 json = self.getData(reddit_api)
                 if json and 'data' in json:
                         try:
@@ -180,13 +182,13 @@ class LinkHandler(webapp.RequestHandler):
 				link.relaxation = link.relaxation + 1
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
-                logging.info('trying to fetch facebook info')
+                logging.info('trying to fetch facebook info %s' %facebook_api)
                 json = self.getData(facebook_api)
                 if json:
                         try:
                                 link.facebook_like=Cast.toInt(json[0]['like_count'], 0)
                                 if link.facebook_like is not None:
-                                        link.overall_score += FB_FACTOR * link.facebook_like
+                                        link.overall_score += self.fb_factor * link.facebook_like
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('request: %s == more info: key error [[%s, %s]] in %s' %(facebook_api, e0, e1, json))
@@ -210,6 +212,12 @@ class LinkHandler(webapp.RequestHandler):
                         	return None
 
 class LinkTractionTask(webapp.RequestHandler):
+	def __init__(self):
+		config=ConfigParser.ConfigParser()
+		config.read('../properties/general.ini')
+		self.tw_margin=int(config.get('social', 'tw_margin'))
+		self.tw_factor=int(config.get('social', 'tw_factor'))
+		self.klout_correction=int(config.get('social', 'klout_correction'))
 	def post(self):
 
                 url = self.request.get('url',None)
@@ -242,11 +250,11 @@ class LinkTractionTask(webapp.RequestHandler):
 		#	twit_margin = twit_margin - 100 * link.relaxation
 		#	logging.info('margin relaxation: %s' % twit_margin)
 		klout_score = UserUtil.getKloutScore(user)
-		share_margin = TWIT_MARGIN
+		share_margin = self.tw_margin
 		if klout_score is not None:
 			link.overall_score = link.overall_score * int(klout_score)
 			logging.info('adjusted overall score %s' % link.overall_score)
-			share_margin = share_margin * KLOUT_CORRECTION
+			share_margin = share_margin * self.klout_correction
 			logging.info('adjusting twit margin: %s' % share_margin)
                 
 		if link.overall_score > share_margin and existingLink is None:

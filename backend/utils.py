@@ -1,4 +1,4 @@
-import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, os
+import urlparse, urllib,logging, urllib2, datetime, simplejson, sys, os, ConfigParser
 from google.appengine.api import memcache
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
@@ -7,11 +7,6 @@ from google.appengine.api import users
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import facebook
 from oauth_handler import OAuthHandler, OAuthClient
-
-DOMAIN='http://instaright.com'
-key='180962951948062'
-secret='9ae7202531b3b813baf1bca1fcea6178'
-
 
 class StatsUtil(object):
 	@classmethod
@@ -97,30 +92,19 @@ class StatsUtil(object):
 		return data
 		# TODO  parse xml 
 class FeedUtil:
+	def __init__(self):
+		config=ConfigParser.ConfigParser()
+		config.read('properties/general.ini')
+		self.domain=config.get('app', 'domain')
 	def sessionModel2Feed(self, model):
 		item = {}
 		item["title"]=model.domain
-		item["link"]=DOMAIN + '/article/' + str(model.key())
+		item["link"]=self.domain+ '/article/' + str(model.key())
 		item["description"]='Link submited by user %s' % model.instaright_account
 		item["pubDate"]=model.date.timetuple()
 		item["uid"]=str(model.key())
 
 		return item
-class UserUtil:
-        def getAvatar(self,instapaper_account):
-		memcache_key='avatar_'+instapaper_account
-		cached_avatar = memcache.get(memcache_key)
-		if cached_avatar:
-                        logging.info('getting avatar from cache: %s for user %s' %(cached_avatar, instapaper_account))
-			return cached_avatar
-		userDetails = UserDetails.gql('WHERE instapaper_account = :1', instapaper_account).get()
-		if userDetails and userDetails.avatar is not None:
-                        logging.info('%s avatar %s' % (instapaper_account, userDetails.avatar))
-			memcache.set(memcache_key, userDetails.avatar)
-			return userDetails.avatar
-		else:
-			return '/static/images/noavatar.png'
-
 class LinkUtil:
         def getFeedOriginalUrl(self,url):
                 try:
@@ -462,6 +446,11 @@ class Version:
                 return 0
 
 class LoginUtil():
+	def __init__(self):
+		config=ConfigParser.ConfigParser()
+		config.read('properties/general.ini')
+		self.facebook_key=config.get('facebook','key')
+		self.facebook_secret=config.get('facebook','secret')
 
         @classmethod
         def create_urls(cls, federated_domains):
@@ -486,7 +475,8 @@ class LoginUtil():
 		user_details_key=None
 
 		google_user = users.get_current_user()
-        	facebook_user = facebook.get_user_from_cookie(request_handler.request.cookies, key, secret)
+		logging.info('trying to connect with fb key %s secret %s' %( self.facebook_key, self.facebook_secret))
+        	facebook_user = facebook.get_user_from_cookie(request_handler.request.cookies, self.facebook_key, self.facebook_secret)
         	if google_user:
                 	logged=True
                 	screen_name=google_user.nickname()

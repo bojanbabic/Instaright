@@ -5,7 +5,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from models import UserDetails, SessionModel
-from utils import UserUtil
+from users import UserUtil
 import simplejson
 
 from feedformatter import Feed
