@@ -1,4 +1,4 @@
-import datetime, time, urllib2, urllib, logging, simplejson, os, sys, base64
+import datetime, time, urllib2, urllib, logging, os, sys, base64
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -24,6 +24,9 @@ oauth_signature='231b69a7d7b85e0b6e9d345bdf999b7922a2dbbc'
 oauth_version='1.0'
 oauth_callback='http://instaright.appspot.com/tools/delicious/callback'
 #oauth_callback='http://localhost:8080/tools/delicious/callback'
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'../§lib'))
+import simplejson
 
 class DeliciousImportHandler(webapp.RequestHandler):
         def get(self):

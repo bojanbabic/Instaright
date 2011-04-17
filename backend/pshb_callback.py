@@ -1,4 +1,4 @@
-import logging, datetime ,os, urllib2, urllib, Queue, simplejson
+import logging, datetime ,os, urllib2, urllib, Queue, sys
 from google.appengine.ext import webapp, db
 from google.appengine.api import xmpp, memcache
 from google.appengine.api.labs import taskqueue
@@ -10,6 +10,8 @@ from users import UserUtil
 from xmpp_handler import XMPPHandler 
 
 import feedparser
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import simplejson
 
 new_updates = Queue.Queue()
 xmpp_handler = XMPPHandler()

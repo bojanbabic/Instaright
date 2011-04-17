@@ -1,4 +1,4 @@
-import datetime, time, urllib, logging, simplejson, os, sys, ConfigParser
+import datetime, time, urllib, logging, os, sys
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -10,9 +10,9 @@ from google.appengine.ext.webapp import template
 from models import UserDetails, SessionModel, UserStats, UserBadge
 from utils import BadgeUtil
 
-config=ConfigParser.ConfigParser()
-config.read('properties/general.ini')
-klout_api_key=config.get('social','klout_api_key')
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import simplejson
+
 
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
@@ -396,7 +396,7 @@ class UserUtil(object):
 
 
 	@classmethod
-	def getKloutScore(cls, user):
+	def getKloutScore(cls, user, klout_api_key):
 		score = None
 		logging.info('klout score for %s' % user)
 		userDetails=UserDetails.gql('WHERE instapaper_account = :1' , user).get()
@@ -425,6 +425,7 @@ class UserUtil(object):
 		json = eval(response.content)
 		try:
 			score = json["users"][0]["kscore"]
+			logging.info('klout api returned score %s for user %' % ( score, screen_name))
 		except:
                         e, e1 = sys.exc_info()[0], sys.exc_info()[1]
                         logging.error('error: %s, %s' %(e, e1))

@@ -12,10 +12,12 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
-from django.utils import simplejson
 from google.appengine.ext.db import BadValueError
 
 from models import UserSessionFE, SessionModel, Links, UserDetails
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import simplejson
 
 class UserMessager:
 	def __init__(self, user_uid):

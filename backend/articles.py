@@ -6,6 +6,8 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from models import UserDetails, SessionModel
 from users import UserUtil
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
 
 from feedformatter import Feed

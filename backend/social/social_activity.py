@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime, os, simplejson, sys, urllib2, logging, urllib, time
+import datetime, os, sys, urllib2, logging, urllib, time
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
@@ -12,6 +12,7 @@ from utils import LinkUtil
 
 sys.path.append('social')
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import simplejson
 
 import twitter
 

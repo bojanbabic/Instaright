@@ -5,7 +5,6 @@ from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
-from django.utils import simplejson
 from utils import LoginUtil
 
 from models import UserSessionFE, SessionModel, Links
@@ -13,7 +12,7 @@ from main import UserMessager
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib')) 
 
-import facebook
+import facebook, simplejson
 from oauth_handler import OAuthHandler, OAuthClient
 
 key='180962951948062'

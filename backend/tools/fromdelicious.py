@@ -1,4 +1,4 @@
-import datetime, time, urllib2, urllib, logging, simplejson, os, sys
+import datetime, time, urllib2, urllib, logging, os, sys
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -8,6 +8,9 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
 
 from models import UserDetails, SessionModel, UserStats, DeliciousImporter
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import simplejson
 
 class DeliciousImportHandler(webapp.RequestHandler):
         def get(self):

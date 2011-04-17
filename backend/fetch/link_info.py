@@ -1,12 +1,5 @@
-import sys, urllib2, simplejson, exceptions, os, logging, datetime, time, urllib
-#TODO create class for all APIes used
-#class GenericApi:
-#        def __init__:
+import sys, urllib2, exceptions, os, logging, datetime, time
 
-#class TopsyApi:
-#        def getInfo(self):
-#print os.environ['INSTAPAPER']
-#sys.path.append('..')
 from utils import StatsUtil,Cast, TaskUtil, ConfigParser
 from users import UserUtil
 from models import Links
@@ -18,6 +11,9 @@ from google.appengine.ext.db import BadValueError
                 
 sys.path.append('../social')
 from social_activity import Twit
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+import simplejson
 
 class LinkHandler(webapp.RequestHandler):
 	def __init__(self):
@@ -84,12 +80,12 @@ class LinkHandler(webapp.RequestHandler):
                 self.response.out.write('get')
 
         def getAllData(self,url, count):
-		url=urllib.quote(url)
+		url=urllib2.quote(url.encode('utf-8'))
                 topsy_api='http://otter.topsy.com/stats.json?url=%s' % url
                 tweet_meme_api='http://api.tweetmeme.com/url_info.json?url=%s' %url
                 delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url=%s&type=json' % url
                 digg_api='http://services.digg.com/1.0/endpoint?method=story.getAll&link=%s&type=json' %url
-                reddit_api='http://www.reddit.com/api/info.json?url=%s'
+                reddit_api='http://www.reddit.com/api/info.json?url=%s' %url
                 facebook_api='https://api.facebook.com/method/fql.query?query=select%20%20like_count%20from%20link_stat%20where%20url=%22'+url+'%22&format=json'
 		link = None
 		try:
@@ -218,6 +214,7 @@ class LinkTractionTask(webapp.RequestHandler):
 		self.tw_margin=int(config.get('social', 'tw_margin'))
 		self.tw_factor=int(config.get('social', 'tw_factor'))
 		self.klout_correction=int(config.get('social', 'klout_correction'))
+		self.klout_api_key=config.get('social', 'klout_api_key')
 	def post(self):
 
                 url = self.request.get('url',None)
@@ -249,7 +246,7 @@ class LinkTractionTask(webapp.RequestHandler):
 		#if hasattr(link, 'relaxation') and link.relaxation > 0:
 		#	twit_margin = twit_margin - 100 * link.relaxation
 		#	logging.info('margin relaxation: %s' % twit_margin)
-		klout_score = UserUtil.getKloutScore(user)
+		klout_score = UserUtil.getKloutScore(user, self.klout_api_key)
 		share_margin = self.tw_margin
 		if klout_score is not None:
 			link.overall_score = link.overall_score * int(klout_score)
