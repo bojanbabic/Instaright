@@ -56,7 +56,7 @@ class TwitterFollowHandler(webapp.RequestHandler):
                 if user is None:
                         logging.info('no user with key %s' % user_account_key)
                         return 
-                if not user.twitter:
+                if not user.twitter or user.twitter_request_sent:
                         logging.info('user %s has not twitter account' % user.instapaper_account)
                         return
                 screen_name = str(user.twitter).replace('http://twitter.com/', '')

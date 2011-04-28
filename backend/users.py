@@ -132,7 +132,11 @@ class UserHandler(webapp.RequestHandler):
 
                         json_string_response = simplejson.loads(simplejson.dumps(response.content))
                         json = simplejson.loads(json_string_response)
-                        name = json["contact"]["name"]
+			name = None
+			try:
+                        	name = json["contact"]["name"]
+			except:
+				logging.info("unable to gather name from rapportive")
 
                         if name is None or len(name) < 1 or unicode(name).startswith('Thanks') or unicode(name).startswith('Sorry'):
 				logging.info('did not find name for account %s' % user)
@@ -150,6 +154,7 @@ class UserHandler(webapp.RequestHandler):
 					logging.info('service %s profile %s' % (service_name, m['profile_url']))
                                         if service_name == 'twitter':
                                                 # send twitter request and need to put since we need key for follow
+						user_detail.twitter_request_send=True
 						user_detail.put()
                                                 taskqueue.add(url='/util/twitter/follow/'+str(user_detail.key()), queue_name='twitter-follow')
 				except:
@@ -177,7 +182,8 @@ class UserHandler(webapp.RequestHandler):
 			except:
 				logging.info('no location info cause of %' %sys.exc_info()[0])
 			if location is not None and len(location):
-				user_detail.location = location.replace('\\n',' ')
+				location_lines = location.splitlines()
+				user_detail.location = ' '.join(location_lines)
                 return user_detail
 
 class UserDeleteHandler(webapp.RequestHandler):
@@ -425,7 +431,7 @@ class UserUtil(object):
 		json = eval(response.content)
 		try:
 			score = json["users"][0]["kscore"]
-			logging.info('klout api returned score %s for user %' % ( score, screen_name))
+			logging.info('klout api returned score %s for user %s' % ( str(score), screen_name))
 		except:
                         e, e1 = sys.exc_info()[0], sys.exc_info()[1]
                         logging.error('error: %s, %s' %(e, e1))
