@@ -21,8 +21,13 @@
   insertafter="context-stop" oncommand="com.appspot.instaright.start();"/>
 </popup>
 <statusbar id="status-bar">
+	<statusbarpanel id="instaright-bar">
 		<image id="status-icon" src="chrome://instaright/skin/instapaper_small.png" higth="20" width="20" onclick="window.open('chrome://instaright/content/option.xul','','chrome');"/>
+	</statusbarpanel>
 </statusbar>
+<hbox id="urlbar-icons">
+    <image id="instaright-image-button" insertbefore ="go-button" src="chrome://instaright/skin/instapaper_icon_16.png" class="urlbar-icon" onclick="com.appspot.model.startup();com.appspot.instaright.sendFromUrlbar();" tooltiptext="&instaright.send;"/>
+</hbox>
 
 </overlay>
 

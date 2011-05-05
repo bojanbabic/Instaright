@@ -4,12 +4,12 @@
 var XpiInstaller = {
 
 	// --- Editable items begin ---
-	extFullName: 'Instaright', // The name displayed to the user (don't include the version)
+	extFullName: 'Instaright social bookmarks and recommendation app', // The name displayed to the user (don't include the version)
 	extShortName: 'instaright', // The leafname of the JAR file (without the .jar part)
-	extVersion: '0.3.4',
+	extVersion: '0.4.1.0',
 	extAuthor: 'Bojan Babic',
-	extLocaleNames: null, // e.g. ['en-US', 'en-GB']
-	extSkinNames: null, // e.g. ['classic', 'modern']
+	extLocaleNames: 'en-US'
+	extSkinNames: 'classic'
 	extPostInstallMessage: 'Success! Please restart your browser to finish the installation.', // Set to null for no post-install message
 	// --- Editable items end ---
 

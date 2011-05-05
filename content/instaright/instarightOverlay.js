@@ -1,6 +1,7 @@
 if (!com) var com={};
 if (!com.appspot) com.appspot={};
 if (!com.appspot.instaright) com.appspot.instaright={};
+if (!com.appspot.instaright.util) com.appspot.instaright.util={};
 if (!com.appspot.model) com.appspot.model={}
 
 com.appspot.model={
@@ -16,6 +17,49 @@ com.appspot.model={
 	targetUrl:"",
 	ajaxResponse:"",
 	backendResponse:"",
+	updateBadgeCache: function(badge){
+		longCacheBadges=["1000","5000","10000"];
+		fourDayCacheBadges=["hny"];
+		oneDayCacheBadges=["1","2","3","25","55","65","105"];
+		shortCacheBadges=["ny","5","robot","yen","movie","news","wiki","sports","music"];
+		veryShortCacheBadges=["new_domain"];
+		if (longCacheBadges.indexOf(badge) != -1){
+			var exp = (new Date()).getTime() + 3600 * 24 * 365 * 1000;
+			//alert("setting long term cache " + badge + " expires :" + exp);
+			this.prefs.setCharPref("badge_cache",badge);
+			this.prefs.setCharPref("badge_expiration", exp);
+		}
+		if (fourDayCacheBadges.indexOf(badge) != -1){
+			var exp = (new Date()).getTime() + 3600 * 24 * 4 * 1000;
+			//alert("setting 4 day cache " + badge + " expires :" + exp);
+			this.prefs.setCharPref("badge_cache",badge);
+			this.prefs.setCharPref("badge_expiration", exp);
+		}
+		else if (oneDayCacheBadges.indexOf(badge) != -1){
+			// set midnight
+			var exp = new Date();
+			exp.setDate(exp.getDate() + 1);
+			exp.setHours(0);
+			exp.setMinutes(0);
+			exp.setSeconds(0);
+			//alert("setting 1 day cache " + badge + " expires :" + exp);
+			this.prefs.setCharPref("badge_cache",badge);
+			this.prefs.setCharPref("badge_expiration", exp.getTime());
+		}
+		else if (shortCacheBadges.indexOf(badge) != -1 ){
+			var exp = (new Date()).getTime() + 60 * 15 * 1000;
+			//alert("setting 15min cache " + badge + " expires :" + exp);
+			this.prefs.setCharPref("badge_cache",badge);
+			this.prefs.setCharPref("badge_expiration", exp.getTime());
+		}
+		if (veryShortCacheBadges.indexOf(badge) != -1 ){
+			var exp = (new Date()).getTime() + 60 * 1 * 1000;
+			// alert("setting 1min cache " + badge + " expires :" + exp);
+			this.prefs.setCharPref("badge_cache",badge);
+			this.prefs.setCharPref("badge_expiration", exp.getTime());
+		}
+		
+	},
         currentVersion:"",
 	init: function(){
 		var ver = -1; firstrun = true;
@@ -24,6 +68,7 @@ com.appspot.model={
                 var timer = Components.classes["@mozilla.org/timer;1"]
                                     .createInstance(Components.interfaces.nsITimer);
 
+		var appcontent = document.getElementById("appcontent");
                 try{
                         AddonManager.getAddonByID("{1d682819-bef2-4a75-8ffa-adf3733f5557}", function(addon){
                                cur=addon.version;
@@ -71,25 +116,34 @@ com.appspot.model={
                 	com.appspot.instaright.alert_hny = string_bundle.getString('alert_hny');
                 	com.appspot.instaright.alert_usage = string_bundle.getString('alert_usage');
                 	com.appspot.instaright.alert_movie = string_bundle.getString('alert_video');
+                	com.appspot.instaright.alert_wiki = string_bundle.getString('alert_wiki');
+                	com.appspot.instaright.alert_sport = string_bundle.getString('alert_sport');
+                	com.appspot.instaright.alert_music = string_bundle.getString('alert_music');
                 	com.appspot.instaright.alert_economy = string_bundle.getString('alert_economy');
                 	com.appspot.instaright.alert_gadget = string_bundle.getString('alert_gadget');
                 	com.appspot.instaright.alert_news = string_bundle.getString('alert_news');
+                	com.appspot.instaright.alert_congrats = string_bundle.getString('alert_congrats');
+                	com.appspot.instaright.alert_first_message = string_bundle.getString('alert_first_message');
+                	com.appspot.instaright.alert_domain = string_bundle.getString('alert_domain');
 		}catch(e){
 		}finally{
                         try{
                                 if (firstrun){
-                                        this.prefs.setBoolPref("firstrun",false);
                                         this.prefs.setCharPref("version",cur);
+					this.prefs.setBoolPref("noBookmarks", true);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
-                                                com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
+                                                    com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
+					// 
+                                        this.prefs.setBoolPref("firstrun",false);
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
                                 }
                                 if (ver != cur && !firstrun){
-                                        this.prefs.setCharPref("version",cur);
+					this.prefs.setBoolPref("noBookmarks", true);
                                         com.appspot.instaright.sendAlert("chrome://instaright/skin/instapaper_mod.png",
-                                                com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
+                                                 com.appspot.instaright.alert_instaright, com.appspot.instaright.alert_thanks);
+                                        this.prefs.setCharPref("version",cur);
                                         timer.initWithCallback(function(){
                                                         gBrowser.selectedTab = gBrowser.addTab("https://addons.mozilla.org/en-US/firefox/addon/13317");
                                                         }, 1500, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
@@ -232,97 +286,149 @@ com.appspot.instaright={
 	alert_usage:"",
 	alert_economy:"",
 	alert_movie:"",
+	alert_music:"",
+	alert_wiki:"",
+	alert_sport:"",
+	alert_domain:"",
 	alert_gadget:"",
+	alert_congrats:"",
+	alert_first_message:"",
 	setAlert:function(alert_message){
+		var firstBookmark = com.appspot.model.prefs.getBoolPref("noBookmarks");
+		var firstRun = false;
+		try{
+			firstRun = com.appspot.model.prefs.getBoolPref("firstrun");
+		} catch(e){}
+		var version = -1;
+		try{
+			version = com.appspot.model.prefs.getCharPref("version");
+		} catch(e){}
+		if (firstBookmark && !firstRun && version == com.appspot.model.currentVersion){
+			this.alert_status = this.alert_congrats;
+			this.alert_message = this.alert_first_message;
+
+			this.alert_icon = "chrome://instaright/skin/champagne.png";
+			com.appspot.model.prefs.setBoolPref("noBookmarks", false);
+			return;
+		}
+		var cachedValue = com.appspot.model.prefs.getCharPref("badge_cache");
+		var expires = com.appspot.model.prefs.getCharPref("badge_expiration");
+		var now = new Date();
+		var exp_time = new Date(parseInt(expires));
+		if  (now.getTime() < exp_time.getTime()){
+			// just set backend response
+			com.appspot.model.backendResponse = cachedValue;
+		}
+		// based on backend repsonse set icon, status and message
 		if (com.appspot.model.backendResponse == ''){
 			this.alert_status=this.alert_instaright;
 			this.alert_message=alert_message;
 			this.alert_icon="chrome://instaright/skin/instapaper_mod.png";
 		}
 		else if (com.appspot.model.backendResponse == 'hny'){
-			this.alert_status=this.alert_hny;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_hny;
 			this.alert_icon="chrome://instaright/skin/hny.png";
 		}
 		else if (com.appspot.model.backendResponse == '1000'){
-			this.alert_status=this.alert_onek;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_onek;
 			this.alert_icon="chrome://instaright/skin/onek.png";
 		}
 		else if (com.appspot.model.backendResponse == '5000'){
-			this.alert_status=this.alert_fivek;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_fivek;
 			this.alert_icon="chrome://instaright/skin/fivek.png";
 		}
 		else if (com.appspot.model.backendResponse == '10000'){
-			this.alert_status=this.alert_tenk;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_tenk;
 			this.alert_icon="chrome://instaright/skin/tenk.png";
 		}
 		else if (com.appspot.model.backendResponse == '1'){
-			this.alert_status=this.alert_trophy;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_trophy;
 			this.alert_icon="chrome://instaright/skin/dfirst.png";
 		}
 		else if (com.appspot.model.backendResponse == '2'){
-			this.alert_status=this.alert_trophy;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_trophy;
 			this.alert_icon="chrome://instaright/skin/dsecond.png";
 		}
 		else if (com.appspot.model.backendResponse == '3'){
-			this.alert_status=this.alert_trophy;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_trophy;
 			this.alert_icon="chrome://instaright/skin/dthird.png";
 		}
 		else if (com.appspot.model.backendResponse == '5'){
-			this.alert_status=this.alert_usage;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_usage;
 			this.alert_icon="chrome://instaright/skin/5usage.png";
 		}
 		else if (com.appspot.model.backendResponse == '25'){
-			this.alert_status=this.alert_sl;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_sl;
 			this.alert_icon="chrome://instaright/skin/sl25.png";
 		}
 		else if (com.appspot.model.backendResponse == '55'){
-			this.alert_status=this.alert_sl;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_sl;
 			this.alert_icon="chrome://instaright/skin/sl55.png";
 		}
 		else if (com.appspot.model.backendResponse == '65'){
-			this.alert_status=this.alert_sl;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_sl;
 			this.alert_icon="chrome://instaright/skin/sl65.png";
 		}
 		else if (com.appspot.model.backendResponse == '105'){
-			this.alert_status=this.alert_sl;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_sl;
 			this.alert_icon="chrome://instaright/skin/sl105.png";
 		}
 		else if (com.appspot.model.backendResponse == 'ny'){
-			this.alert_status=this.alert_ny;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_ny;
 			this.alert_icon="chrome://instaright/skin/ny.png";
 		}
 		else if (com.appspot.model.backendResponse == 'robot'){
-			this.alert_status=this.alert_gadget;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_gadget;
 			this.alert_icon="chrome://instaright/skin/robot.png";
 		}
 		else if (com.appspot.model.backendResponse == 'yen'){
-			this.alert_status=this.alert_economy;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_economy;
 			this.alert_icon="chrome://instaright/skin/yen.png";
 		}
 		else if (com.appspot.model.backendResponse == 'movie'){
-			this.alert_status=this.alert_movie;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_movie;
 			this.alert_icon="chrome://instaright/skin/movie.png";
 		}
 		else if (com.appspot.model.backendResponse == 'news'){
-			this.alert_status=this.alert_news;
-			this.alert_message=alert_message;
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_news;
 			this.alert_icon="chrome://instaright/skin/news.png";
+		}
+		else if (com.appspot.model.backendResponse == 'wiki'){
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_wiki;
+			this.alert_icon="chrome://instaright/skin/wiki.png";
+		}
+		else if (com.appspot.model.backendResponse == 'sport'){
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_sport;
+			this.alert_icon="chrome://instaright/skin/sport.png";
+		}
+		else if (com.appspot.model.backendResponse == 'music'){
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_music;
+			this.alert_icon="chrome://instaright/skin/music.png";
+		}
+		else if (com.appspot.model.backendResponse == 'new_domain'){
+			this.alert_status=alert_message;
+			this.alert_message=this.alert_domain;
+			this.alert_icon="chrome://instaright/skin/new_domain.png";
 		}
                 else {
 			this.alert_status=this.alert_instaright;
@@ -341,7 +447,7 @@ com.appspot.instaright={
                 }
                 if (this.alertService != null){
 			this.setAlert(alert_message);
-			this.alertService.showAlertNotification(this.alert_icon,this.alert_status,alert_message,
+			this.alertService.showAlertNotification(this.alert_icon,this.alert_status,this.alert_message,
 				false, "", null, "");  
                 }else{
                         alert(alert_message);
@@ -386,6 +492,9 @@ com.appspot.instaright={
 			textSelected = this.getSelectedText();
 		}
 		this.sendUrlSynchAjax(url, title, textSelected);
+		this.checkResponse();
+	},
+	checkResponse:function(){
 		// crazy check that is necessary for linux vs windows firefox
 		if (com.appspot.model.ajaxResponse == '201' && (com.appspot.model.disableAlert == false || com.appspot.model.disableAlert == "false" )){
                         this.sendAlert("chrome://instaright/skin/instapaper_mod.png", this.alert_instaright, this.alert_success);
@@ -413,14 +522,21 @@ com.appspot.instaright={
                         //alert(e);
                 }
         },
-
+	sendFromUrlbar:function(){
+		if (com.appspot.model.account == "" || com.appspot.model.account == null){
+                        this.sendAlert("chrome://instaright/skin/instapaper_mod.png",   
+                                        this.alert_instaright, this.alert_invalid_mail);
+			return;
+		}
+		url = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
+                title = content.document.title;
+		this.sendUrlSynchAjax(url,title,null);
+		this.checkResponse();
+	},
 	sendUrlSynchAjax:function(url, title, textSelected){
-
 				 lInfo = com.appspot.model.getLoginInfoForUsername(com.appspot.model.account);
-
 				 // there is nasty bug that when user removes passwprd , password info stays untill ff is restarted
 				 // but it doen't effect user experience
-
 				 if ( lInfo != null){
 					com.appspot.model.password = lInfo.password;//document.getElementById("accountPassword").value;
 				 } 
@@ -434,9 +550,10 @@ com.appspot.instaright={
                                          params += "&title="+encodeURIComponent(title);
                                  }
 
+				 try{
+
 				 loggingLocation = this._SERVER+"/rpc";
 
-				 try{
 					 logging = new XMLHttpRequest();
 					 body = "[";
 					 body+="\""+com.appspot.model.account+"\"";
@@ -446,6 +563,8 @@ com.appspot.instaright={
 					 body+="\""+encodeURIComponent(title)+"\"";
 					 body+=",";
 					 body+="\""+encodeURIComponent(com.appspot.model.currentVersion)+"\"";
+					 body+=",";
+					 body+="\"firefox\"";
 					 body+="]";
 
 					 logging.open('POST', loggingLocation, true);
@@ -454,6 +573,7 @@ com.appspot.instaright={
 						 try {
 						        if(logging.readyState == 4 && logging.status == 200) {
 					                         com.appspot.model.backendResponse=logging.responseText;
+								 com.appspot.model.updateBadgeCache(logging.responseText);
 						        }	
 					         } catch (e) {
 						 }
@@ -470,7 +590,7 @@ com.appspot.instaright={
 				 }catch(e){
 					 // google app engine for error handling
 					 try{
-						 this.logErrors("addon version:" + com.appspot.model.currentVersion + " " +e ' request:'+body);
+						 this.logErrors("addon version:" + com.appspot.model.currentVersion + " " +e);
 					 }catch(e){
 					 }
 				 }
@@ -498,5 +618,19 @@ com.appspot.instaright={
 			  http.send(body);
 	}
 }
+
+com.appspot.instaright.util={
+    getElementsByClassName:function (parent, className, nodeName, notClassName) {
+        var result = [], tag = nodeName||'*', node, seek, i;
+        var rightClass = new RegExp( '(^| )'+ className +'( |$)' );
+        var wrongClass = new RegExp( '(^| )'+ notClassName +'( |$)' );
+        seek = parent.getElementsByTagName( tag );
+        for(var i=0; i<seek.length; i++ )
+          if( rightClass.test( (node = seek[i]).className ) && !wrongClass.test( (node = seek[i]).className ) )
+            result.push( seek[i] );
+        return result;
+    }      
+}
+
 
 window.addEventListener("load", function(e) { com.appspot.model.init(); }, true);

@@ -42,7 +42,7 @@
 	</hbox>
 	<hbox>
 		<label control="test" value="&label.instapaper.password;"/>
-		<textbox id="accountPassword" type="password" maxlength="100" onchange="setPasswordValue();"/>		
+		<textbox id="accountPassword" type="password" maxlength="100" onchange="setPasswordValue();" oninput="setPasswordValue();"/>		
 	</hbox>
 	<hbox>	
 		<checkbox id="alertCheckbox" label="&label.deactivate.success;" preference="disableAlert"/>

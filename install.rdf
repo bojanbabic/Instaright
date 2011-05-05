@@ -7,8 +7,8 @@ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
 		<em:id>{1d682819-bef2-4a75-8ffa-adf3733f5557}</em:id>
 		<em:name>Instaright!</em:name>		
-		<em:version>0.4.0.4</em:version>
-		<em:description>Instapaper links on right-click.</em:description>
+		<em:version>0.4.1.1</em:version>
+		<em:description>Instaright realtime bookmarks and recommendation engine.</em:description>
 		<em:creator>Bojan Babic</em:creator>
 		<em:homepageURL>http://bojanbabic.blogspot.com</em:homepageURL>
 		<em:aboutURL>chrome://instaright/content/about.xul</em:aboutURL>
