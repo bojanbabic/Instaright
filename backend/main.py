@@ -75,8 +75,6 @@ class MainHandler(webapp.RequestHandler):
 
                         cachedBadge = memcache.get('badge_'+user)
                         logging.info('looking for badge %s' % 'badge_'+user)
-			self.response.out.write("new_domain")
-			return
                         if cachedBadge is not None:
                                 logging.info('response badge %s' %cachedBadge)
                                 self.response.out.write(cachedBadge)

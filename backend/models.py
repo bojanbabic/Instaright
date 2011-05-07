@@ -269,6 +269,7 @@ class UserDetails(db.Model):
 
 class Links(db.Model):
         url=db.TextProperty()
+        domain=db.TextProperty()
         all_score=db.IntegerProperty()
         influence_score = db.IntegerProperty()
         instapaper_count=db.IntegerProperty()
@@ -317,3 +318,7 @@ class UserSessionFE(db.Model):
 	last_updatetime = db.DateTimeProperty(auto_now_add = True)
 	active = db.BooleanProperty()
 	user_details = db.ReferenceProperty(UserDetails)
+class CategoryDomains(db.Model):
+	category=db.StringProperty()
+	domains = db.TextProperty()
+	

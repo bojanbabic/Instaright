@@ -1,10 +1,16 @@
-import os, urllib2, logging
+import os, urllib2, logging, sys
 from google.appengine.ext import webapp, db
+from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
+from google.appengine.api.labs import taskqueue
 
-from models import Links, SessionModel
+from models import Links, SessionModel, CategoryDomains
 from utils import StatsUtil, LinkUtil
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
+from link_info import LinkHandler
 
 class LinkSortHandler(webapp.RequestHandler):
         def get(self):
@@ -93,12 +99,78 @@ class ShortLinkHandler(webapp.RequestHandler):
                 s.domain = domain
                 s.put()
                 util.updateStats(s)
+
+class LinkDomainCategoriesBatch(webapp.RequestHandler):
+	def post(self):
+		domain = self.request.get('domain',None)
+		if domain is None:
+			logging.info('no domain in request')
+		logging.info('fetching categories for domain %s' % domain)
+		memcache_key='domain_lookup_%s' % domain
+		if memcache.get(memcache_key) is None:
+			logging.info('domain already processed skipping')
+			return
+		else:
+                        next_week=datetime.datetime.now().date() + datetime.timedelta(days=7)
+                        next_week_ts=time.mktime(next_week.timetuple())
+			memcache.set(memcache_key,1,time=next_week_ts)
+		sessions = SessionModel.gql('WHERE  domain = :1', domain).fetch(1000)
+		for s in sessions:
+			logging.info('task: determine categories for url %s ( domain: %s)' % (s.url, domain))
+			taskqueue.add(queue_name='category-queue', url='/link/category/task', params={'url':s.url, 'domain':domain})
+
+class LinkDomainCategoriesTask(webapp.RequestHandler):
+	def post(self):
+		url = self.request.get('url', None)
+		domain = self.request.get('domain', None)
+		if url is None:
+			logging.info('no url giving up')
+			return
+		link = None
+		try:
+			link = Links.gql('WHERE url = :1' , url).get()
+		except:
+			logging.info('error while fetching url from db')
+		if link is None:
+			link= Links()
+		if link.categories is None:
+			lh = LinkHandler()
+			link=lh.delicious_data(url)	
+			if link is None or link.categories is None:
+				logging.info('no categories for link %s' % url)
+				return
+		cat_dict = eval(link.categories)
+		if len(cat_dict) == 0:
+			logging.info('no categories for link %s' % url)
+			return
+		for cat, cnt in cat_dict.iteritems():
+			catDomains=CategoryDomains.gql('WHERE category = :1' , cat).get()
+			if catDomains is None:
+				logging.info('new category %s , init domain %s' % (cat, domain))
+				catDomains = CategoryDomains()
+				catDomains.category = cat
+				catDomains.domains = domain
+				catDomains.put()
+			else:
+				domainsArray = catDomains.domains.split(',')
+				if domain in domainsArray:
+					logging.info('category %s already contains domain %s' % ( cat, domain))
+				else:
+					if domainsArray is None:
+						domainsArray = []
+					domainsArray.append(domain)
+					catDomains.domains = ','.join(domainsArray)
+					logging.info('updated category %s' % catDomains.domains)
+					catDomains.put()
+		
 def main():
         run_wsgi_app(application)
 
 application=webapp.WSGIApplication(
                 [
                         ('/link/stats',LinkSortHandler),
+                        ('/link/category/task',LinkDomainCategoriesTask),
+                        ('/link/category/task/batch',LinkDomainCategoriesBatch),
                         ('/link/transform/feed',LinkTransformHandler),
                         ('/link/transform/short',ShortLinkHandler),
                         ],debug=True

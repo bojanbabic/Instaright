@@ -1,3 +1,4 @@
+total_storage_limit: 300M
 queue:
 - name: default
   rate: 1/m
@@ -40,4 +41,7 @@ queue:
   bucket_size: 10
 - name: link-queue
   rate: 50/s
+  bucket_size: 10
+- name: category-queue
+  rate: 10/s
   bucket_size: 10

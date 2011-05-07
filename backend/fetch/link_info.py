@@ -19,9 +19,12 @@ class LinkHandler(webapp.RequestHandler):
 	def __init__(self):
 		config=ConfigParser.ConfigParser()
 		config.read('../properties/general.ini')
-		self.fb_factor=int(config.get('social', 'fb_factor'))
-		self.tw_factor=int(config.get('social', 'tw_factor'))
-		self.tw_margin=int(config.get('social', 'tw_margin'))
+		try:
+			self.fb_factor=int(config.get('social', 'fb_factor'))
+			self.tw_factor=int(config.get('social', 'tw_factor'))
+			self.tw_margin=int(config.get('social', 'tw_margin'))
+		except:
+			logging.error('properties propblem on path %s' % os.path.join(os.path.dirname(__file__),'properties/general.ini'))
 
         def post(self):
                 count = self.request.get('count',None)
@@ -56,6 +59,7 @@ class LinkHandler(webapp.RequestHandler):
                         existingLink.categories=link.categories
                         existingLink.delicious_count=link.delicious_count
                         existingLink.facebook_like=link.facebook_like
+			existingLink.domain = link.domain
                         #if increase in score is more then 20%
                         if  existingLink.overall_score == 0 or link.overall_score  / existingLink.overall_score >= 1.2:
                                 existingLink.shared=False
@@ -79,8 +83,29 @@ class LinkHandler(webapp.RequestHandler):
         def get(self):
                 self.response.out.write('get')
 
-        def getAllData(self,url, count):
+	def delicious_data(self, url):
+                delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url=%s&type=json' % url
+                logging.info('trying to fetch delicious info %s ' % delicious_api)
+                json =self.getData(delicious_api)
+		link=Links()
+                if json:
+                        try:
+                                if not link.title:
+                                        link.title = json[0]['title']
+                                link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
+                                link.delicious_count = Cast.toInt(json[0]['total_posts'],0)
+				logging.info('delicious count %s' % link.delicious_count)
+                        except KeyError:
+                                e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
+                                logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
+		return link
+
+        def getAllData(self,url, count=0):
+
+		domain = StatsUtil.getDomain(url)
+		logging.info('from %s domain %s' %( url, domain))
 		url=urllib2.quote(url.encode('utf-8'))
+
                 topsy_api='http://otter.topsy.com/stats.json?url=%s' % url
                 tweet_meme_api='http://api.tweetmeme.com/url_info.json?url=%s' %url
                 delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url=%s&type=json' % url
@@ -99,6 +124,8 @@ class LinkHandler(webapp.RequestHandler):
 		alternate_facebook_share_score = None
 		alternate_facebook_like_score = None
 		alternate_su_score = None
+		
+		taskqueue.add(queue_name='category-queue', url='/link/category/task/batch', params={'domain':domain})
 
 		try:
                 	link = Links.gql('WHERE url = :1', url).get()
@@ -106,8 +133,9 @@ class LinkHandler(webapp.RequestHandler):
 			logging.info('url property too long')
                 if link is None:
                         link = Links()
+			link.domain = domain
                         link.instapaper_count = Cast.toInt(count,0)
-                        link.url = url
+                        link.url = urllib2.unquote(url).decode('utf-8')
                         link.redditups = 0
                         link.redditdowns = 0
                         link.tweets = 0
@@ -117,6 +145,7 @@ class LinkHandler(webapp.RequestHandler):
                         link.shared = False
                 else:
                         link.date_updated = datetime.datetime.now().date()
+			link.domain = domain
 
 		#relaxation 
 		link.relaxation = 0

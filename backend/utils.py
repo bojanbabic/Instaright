@@ -198,8 +198,6 @@ class LinkUtil:
                 linkStats.put()
 
 class BadgeUtil:
-        global DOMAIN_SPECIFIC_BADGES
-        DOMAIN_SPECIFIC_BADGES=['nytimes.com', 'newyorker.com','youtube.com','vimeo.com','blip.tv','economist.com','finance.yahoo.com','ft.com','foxbusiness.com','lifehacker.com','gizmodo.com', 'engadget.com','news.google.com','guardian.co.uk', 'reuters.com', 'imdb.com', 'spiegel.de','nymag.com' , 'yahoo.news.com', 'howtogeek.com','business.nikkeibp.co.jp', 'time.com', 'online.wsj.com']
 
         @staticmethod
         def getBadger(user, url, domain, version):
@@ -208,9 +206,10 @@ class BadgeUtil:
                if trophyBadger.getBadge() is not None:
                         logging.info('initializing trophy badger')
                         return trophyBadger
-               if domain in DOMAIN_SPECIFIC_BADGES and version is not None:
+	       siteSpecBadge=SiteSpecificBadge(user, url, domain, version)	
+               if version is not None and siteSpecBadge.getBadge() is not None:
                         logging.info('initializing site specific badger: %s' %domain)
-                        return SiteSpecificBadge(user, url, domain, version)
+                        return 
                speedLimitBadger=SpeedLimitBadger(user, url, domain, version)
                clubBadger=ClubBadger(user, url, domain, version)
                if speedLimitBadger.getBadge() is not None:
@@ -219,13 +218,13 @@ class BadgeUtil:
                if clubBadger.getBadge() is not None:
                         logging.info('initializing club badger')
                         return clubBadger
-               usageBadge=ContinuousUsageBade(user, url, domain, version)
+               usageBadge=ContinuousUsageBadge(user, url, domain, version)
                if usageBadge.getBadge() is not None:
                         logging.info('initializing usage badger')
                         return usageBadge
                return None
                 
-class ContinuousUsageBade:
+class ContinuousUsageBadge:
         def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
@@ -277,80 +276,137 @@ class SpeedLimitBadger:
                logging.info('speed limit badge %s: not initialized' %self.user)
                return None
                 
-class SiteSpecificBadge:
+class SiteSpecificBadge(object):
+	newsProps=ConfigParser.ConfigParser()
+	movieProps=ConfigParser.ConfigParser()
+	nyProps=ConfigParser.ConfigParser()
+	economyProps=ConfigParser.ConfigParser()
+	gadgetProps=ConfigParser.ConfigParser()
+	wikiProps=ConfigParser.ConfigParser()
+	sportProps=ConfigParser.ConfigParser()
         def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
                 self.domain = domain
                 self.version=version
+		#read domain lists
+		self.newsProps.read('properties/badges/news/news.properties')
+		self.newsDomains=self.newsProps.get('news','domains').split(',')
+		self.news_tresshold=int(self.newsProps.get('news','tresshold'))
+
+		self.movieProps.read('properties/badges/movie/movie.properties')
+		self.movieDomains=self.movieProps.get('movie','domains').split(',')
+		self.movie_tresshold=int(self.movieProps.get('movie','tresshold'))
+
+		self.nyProps.read('properties/badges/ny/ny.properties')
+		self.nyDomains=self.nyProps.get('ny','domains').split(',')
+		self.ny_tresshold=int(self.nyProps.get('ny','tresshold'))
+
+		self.economyProps.read('properties/badges/economy/economy.properties')
+		self.economyDomains=self.economyProps.get('economy','domains').split(',')
+		self.economy_tresshold=int(self.economyProps.get('economy','tresshold'))
+
+		self.gadgetProps.read('properties/badges/gadget/gadget.properties')
+		self.gadgetDomains=self.gadgetProps.get('gadget','domains').split(',')
+		self.gadget_tresshold=int(self.gadgetProps.get('gadget','tresshold'))
+
+		self.wikiProps.read('properties/badges/wiki/wiki.properties')
+		self.wikiDomains=self.wikiProps.get('wiki','domains').split(',')
+		self.wiki_tresshold=int(self.wikiProps.get('wiki','tresshold'))
+
+		self.sportProps.read('properties/badges/sport/sport.properties')
+		self.sportDomains=self.sportProps.get('sport','domains').split(',')
+		self.sport_tresshold=int(self.sportProps.get('sport','tresshold'))
+
         def getBadge(self):
-                if self.domain == 'nytimes.com' or self.domain == 'newyorker.com' or self.domain == 'nymag.com' or self.domain == 'nybooks.com':
+                if self.domain in self.nyDomains:
                         return self.getnytbadge()
-                if (self.domain == 'youtube.com' or self.domain == 'vimeo.com' or self.domain == 'blip.tv' or self.domain == 'imdb.com' or self.domain == 'netflix.com' or self.domain == 'movies.netflix.com') and Version.validateVersion(self.version, 'movie'):
+                if self.domain in self.movieDomains:
                         return self.getmoviebadge()
-                if (self.domain == 'economist.com' or self.domain == 'ft.com' or self.domain == 'finance.yahoo.com' or self.domain == 'foxbusiness.com' or self.domain == 'business.nikkeibp.co.jp') and Version.validateVersion(self.version, 'yen'): 
+                if self.domain in self.economyDomains:
                         return self.geteconomybadge()
-                if (self.domain == 'lifehacker.com' or self.domain == 'gizmodo.com' or self.domain == 'engadget.com' or self.domain == 'howtogeek.com') and Version.validateVersion(self.version, 'robot'):
+                if self.domain in self.gadgetDomains:
                         return self.getgadgetbadge()
-                if (self.domain == 'news.google.com' or  self.domain == 'yahoo.news.com' or self.domain == 'guardian.co.uk' or self.domain == 'reuters.com' or self.domain == 'spiegel.de' or self.domain == 'time.com' or self.domain == 'online.wsj.com' or self.domain == 'cnn.com') and Version.validateVersion(self.version, 'news'):
+                if self.domain in self.sportDomains:
+                        return self.getsportbadge()
+                if self.domain in self.wikiDomains:
+                        return self.getwikibadge()
+                if self.domain in self.newsDomains:
                         return self.getnewsbadge()
                 else:
                         logging.info('no domain specific badge initialized or no addon version')
                         return None
         def getnytbadge(self):
-               ny_tresshold=8
                midnight = datetime.datetime.now().date()
-               nyTotal=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'nytimes.com', 'newyorker.com', midnight, self.user).count()
+               nyTotal=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.nyDomains, midnight, self.user).count()
                logging.info('site specific badger(NY): fetched stats %s' % nyTotal)
-               if nyTotal >= ny_tresshold:
+               if nyTotal >= self.ny_tresshold:
                         logging.info('setting ny badge for user %s ' %self.user)
                         return 'ny'
                else:
-                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, ny_tresshold, nyTotal))
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.ny_tresshold, nyTotal))
                         return None
         def getmoviebadge(self):
-               movie_tresshold=6
                midnight = datetime.datetime.now().date()
-               currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'youtube.com', 'vimeo.com', midnight, self.user).count()
+               currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.movieDomains, midnight, self.user).count()
                logging.info('site specific badger(movie): fetched stats %s' % currentCount)
-               if currentCount >= movie_tresshold:
+               if currentCount >= self.movie_tresshold:
                         logging.info('setting movie badge for user %s ' %self.user)
                         return 'movie'
                else:
-                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, movie_tresshold, currentCount))
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.movie_tresshold, currentCount))
                         return None
         def geteconomybadge(self):
-               economy_tresshold=5
                midnight = datetime.datetime.now().date()
-               currentCount=SessionModel.gql('where domain = :1 and date >= :2 and instaright_account = :3', self.domain, midnight, self.user).count()
+               currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.economyDomains, midnight, self.user).count()
                logging.info('site specific badger(economy): fetched stats %s' % currentCount)
-               if currentCount >= economy_tresshold:
+               if currentCount >= self.economy_tresshold:
                         logging.info('setting economy badge for user %s ' %self.user)
                         return 'yen'
                else:
-                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, economy_tresshold, currentCount))
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.economy_tresshold, currentCount))
                         return None
         def getgadgetbadge(self):
-               gadget_tresshold=8
                midnight = datetime.datetime.now().date()
-               currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'lifehacker.com', 'gizmodo.com', midnight, self.user).count()
+               currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.gadgetDomains, midnight, self.user).count()
                logging.info('site specific badger(gadget): fetched stats %s' % currentCount)
-               if currentCount >= gadget_tresshold:
+               if currentCount >= self.gadget_tresshold:
                         logging.info('setting gadget badge for user %s ' %self.user)
                         return 'robot'
                else:
-                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, gadget_tresshold, currentCount))
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.gadget_tresshold, currentCount))
                         return None
         def getnewsbadge(self):
-               news_tresshold=8
                midnight = datetime.datetime.now().date()
-               currentCount=SessionModel.gql('where domain in ( :1 , :2) and date >= :3 and instaright_account = :4', 'news.google.com', 'guardian.co.uk', midnight, self.user).count()
+               currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.newsDomains, midnight, self.user).count()
                logging.info('site specific badger(news): fetched stats %s' % currentCount)
-               if currentCount >= news_tresshold:
+               if currentCount >= self.news_tresshold:
                         logging.info('setting news badge for user %s ' %self.user)
                         return 'news'
                else:
-                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, news_tresshold, currentCount))
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.news_tresshold, currentCount))
+                        return None
+
+        def getwikibadge(self):
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.wikiDomains, midnight, self.user).count()
+               logging.info('site specific badger(wiki): fetched stats %s' % currentCount)
+               if currentCount >= self.wiki_tresshold:
+                        logging.info('setting wiki badge for user %s ' %self.user)
+                        return 'news'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.wiki_tresshold, currentCount))
+                        return None
+
+        def getsportbadge(self):
+               midnight = datetime.datetime.now().date()
+               currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.sportDomains, midnight, self.user).count()
+               logging.info('site specific badger(sport): fetched stats %s' % currentCount)
+               if currentCount >= self.sport_tresshold:
+                        logging.info('setting news badge for user %s ' %self.user)
+                        return 'sport'
+               else:
+                        logging.info('for user %s still tresshold of %s still not reached %s' %(self.user, self.sport_tresshold, currentCount))
                         return None
 
 class ClubBadger:
