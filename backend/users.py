@@ -152,9 +152,9 @@ class UserHandler(webapp.RequestHandler):
 				try:
                                 	setattr(user_detail, service_name, m['profile_url'])
 					logging.info('service %s profile %s' % (service_name, m['profile_url']))
-                                        if service_name == 'twitter' and not user_detail.request_send:
+                                        if service_name == 'twitter' and not user_detail.twitter_request_sent:
                                                 # send twitter request and need to put since we need key for follow
-						user_detail.twitter_request_send=True
+						user_detail.twitter_request_sent=True
 						user_detail.put()
                                                 taskqueue.add(url='/util/twitter/follow/'+str(user_detail.key()), queue_name='twitter-follow')
 				except:

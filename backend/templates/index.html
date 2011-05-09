@@ -7,7 +7,6 @@
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
                 <link rel="stylesheet" type="text/css" href="css/style.css" />
                 <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
-                <!--script src='/_ah/channel/jsapi'></script-->
                 <script src='static/javascript/channel.js'></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -221,22 +220,24 @@ function send_invite(){
 </script>
 
 
-<div id="header" class="container_24">
-        <div style="text-align: right;">
-                <ul> 
+<div class="wrapper"> 
+	<div id="nav" >
+		<div class="center clearfix">
+			<h5><a href="/">Instaright - Perfect information for you in realtime.</a></h5>
+                <ul class="menu borderless clearfix"> 
                         {% if user %}
-                        <li>Hi {{ user }}</li>
-			<li><a href="{{ logout_url }}">Say byebye!</a></li>
+			<li><a href="javascript:alert('Dashboard soon available!');"><span>{{ user }}</span></a></li>
+			<li><a href="javascript:alert('Dashboard soon available!');"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+			<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
                         {% else %}
-                        <li><a id="btn_login" href="/account" title="Login">introduce yourself</a></li>
+			<li><a id="btn_login" href="/account" title="Login"><span>Login</span></a></li>
                         {% endif %}
                         <li>
                         </li>
 
                 </ul>
-        </div>
-</div>
-<div class="wrapper"> 
+		</div>
+	</div>
         <div id="content" class="container_24"> 
                 <div id="left_col" class="grid_18"> 
                         <div class="left_box_top"> 

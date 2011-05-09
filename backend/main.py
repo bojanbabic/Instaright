@@ -1,13 +1,10 @@
 import sys, os, urllib2, datetime, logging, cgi, uuid
 import pubsubhubbub_publish as pshb
 
-from utils import StatsUtil
-from utils import LoginUtil
+from utils import StatsUtil,LoginUtil
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
-#from google.appengine.api import users
-#from google.appengine.api import channel 
 from google.appengine.api.labs import taskqueue
 from google.appengine.api import memcache, channel, users, datastore_errors
 from google.appengine.ext import db
@@ -16,6 +13,7 @@ from google.appengine.ext.db import BadValueError
 from google.appengine.runtime import apiproxy_errors
 
 from models import UserSessionFE, SessionModel, Links, UserDetails
+from generic_handler import GenericWebHandler
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
@@ -149,13 +147,15 @@ class ErrorHandling(webapp.RequestHandler):
                         e,e0 = sys.exc_info()[0], sys.exc_info()[1]
                         logging.error('weird:ERROR while hadling ERROR for %s: ' % self.request.body)
 
-class IndexHandler(webapp.RequestHandler):
+class IndexHandler(GenericWebHandler):
 	def get(self):
-
+                #redirect from appengine domain
+                self.redirect_perm()
 		uu = LoginUtil()
 		userSession = None
 		screen_name=None
 		auth_service=None
+                avatar=None
 		used_data_from_session = False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
@@ -176,6 +176,7 @@ class IndexHandler(webapp.RequestHandler):
 				else:
 					user_data = ud.getUserInfo()
 					screen_name = user_data["screen_name"]
+                                        avatar = user_data["avatar"]
 					user_data_from_session = True
 					logging.info('using screen name %s from session %s' %(screen_name, user_uuid))
 			# sanity check
@@ -200,6 +201,7 @@ class IndexHandler(webapp.RequestHandler):
 		else:
 			user_details = uu.getUserDetails(self)
 			screen_name = user_details["screen_name"]
+                        avatar = user_details["avatar"]
 			auth_service = user_details["auth_service"]
 			user_details_key = user_details["user_details_key"]
 
@@ -213,9 +215,11 @@ class IndexHandler(webapp.RequestHandler):
 		userMessager = UserMessager(str(user_uuid))
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
+                if avatar is None:
+                        avatar='/static/images/noavatar.png'
 		template_variables = []
-                template_variables = {'user':screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None}
-		path= os.path.join(os.path.dirname(__file__), 'index.html')
+                template_variables = {'user':screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':avatar}
+		path= os.path.join(os.path.dirname(__file__), 'templates/index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
 

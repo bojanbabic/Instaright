@@ -35,7 +35,7 @@ class AccountHandler(webapp.RequestHandler):
                 self.response.out.write(template.render(path,template_variables))
         else:
                 template_variables = {}
-                path = os.path.join(os.path.dirname(__file__), 'index.html')
+                path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
                 self.response.headers["Contant-Type"]= "text/html; charset=utf-8"
                 self.response.out.write(template.render(path,template_variables))
 

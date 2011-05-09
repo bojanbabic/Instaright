@@ -526,6 +526,7 @@ class LoginUtil():
         	twitter_user = OAuthClient('twitter', request_handler)
         	logged=False
         	screen_name=None
+                avatar=None
 		auth_service=None
 		# used to connect user details with session
 		user_details_key=None
@@ -541,6 +542,8 @@ class LoginUtil():
 				existing_user = UserDetails()
 				existing_user.mail=google_user.email()
 				existing_user.put()
+                        elif existing_user.avatar is not None:
+                                avatar = existing_user.avatar
 			auth_service='google'
 			user_details_key=existing_user.key()
         	elif twitter_user.get_cookie():
@@ -550,6 +553,7 @@ class LoginUtil():
                 		followers = twitter_user.get('/followers/ids')
                 		screen_name = "%s" % info['screen_name']
 				profile_image_url = "%s" %info['profile_image_url']
+                                avatar=profile_image_url
 				existing_user = UserDetails.gql('WHERE twitter = \'http://twitter.com/%s\'' % screen_name).get()
 				if existing_user is None:
 					logging.info('new twitter user login %s' % screen_name)
@@ -565,6 +569,8 @@ class LoginUtil():
 					existing_user.twitter_following=simplejson.dumps(following)
 					if existing_user.avatar is None:
 						existing_user.avatar = profile_image_url
+                                        else:
+                                                avatar = existing_user.avatar
 					existing_user.put()
 				auth_service='twitter'
 				user_details_key=existing_user.key()
@@ -578,6 +584,7 @@ class LoginUtil():
 				profile_id=profile["id"]
                 		friends = graph.get_connections("me", "friends")
                 		screen_name = profile["name"]
+                                avatar='http://graph.facebook.com/%s/picture?typequare' % profile_id
 				existing_user=UserDetails.gql('WHERE facebook = \'%s\'' % profile_link).get()
 				if existing_user is not None:
 					logging.info('existing facebook logging %s' % profile_link)
@@ -586,7 +593,9 @@ class LoginUtil():
 					existing_user.facebook_profile=profile["name"]
 					existing_user.facebook_id=profile_id
 					if existing_user.avatar is None:
-						existing_user.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
+						existing_user.avatar = avatar
+                                        else:
+                                                avatar = existing_user.avatar
 					existing_user.put()
 				else:
 					logging.info('new facebook logging %s' % profile_link)
@@ -595,7 +604,7 @@ class LoginUtil():
 					existing_user.facebook_profile=profile["name"]
 					existing_user.facebook_friends=simplejson.dumps(friends)
 					existing_user.facebook_id=profile_id
-					existing_user.avatar = 'http://graph.facebook.com/%s/picture?typequare' % profile_id
+					existing_user.avatar = avatar
 					existing_user.put()
 				auth_service='facebook'
 				user_details_key=existing_user.key()
@@ -614,7 +623,7 @@ class LoginUtil():
 			request_handler.response.headers.add_header('Set-Cookie', 'user_logged_out=%s; expires=%s; path=/' %( '0', exp_format))
 			
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
-		user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key}
+                user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar}
 		return user_details
 
 class TaskUtil(object):
