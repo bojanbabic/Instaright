@@ -99,6 +99,7 @@ class MainTaskHandler(webapp.RequestHandler):
 		domain=StatsUtil.getDomain(url)
                 title = StatsUtil.getTitle(args)
                 version = StatsUtil.getVersion(args)
+                client = StatsUtil.getClient(args)
 
 		try:
 	                model = SessionModel()
@@ -112,6 +113,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 	model.feed_link = None
                 	model.title = title
                 	model.version = version
+                        model.client = client
 			while True:
 				timeout_ms= 100
 				try:

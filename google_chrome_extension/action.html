@@ -1,0 +1,22 @@
+<style>
+body {
+  min-width:387px;
+  overflow-x:hidden;
+}
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'></script>
+<script src='js/action.js'></script>
+<script src='js/instaright.js'></script>
+<script>
+	$(document).ready(function(){
+		chrome.tabs.getSelected(null, function(tab){	
+			getUrl(tab);
+		});
+		function getUrl(tab){
+			try{
+				$('body').append('p').html("<b>Waiting for response ...</b>");
+				sendToService(null, tab, false);
+			} catch(e){alert(e);}
+		}
+	});
+</script>

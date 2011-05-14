@@ -1,0 +1,38 @@
+<html>
+	<script src='js/options.js'></script>
+	<link href="css/options.css" rel="stylesheet" type="text/css" />
+	<body onload="restoreOptions()">
+		<div id="content">
+			<div class="left_box_top">
+				<h2 class="round_title"><span>Instaright options</span></h2>
+			</div>
+			<div class="left_box_mid">
+		
+				<div><p>Please enter your credentials belove</p></div>
+				<div><label for="instapaper_account">Instapaper account</label><input type="text" id="instapaper_account" name="instapaper_account" /></div>
+				<div><label for="instapaper_password">Instapaper password</label><input type="password" id="instapaper_password" name="instapaper_password" /></div>
+				<div class="save_button">
+					<button onclick="saveOptions()">Save</button>
+					<div id="status"/>
+				</div>
+			</div>
+		</div>
+		<div class="soc_network">
+			<h2 class="title"><span>Instaright on Social Networks</span></h2>
+			<br>
+			<div>
+			<p><a href="http://twitter.com/instaright">@instaright</a></p>
+			<p><a href="http://facebook.com/instaright">facebook.com/instaright</a></p>
+		</div>
+		</div>
+		<div class="thanks">
+		<p>Thanks for supporting continuous support of this extension</p> 
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="MUZRSUWBUWMUA">
+			<input type="image" src="https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+			<img alt="" border="0" src="https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/scr/pixel.gif" width="1" height="1">
+		</form>
+		</div>
+	</body>
+</html>

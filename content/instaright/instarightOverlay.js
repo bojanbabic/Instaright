@@ -95,8 +95,6 @@ com.appspot.model={
                         return;
                 }
 		try{
-			ver = this.prefs.getCharPref("version");
-			firstrun = this.prefs.getBoolPref("firstrun");
                 	var string_bundle = document.getElementById("instaright_bundle");
 	                com.appspot.instaright.alert_instaright = string_bundle.getString('alert_instaright');
                 	com.appspot.instaright.alert_invalid_mail = string_bundle.getString('alert_invalid_email');
@@ -125,6 +123,8 @@ com.appspot.model={
                 	com.appspot.instaright.alert_congrats = string_bundle.getString('alert_congrats');
                 	com.appspot.instaright.alert_first_message = string_bundle.getString('alert_first_message');
                 	com.appspot.instaright.alert_domain = string_bundle.getString('alert_domain');
+			firstrun = this.prefs.getBoolPref("firstrun");
+			ver = this.prefs.getCharPref("version");
 		}catch(e){
 		}finally{
                         try{
@@ -261,7 +261,8 @@ com.appspot.model={
 }
 
 com.appspot.instaright={
-	_SERVER:"http://instaright.appspot.com",
+	_SERVER:"http://49.latest.instaright.appspot.com",
+	//_SERVER:"http://instaright.appspot.com",
 	//_SERVER:"http://localhost:8080",
         alertService:null,
         alert_instaright:"",

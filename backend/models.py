@@ -12,6 +12,7 @@ class SessionModel(db.Model):
 	domain=db.StringProperty()
         title=db.StringProperty()
         version=db.StringProperty()
+        client = db.StringProperty()
 	def count_all(self):
 		count = 0
 		query = SessionModel.all().order('__key__')

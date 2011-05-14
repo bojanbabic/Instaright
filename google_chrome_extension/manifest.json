@@ -1,0 +1,24 @@
+{
+	"name":"Instaright",
+	"version":"0.1",
+	"description":"Instapaper addon for Chrome",
+	"browser_action":{
+		"default_icon":"img/instaright.png",
+		"popup":"action.html"
+	},
+	"options_page":"options.html",
+	"permissions":[
+		"http://instaright.appspot.com/",
+		"http://www.instapaper.com/",
+		"tabs",
+		"contextMenus",
+		"notifications",
+		"background"
+	],
+	"icons":{
+		"16":"img/instaright_16.png",
+		"48":"img/instaright_48.png",
+		"128":"img/instaright_48.png"
+	},
+	"background_page": "background.htm"
+}

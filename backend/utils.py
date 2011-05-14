@@ -1,5 +1,5 @@
 import urlparse, urllib,logging, urllib2, datetime, sys, os, ConfigParser
-from google.appengine.api import memcache
+from google.appengine.api import memcache, mail
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
 from google.appengine.api import users
@@ -49,6 +49,15 @@ class StatsUtil(object):
                         e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
                         logging.info('version error: %s ::: %s' %(e0, e1))
                 return version
+        @classmethod
+        def getClient(cls, args):
+                client = "firefox"
+                try:
+                        client = urllib2.unquote(args[4])
+                except:
+                        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                return client
+
 
         @classmethod
         def checkUrl(cls, args):
@@ -623,6 +632,9 @@ class LoginUtil():
 			request_handler.response.headers.add_header('Set-Cookie', 'user_logged_out=%s; expires=%s; path=/' %( '0', exp_format))
 			
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
+                if screen_name is not None:
+                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %( screen_name , avatar, avatar), body='Awesome new user signed up: %s avatar %s' %( screen_name, avatar))
+                                        
                 user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar}
 		return user_details
 
