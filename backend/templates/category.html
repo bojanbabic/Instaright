@@ -8,6 +8,7 @@
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
                 <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
                 <script src='../static/javascript/channel.js'></script>
+                <script src='../static/javascript/invite.js'></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
                 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -43,88 +44,58 @@
 			});
 		});
 		</script>
-    <div id="fb-root"></div>
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({appId: '180962951948062', status: true, cookie: true,
-                 xfbml: true});
-      };
-      (function() {
-        var e = document.createElement('script');
-        e.type = 'text/javascript';
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-        e.async = true;
-        document.getElementById('fb-root').appendChild(e);
-      }());
-    </script>
-                 <script type="text/javascript" charset="utf-8">
-                         if( !window.XMLHttpRequest ) XMLHttpRequest = function()
-{
-        try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
-        try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
-        try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
-        try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
-        throw new Error("Could not find an XMLHttpRequest alternative.")
-};
-var channel_id= '{{ channel_id }}';
-var channel = new goog.appengine.Channel(channel_id);
-var socket = channel.open();
-var maxElementsInStream=4;
-var maxHotLinks = 3;
-socket.onopen = function(){
-        //alert('connected');
-}
-socket.onmessage = function(evt){
-        try{
-                feed_json_update = JSON.parse(evt.data);
-                updateDisplayEntry(feed_json_update, stream);
-        } catch(e){
-                //alert('eee:'+e);
-        } 
-};
-
-
-$(document).ready(function(){
-		$("#invite_jid").bind('keypress', function(e){
-			if (e.keyCode == 13){
-			check_and_send_jid();
+                <script type="text/javascript" charset="utf-8">
+                         if( !window.XMLHttpRequest ) XMLHttpRequest = function(){
+        			try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
+        			try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
+        			try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
+        			try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
+        			throw new Error("Could not find an XMLHttpRequest alternative.")
+			};
+			var channel_id= '{{ channel_id }}';
+			var channel = new goog.appengine.Channel(channel_id);
+			var socket = channel.open();
+			var maxElementsInStream=4;
+			var maxHotLinks = 3;
+			socket.onopen = function(){
+			        //alert('connected');
 			}
+			socket.onmessage = function(evt){
+			        try{
+			                feed_json_update = JSON.parse(evt.data);
+			                updateDisplayEntry(feed_json_update, stream);
+			        } catch(e){
+			                //alert('eee:'+e);
+			        } 
+			};
+
+			$(document).ready(function(){
+					$("#invite_jid").bind('keypress', function(e){
+						if (e.keyCode == 13){
+						check_and_send_jid();
+						}
+						});
+					$("#invite_jid").focus(function(){
+						$(this).val("");
+						});
+					$.get('/feed?format=json', {}, updateDisplayEntry)
+					$("#jid_result").hide();
+					$("#invite_jid").focus();
 			});
-		$("#invite_jid").focus(function(){
-			$(this).val("");
-			});
-		$.get('/feed?format=json', {}, updateDisplayEntry)
-		$("#jid_result").hide();
-		$("#invite_jid").focus();
-                });
 
-// Create variables to display subscription options using HTML DIVs
+			// Create variables to display subscription options using HTML DIVs
 
-var stream = document.getElementById('stream');
+			var stream = document.getElementById('stream');
 
-// Initialize the API.
-var feed;
-function check_and_send_jid(){
-        jid= $("#invite_jid").val();     
-        if (jid.indexOf("@") == -1 || jid.indexOf(" ") != -1){
-                $("#jid_result").html("<b>not valid jabber address</b>");
-                $("#jid_result").show();
-        }
-        else{
-                send_invite();
-                $("#jid_result").html("<b>Message sent. you will receive IM from instaright@appspot.com</b>");
-                $("#jid_result").show();
-        }
-        $("#jid_result").delay(2000).fadeOut('slow');
-        $("#invite_jid").val('');     
-}
+			// Initialize the API.
+			var feed;
 
-function updateDisplayEntry(response, div) {
-        try{
-                div = document.getElementById('stream');
-                for (i = response.length - 1; i >= 0; i--) {
-                        e = response[i]['u'];
-                        domain = e['d'];
+			function updateDisplayEntry(response, div) {
+        			try{
+                			div = document.getElementById('stream');
+                			for (i = response.length - 1; i >= 0; i--) {
+                        			e = response[i]['u'];
+                        			domain = e['d'];
                         try{
                                 title=e['t'];
                         }catch(e){
@@ -209,14 +180,6 @@ function updateDisplayEntry(response, div) {
                 alert("while adding new element :" +e);
         }
 }
-function send_invite(){
-        try{
-                $.post("/send_invite", $("#invite_jid").val());
-        } catch(e){
-                alert('e:'+e);
-        }
-
-}
 </script>
 
 
@@ -243,7 +206,7 @@ function send_invite(){
                 <div id="left_col" class="grid_18"> 
                         <div class="left_box_top"> 
                                 <h2 class="round_title"> 
-                                        <span>Instaright Stream</span> 
+					<span>Instaright Stream about {{ category }}</span> 
                                 </h2> 
                         </div> 
                         <div class="left_box_mid">
@@ -266,76 +229,7 @@ function send_invite(){
                                 </style>
                                 <div id="stream"></div>
                         </div>
-                                <!--style>
-                                        .hot_story_link {
-                                                background:#bbbb22; 
-                                        }
-                                 .hot_story_link, .hot_story {
-                                 -moz-border-radius:15px;
-                                 border:1px solid #ADA699;
-                                 clear:both;
-                                 display:block;
-                                 margin:10px 0px 10px 0px;
-                                 padding:10px;
-                                 text-decoration:none;
-                                 } 
-                                </style>
-                        {% for l in hotlinks %}
-                        <div id="hot_story"><p class="hot_story_link"><a href="{{ l.url }}">{{ l.title }}</a></p>
-                        <ul class="hot_story">
-                                {% if l.tweets %}
-                                <li> 
-                                        <span><img src="/static/images/twitter_small.png"/>{{ l.tweets }}&nbsp;&nbsp;&nbsp;</span>
-                                </li>
-                                {% endif %}
-                                {% if l.facebook_like %}
-                                <li>
-                                        <span><img src="/static/images/facebook_small.png"/>{{ l.facebook_like }}&nbsp;&nbsp;&nbsp;</span>
-                                </li>
-                                {% endif %}
-                                {% if l.redditups %}
-                                <li>
-                                        <span><img src="/static/images/reddit_small.png"/>{{ l.redditups }}&nbsp;&nbsp;&nbsp;</span>
-                                </li>
-                                {% endif %}
-                                <li>
-                                {% if l.delicious_count %}
-                                        <span><img src="/static/images/delicious_small.png"/>{{ l.delicious_count }}&nbsp;&nbsp;&nbsp;</span>
-                                </li>
-                                {% endif %}
-                                {% if l.instapaper_count %}
-                                <li>
-                                        <span><img src="/static/images/instapaper_small.png"/>{{ l.instapaper_count }}&nbsp;&nbsp;&nbsp;</span>
-                                </li>
-                                {% endif %}
-                                {% if l.diggs %}
-                                <li>
-                                        <span><img src="/static/images/digg_small.png"/><span>{{ l.diggs }}&nbsp;&nbsp;&nbsp;</span>
-                                </li>
-                                {% endif %}
-                        </ul>
-                        </div>
-                        {% endfor %}
-                        </div> 
-                        <!--div class="left_box_mid_close"></div-->
                         <div class="left_box_bot"> 
-                <!--div id="disqus_thread"></div>
-                <script type="text/javascript">
-                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-                         var disqus_shortname = 'instaright'; // required: replace example with your forum shortname
-
-                         // The following are highly recommended additional parameters. Remove the slashes in front to use.
-                         var disqus_identifier = 'agppbnN0YXJpZ2h0chULEgxTZXNzaW9uTW9kZWwY_7fmAgw';
-                         var disqus_url = 'http://instaright.appspot.com';
-
-                         /* * * DON'T EDIT BELOW THIS LINE * * */
-                         (function() {
-                                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                                 dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-                                 (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                         })();
-                </script>
-                <noscript>Please enable JavaScript to view the comments</noscript-->
                         </div>
                 </div>
                 <div id="right_col" class="grid_6">

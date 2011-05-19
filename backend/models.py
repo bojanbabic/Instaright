@@ -319,6 +319,7 @@ class UserSessionFE(db.Model):
 	last_updatetime = db.DateTimeProperty(auto_now_add = True)
 	active = db.BooleanProperty()
 	user_details = db.ReferenceProperty(UserDetails)
+        path=db.StringProperty()
 class CategoryDomains(db.Model):
 	category=db.StringProperty()
 	domains = db.TextProperty()

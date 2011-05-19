@@ -159,10 +159,10 @@ class IndexHandler(GenericWebHandler):
 		userMessager = UserMessager(str(self.user_uuid))
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
-                if avatar is None:
-                        avatar='/static/images/noavatar.png'
+                if self.avatar is None:
+                        self.avatar='/static/images/noavatar.png'
 		template_variables = []
-                template_variables = {'user':screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':avatar}
+                template_variables = {'user':self.screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':self.avatar}
 		path= os.path.join(os.path.dirname(__file__), 'templates/index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))

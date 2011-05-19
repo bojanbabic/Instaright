@@ -38,6 +38,8 @@ class GenericWebHandler(webapp.RequestHandler):
 			if userSession is None:
 				logging.info('smth wicked ')
 				userSession = UserSessionFE()
+                        if userSession and userSession.user_uuid is None:
+                                userSession.user_uuid = str(self.user_uuid)
 		else:
 			self.user_uuid = uuid.uuid4()
 			logging.info('generated new uuid: %s' % self.user_uuid)
@@ -55,17 +57,38 @@ class GenericWebHandler(webapp.RequestHandler):
 			self.screen_name = None
 		else:
 			user_details = uu.getUserDetails(self)
-			self.screen_name = user_details["screen_name"]
-                        self.avatar = user_details["avatar"]
-			self.auth_service = user_details["auth_service"]
-			user_details_key = user_details["user_details_key"]
+                        if user_details["screen_name"] is not None:
+			        self.screen_name = user_details["screen_name"]
+                        if user_details["avatar"] is not None:
+                                self.avatar = user_details["avatar"]
+                        if user_details["auth_service"] is not None:
+			        self.auth_service = user_details["auth_service"]
+                        if user_details["user_details_key"] is not None:
+			        user_details_key = user_details["user_details_key"]
 
 			userSession.active=True
 			userSession.user_details = user_details_key
 			
 		userSession.screen_name = self.screen_name
 		userSession.auth_service = self.auth_service
-		userSession.put()
+
+                #determine path
+                url=self.request.url
+                scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+
+                existingUserPathSession=UserSessionFE.gql('WHERE user_uuid = :1 and path = :2 and screen_name = :3' , userSession.user_uuid, path, userSession.screen_name).get()
+                if existingUserPathSession is None:
+                        logging.info('new path %s -> %s' %(userSession.path, path))
+                        newPathUserSession=UserSessionFE()
+                        newPathUserSession.active=userSession.active
+                        newPathUserSession.auth_service=userSession.auth_service
+                        newPathUserSession.screen_name=userSession.screen_name
+                        newPathUserSession.user=userSession.user
+                        newPathUserSession.user_details=userSession.user_details
+                        newPathUserSession.user_uuid=userSession.user_uuid
+                        newPathUserSession.path=path
+                        newPathUserSession.put()
+		#userSession.put()
                 
 
         def get_redirect(self, url):
