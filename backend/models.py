@@ -323,3 +323,7 @@ class CategoryDomains(db.Model):
 	category=db.StringProperty()
 	domains = db.TextProperty()
 	
+class LinkCategory(db.Model):
+        url=db.StringProperty()
+        category=db.StringProperty()
+        updated=db.DateTimeProperty(auto_now_add = True)

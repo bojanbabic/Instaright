@@ -1,16 +1,12 @@
-import os, urllib2, logging, sys
+import os, urllib2, logging, ConfigParser, sys, datetime
 from google.appengine.ext import webapp, db
-from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
-from google.appengine.api.labs import taskqueue
 
-from models import Links, SessionModel, CategoryDomains
-from utils import StatsUtil, LinkUtil, CategoriesUtil
-
-sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
-sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
-from link_info import LinkHandler
+from models import Links, SessionModel, LinkCategory
+from utils import StatsUtil, LinkUtil, Cast, CategoriesUtil
+from generic_handler import GenericWebHandler
+from main import UserMessager
 
 class LinkSortHandler(webapp.RequestHandler):
         def get(self):
@@ -100,72 +96,107 @@ class ShortLinkHandler(webapp.RequestHandler):
                 s.put()
                 util.updateStats(s)
 
-class LinkDomainCategoriesBatch(webapp.RequestHandler):
-	def post(self):
-		domain = self.request.get('domain',None)
-		if domain is None:
-			logging.info('no domain in request')
-		logging.info('fetching categories for domain %s' % domain)
-		memcache_key='domain_lookup_%s' % domain
-                logging.info('checking cache for key %s' %memcache_key)
-		if memcache.get(memcache_key) is None:
-			logging.info('domain already processed skipping. key %s expires %s' % (memcache_key, memcache.get(memcache_key)))
-			return
-		else:
-                        next_week=datetime.datetime.now().date() + datetime.timedelta(days=2)
-                        next_week_ts=time.mktime(next_week.timetuple())
-			memcache.set(memcache_key,1,time=next_week_ts)
-		sessions = SessionModel.gql('WHERE  domain = :1', domain).fetch(1000)
-		for s in sessions:
-			logging.info('task: determine categories for url %s ( domain: %s)' % (s.url, domain))
-			taskqueue.add(queue_name='category-queue', url='/link/category/task', params={'url':s.url, 'domain':domain})
-
-class LinkDomainCategoriesTask(webapp.RequestHandler):
-	def post(self):
-		url = self.request.get('url', None)
-		domain = self.request.get('domain', None)
-		if url is None:
-			logging.info('no url giving up')
-			return
-                if domain is None:
-                        logging.info('no domain provided. giving up')
-                        return
-		link = None
-		try:
-			link = Links.gql('WHERE url = :1' , url).get()
-		except:
-			logging.info('error while fetching url from db')
-		if link is None:
-			link= Links()
-		if link.categories is None:
-			lh = LinkHandler()
-			link=lh.delicious_data(url)	
-			if link is None or link.categories is None:
-				logging.info('no categories for link %s' % url)
-				return
-                CategoriesUtil.processDomainCategories(link.categories, domain)
                 
-class ProcessCategoriesHandler(webapp.RequestHandler):
+class LinkCategoryHandler(webapp.RequestHandler):
+        def __init__(self):
+		config=ConfigParser.ConfigParser()
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
+		self.alchemy_key=config.get('social', 'alchemy_api_key')
         def post(self):
-                categories = self.request.get('categories',None)
-                domain = self.request.get('domain',None)
-                if categories is None:
-                        logging.info('no categories in request. skipping..')
+                url=self.request.get('url',None)
+                if url is None:
+                        logging.info('no link in request. skipping')
 
-                if domain is None:
-                        logging.info('no domain is request. skipping...')
-                CategoriesUtil.processDomainCategories(categories, domain)
+                category_api='http://access.alchemyapi.com/calls/url/URLGetCategory?apikey=%s&url=%s&outputMode=json' %(self.alchemy_key, urllib2.quote(url.encode('utf-8')))
+                logging.info('trying to fetch shared count info %s' %category_api)
+                link=None
+                languge=None
+                category=None
+
+		try:
+                	link = Links.gql('WHERE url = :1', url).get()
+		except BadValueError:
+			logging.info('url property too long')
+                if link is None:
+                        link = Links()
+                else:
+                        link.date_updated = datetime.datetime.now().date()
+                json = LinkUtil.getJsonFromApi(category_api)
+                if json is None:
+                        logging.info('alchemy api returned no category.skipping')
+                        return
+                try:
+                    language=json['language']
+                    category=json['category']
+                    score=Cast.toFloat(json['score'],0)
+                    if score is not None and score > 0.5 and category is not None:
+                            logging.info('category %s score %s' %(category, score))
+                            cats=category.split("_")
+                            if cats is None:
+                                    logging.info('no categories. exit')
+                                    return
+                            for c in cats:
+                                existingLinkCat = LinkCategory.gql('WHERE url = :1 and category = :2', url, c).get()
+                                if existingLinkCat is not None:
+                                        existingLinkCat.updated=datetime.datetime.now()
+                                        existingLinkCat.put()
+                                        logging.info('updated exisitng url(%s) category(%s) update time %s' % (url, c, existingLinkCat.updated))
+                                else:
+                                        logging.info('new pair: url%s) category(%s) ' % (url, c))
+                                        linkCategory=LinkCategory()
+                                        linkCategory.url=url
+                                        linkCategory.category=c
+                                        linkCategory.put()
+                    if language is not None:
+                            link.language = language
+                            link.url=url
+                            link.put()
+                except KeyError:
+                    e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
+                    logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
+
+class LinkCategoryDeliciousHandler(webapp.RequestHandler):
+        def post(self):
+                category=self.request.get('category',None)
+                url=self.request.get('url',None)
+                if category is None:
+                        logging.info('no category skipping')
+                        return
+                if url is None:
+                        logging.info('no url skipping')
+                        return
+                logging.info('processing categories %s for url %s' %(category, url))
+                CategoriesUtil.processLinkCategoriesFromJson(category, url)
+
+class CategoryHandler(GenericWebHandler):
+        def get(self,category):
+                self.redirect_perm()
+                self.get_user()
+                logging.info('category screen_name %s' %self.screen_name)
+                if self.avatar is None:
+                        self.avatar='/static/images/noavatar.png'
+
+		userMessager = UserMessager(str(self.user_uuid))
+		channel_id = userMessager.create_channel()
+
+		template_variables = []
+                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'category':category}
+		path= os.path.join(os.path.dirname(__file__), 'templates/category.html')
+                self.response.headers["Content-Type"] = "text/html; charset=utf-8"
+		self.response.out.write(template.render(path,template_variables))
+
+
 def main():
         run_wsgi_app(application)
 
 application=webapp.WSGIApplication(
                 [
                         ('/link/stats',LinkSortHandler),
-                        ('/link/category/task',LinkDomainCategoriesTask),
-                        ('/link/category/task/batch',LinkDomainCategoriesBatch),
                         ('/link/transform/feed',LinkTransformHandler),
                         ('/link/transform/short',ShortLinkHandler),
-                        ('/domain/categories',ProcessCategoriesHandler),
+                        ('/link/category',LinkCategoryHandler),
+                        ('/link/category/delicious',LinkCategoryDeliciousHandler),
+                        ('/category/(.*)',CategoryHandler),
                         ],debug=True
                 )
 

@@ -1,5 +1,5 @@
 application: instaright
-version: 50
+version: 52
 runtime: python 
 api_version: 1
 
@@ -132,6 +132,15 @@ handlers:
 - url: /link/traction/task
   script: fetch/link_info.py
 
+- url: /domain/categories.*
+  script: links.py
+  
+- url: /category.*
+  script: categories.py
+  
+- url: /link/category.*
+  script: categories.py
+  
 - url: /link/.*
   script: links.py
   

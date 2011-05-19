@@ -1,6 +1,6 @@
 import sys, urllib2, exceptions, os, logging, datetime, time
 
-from utils import StatsUtil,Cast, TaskUtil, ConfigParser
+from utils import StatsUtil,Cast, TaskUtil, ConfigParser, LinkUtil
 from users import UserUtil
 from models import Links
 from google.appengine.ext import webapp
@@ -86,13 +86,15 @@ class LinkHandler(webapp.RequestHandler):
 	def delicious_data(self, url):
                 delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url=%s&type=json' % url
                 logging.info('trying to fetch delicious info %s ' % delicious_api)
-                json =self.getData(delicious_api)
+                json =LinkUtil.getJsonFromApi(delicious_api)
 		link=Links()
                 if json:
                         try:
                                 if not link.title:
                                         link.title = json[0]['title']
                                 link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
+                                if link.categories is not None:
+                                        taskqueue.add(queue_name='category-queue', url='/link/category/delicious', params={'url':url, 'categories':link.categories})
                                 link.delicious_count = Cast.toInt(json[0]['total_posts'],0)
 				logging.info('delicious count %s' % link.delicious_count)
                         except KeyError:
@@ -124,9 +126,8 @@ class LinkHandler(webapp.RequestHandler):
 		alternate_facebook_share_score = None
 		alternate_facebook_like_score = None
 		alternate_su_score = None
+                alternate_linkedin_score = None
 		
-		taskqueue.add(queue_name='category-queue', url='/link/category/task/batch', params={'domain':domain})
-
 		try:
                 	link = Links.gql('WHERE url = :1', url).get()
 		except BadValueError:
@@ -151,7 +152,7 @@ class LinkHandler(webapp.RequestHandler):
 		link.relaxation = 0
 
                 logging.info('trying to fetch shared count info %s' %alternate_api )
-                json = self.getData(alternate_api)
+                json = LinkUtil.getJsonFromApi(alternate_api)
                 if json:
                         try:
                                 alternate_twitter_score=Cast.toInt(json['Twitter'],0)
@@ -160,13 +161,14 @@ class LinkHandler(webapp.RequestHandler):
                                 alternate_facebook_share_score=Cast.toInt(json['Facebook']['share_count'],0)
                                 alternate_facebook_like_score=Cast.toInt(json['Facebook']['like_count'],0)
                                 alternate_su_score=Cast.toInt(json['StumbleUpon'],0)
+                                alternate_linkedin_score=Cast.toInt(json['LinkedIn'],0)
 
                         except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
                 logging.info('trying to fetch topsi info %s' %topsy_api)
-                json = self.getData(topsy_api)
+                json = LinkUtil.getJsonFromApi(topsy_api)
                 if json:
                         try:
                                 link.influence_score=Cast.toInt(json['response']['influential'],0)
@@ -176,7 +178,7 @@ class LinkHandler(webapp.RequestHandler):
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
                 logging.info('trying to fetch digg info %s' %digg_api)
-                json =self.getData(digg_api)
+                json =LinkUtil.getJsonFromApi(digg_api)
                 if json:
                         try:
                                 link.diggs =Cast.toInt(json['count'],0)
@@ -191,7 +193,7 @@ class LinkHandler(webapp.RequestHandler):
                         link.overall_score += link.diggs
 
                 logging.info('trying to fetch tweet_meme info %s ' % tweet_meme_api )
-                json = self.getData(tweet_meme_api)
+                json = LinkUtil.getJsonFromApi(tweet_meme_api)
                 if json and 'story' in json:
                         try:
                                 link.tweets=Cast.toInt(json['story']['url_count'],0)
@@ -211,7 +213,7 @@ class LinkHandler(webapp.RequestHandler):
                 	link.overall_score += self.tw_factor * link.tweets
 
                 logging.info('trying to fetch delicious info %s ' % delicious_api)
-                json =self.getData(delicious_api)
+                json =LinkUtil.getJsonFromApi(delicious_api)
                 if json:
                         try:
                                 if not link.title:
@@ -226,7 +228,7 @@ class LinkHandler(webapp.RequestHandler):
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
 
                 logging.info('trying to fetch reddit info %s' % reddit_api)
-                json = self.getData(reddit_api)
+                json = LinkUtil.getJsonFromApi(reddit_api)
                 if json and 'data' in json:
                         try:
                                 data = [ x for x in json['data']['children']]
@@ -245,7 +247,7 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
                 logging.info('trying to fetch facebook info %s' %facebook_api)
-                json = self.getData(facebook_api)
+                json = LinkUtil.getJsonFromApi(facebook_api)
                 if json:
                         try:
                                 link.facebook_like=Cast.toInt(json[0]['like_count'], 0)
@@ -268,7 +270,7 @@ class LinkHandler(webapp.RequestHandler):
                         link.overall_score += link.facebook_share
 
 		logging.info('trying to fetch stumple upon link %s' % stumble_upon_api)
-		json = self.getData(stumble_upon_api)
+		json = LinkUtil.getJsonFromApi(stumble_upon_api)
 		if json:
 			try:
 				link.stumble_upons = Cast.toInt(json['result']['views'], 0)
@@ -302,8 +304,13 @@ class LinkHandler(webapp.RequestHandler):
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('request: %s == more info: [[%s, %s]] in %s' %(linkedin_api, e0, e1, json))
 
+                if link.linkedin_share is None and alternate_linkedin_score is not None:
+                        logging.info('using alternate linkedin score %s' % alternate_linkedin_score)
+                        link.linkedin_share = alternate_linkedin_score
+                        link.overall_score += alternate_linkedin_score
+
 		logging.info('trying to fetch buzz upon link %s' % buzz_api)
-		json = self.getData(buzz_api)
+		json = LinkUtil.getJsonFromApi(buzz_api)
 		if json:
 			try:
 				link.buzz_count = Cast.toInt(json['data']['counts']["%s"][0]["count"] % url, 0)
@@ -316,6 +323,7 @@ class LinkHandler(webapp.RequestHandler):
 			link.buzz = alternate_buzz_score
 		if link.buzz_count is not None:
 			link.overall_score += link.buzz_count
+
                 return link
 
         def getData(self, url):
@@ -337,7 +345,7 @@ class LinkHandler(webapp.RequestHandler):
 class LinkTractionTask(webapp.RequestHandler):
 	def __init__(self):
 		config=ConfigParser.ConfigParser()
-		config.read('../properties/general.ini')
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
 		self.tw_margin=int(config.get('social', 'tw_margin'))
 		self.tw_factor=int(config.get('social', 'tw_factor'))
 		self.klout_correction=int(config.get('social', 'klout_correction'))

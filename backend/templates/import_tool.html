@@ -11,6 +11,9 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
         <script type="text/javascript" src="http://dev.jquery.com/view/trunk/plugins/validate/jquery.validate.js"></script>
 
+	<!-- fancybox -->
+	<script type="text/javascript" src="/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
+	<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width = 900"/>
@@ -25,6 +28,34 @@
             
       </head>
     <body>
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		$("#btn_login").fancybox({
+			'scrolling'		: 'no',
+			'titleShow'		: false,
+			'onClosed'		: function(){
+			}
+		});
+	});
+	</script>
+	<div id="nav" >
+		<div class="center clearfix">
+			<h5><a href="/">Instaright - Perfect information for you in realtime.</a></h5>
+                <ul class="menu borderless clearfix"> 
+			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
+                        {% if user %}
+			<li><a href="javascript:alert('Dashboard soon available!');"><span>{{ user }}</span></a></li>
+			<li><a href="javascript:alert('Dashboard soon available!');"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+			<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
+                        {% else %}
+			<li><a id="btn_login" href="/account" title="Login"><span>Login</span></a></li>
+                        {% endif %}
+                        <li>
+                        </li>
+
+                </ul>
+		</div>
+	</div>
         
         <script type="text/javascript" charset="utf-8">
                 $(document).ready(function(){
@@ -102,11 +133,6 @@
                 </div>
             </div>
         </div>
-<!-- apture bar -->
-<script id="aptureScript">
-(function (){var a=document.createElement("script");a.defer="true";a.src="http://www.apture.com/js/apture.js?siteToken=B6cWD6D";document.getElementsByTagName("head")[0].appendChild(a);})();
-</script>
-<!-- end apture bar -->
 <!-- GETSATISFACTION -->
 <script type="text/javascript" charset="utf-8">
         var is_ssl = ("https:" == document.location.protocol);

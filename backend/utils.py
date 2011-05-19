@@ -1,7 +1,8 @@
 import urlparse, urllib,logging, urllib2, datetime, sys, os, ConfigParser
+#urllib.getproxies_macosx_sysconf = lambda: {}
 from google.appengine.api import memcache, mail
 from xml.dom import minidom
-from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge
+from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge, CategoryDomains, LinkCategory
 from google.appengine.api import users
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -103,7 +104,7 @@ class StatsUtil(object):
 class FeedUtil:
 	def __init__(self):
 		config=ConfigParser.ConfigParser()
-		config.read('properties/general.ini')
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
 		self.domain=config.get('app', 'domain')
 	def sessionModel2Feed(self, model):
 		item = {}
@@ -205,6 +206,23 @@ class LinkUtil:
                         linkStats.link = s.url
                         linkStats.lastUpdatedBy = s.instaright_account
                 linkStats.put()
+        @classmethod
+        def getJsonFromApi(cls,url):
+                try:
+                        dta = urllib2.urlopen(url)
+                        json = simplejson.load(dta)
+                        return json
+                except:
+                        logging.info('error while getting link %s reTRYing'  % url)
+                	try:
+                        	dta = urllib2.urlopen(url)
+                        	json = simplejson.load(dta)
+                        	return json
+                	except:
+                        	e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
+                        	logging.info('error %s %s, while getting link %s'  %( e0, e1, url))
+                        	return None
+
 
 class BadgeUtil:
 
@@ -299,31 +317,31 @@ class SiteSpecificBadge(object):
                 self.domain = domain
                 self.version=version
 		#read domain lists
-		self.newsProps.read('properties/badges/news/news.properties')
+		self.newsProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/news/news.properties')
 		self.newsDomains=self.newsProps.get('news','domains').split(',')
 		self.news_tresshold=int(self.newsProps.get('news','tresshold'))
 
-		self.movieProps.read('properties/badges/movie/movie.properties')
+		self.movieProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/movie/movie.properties')
 		self.movieDomains=self.movieProps.get('movie','domains').split(',')
 		self.movie_tresshold=int(self.movieProps.get('movie','tresshold'))
 
-		self.nyProps.read('properties/badges/ny/ny.properties')
+		self.nyProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/ny/ny.properties')
 		self.nyDomains=self.nyProps.get('ny','domains').split(',')
 		self.ny_tresshold=int(self.nyProps.get('ny','tresshold'))
 
-		self.economyProps.read('properties/badges/economy/economy.properties')
+		self.economyProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/economy/economy.properties')
 		self.economyDomains=self.economyProps.get('economy','domains').split(',')
 		self.economy_tresshold=int(self.economyProps.get('economy','tresshold'))
 
-		self.gadgetProps.read('properties/badges/gadget/gadget.properties')
+		self.gadgetProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/gadget/gadget.properties')
 		self.gadgetDomains=self.gadgetProps.get('gadget','domains').split(',')
 		self.gadget_tresshold=int(self.gadgetProps.get('gadget','tresshold'))
 
-		self.wikiProps.read('properties/badges/wiki/wiki.properties')
+		self.wikiProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/wiki/wiki.properties')
 		self.wikiDomains=self.wikiProps.get('wiki','domains').split(',')
 		self.wiki_tresshold=int(self.wikiProps.get('wiki','tresshold'))
 
-		self.sportProps.read('properties/badges/sport/sport.properties')
+		self.sportProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/sport/sport.properties')
 		self.sportDomains=self.sportProps.get('sport','domains').split(',')
 		self.sport_tresshold=int(self.sportProps.get('sport','tresshold'))
 
@@ -465,11 +483,18 @@ class TrophyBadger:
 
                  
 class Cast:
-        @staticmethod
-        def toInt(string,default):
+        @classmethod
+        def toInt(cls, string, default):
                 try:
                         return int(string)
                 except ValueError:
+                        return default
+
+        @classmethod
+        def toFloat(cls, string, default):
+                try:
+                        return float(string)
+                except:
                         return default
                 
 BADGES_VERSION={'0.4.0.4':['news','yen','movie', 'robot']}
@@ -513,7 +538,7 @@ class Version:
 class LoginUtil():
 	def __init__(self):
 		config=ConfigParser.ConfigParser()
-		config.read('properties/general.ini')
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
 		self.facebook_key=config.get('facebook','key')
 		self.facebook_secret=config.get('facebook','secret')
 
@@ -663,3 +688,53 @@ class TaskUtil(object):
 			return ss_5
 		else:
 			return ss_1
+class CategoriesUtil(object):
+        @classmethod
+        def processDomainCategories(cls, categories, domain):
+                if categories is None or len(categories) == 0:
+                        logging.info('missing categories. skipping')
+                        return
+		cat_dict = eval(categories)
+		if len(cat_dict) == 0:
+			logging.info('no categories. skipping')
+			return
+		for cat, cnt in cat_dict.iteritems():
+			catDomains=CategoryDomains.gql('WHERE category = :1' , cat).get()
+			if catDomains is None:
+				logging.info('new category %s , init domain %s' % (cat, domain))
+				catDomains = CategoryDomains()
+				catDomains.category = cat
+				catDomains.domains = domain
+				catDomains.put()
+			else:
+				domainsArray = catDomains.domains.split(',')
+				if domain in domainsArray:
+					logging.info('category %s already contains domain %s' % ( cat, domain))
+				else:
+					if domainsArray is None:
+						domainsArray = []
+					domainsArray.append(domain)
+					catDomains.domains = ','.join(domainsArray)
+                                        logging.info('updated category %s [ %s ]' % (cat, catDomains.domains))
+					catDomains.put()
+        @classmethod
+        def processLinkCategoriesFromJson(cls, categories, url):
+                if categories is None or len(categories) == 0:
+                        logging.info('missing categories. skipping')
+                        return
+		cat_dict = eval(categories)
+		if len(cat_dict) == 0:
+			logging.info('no categories. skipping')
+			return
+		for cat, cnt in cat_dict.iteritems():
+                        existingCategory=LinkCategory.gql('WHERE category = :1 and url = :2' , cat, url).get()
+			if existingCategory is None:
+				logging.info('new category %s , init url %s' % (cat, url))
+				linkCategory = LinkCategory()
+				linkCategory.category = cat
+				linkCategory.url = url
+				linkCategory.put()
+			else:
+                                logging.info('updated time for category %s [ %s ]' % (cat, existingCategory.url))
+                                existingCategory.updated = datetime.datetime.now()
+				existingCategory.put()

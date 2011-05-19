@@ -126,3 +126,34 @@ body{
     padding: 30px;
     width: 498px;
 }
+.addons {
+	margin-left:330px;
+	margin-top:80px;
+}
+.addons img {
+	width: 150px;
+	height: 150px;
+}
+.inline{
+	float:left;
+	margin-right:200px;
+}
+.clear-both{
+	clear: both;
+}
+#footer-container {
+	margin-top: 130px;
+}
+.install_steps {
+	margin-top:30px;
+	margin-left:-80px;
+}
+.install_steps ol {
+	font-size:.9em;
+	padding: 0;
+	margin:0 0 15px 35px;
+}
+.version {
+	margin-left:-160px;
+	text-align: center;
+}

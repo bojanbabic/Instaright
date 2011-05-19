@@ -123,11 +123,12 @@ class MainTaskHandler(webapp.RequestHandler):
 					logging.info('model save timeout retrying in %s' % timeout_ms)
 					thread.sleep(timeout_ms)
 					timeout_ms *= 2
-                	logging.info('model saved: %s' % model.to_xml())
+                	logging.info('model saved: %s %s' % (model.to_xml() , model.client))
 		except BadValueError, apiproxy_errors.DeadlineExceededError:
 			logging.info('error while saving url %s' % url)
 
 
+                taskqueue.add(url='/link/category', queue_name='category-queue', params={'url':url })
                 taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
                 taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
 
@@ -152,7 +153,8 @@ class ErrorHandling(webapp.RequestHandler):
 class IndexHandler(GenericWebHandler):
 	def get(self):
                 #redirect from appengine domain
-                self.redirect_perm()
+                #self.redirect_perm()
+                #self.get_user()
 		uu = LoginUtil()
 		userSession = None
 		screen_name=None
@@ -235,7 +237,21 @@ class PrivacyPolicyHandler(webapp.RequestHandler):
 		path= os.path.join(os.path.dirname(__file__), 'templates/privacy_policy.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
-                
+
+
+class ToolsHandler(GenericWebHandler):
+        def get(self):
+                self.redirect_perm()
+                self.get_user()
+                logging.info('screen_name %s' %self.screen_name)
+                if self.avatar is None:
+                        self.avatar='/static/images/noavatar.png'
+		template_variables = []
+                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar}
+		path= os.path.join(os.path.dirname(__file__), 'templates/tools.html')
+                self.response.headers["Content-Type"]= "text/html"
+		self.response.out.write(template.render(path,template_variables))
+
                 
 		
 application = webapp.WSGIApplication(
@@ -246,6 +262,7 @@ application = webapp.WSGIApplication(
                                      	('/deactivate_channels', ChannelHandler),
                                      	('/privacy_policy.html', PrivacyPolicyHandler),
                                      	('/0Ci1tA9HYDgTPNzJLQ.ytA--.html', YahooVerificationFile),
+                                     	('/tools', ToolsHandler),
                                      	('/', IndexHandler),
 				     ],
                                      debug=True)
