@@ -153,70 +153,10 @@ class ErrorHandling(webapp.RequestHandler):
 class IndexHandler(GenericWebHandler):
 	def get(self):
                 #redirect from appengine domain
-                #self.redirect_perm()
-                #self.get_user()
-		uu = LoginUtil()
-		userSession = None
-		screen_name=None
-		auth_service=None
-                avatar=None
-		used_data_from_session = False
+                self.redirect_perm()
+                self.get_user()
 
-		uuid_cookie = self.request.cookies.get('user_uuid')
-		logout_cookie = self.request.cookies.get('user_logged_out')
-
-		# try to get user name by cookie or from login
-		if uuid_cookie:
-			#Connect uuid with registered user
-			logging.info('reusing uuid: %s' % uuid_cookie)
-			user_uuid = uuid_cookie
-			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , user_uuid).get()
-			if userSession is not None and userSession.user_details is not None:
-				#TODO check why never reached
-				ud = UserDetails.gql('WHERE __key__ = :1', userSession.user_details).get()
-
-				if ud is None:
-					logging.error('missing proper db entry for cookie %s' % uuid_cookie)
-				else:
-					user_data = ud.getUserInfo()
-					screen_name = user_data["screen_name"]
-                                        avatar = user_data["avatar"]
-					user_data_from_session = True
-					logging.info('using screen name %s from session %s' %(screen_name, user_uuid))
-			# sanity check
-			if userSession is None:
-				logging.info('smth wicked ')
-				userSession = UserSessionFE()
-		else:
-			user_uuid = uuid.uuid4()
-			logging.info('generated new uuid: %s' % user_uuid)
-                        expires = datetime.datetime.now() + datetime.timedelta(minutes=60)
-                        exp_format = datetime.datetime.strftime(expires, '%a, %d-%b-%Y %H:%M:%S GMT')
-                        logging.info('expr date %s' %exp_format)
-			self.response.headers.add_header('Set-Cookie', 'user_uuid=%s; expires=%s; path=/' %( user_uuid, exp_format))
-
-			userSession = UserSessionFE()
-			userSession.user_uuid = str(user_uuid)
-
-		# not pretty but working
-		if logout_cookie:
-			logging.info('found logout cookie. reseting screen_name')
-			screen_name = None
-		else:
-			user_details = uu.getUserDetails(self)
-			screen_name = user_details["screen_name"]
-                        avatar = user_details["avatar"]
-			auth_service = user_details["auth_service"]
-			user_details_key = user_details["user_details_key"]
-
-			userSession.active=True
-			userSession.user_details = user_details_key
-			
-		userSession.screen_name = screen_name
-		userSession.auth_service = auth_service
-		userSession.put()
-
-		userMessager = UserMessager(str(user_uuid))
+		userMessager = UserMessager(str(self.user_uuid))
 		channel_id = userMessager.create_channel()
 		login_url = users.create_login_url('/')	
                 if avatar is None:
