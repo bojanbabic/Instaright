@@ -412,7 +412,17 @@ class UserUtil(object):
                 	userDetails = userhandler.gather_info(user)
 			if userDetails is not None:
 				logging.info('saving user info %s' %userDetails.mail)
-				userDetails.put()
+			        try:
+				        while True:
+					        timeout_ms = 100
+					        try:
+				                        userDetails.put()
+						        break
+					        except datastore_errors.Timeout:
+						        thread.sleep(timeout_ms)
+						        timeout_ms *= 2
+			        except apiproxy_errors.DeadlineExceededError:
+				        logging.info('run out of retries for writing to db')
 		if userDetails is None or userDetails.twitter is None:
 			logging.info('no twitter account for user %s . aborting' % user)
 			return

@@ -27,11 +27,14 @@ class UserMessager:
 		channel.send_message(self.user_uuid, simplejson.dumps(message))
 
 class BroadcastMessage:
-	def send_message(self, message):
+	def send_message(self, message, path=None):
 		last_hour = datetime.datetime.now() - datetime.timedelta(hours = 1)
                 taskqueue.add(queue_name='deactivate-channels', url='/deactivate_channels')
-		activeUsers = UserSessionFE.gql("WHERE active = True and last_updatetime > :1", last_hour)
-		logging.info('getting all active user channels')
+                if path is None:
+                        path='/'
+                logging.info('looking for active users on %s from %s' %(path, last_hour))
+                activeUsers = UserSessionFE.gql("WHERE active = True and path = :1  and last_updatetime > :2", path, last_hour).fetch(1000)
+		logging.info('getting all active user channels for path %s' % path)
 		for user in activeUsers:
 			logging.info('sending message to: %s' %user.user_uuid)
 			messager = UserMessager(user.user_uuid)
@@ -62,10 +65,16 @@ class MainHandler(webapp.RequestHandler):
                         if not StatsUtil.checkUrl(args):
                                 logging.info('skipping since url is not good!')
                                 return
+		        user=StatsUtil.getUser(args)
+		        url=StatsUtil.getUrl(args)
+		        domain=StatsUtil.getDomain(url)
+                        title = StatsUtil.getTitle(args)
+                        version = StatsUtil.getVersion(args)
+                        client = StatsUtil.getClient(args)
                         try:
-                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'args': self.request.body})
+                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client})
                         except TransientError:
-                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'args': self.request.body})
+                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client})
 
 			logging.info('triggering feed update')
 
@@ -88,18 +97,12 @@ class MainHandler(webapp.RequestHandler):
 
 class MainTaskHandler(webapp.RequestHandler):
         def post(self):
-                args = simplejson.loads(self.request.get('args', None))
-                logging.info(args)
-                if args is None:
-                        logging.info('missing arg from user rpc body')
-                        return
-
-		user=StatsUtil.getUser(args)
-		url=StatsUtil.getUrl(args)
-		domain=StatsUtil.getDomain(url)
-                title = StatsUtil.getTitle(args)
-                version = StatsUtil.getVersion(args)
-                client = StatsUtil.getClient(args)
+		user=self.request.get('user',None)
+		url=self.request.get('url',None)
+		domain=self.request.get('domain',None)
+                title=self.request.get('title',None)
+                version=self.request.get('version',None)
+                client=self.request.get('client',None)
 
 		try:
 	                model = SessionModel()
@@ -128,9 +131,12 @@ class MainTaskHandler(webapp.RequestHandler):
 			logging.info('error while saving url %s' % url)
 
 
-                taskqueue.add(url='/link/category', queue_name='category-queue', params={'url':url })
                 taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
                 taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
+                try:
+                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'session_key': str(model.key()), 'url': url })
+                except TransientError:
+                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'session_key': str(model.key()), 'url': url })
 
                 logging.info('pubsubhubbub feed update')
 		try:

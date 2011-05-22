@@ -78,7 +78,7 @@
 					$("#invite_jid").focus(function(){
 						$(this).val("");
 						});
-					$.get('/feed?format=json', {}, updateDisplayEntry)
+					$.get('/category/{{ category }}/feed?out=json', {}, updateDisplayEntry)
 					$("#jid_result").hide();
 					$("#invite_jid").focus();
 			});
@@ -96,90 +96,95 @@
                 			for (i = response.length - 1; i >= 0; i--) {
                         			e = response[i]['u'];
                         			domain = e['d'];
-                        try{
-                                title=e['t'];
-                        }catch(e){
-                                title="Instaright article from domain "+domain;
-                        }
-                        if (title == null || title == 'None' || title == 'null' || title.length == 0){
-                                title="Instaright article from domain "+domain;
-                        } else {
-                                try{
-                                if ((title.charCodeAt(0) > 256 || title.charCodeAt(title.length/2) > 256)   && title.length >= 40){
-                                        title = title.substr(0,37) + ' ...';
-                                }
-                                else if (title.length >= 70){
-                                        title = title.substr(0,67) + ' ...';
-                                }
-                                } catch(e){
-                                }
-                        }
-                        link = e['l'];
-                        dateUpdated = new Date(e['u']);
-                        id = e['id'];
-			a = e['a'];
-                        original_url = e['ol'];
+                        			try{
+                                			title=e['t'];
+                        			}catch(e){
+                                			title="Instaright article from domain "+domain;
+                        			}
+                        			if (title == null || title == 'None' || title == 'null' || title.length == 0){
+                                			title="Instaright article from domain "+domain;
+                        			} else {
+                                			try{
+                                			if ((title.charCodeAt(0) > 256 || title.charCodeAt(title.length/2) > 256)   && title.length >= 40){
+                                        			title = title.substr(0,37) + ' ...';
+                                			}
+                                			else if (title.length >= 70){
+                                        			title = title.substr(0,67) + ' ...';
+                                			}
+                                			} catch(e){
+                                			}
+                        			}
+                        			link = e['l'];
+                        			dateUpdated = new Date(e['u']);
+                        			id = e['id'];
+						a = e['a'];
+                        			original_url = e['ol'];
+						category=e['c'];
+						if (typeof(category) !== 'undefined' && category != '{{ category }}'){
+							alert('sanity check did not pass ('+category+' != {{ category }}..continue');
+							continue;
+						} 
 
-                        container = document.createElement('div');
-                        containerAvatar = document.createElement('div');
+                        			container = document.createElement('div');
+                        			containerAvatar = document.createElement('div');
 
 
-                        avatarElement = document.createElement('img');
-                        avatarElement.setAttribute('src', a);
-                        avatarElement.setAttribute('class', 'avatar');
+                        			avatarElement = document.createElement('img');
+                        			avatarElement.setAttribute('src', a);
+                        			avatarElement.setAttribute('class', 'avatar');
 
-                        containerAvatar.appendChild(avatarElement);
-                        container.setAttribute('class', 'streamcontent');
-                        container.setAttribute('id', id);
+                        			containerAvatar.appendChild(avatarElement);
+                        			container.setAttribute('class', 'streamcontent');
+                        			container.setAttribute('id', id);
 
-                        titleElement = document.createElement('a');
-                        titleElement.innerHTML = title;
-                        if (original_url === undefined){
-                                titleElement.href = link;
-                        } else{
-                                // visibli link
-                                titleElement.href ='http://links.instaright.com/a947824b599193b3/?web=058421&dst='+original_url;
-                        }
-                        titleElement.target="_new"
-                        titleParagraph = document.createElement('p');
-                        titleParagraph.appendChild(titleElement);
+                        			titleElement = document.createElement('a');
+                        			titleElement.innerHTML = title;
+                        			if (original_url === undefined){
+                                			titleElement.href = link;
+                        			} else{
+                                			// visibli link
+                                			titleElement.href ='http://links.instaright.com/a947824b599193b3/?web=058421&dst='+original_url;
+                        			}
+                        			titleElement.target="_new"
+                        			titleParagraph = document.createElement('p');
+                        			titleParagraph.appendChild(titleElement);
 
-                        domainElement = document.createElement('a');
-                        domainElement.innerHTML = domain;
-                        domainElement.href = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+'http://'+domain;
-                        domainElement.target="_new"
+                        			domainElement = document.createElement('a');
+                        			domainElement.innerHTML = domain;
+                        			domainElement.href = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+'http://'+domain;
+                        			domainElement.target="_new"
 
-                        container.appendChild(containerAvatar);
-                        container.appendChild(titleParagraph);
-                        container.appendChild(document.createElement('br'));
-                        container.appendChild(domainElement);
-                        container.appendChild(document.createElement('br'));
+                        			container.appendChild(containerAvatar);
+                        			container.appendChild(titleParagraph);
+                        			container.appendChild(document.createElement('br'));
+                        			container.appendChild(domainElement);
+                        			container.appendChild(document.createElement('br'));
 
-                        contentParagraph = document.createElement('p');
-                        contentParagraph.innerHTML = dateUpdated;
+                        			contentParagraph = document.createElement('p');
+                        			contentParagraph.innerHTML = dateUpdated;
 
-                        domainParagraph = document.createElement('p');
-                        domainParagraph.innerHTML = domainElement;
+                        			domainParagraph = document.createElement('p');
+                        			domainParagraph.innerHTML = domainElement;
 
-                        container.appendChild(contentParagraph);
+                        			container.appendChild(contentParagraph);
                        
-                        div.insertBefore(container, div.firstChild);
-                        $("#"+id).hide();
-                        $("#"+id).show('blind');
-                        sElements = $("#stream").children();
-                        if (sElements.length > maxElementsInStream ){
-                                lastElement = sElements.get(-1); 
-                                last_id = lastElement.getAttribute('id');
-                                //alert('id:'+ id);
-                                $("#"+last_id).hide();
-                                div.removeChild(lastElement)
-                        }
-                }
+                        			div.insertBefore(container, div.firstChild);
+                        			$("#"+id).hide();
+                        			$("#"+id).show('blind');
+                        			sElements = $("#stream").children();
+                        			if (sElements.length > maxElementsInStream ){
+                                			lastElement = sElements.get(-1); 
+                                			last_id = lastElement.getAttribute('id');
+                                			//alert('id:'+ id);
+                                			$("#"+last_id).hide();
+                                			div.removeChild(lastElement)
+                        			}
+                			}
 
-        }catch(e){
-                alert("while adding new element :" +e);
-        }
-}
+        			}catch(e){
+                			alert("while adding new element :" +e);
+        			}
+			}
 </script>
 
 

@@ -18,7 +18,7 @@ import simplejson
 class LinkHandler(webapp.RequestHandler):
 	def __init__(self):
 		config=ConfigParser.ConfigParser()
-		config.read('../properties/general.ini')
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
 		try:
 			self.fb_factor=int(config.get('social', 'fb_factor'))
 			self.tw_factor=int(config.get('social', 'tw_factor'))

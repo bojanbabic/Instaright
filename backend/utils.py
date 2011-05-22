@@ -541,6 +541,8 @@ class LoginUtil():
 		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
 		self.facebook_key=config.get('facebook','key')
 		self.facebook_secret=config.get('facebook','secret')
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/users.ini')
+                self.skip_list=config.get('notification','skip_notification').split(',')
 
         @classmethod
         def create_urls(cls, federated_domains):
@@ -657,7 +659,8 @@ class LoginUtil():
 			request_handler.response.headers.add_header('Set-Cookie', 'user_logged_out=%s; expires=%s; path=/' %( '0', exp_format))
 			
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
-                if screen_name is not None:
+                if screen_name is not None and screen_name not in self.skip_list:
+                        logging.info('user %s not in skip list %s ... sending mail' %(screen_name, str(self.skip_list)))
                         mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %( screen_name , avatar, avatar), body='Awesome new user signed up: %s avatar %s' %( screen_name, avatar))
                                         
                 user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar}

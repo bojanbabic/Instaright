@@ -65,9 +65,9 @@ class GenericWebHandler(webapp.RequestHandler):
 			        self.auth_service = user_details["auth_service"]
                         if user_details["user_details_key"] is not None:
 			        user_details_key = user_details["user_details_key"]
+			        userSession.user_details = user_details_key
 
 			userSession.active=True
-			userSession.user_details = user_details_key
 			
 		userSession.screen_name = self.screen_name
 		userSession.auth_service = self.auth_service

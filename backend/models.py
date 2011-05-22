@@ -328,3 +328,16 @@ class LinkCategory(db.Model):
         url=db.StringProperty()
         category=db.StringProperty()
         updated=db.DateTimeProperty(auto_now_add = True)
+        model_details=db.ReferenceProperty(SessionModel)
+	@classmethod
+	def getAll(cls):
+		data=LinkCategory.gql('ORDER by __key__').fetch(1000)
+		if not data:
+			return None
+		lastKey = data[-1].key()
+		results=data
+		while len(data) == 1000:
+			data=LinkCategory.gql('WHERE __key__> :1 ORDER by __key__', lastKey).fetch(1000)
+			lastKey=data[-1].key()
+			results.extend(data)
+		return results
