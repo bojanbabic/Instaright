@@ -16,6 +16,28 @@ from google.appengine.ext.db import BadValueError
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 import simplejson
 
+class CategoryDetailOneHandler(webapp.RequestHandler):
+        def get(self, c):
+               logging.info('updates for category %s' % c)
+               lc=LinkCategory.gql('WHERE category = :1 order by updated desc', c).fetch(50)
+               for l in lc:
+                    if hasattr(l,'model_details') and l.model_details is not None:
+                         logging.info('url %s already has details, skipping update' %l.url)
+                         continue
+                    logging.info('updating url details %s ' %l.url)
+                    s=SessionModel.gql('WHERE url = :1', l.url).get()
+                    if s is None:
+                         s=SessionModel.gql('WHERE feed_url = :1', l.url).get()
+                    if s is None:
+                         s=SessionModel.gql('WHERE feed_url = :1', l.url).get()
+                    if s is None:
+                         logging.info('ERROR: no session model url for %s' % l.url)
+                         continue
+                    logging.info('session model for url %s FOUND' %l.url)
+                    l.model_details=s.key()
+                    l.put()
+
+
 class CategoryDetailsUpdate(webapp.RequestHandler):
         def get(self):
                 allData=LinkCategory.getAll()
@@ -189,8 +211,8 @@ class LinkCategoryHandler(webapp.RequestHandler):
                                     merge_cat=list(merge(current_categories, cats))
                             else:
                                     merge_cat=cats
-                            logging.info('caching cats %s for url %s' %(current_category, url))
-                            memcache.set(memcache_key, set(merge_cats))
+                            logging.info('caching cats %s for url %s' %(current_categories, url))
+                            memcache.set(memcache_key, set(merge_cat))
 
                             for c in cats:
                                 taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'model_key': str(model.key()), 'category':c, 'url': url})
@@ -236,7 +258,7 @@ class CategoryFeedHandler(webapp.RequestHandler):
                 if format == 'json':
                         logging.info('catefory %s json feed' % category)
                         userUtil = UserUtil()
-                        allentries = LinkCategory.gql('WHERE category = :1 order by updated desc', category).fetch(10)
+                        allentries = LinkCategory.gql('WHERE category = :1 order by updated desc', category).fetch(50)
                         entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None]
 			self.response.headers['Content-Type'] = "application/json"
                         self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'l': 'http://instaright.appspot.com/article/'+str(o.model_details.key()), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':category}}))
@@ -293,7 +315,6 @@ class CategoryListHandler(GenericWebHandler):
                         self.avatar='/static/images/noavatar.png'
 
                 memcache_key='category_list'
-                memcache.delete(memcache_key)
                 cached_category=memcache.get(memcache_key)
                 categories={}
                 if cached_category is not None:
@@ -322,6 +343,7 @@ application=webapp.WSGIApplication(
                         ('/link/category/delicious',LinkCategoryDeliciousHandler),
                         ('/category/stream',CategoryStreamHandler),
                         ('/category/(.*)/feed',CategoryFeedHandler),
+                        ('/category/(.*)/model/update',CategoryDetailOneHandler),
                         ('/category/model/update',CategoryDetailsUpdate),
                         ('/category/(.*)',CategoryHandler),
                         ('/category',CategoryListHandler),

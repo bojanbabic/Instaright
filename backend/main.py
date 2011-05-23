@@ -11,6 +11,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.db import BadValueError
 from google.appengine.runtime import apiproxy_errors
+from google.appengine.api.taskqueue import TransientError
 
 from models import UserSessionFE, SessionModel, Links, UserDetails, Subscription, LinkCategory
 from generic_handler import GenericWebHandler
@@ -72,6 +73,9 @@ class MainHandler(webapp.RequestHandler):
                         version = StatsUtil.getVersion(args)
                         client = StatsUtil.getClient(args)
                 	user_agent = self.request.headers['User-agent']
+                        if user is None or user == 'undefined':
+                                logging.info('skipping since there is no user defined ( client %s )' % client )
+                                return
                         try:
                                 taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
                         except TransientError:

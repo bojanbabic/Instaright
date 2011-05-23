@@ -192,7 +192,7 @@
                         			container.appendChild(document.createElement('br'));
 
                         			contentParagraph = document.createElement('p');
-						if (typeof(lc) !== 'undefined'){
+						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length != 0 && lc != '[]'){
 							contentParagraph.innerHTML = '<a href="/category/'+lc+'">'+lc+'</a>';
 						} else {
                         				contentParagraph.innerHTML = dateUpdated;
