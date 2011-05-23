@@ -3,6 +3,7 @@ from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.api.labs import taskqueue
+from google.appengine.api import memcache
 
 from models import Links, SessionModel, LinkCategory
 from main import BroadcastMessage
@@ -179,6 +180,18 @@ class LinkCategoryHandler(webapp.RequestHandler):
                             if cats is None:
                                     logging.info('no categories. exit')
                                     return
+                            memcache_key=url+'_category'
+                            current_categories=memcache.get(memcache_key)
+                            merge_cat=None
+                            if current_categories is not None:
+                                    logging.info('merging with existing cats %s' %current_category)
+                                    from heapq import merge
+                                    merge_cat=list(merge(current_categories, cats))
+                            else:
+                                    merge_cat=cats
+                            logging.info('caching cats %s for url %s' %(current_category, url))
+                            memcache.set(memcache_key, set(merge_cats))
+
                             for c in cats:
                                 taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'model_key': str(model.key()), 'category':c, 'url': url})
                                 existingLinkCat = LinkCategory.gql('WHERE url = :1 and category = :2', url, c).get()
@@ -226,7 +239,7 @@ class CategoryFeedHandler(webapp.RequestHandler):
                         allentries = LinkCategory.gql('WHERE category = :1 order by updated desc', category).fetch(10)
                         entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None]
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'l': 'http://instaright.appspot.com/article/'+str(o.model_details.key()), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'l': 'http://instaright.appspot.com/article/'+str(o.model_details.key()), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':category}}))
 			return
                 self.reponse.headers['Content-Type'] = "application/json"
                 self.response.out.write("[{}]")
@@ -266,9 +279,36 @@ class CategoryStreamHandler(webapp.RequestHandler):
                 category_path='/category/%s' %category
 		broadcaster = BroadcastMessage()
                         
-                messageAsJSON = [{'u':{'id':str(model.key()), 't':unicode(model.title),'l':model.url,'d':model.domain,'u': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(model.instaright_account),'ol':model.url,'c':category}}]
+                messageAsJSON = [{'u':{'id':str(model.key()), 't':unicode(model.title),'l':model.url,'d':model.domain,'u': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(model.instaright_account),'ol':model.url,'c':category, 'lc':category}}]
                 logging.info('sending message %s for users on path %s' % (messageAsJSON, category_path))
                 broadcaster.send_message(messageAsJSON,category_path)
+
+class CategoryListHandler(GenericWebHandler):
+        def get(self):
+                logging.info('category list handler ')
+                self.redirect_perm()
+                self.get_user()
+                logging.info('category screen_name %s' %self.screen_name)
+                if self.avatar is None:
+                        self.avatar='/static/images/noavatar.png'
+
+                memcache_key='category_list'
+                memcache.delete(memcache_key)
+                cached_category=memcache.get(memcache_key)
+                categories={}
+                if cached_category is not None:
+                        categories=cached_category
+                else:
+                        categories = LinkCategory.getAllCategoryCount()
+                        memcache.set(memcache_key, categories)
+
+		template_variables = []
+                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':simplejson.dumps(categories)}
+		path= os.path.join(os.path.dirname(__file__), 'templates/category_list.html')
+                self.response.headers["Content-Type"] = "text/html; charset=utf-8"
+		self.response.out.write(template.render(path,template_variables))
+
+
 
 def main():
         run_wsgi_app(application)
@@ -284,6 +324,7 @@ application=webapp.WSGIApplication(
                         ('/category/(.*)/feed',CategoryFeedHandler),
                         ('/category/model/update',CategoryDetailsUpdate),
                         ('/category/(.*)',CategoryHandler),
+                        ('/category',CategoryListHandler),
                         ],debug=True
                 )
 

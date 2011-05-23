@@ -387,6 +387,8 @@ class UserUtil(object):
 
 	@classmethod
         def getAvatar(cls,instapaper_account):
+                if instapaper_account is None:
+                        return '/static/images/noavatar.png'
 		memcache_key='avatar_'+instapaper_account
 		cached_avatar = memcache.get(memcache_key)
 		if cached_avatar:

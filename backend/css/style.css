@@ -390,7 +390,7 @@ z-index: 2;
 }
 #nav h5 {
 float: left;
-margin: 10px 33px 0 0;
+margin: 10px 23px 0 0;
 }
 #nav .center {
 margin: 0 auto;
@@ -432,4 +432,9 @@ position: relative;
 	font-weight:700;
 
 	/*text-shadow: 0 -1px #224E6D;*/
+}
+span {
+	color: #0066CC;
+	font-size: 17px;
+	font-weight: 700;
 }

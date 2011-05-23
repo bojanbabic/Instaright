@@ -55,6 +55,7 @@ class BroadcastMessageTask(webapp.RequestHandler):
 			domain = self.request.get('domain', None)
                         user_id = self.request.get('user_id', None)
                         updated = self.request.get('updated', None)
+                        link_category = self.request.get('link_category', None)
                         subscribers = simplejson.loads(self.request.get('subscribers', None))
 
 			message = Message( title = title, link = link , domain = domain)
@@ -66,7 +67,8 @@ class BroadcastMessageTask(webapp.RequestHandler):
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)
                         logging.info('avatar %s' %avatar)
-                        messageAsJSON = [{'u':{'id':user_id, 't':title,'l':link,'d':domain,'a':avatar, 'u':updated}}]
+                        messageAsJSON = [{'u':{'id':user_id, 't':title,'l':link,'d':domain,'a':avatar, 'u':updated, 'lc':link_category}}]
+                        logging.info('sending message %s ' %messageAsJSON)
 			broadcaster.send_message(messageAsJSON)
 			xmpp_handler.send_message(subscribers, message)
                                        

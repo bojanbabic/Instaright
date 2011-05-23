@@ -26,6 +26,12 @@ indexes:
   - name: oauth_token
   - name: oauth_expires_in
 
+- kind: LinkCategory
+  properties:
+  - name: category
+  - name: updated
+    direction: desc
+
 - kind: LinkStats
   properties:
   - name: count
@@ -159,6 +165,12 @@ indexes:
 
 - kind: UserSessionFE
   properties:
+  - name: active
+  - name: path
+  - name: last_updatetime
+
+- kind: UserSessionFE
+  properties:
   - name: last_updatetime
     direction: desc
   - name: user
@@ -187,14 +199,4 @@ indexes:
   - name: date
     direction: desc
   - name: count
-    direction: desc
-- kind: UserSessionFE
-  properties:
-  - name: active
-  - name: path
-  - name: last_updatetime
-- kind: LinkCategory
-  properties:
-  - name: category
-  - name: updated
     direction: desc

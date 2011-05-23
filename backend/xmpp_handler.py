@@ -130,8 +130,8 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 			if s['d'] == message.domain or s['d'] == 'all':
 				msg = ' %s ( %s )' %( message.title, message.link)
 				xmpp.send_message(s['a'], msg)
-			else:
-				logging.info('skipping: domain missmatch')
+			#else:
+			#	logging.info('skipping: domain missmatch')
 
 class XMPPUserHandler(webapp.RequestHandler):
 	def post(self):

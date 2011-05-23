@@ -12,7 +12,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.db import BadValueError
 from google.appengine.runtime import apiproxy_errors
 
-from models import UserSessionFE, SessionModel, Links, UserDetails
+from models import UserSessionFE, SessionModel, Links, UserDetails, Subscription, LinkCategory
 from generic_handler import GenericWebHandler
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -71,10 +71,11 @@ class MainHandler(webapp.RequestHandler):
                         title = StatsUtil.getTitle(args)
                         version = StatsUtil.getVersion(args)
                         client = StatsUtil.getClient(args)
+                	user_agent = self.request.headers['User-agent']
                         try:
-                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client})
+                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
                         except TransientError:
-                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client})
+                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
 
 			logging.info('triggering feed update')
 
@@ -103,14 +104,16 @@ class MainTaskHandler(webapp.RequestHandler):
                 title=self.request.get('title',None)
                 version=self.request.get('version',None)
                 client=self.request.get('client',None)
+                user_agent = self.request.get('user_agent',None)
 
 		try:
 	                model = SessionModel()
-                	model.user_agent = self.request.headers['User-agent']
+                        #remove for local testing
                 	model.ip = self.request.remote_addr
                 	model.instaright_account = user
                 	model.date = datetime.datetime.now()
                 	model.url = url
+                        model.user_agent=user_agent
                 	model.domain = domain
                 	model.short_link = None
                 	model.feed_link = None
@@ -138,12 +141,30 @@ class MainTaskHandler(webapp.RequestHandler):
                 except TransientError:
                         taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'session_key': str(model.key()), 'url': url })
 
-                logging.info('pubsubhubbub feed update')
-		try:
-		        pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
-		except:
-		        e0, e = sys.exc_info()[0], sys.exc_info()[1]
-                        logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
+                # xmpp and main stream update
+		subscribers = Subscription.gql('WHERE active = True and mute = False').fetch(100)
+		subscribers_address = [ s.subscriber.address for s in subscribers ]
+                #known category
+                category=None
+                mem_key=model.url+'_category'
+                cached_category=memcache.get(mem_key)
+                if cached_category is not None:
+                        category=simplejson.dumps(cached_category)
+                        logging.info('got category from cache %s' %category)
+                if category is None:
+                        linkCategory=LinkCategory.gql('WHERE model_details = :1' , str(model.key())).fetch(1000)
+                        if linkCategory is not None:
+                                cats=[ l.category for l in linkCategory if l.category is not None ]
+                                category=simplejson.dumps(cats)
+                                logging.info('got category from query %s' %category)
+                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date, 'link_category': category, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+
+                #logging.info('pubsubhubbub feed update')
+		#try:
+		#        pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
+		#except:
+		#        e0, e = sys.exc_info()[0], sys.exc_info()[1]
+                #        logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
                 
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):

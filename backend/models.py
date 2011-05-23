@@ -341,3 +341,13 @@ class LinkCategory(db.Model):
 			lastKey=data[-1].key()
 			results.extend(data)
 		return results
+        @classmethod
+        def getAllCategoryCount(cls):
+                cats=LinkCategory.getAll()
+                all_cats = [ c.category for c in cats ]
+                result = dict((c, all_cats.count(c)) for c in set(all_cats) )
+                logging.info(result)
+                import operator
+                sorted_cats = sorted(result.iteritems(), key=operator.itemgetter(1), reverse=True)
+                return dict(sorted_cats)
+                

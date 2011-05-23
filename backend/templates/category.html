@@ -6,8 +6,9 @@
                 <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later" />
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
-                <script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
-                <script src='../static/javascript/channel.js'></script>
+                <!--script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script-->
+		<script type="text/javascript" src="/_ah/channel/jsapi"></script>
+                <!--script src='../static/javascript/channel.js'></script-->
                 <script src='../static/javascript/invite.js'></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -65,7 +66,7 @@
 			                feed_json_update = JSON.parse(evt.data);
 			                updateDisplayEntry(feed_json_update, stream);
 			        } catch(e){
-			                //alert('eee:'+e);
+			         //       alert('eee:'+e);
 			        } 
 			};
 
@@ -89,9 +90,38 @@
 
 			// Initialize the API.
 			var feed;
+			function noUpdates(){
+                        	container = document.createElement('div');
+                        	containerAvatar = document.createElement('div');
+
+
+                        	titleElement = document.createElement('a');
+                        	titleElement.innerHTML = 'Meh ... this category is kinda empty';
+
+                        	domainElement = document.createElement('a');
+                        	domainElement.innerHTML = 'Don\'t worry, there are lots of interesting categories one click away :)';
+                        	domainElement.href = '/category';
+
+                        	container.appendChild(titleElement);
+                        	container.appendChild(document.createElement('br'));
+                        	container.appendChild(document.createElement('br'));
+                        	container.appendChild(domainElement);
+                        	container.appendChild(document.createElement('br'));
+
+                		div = document.getElementById('stream');
+                        	div.insertBefore(container, div.firstChild);
+
+
+			}
 
 			function updateDisplayEntry(response, div) {
         			try{
+					// check if it is page load
+                        		sElements = $("#stream").children();
+					if ((typeof(response) == 'undefined' || response.length == 0) && sElements.length == 0){
+						noUpdates();
+						return;
+					}
                 			div = document.getElementById('stream');
                 			for (i = response.length - 1; i >= 0; i--) {
                         			e = response[i]['u'];
@@ -116,6 +146,7 @@
                         			}
                         			link = e['l'];
                         			dateUpdated = new Date(e['u']);
+                        			lc = e['lc'];
                         			id = e['id'];
 						a = e['a'];
                         			original_url = e['ol'];
@@ -161,7 +192,11 @@
                         			container.appendChild(document.createElement('br'));
 
                         			contentParagraph = document.createElement('p');
-                        			contentParagraph.innerHTML = dateUpdated;
+						if (typeof(lc) !== 'undefined'){
+							contentParagraph.innerHTML = '<a href="/category/'+lc+'">'+lc+'</a>';
+						} else {
+                        				contentParagraph.innerHTML = dateUpdated;
+						}
 
                         			domainParagraph = document.createElement('p');
                         			domainParagraph.innerHTML = domainElement;
@@ -193,6 +228,7 @@
 		<div class="center clearfix">
 			<h5><a href="/">Instaright - Perfect information for you in realtime.</a></h5>
                 <ul class="menu borderless clearfix"> 
+			<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
 			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         {% if user %}
 			<li><a href="javascript:alert('Dashboard coming soon!');"><span>{{ user }}</span></a></li>
@@ -230,6 +266,7 @@
                                                 margin:10px 0px 10px 0px;
                                                 padding:10px;
                                                 text-decoration:none;
+						height: 80px;
                                         }
                                 </style>
                                 <div id="stream"></div>
