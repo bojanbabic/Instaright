@@ -1,19 +1,21 @@
-import sys, os, urllib2, datetime, logging, cgi, uuid
-import pubsubhubbub_publish as pshb
+import sys
+import os
+import datetime
+import logging
 
-from utils import StatsUtil,LoginUtil
+from utils import StatsUtil,LinkUtil, UserScoreUtility
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api.labs import taskqueue
 from google.appengine.api import memcache, channel, users, datastore_errors
-from google.appengine.ext import db
+from google.appengine.ext.db import NotSavedError
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.db import BadValueError
 from google.appengine.runtime import apiproxy_errors
 from google.appengine.api.taskqueue import TransientError
 
-from models import UserSessionFE, SessionModel, Links, UserDetails, Subscription, LinkCategory
+from models import UserSessionFE, SessionModel, Subscription, LinkCategory
 from generic_handler import GenericWebHandler
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -106,17 +108,33 @@ class MainTaskHandler(webapp.RequestHandler):
 		url=self.request.get('url',None)
 		domain=self.request.get('domain',None)
                 title=self.request.get('title',None)
+                if not StatsUtil.checkUrl([],url):
+                    logging.info('skipping since url is not good!')
+                    return
+                if title is None or title == 'None' or title == 'null':
+                        title=LinkUtil.getLinkTitle(url)
+                if title is not None:
+                        title = title[:199]
+                logging.info('link title %s' %title)
                 version=self.request.get('version',None)
                 client=self.request.get('client',None)
                 user_agent = self.request.get('user_agent',None)
 
+                UserScoreUtility.updateLinkScore(user,url)
+                UserScoreUtility.updateDomainScore(user, domain)
+
+                taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version, 'client': client})
+                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
+                taskqueue.add(url='/link/recommendation/task', queue_name='link-rcmd-queue', params={'url':url })
+
+	        model = SessionModel()
 		try:
-	                model = SessionModel()
                         #remove for local testing
                 	model.ip = self.request.remote_addr
                 	model.instaright_account = user
                 	model.date = datetime.datetime.now()
                 	model.url = url
+                        model.url_hash = LinkUtil.getUrlHash(url)
                         model.user_agent=user_agent
                 	model.domain = domain
                 	model.short_link = None
@@ -135,40 +153,41 @@ class MainTaskHandler(webapp.RequestHandler):
 					timeout_ms *= 2
                 	logging.info('model saved: %s %s' % (model.to_xml() , model.client))
 		except BadValueError, apiproxy_errors.DeadlineExceededError:
-			logging.info('error while saving url %s' % url)
+		        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+			logging.error('error while saving url %s ( %s, %s)' % (url, e0, e1))
 
 
-                taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version})
-                taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
                 try:
-                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'session_key': str(model.key()), 'url': url })
+                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'url': url })
                 except TransientError:
-                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'session_key': str(model.key()), 'url': url })
+                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'url': url })
 
                 # xmpp and main stream update
 		subscribers = Subscription.gql('WHERE active = True and mute = False').fetch(100)
-		subscribers_address = [ s.subscriber.address for s in subscribers ]
                 #known category
                 category=None
-                mem_key=model.url+'_category'
-                cached_category=memcache.get(mem_key)
+                cached_category=None
+                if model.url is not None:
+                        mem_key=model.url+'_category'
+                        cached_category=memcache.get(mem_key)
                 if cached_category is not None:
-                        category=simplejson.dumps(cached_category)
+                        category=",".join(cached_category)
                         logging.info('got category from cache %s' %category)
                 if category is None:
-                        linkCategory=LinkCategory.gql('WHERE model_details = :1' , str(model.key())).fetch(1000)
+                        linkCategory=None
+                        try:
+                                linkCategory=LinkCategory.gql('WHERE category != NULL and url = :1 ' , model.url).fetch(1000)
+                        except NotSavedError:
+                                logging.info('not saved key for url %s' % model.url)
                         if linkCategory is not None:
-                                cats=[ l.category for l in linkCategory if l.category is not None ]
-                                category=simplejson.dumps(cats)
-                                logging.info('got category from query %s' %category)
-                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date, 'link_category': category, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+                                logging.info('got %s categories for %s' %( len(linkCategory), model.url))
 
-                #logging.info('pubsubhubbub feed update')
-		#try:
-		#        pshb.publish('http://pubsubhubbub.appspot.com', 'http://instaright.appspot.com/feed')
-		#except:
-		#        e0, e = sys.exc_info()[0], sys.exc_info()[1]
-                #        logging.info('(handled):Error while triggering pshb update: %s %s' % (e0, e))
+                                cats_tag=[ l.category  for l in linkCategory if l.category is not None ]
+                                category=simplejson.dumps(cats_tag)
+                                #category=simplejson.dumps(",".join(cats_tag))
+                                logging.info('got category from query %s' %category)
+                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+
                 
 class ErrorHandling(webapp.RequestHandler):
 	def post(self):

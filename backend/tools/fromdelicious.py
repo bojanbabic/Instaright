@@ -84,8 +84,12 @@ class DeliciousImportTask(webapp.RequestHandler):
                d_link='http://feeds.delicious.com/v2/json/%s'  %duser
                logging.info('fetching felicious feed %s' %d_link)
                #dpass = self.request.get('dpass',None)
-               dta = urllib2.urlopen(d_link)
-               json = simplejson.load(dta)
+               json = None
+               try:
+                       dta = urllib2.urlopen(d_link)
+                       json = simplejson.load(dta)
+               except:
+                       logging.info('can\'t fetch url %s' % d_link)
                if json is not None:
                    for j in json:
                        logging.info('delicious link %s %s' %(j['d'], j['u']))

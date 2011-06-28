@@ -192,8 +192,8 @@
                         			container.appendChild(document.createElement('br'));
 
                         			contentParagraph = document.createElement('p');
-						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length != 0 && lc != '[]'){
-							contentParagraph.innerHTML = '<a href="/category/'+lc+'">'+lc+'</a>';
+						if (typeof(lc) !== 'undefined' ){
+							contentParagraph.innerHTML = "<span class=\"text_bubble_cats\"><a href=\"/category/"+lc+"\">"+lc+"</a></span>";
 						} else {
                         				contentParagraph.innerHTML = dateUpdated;
 						}
@@ -297,7 +297,7 @@
                                         <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a href="http://twitter.com/instaright">Twitter</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a href="http://www.facebook.com/instaright">Facebook Page</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a href="http://instaright.tumblr.com/">Blog</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Import to Instapaper</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Import</a></li>
                                 </ul>
                         </div>
                         <div id="right_box_bot">

@@ -1,7 +1,9 @@
 application: instaright
-version: 55
+version: 49
 runtime: python 
 api_version: 1
+builtins:
+- remote_api: on
 
 handlers:
 - url: /cron

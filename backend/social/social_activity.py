@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime, os, sys, urllib2, logging, urllib, time
+import datetime, os, sys, urllib2, logging, urllib, time, ConfigParser
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
@@ -8,7 +8,7 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from models import UserDetails, Links
-from utils import LinkUtil
+from utils import LinkUtil,StatsUtil
 
 sys.path.append('social')
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -77,13 +77,21 @@ class TwitterFollowHandler(webapp.RequestHandler):
                 user.put()
 
 class TweetHotLinks(webapp.RequestHandler):
+        def __init__(self):
+                config=ConfigParser.ConfigParser()
+                config.read(os.path.split(os.path.append(__file__)[0]+'/../properties/general.ini'))
+                self.skip_domains=config.get('twit','skip_domain')
         def get(self):
                  not_shared=False
                  hotLinks = Links.gql('WHERE shared = :1 ORDER by date_added desc, overall_score desc', not_shared).fetch(30)
                  linkUtil=LinkUtil()
                  a=[]
                  for h in hotLinks:
-                        if "twitter.com" in h.url or "google.com" in h.url or "instapaper.com" in h.url or  "facebook.com" in h.url or  "edition.cnn.com" in h.url or "maps.google.com" in h.url or "wikipedia.com" in h.url:
+                        if h.domain is None:
+                                h.domain=StatsUtil.getDomain(h.url)
+                                h.put()
+
+                        if h.domain in self.skip_domains:
                                 logging.info('filering out %s' %h.url)
                                 h.delete()
                                 continue
@@ -206,7 +214,7 @@ class Twit:
                                         top_category = sorteddict[len(sorteddict)-1]
                 if len(self.text) <= 140:
                                 if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
-                                        self.text +=" #%s" %top_category[0]
+                                        self.text +=" #%s" % unicode(top_category[0])
                                 if link.diggs is not None and link.diggs > 4 and 8 + len(self.text) +2 <= 140:
                                         self.text +=" #digg %s" % link.diggs
                 logging.info('self.text: %s' % self.text)
@@ -225,7 +233,7 @@ class Twit:
                         if len(dicti) == 0:
 				if title_from_url is not None and len(title_from_url) > 10:
                         		logging.info('trying from title to get twit text')
-					self.text = title_from_url[0:80] + " .... " + short_link + " #recommended"
+					self.text = unicode(title_from_url[0:80]) + " .... " + short_link + " #recommended"
 				else:
                                		logging.info('no cat. generating old style')
                                		self.textOldStyle(link)
@@ -240,16 +248,16 @@ class Twit:
                                top_category1 = None
                                top_category2 = None
                                try:
-                                        top_category = sorteddict[0]
-                                        top_category1 = sorteddict[1]
-                                        top_category2 = sorteddict[2]
+                                        top_category = unicode(sorteddict[0])
+                                        top_category1 = unicode(sorteddict[1])
+                                        top_category2 = unicode(sorteddict[2])
                                         logging.info('top cats %s' % sorteddict)
                                except:
                                         logging.info('can\'t get all cats')
 			       if short_link is None:
 					self.text=None
 					return
-                               self.text=""+link.title[0:59] + "... " +short_link
+                               self.text=""+unicode(link.title[0:59]) + "... " +short_link
                                if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
                                         self.text += " #%s" % top_category[0]
                                if top_category1 is not None and top_category1[0] not in self.text and len(top_category1[0]) + len(self.text) +2 <= 140:
@@ -260,7 +268,7 @@ class Twit:
 			if title_from_url is not None and len(title_from_url) > 20:
                         	logging.info('trying from title to get twit text')
                                 short_link = linkUtil.shortenLink(link.url)
-				self.text = title_from_url[0:80] + " .... " + short_link + " #recommended"
+				self.text = unicode(title_from_url[0:80]) + " .... " + short_link + " #recommended"
 			else:
                         	logging.info('no categories going back to old style')
                         	self.textOldStyle(link)
@@ -272,7 +280,7 @@ application = webapp.WSGIApplication(
                                         [
                                                 ('/util/twitter/follow/(.*)', TwitterFollowHandler),
                                                 ('/util/twitter/reply/(.*)', TwitterReplyHandler), 
-                                                ('/util/twitter/twit', TweetHotLinks), 
+                                                #('/util/twitter/twit', TweetHotLinks), 
                                                 ('/util/twitter/twit/task', TweetHotLinksTask), 
                                                 ('/util/twitter/reset_sent', TwitterResetSendHandler),
                                                 ], debug=True

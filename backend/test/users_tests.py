@@ -2,14 +2,13 @@ import unittest, logging, ConfigParser, sys, os
 from google.appengine.api import urlfetch
 from users import UserUtil
 
-
 class AppEngineAPITest(unittest.TestCase):
     
-    def test_urlfetch(self):
+    def _test_urlfetch(self):
         response = urlfetch.fetch('http://www.google.com')
         self.assertEquals(15, response.content.find('<html>'))
 class KloutScoreTest(unittest.TestCase):
-    def testKloutScore(self):
+    def _testKloutScore(self):
 	user='gbabun@gmail.com'
 	config=ConfigParser.ConfigParser()
 	config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')

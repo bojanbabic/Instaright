@@ -1,11 +1,12 @@
 import datetime, logging
 from google.appengine.ext import db 
 
-class SessionModel(db.Model):
+class SessionModel(db.Model): 
 	user_agent=db.StringProperty()
 	instaright_account=db.StringProperty()
 	ip=db.StringProperty()
 	url=db.LinkProperty()
+        url_hash = db.StringProperty()
         short_url=db.LinkProperty()
         feed_url=db.LinkProperty()
 	date=db.DateTimeProperty()
@@ -270,6 +271,7 @@ class UserDetails(db.Model):
 
 class Links(db.Model):
         url=db.TextProperty()
+        url_hash=db.StringProperty()
         domain=db.TextProperty()
         all_score=db.IntegerProperty()
         influence_score = db.IntegerProperty()
@@ -292,6 +294,7 @@ class Links(db.Model):
         created = db.IntegerProperty()
         date_added = db.DateProperty(auto_now_add=True)
         date_updated = db.DateProperty(auto_now_add=True)
+        recommendation = db.TextProperty()
         shared = db.BooleanProperty(default=False)
 
 class UserStats(db.Model):
@@ -307,9 +310,16 @@ class DeliciousImporter(db.Model):
         oauth_token_secret=db.StringProperty()
         oauth_token=db.StringProperty()
         oauth_expires_in=db.DateTimeProperty()
+class Badges(db.Model):
+        badge_label = db.StringProperty()
+        badge_desc = db.StringProperty()
+        badge_icon = db.StringProperty()
+        badge_quote = db.StringProperty()
 class UserBadge(db.Model):
         user=db.StringProperty()
         badge=db.StringProperty()
+        badge_property = db.ReferenceProperty(Badges)
+        user_property = db.ReferenceProperty(UserDetails)
         date=db.DateProperty(auto_now_add=True)
 class UserSessionFE(db.Model):
 	user = db.UserProperty()
@@ -326,6 +336,7 @@ class CategoryDomains(db.Model):
 	
 class LinkCategory(db.Model):
         url=db.StringProperty()
+        url_hash=db.StringProperty()
         category=db.StringProperty()
         updated=db.DateTimeProperty(auto_now_add = True)
         model_details=db.ReferenceProperty(SessionModel)
@@ -344,6 +355,8 @@ class LinkCategory(db.Model):
         @classmethod
         def getAllCategoryCount(cls):
                 cats=LinkCategory.getAll()
+                if cats is None:
+                        return None
                 all_cats = [ c.category for c in cats ]
                 result = dict((c, all_cats.count(c)) for c in set(all_cats) )
                 logging.info(result)
@@ -351,3 +364,8 @@ class LinkCategory(db.Model):
                 sorted_cats = sorted(result.iteritems(), key=operator.itemgetter(1), reverse=True)
                 return dict(sorted_cats)
                 
+
+class ScoreUsersDaily(db.Model):
+        user=db.ReferenceProperty(UserDetails)
+        score=db.IntegerProperty(default=0)
+        date=db.DateProperty()

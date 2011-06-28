@@ -1,4 +1,9 @@
-import os, urllib2, logging, ConfigParser, sys, os, datetime
+import urllib2
+import logging
+import ConfigParser
+import sys
+import datetime
+import os
 from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
@@ -51,7 +56,7 @@ class CategoryDetailsUpdate(webapp.RequestHandler):
                                         #logging.info('url %s already has details, skipping update' %l.url)
                                         continue
                                 logging.info('updating url details %s ' %l.url)
-                                s=SessionModel.gql('WHERE url = :1', l.url).get()
+                                s=SessionModel.gql('WHERE url = :1 order by date desc', l.url).get()
                                 if s is None:
                                         logging.info('no session model for url %s trying feed url' %l.url)
                                 s=SessionModel.gql('WHERE feed_url = :1', l.url).get()
@@ -161,27 +166,20 @@ class LinkCategoryHandler(webapp.RequestHandler):
 		self.alchemy_key=config.get('social', 'alchemy_api_key')
         def post(self):
 		url=self.request.get('url',None)
-                key=self.request.get('session_key', None)
+                url_hash = LinkUtil.getUrlHash(url)
                 if url is None:
                         logging.info('no link in request. skipping')
                         return
-                if id is None:
-                        logging.info('link inconsistency detected. skipping.')
-                        return
-                modelKey = db.Key(key)
-                model = SessionModel.gql('WHERE __key__ = :1', modelKey).get()
-                if model is None:
-                        logging.error('no session model for key %s ' %str(modelKey))
-                        return
-
                 category_api='http://access.alchemyapi.com/calls/url/URLGetCategory?apikey=%s&url=%s&outputMode=json' %(self.alchemy_key, urllib2.quote(url.encode('utf-8')))
                 logging.info('trying to fetch shared count info %s' %category_api)
                 link=None
-                languge=None
+                language=None
                 category=None
 
 		try:
-                	link = Links.gql('WHERE url = :1', url).get()
+                	link = Links.gql('WHERE url_hash = :1', url_hash).get()
+                        if link is None:
+                	        link = Links.gql('WHERE url = :1', url).get()
 		except BadValueError:
 			logging.info('url property too long')
                 if link is None:
@@ -202,36 +200,68 @@ class LinkCategoryHandler(webapp.RequestHandler):
                             if cats is None:
                                     logging.info('no categories. exit')
                                     return
-                            memcache_key=url+'_category'
+                            memcache_key=url_hash+'_category'
                             current_categories=memcache.get(memcache_key)
                             merge_cat=None
                             if current_categories is not None:
-                                    logging.info('merging with existing cats %s' %current_category)
-                                    from heapq import merge
-                                    merge_cat=list(merge(current_categories, cats))
-                            else:
-                                    merge_cat=cats
+                                    logging.info('merging with existing cats %s' %current_categories)
+                                    merge_cat=current_categories
+                                    for c in cats:
+                                            merge_cat.add(c)
+                                    merge_cat=set(merge_cat)
+                            else: 
+                                    merge_cat=cats 
+                            model=None 
+                            try: 
+                                    model=SessionModel.gql('WHERE url_hash = :1 order by date desc', url).get() 
+                                    if model is None:
+                                        model=SessionModel.gql('WHERE url = :1 order by date desc', url).get()
+                            except BadValueError:
+                                logging.info('url too long ... %s' %url)
+                            if model is None:
+                                logging.info('model not defined ... skipping')
+                                return
+
+                            linkDetail=Links.gql('WHERE url_hash = :1' , url_hash).get()
+                            if linkDetail is None:
+                                linkDetail=Links.gql('WHERE url = :1' , url).get()
+                            if linkDetail is not None and linkDetail.categories is not None:
+                                    logging.info('category found from link details')
+                                    delic_cats=eval(linkDetail.categories)
+                                    d_cats=[ c[0] for c in  delic_cats ]
+                                    for c in d_cats:
+                                            cats.add(c)
+                                    cats=set(cats)
+
                             logging.info('caching cats %s for url %s' %(current_categories, url))
                             memcache.set(memcache_key, set(merge_cat))
 
                             for c in cats:
-                                taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'model_key': str(model.key()), 'category':c, 'url': url})
-                                existingLinkCat = LinkCategory.gql('WHERE url = :1 and category = :2', url, c).get()
+                                taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'category':c, 'url': url})
+                                existingLinkCat = LinkCategory.gql('WHERE url_hash = :1 and category = :2', url_hash, c).get()
+                                if existingLinkCat is None:
+                                        existingLinkCat = LinkCategory.gql('WHERE url = :1 and category = :2', url, c).get()
                                 if existingLinkCat is not None:
                                         existingLinkCat.updated=datetime.datetime.now()
+                                        if existingLinkCat.url_hash is None:
+                                                existingLinkCat.url_hash = url_hash
                                         existingLinkCat.put()
                                         logging.info('updated exisitng url(%s) category(%s) update time %s' % (url, c, existingLinkCat.updated))
                                 else:
                                         logging.info('new pair: url%s) category(%s) ' % (url, c))
                                         linkCategory=LinkCategory()
                                         linkCategory.url=url
+                                        linkCategory.url_hash = url_hash
                                         linkCategory.category=c
-                                        linkCategory.model_details=model.key()
+                                        if model is not None:
+                                                linkCategory.model_details=model.key()
                                         linkCategory.put()
+
                     if language is not None:
                             link.language = language
-                            link.url=url
-                            link.put()
+                    link.url=url
+                    link.url_hash=url_hash
+                    link.put()
                 except KeyError:
                     e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                     logging.info('key error [[%s, %s]] in %s' %(e0, e1, json))
@@ -287,7 +317,6 @@ class CategoryHandler(GenericWebHandler):
 class CategoryStreamHandler(webapp.RequestHandler):
         def post(self):
                 category=self.request.get('category', None)
-                model_key=self.request.get('model_key', None)
                 url=self.request.get('url', None)
                 userUtil=UserUtil()
                 if category is None or len(category) == 0:
@@ -296,12 +325,18 @@ class CategoryStreamHandler(webapp.RequestHandler):
                 if url is None:
                         logging.info('no url in request. skipping ...')
                         return
-                key=db.Key(model_key)
-                model=SessionModel.gql('WHERE __key__ = :1' , key).get()
+                model = SessionModel.gql('WHERE url = :1', url).get()
+                if model is None:
+                        logging.error('no session model for url %s ' %url)
+                        return
+
                 category_path='/category/%s' %category
 		broadcaster = BroadcastMessage()
+                date_published=''
+                if model.date is not None:
+                        date_published=model.date.strftime("%Y-%m-%dT%I:%M:%SZ")
                         
-                messageAsJSON = [{'u':{'id':str(model.key()), 't':unicode(model.title),'l':model.url,'d':model.domain,'u': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(model.instaright_account),'ol':model.url,'c':category, 'lc':category}}]
+                messageAsJSON = [{'u':{'id':str(model.key()), 't':unicode(model.title),'l':model.url,'d':model.domain,'u': date_published, 'a':userUtil.getAvatar(model.instaright_account),'ol':model.url,'c':category, 'lc':category}}]
                 logging.info('sending message %s for users on path %s' % (messageAsJSON, category_path))
                 broadcaster.send_message(messageAsJSON,category_path)
 

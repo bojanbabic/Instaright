@@ -1,63 +1,121 @@
-import datetime, time, urllib, logging, os, sys
+import datetime
+import time
+import urllib
+import urllib2
+import logging
+import os
+import sys
+import ConfigParser
 from google.appengine.ext import webapp
 from google.appengine.api import urlfetch
+from google.appengine.api import datastore_errors
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
+from google.appengine.runtime import apiproxy_errors
 
-from models import UserDetails, SessionModel, UserStats, UserBadge
-from utils import BadgeUtil
+from models import UserDetails, SessionModel, Badges
+from models import UserStats, UserBadge, ScoreUsersDaily
+from utils import BadgeUtil, UserScoreUtility
+from generic_handler import GenericWebHandler
 
-sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 import simplejson
 
 
 class TopUserHandler(webapp.RequestHandler):
         def get(self, stat_range):
-		#try:
-                        format=self.request.get('format',None)
-			if '-' in stat_range:
-				low, high = stat_range.split('-')
-			else:
-				low, high = stat_range, None
-       		 	memcache_key = 'top_users_'+str(datetime.datetime.now().date())+'_'+stat_range
-       		        usrs = memcache.get(memcache_key)
-		        if usrs:
-                                if format and format == 'txt':
-                                        self.response.headers["Content-type"] = "text/plain"
-                                        self.response.out.write("\n".join([ u[0] for u in usrs ]))
-                                        return 
-                	        template_variables = {'users' : usrs }
-        			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
-                    		self.response.headers["Content-type"] = "text/html"
-        			self.response.out.write(template.render(path,template_variables))
-                                return
-       			elif high:
-				logging.info('lower range %s ; higher range %s' %(low, high))
-				users = UserDetails.gql('WHERE links_added >= :1 and links_added < :2 ORDER by links_added DESC', int(low), int(high))
-			else:
-				logging.info('lower range %s ' %low)
-				users = UserDetails.gql('WHERE links_added >= :1 ORDER by links_added DESC', int(low))
-                        logging.info('fetched %d users ' % users.count())
-	       		user_accounts = [ (u.instapaper_account, u.links_added) for u in users ]
-			if users.count() > 0:
-				logging.info('setting users cache. %s user entries' % users.count())
-        			memcache.set(memcache_key, user_accounts)
+                format = self.request.get('format', None)
+		if '-' in stat_range:
+		        low, high = stat_range.split('-')
+		else:
+		        low, high = stat_range, None
+       		memcache_key = 'top_users_' +str(datetime.datetime.now().date()) + '_' + stat_range
+       		usrs = memcache.get(memcache_key)
+		if usrs:
                         if format and format == 'txt':
                                 self.response.headers["Content-type"] = "text/plain"
-                                self.response.out.write("\n".join([ u[0] for u in user_accounts ]))
-                                return
-                	template_variables = {'users' : user_accounts }
-			path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
-        		self.response.headers["Content-type"] = "text/html"
-			self.response.out.write(template.render(path,template_variables))
-	#	except:
-	#		e, e0 = sys.exc_info()[0], sys.exc_info()[1]
-	#		logging.error('stats error: %s ; %s' %(e, e))
-	#		self.response.out.write('oups, try something else')
+                                self.response.out.write("\n".join([u[0] for u in usrs]))
+                                return 
+                	template_variables = {'users': usrs}
+        		path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
+                    	self.response.headers["Content-type"] = "text/html"
+        		self.response.out.write(template.render(path, template_variables))
+                        return
+       	        elif high:
+			logging.info('lower range %s ; higher range %s' %(low, high))
+			users = UserDetails.gql('WHERE links_added >= :1 and links_added < :2 ORDER by links_added DESC', int(low), int(high))
+		else:
+			logging.info('lower range %s ' %low)
+			users = UserDetails.gql('WHERE links_added >= :1 ORDER by links_added DESC', int(low))
+                logging.info('fetched %d users ' % users.count())
+	       	user_accounts = [ (u.instapaper_account, u.links_added) for u in users ]
+		if users.count() > 0:
+			logging.info('setting users cache. %s user entries' % users.count())
+        		memcache.set(memcache_key, user_accounts)
+                if format and format == 'txt':
+                        self.response.headers["Content-type"] = "text/plain"
+                        self.response.out.write("\n".join([ u[0] for u in user_accounts ]))
+                        return
+                template_variables = {'users' : user_accounts }
+		path= os.path.join(os.path.dirname(__file__), 'templates/top_users.html')
+        	self.response.headers["Content-type"] = "text/html"
+		self.response.out.write(template.render(path,template_variables))
 
+
+class UserGenericHandler(GenericWebHandler):
+        def __init__(self):
+                conf=ConfigParser.ConfigParser()
+	        conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/users.ini')
+                self.visible_links=int(conf.get('dashboard','show_links'))
+        def get(self):
+                #redirect from appengine domain
+                self.redirect_perm()
+                self.get_user()
+
+                if self.user_uuid is None or len(str(self.user_uuid)) == 0 or self.screen_name is None or self.user_detail_key is None:
+                        logging.info('No cookies, redirecting to home page')
+                        self.redirect('/')
+                        return
+                logging.info('user: %s' %self.instaright_account)
+                sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , self.instaright_account).fetch(40)
+
+                score = 0
+                links = None
+                if sessions is not None:
+                        links = [ s for s in sessions if s is not None ]
+                ud_key=db.Key(self.user_detail_key)
+                logging.info('user detail key %s' % self.user_detail_key)
+                template_variables=[]
+                now=datetime.datetime.now().date()
+                start_of_week= time.asctime(time.strptime('%s %s 1' %(now.year, now.isocalendar()[1]), '%Y %W %w'))
+                memcache_key='user_'+self.user_detail_key+'_score'
+                cached_score=memcache.get(memcache_key)
+                if cached_score is not None:
+                        logging.info('got score from cache( %s ): %s' %( memcache_key, cached_score ))
+                        score=cached_score
+                else:
+                        logging.info('parameters: start of week %s now %s for user_key %s ' % ( start_of_week,now, ud_key))
+                        score_entities = ScoreUsersDaily.gql('WHERE user = :1 and date <= :2 and date >= :3', ud_key, now , start_of_week).fetch(100)
+                        logging.info('got %s score entities' % len(score_entities))
+                        if score_entities is not None:
+                                scores = [ s.score for s in score_entities if s is not None ]
+                                score=sum(scores)
+
+                        logging.info('calculated score : %s' % score )
+                        exp_ts=time.mktime((datetime.datetime.now() + datetime.timedelta(days=1)).timetuple())
+                        memcache.set(memcache_key, score, time=exp_ts)
+                badges = None
+                all_badges = UserBadge.gql('WHERE user = :1 order by date desc', self.instaright_account).fetch(1000)
+                if all_badges is not None:
+                        badges = set([ (b.badge, b.badge_property.badge_desc) for b in all_badges if b is not None and b.badge_property is not None ])
+                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'links':links, 'score': score, 'visible_items_num': self.visible_links, 'badges': badges,'logout_url':'/account/logout'}
+                logging.info('templates %s' %template_variables)
+                path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
+                self.response.headers["Content-type"] = "text/html"
+		self.response.out.write(template.render(path,template_variables))
 
 class UserHandler(webapp.RequestHandler):
         def get(self, user):
@@ -66,6 +124,15 @@ class UserHandler(webapp.RequestHandler):
                         return
                 user_decoded = urllib.unquote(user)
                 logging.info('user: %s' %user_decoded)
+                ud=UserDetails.gql('WHERE instapaper_account = :1' , user_decoded).get()
+                if ud is None:
+                        logging.info('non existing user. redirect to home')
+                        self.redirect('/')
+                        return
+                # sanity check
+                if ud.instaright_account is None:
+                        ud.instaright_account = ud.instapaper_account
+                        ud.put()
                 memcache_key ='user_info_' + user_decoded+'_'+str(datetime.datetime.now().date())
                 sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , user_decoded).fetch(100)
                 links = [ s for s in sessions if s is not None ]
@@ -85,15 +152,19 @@ class UserHandler(webapp.RequestHandler):
                         ud = UserDetails()
                         ud.name = user_decoded
                         ud.instapaper_account = user_decoded
+                        ud.instaright_account = user_decoded
                         ud.links_added = SessionModel.countAllForUser(user_decoded)
                         # tmp put until we find more info for user
-                        #ud.put()
+                        ud.put()
                         template_variables = {'user':ud, 'links': links}
                         path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
                         self.response.headers["Content-type"] = "text/html"
                         self.response.headers["Accept-Charset"] = "utf-8"
 		        self.response.out.write(template.render(path,template_variables))
 			return
+                if user_detail.instaright_account is None:
+                        user_detail.instaright_account = user_decoded
+                        user_detail.put()
 		memcache.set(memcache_key, user_detail)
                 template_variables = {'user':user_detail, "links" : links}
                 path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
@@ -101,7 +172,6 @@ class UserHandler(webapp.RequestHandler):
 		self.response.out.write(template.render(path,template_variables))
 
         def gather_info(self, user):
-
                 if not '@' in user:
 			logging.info('not email address: skipping ...')
                         user_detail = UserDetails()
@@ -112,9 +182,12 @@ class UserHandler(webapp.RequestHandler):
 		if user_detail.mail is None:
 			logging.info('updating user details setting user mail %s' % user)
 			user_detail.mail = user
+                if user_detail.instaright_account is None:
+                        logging.info('update instaright account for user %s' % user)
+                        user_detail.instaright_account = user
 
                 #PREPARE for request
-                time_milis = time.time() * 1000
+                #time_milis = time.time() * 1000
                 logging.info("user encoded %s" % user)
                 RAPPORTIVE_LINK = "https://rapportive.com/contacts/email/%s" % user
 		logging.info('fetchin url:%s' %RAPPORTIVE_LINK)
@@ -307,7 +380,7 @@ class UserStatsDeleteHandler(webapp.RequestHandler):
                 #        return
                 allUsers = UserStats.gql('WHERE date = :1', date).fetch(1000)
                 if not allUsers:
-                        loging.info('not stats for %s delete , exit' %d)
+                        logging.info('not stats for %s delete , exit' %d)
                         return
                 logging.info('total stats for  %s delete %d' % (d, len(allUsers)))
                 for u in allUsers:
@@ -356,9 +429,26 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                 url=self.request.get('url', None)
                 domain=self.request.get('domain', None)
                 version=self.request.get('version', None)
+                client=self.request.get('client', None)
+                badge=None
                 if user is None:
                         logging.info('unknown user skipping')
                         return
+                user_details = UserDetails.gql('WHERE instaright_account = :1', user).get()
+                if user_details is None:
+                        user_details = UserDetails()
+                        user_details.instaright_account = user
+                        user_details.put()
+                client_badge = UserBadge.gql('WHERE badge = :1 and user = :2', client, user).get()
+                if client_badge is None:
+                        badge = Badges.gql('WHERE badge_label = :1' , client).get()
+                        client_badge = UserBadge()
+                        client_badge.badge = client
+                        client_badge.badge_property = badge.key()
+                        client_badge.date = datetime.datetime.now().date()
+                        client_badge.user = user
+                        client_badge.user_property = user_details.key()
+                        client_badge.put()
                 if version is not None and len(version) == 0:
                         version = None
                 currentBadge = memcache.get('badge_'+user)
@@ -378,11 +468,21 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                         logging.info('setting badge cache: %s for user badge_%s valid until midnight %s' % (badge,user,midnight_ts))
                         existingBadge=UserBadge.gql('WHERE badge = :1 and user = :2 and date = :3', badge, user, datetime.datetime.now().date()).get()
                         if existingBadge is not None:
+                                self.response.out.write('request processed')
                                 return
+                        b = Badges.gql('WHERE badge_label = :1' , badge).get()
+                        if b is None:
+                                b = Badges()
+                                b.badge_label = badge
+                                b.badge_icon = badge
+                                b.put()
                         userBadge=UserBadge()
                         userBadge.user=user
                         userBadge.badge=badge
+                        userBadge.badge_property = b.key()
+                        userBadge.user_property = user_details.key()
                         userBadge.put()
+                UserScoreUtility.updateBadgeScore(user, badge)
 class UserUtil(object):
 
 	@classmethod
@@ -446,7 +546,7 @@ class UserUtil(object):
 			logging.info('klout api returned score %s for user %s' % ( str(score), screen_name))
 		except:
                         e, e1 = sys.exc_info()[0], sys.exc_info()[1]
-                        logging.error('error: %s, %s' %(e, e1))
+                        logging.info('error: %s, %s for response: %s' %(e, e1, json))
 		if score is not None:
 			userDetails.klout_score=int(score)
 			userDetails.put()
@@ -460,13 +560,14 @@ app = webapp.WSGIApplication([
                                 ('/user/stats/(.*)', UserStatsHandler),
                                 #NOTE: never uncomment this
                                 #('/user/delete_all', UserDeleteHandler),
+                                ('/user/dashboard', UserGenericHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
                                 ('/user/task/update_all', UserUpdate),
                                 ('/user/badge/task', UserBadgeTaskHandler),
                                 ('/user/(.*)/(.*)', UserFormKeyHandler),
                                 ('/user/(.*)', UserHandler),
-                                        ], debug =True)
+                                        ], debug = True)
 def main():
         run_wsgi_app(app)
 

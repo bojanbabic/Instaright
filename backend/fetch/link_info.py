@@ -1,4 +1,8 @@
-import sys, urllib2, exceptions, os, logging, datetime, time
+import sys
+import urllib2
+import os
+import logging
+import datetime
 
 from utils import StatsUtil,Cast, TaskUtil, ConfigParser, LinkUtil
 from users import UserUtil
@@ -7,7 +11,10 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api.labs import taskqueue
+from google.appengine.api import datastore_errors
 from google.appengine.ext.db import BadValueError
+from google.appengine.runtime import apiproxy_errors
+from google.appengine.api import mail
                 
 sys.path.append('../social')
 from social_activity import Twit
@@ -42,9 +49,16 @@ class LinkHandler(webapp.RequestHandler):
 
 	def update_link(self, url, link):
 		existingLink=None
+                url_hash = LinkUtil.getUrlHash(url)
+                link.url_hash = url_hash
+                #qfix for title TODO: find proper solution
+                if link.title is not None:
+                        link.title=link.title[:199]
 		try:
-                	existingLink = Links.gql('WHERE url = :1', url).get()
-		except BadValueError:
+                	existingLink = Links.gql('WHERE url_hash  = :1', url_hash).get()
+                        if existingLink is None:
+                	        existingLink = Links.gql('WHERE url = :1', url).get()
+		except:
 			logging.info('bad value for url %s' % url)
                 if existingLink is not None:
                         existingLink.date_updated= link.date_updated
@@ -60,6 +74,9 @@ class LinkHandler(webapp.RequestHandler):
                         existingLink.delicious_count=link.delicious_count
                         existingLink.facebook_like=link.facebook_like
 			existingLink.domain = link.domain
+                        if existingLink.url_hash is None:
+                                existingLink.url_hash = url_hash
+                        existingLink.title = link.title[:199]
                         #if increase in score is more then 20%
                         if  existingLink.overall_score == 0 or link.overall_score  / existingLink.overall_score >= 1.2:
                                 existingLink.shared=False
@@ -83,6 +100,7 @@ class LinkHandler(webapp.RequestHandler):
         def get(self):
                 self.response.out.write('get')
 
+        #TODO see if this is still used
 	def delicious_data(self, url):
                 delicious_api='http://feeds.delicious.com/v2/json/urlinfo/data?url=%s&type=json' % url
                 logging.info('trying to fetch delicious info %s ' % delicious_api)
@@ -107,6 +125,7 @@ class LinkHandler(webapp.RequestHandler):
 		domain = StatsUtil.getDomain(url)
 		logging.info('from %s domain %s' %( url, domain))
 		url=urllib2.quote(url.encode('utf-8'))
+                url_hash = LinkUtil.getUrlHash(url)
 
                 topsy_api='http://otter.topsy.com/stats.json?url=%s' % url
                 tweet_meme_api='http://api.tweetmeme.com/url_info.json?url=%s' %url
@@ -129,7 +148,9 @@ class LinkHandler(webapp.RequestHandler):
                 alternate_linkedin_score = None
 		
 		try:
-                	link = Links.gql('WHERE url = :1', url).get()
+                	link = Links.gql('WHERE url_hash  = :1', url_hash).get()
+                        if link is None:
+                	        link = Links.gql('WHERE url = :1', url).get()
 		except BadValueError:
 			logging.info('url property too long')
                 if link is None:
@@ -137,6 +158,7 @@ class LinkHandler(webapp.RequestHandler):
 			link.domain = domain
                         link.instapaper_count = Cast.toInt(count,0)
                         link.url = urllib2.unquote(url).decode('utf-8')
+                        link.url_hash = LinkUtil.getUrlHash(link.url)
                         link.redditups = 0
                         link.redditdowns = 0
                         link.tweets = 0
@@ -147,6 +169,10 @@ class LinkHandler(webapp.RequestHandler):
                 else:
                         link.date_updated = datetime.datetime.now().date()
 			link.domain = domain
+                        if link.title:
+                                link.title=link.title[:199]
+                        if link.url_hash is None:
+                                link.url_hash =url_hash 
 
 		#relaxation 
 		link.relaxation = 0
@@ -158,7 +184,7 @@ class LinkHandler(webapp.RequestHandler):
                                 alternate_twitter_score=Cast.toInt(json['Twitter'],0)
                                 alternate_buzz_score=Cast.toInt(json['Buzz'],0)
                                 alternate_digg_score=Cast.toInt(json['Diggs'],0)
-                                alternate_facebook_share_score=Cast.toInt(json['Facebook']['share_count'],0)
+                                alternate_facebook_share_score = Cast.toInt(json['Facebook']['share_count'],0)
                                 alternate_facebook_like_score=Cast.toInt(json['Facebook']['like_count'],0)
                                 alternate_su_score=Cast.toInt(json['StumbleUpon'],0)
                                 alternate_linkedin_score=Cast.toInt(json['LinkedIn'],0)
@@ -197,7 +223,7 @@ class LinkHandler(webapp.RequestHandler):
                 if json and 'story' in json:
                         try:
                                 link.tweets=Cast.toInt(json['story']['url_count'],0)
-                                link.title=json['story']['title']
+                                link.title=json['story']['title'][:199]
 			 	if 'excerpt' in json['story']:	
 					logging.info('getting excerpt');
                                 	link.excerpt = db.Text(unicode(json['story']['excerpt']))
@@ -217,7 +243,7 @@ class LinkHandler(webapp.RequestHandler):
                 if json:
                         try:
                                 if not link.title:
-                                        link.title = json[0]['title']
+                                        link.title = json[0]['title'][:199]
                                 link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
                                 link.delicious_count = Cast.toInt(json[0]['total_posts'],0)
 				logging.info('delicious count %s' % link.delicious_count)
@@ -263,7 +289,7 @@ class LinkHandler(webapp.RequestHandler):
 			link.facebook_like_score = alternate_facebook_like_score
 		elif alternate_facebook_share_score is not None:
 			logging.info('using alternate facebook share count %s' % alternate_facebook_share_score)
-			link.facebook_share = alternate_facebook_share_count
+			link.facebook_share = alternate_facebook_share_score
                 if link.facebook_like is not None:
                         link.overall_score += self.fb_factor * link.facebook_like
                 if link.facebook_share is not None:
@@ -276,14 +302,14 @@ class LinkHandler(webapp.RequestHandler):
 				link.stumble_upons = Cast.toInt(json['result']['views'], 0)
 				logging.info('stumle_score %s' % link.stumble_upons)
 				if not link.title:
-					link.title = json['result']['title']
+                                        link.title = json['result']['title'][:199]
 					logging.info('settting stumble title: %s' % link.title)
 			except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                                 logging.info('request: %s == more info: key error [[%s, %s]] in %s' %(stumble_upon_api, e0, e1, json))
 		elif alternate_su_score is not None:
 			logging.info('using alternate su score %s' % alternate_su_score )
-			links.stumble_upons = alternate_su_score
+			link.stumble_upons = alternate_su_score
 		if link.stumble_upons is not None:
 			link.overall_score += link.stumble_upons
 
@@ -350,9 +376,11 @@ class LinkTractionTask(webapp.RequestHandler):
 		self.tw_factor=int(config.get('social', 'tw_factor'))
 		self.klout_correction=int(config.get('social', 'klout_correction'))
 		self.klout_api_key=config.get('social', 'klout_api_key')
+                self.skip_domains=config.get('twit','skip_domain')
 	def post(self):
 
                 url = self.request.get('url',None)
+                url_hash = LinkUtil.getUrlHash(url)
 		if url is None:
 			logging.info('no url detected. skipping...')
 			return
@@ -366,7 +394,7 @@ class LinkTractionTask(webapp.RequestHandler):
                 if not domain or len(domain) == 0:
                         self.response.out.write('not url: %s skipping!\n' %url)
                         return
-                if "lifehacker.com" in url or "twitter.com" in url or "google.com" in url or "instapaper.com" in url or  "facebook.com" in url or  "edition.cnn.com" in url or "maps.google.com" in url or "wikipedia.org" in url or "yahoo.com" in url or "doubleclick.net" in url or "instaright.com" in url:
+                if domain in self.skip_domains:
                                 logging.info('filering out %s' %url)
                                 return
 		lh = LinkHandler()
@@ -375,7 +403,9 @@ class LinkTractionTask(webapp.RequestHandler):
 
 		existingLink = None
 		try:
-	                existingLink = Links.gql('WHERE url = :1', url).get()
+	                existingLink = Links.gql('WHERE url_hash = :1', url_hash).get()
+                        if existingLink is None:
+	                        existingLink = Links.gql('WHERE url = :1', url).get()
 		except BadValueError:
 			logging.info('bad value url %s' % url)
 		#if hasattr(link, 'relaxation') and link.relaxation > 0:
@@ -398,8 +428,10 @@ class LinkTractionTask(webapp.RequestHandler):
 				return
 			execute_time=TaskUtil.execution_time()
 			logging.info('scheduling tweet for %s' %str(execute_time))
+                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Twit to queue!', html='Twitt: %s <br> score: %s' %( t.text, link.overall_score), body='Twitt: %s <br> score: %s' %(t.text, link.overall_score))
 			
-                        taskqueue.add(url='/util/twitter/twit/task', eta=execute_time, queue_name='twit-queue', params={'twit':t.text})
+                        #taskqueue.add(url='/util/twitter/twit/task', eta=execute_time, queue_name='twit-queue', params={'twit':t.text})
+                        taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
 		lh.update_link(url, link)
 
 application = webapp.WSGIApplication(

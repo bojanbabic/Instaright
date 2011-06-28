@@ -1,4 +1,4 @@
-import os, urllib2, logging, sys
+import os, urllib2, logging, sys, ConfigParser, urllib, simplejson
 from google.appengine.ext import webapp, db
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -7,10 +7,13 @@ from google.appengine.api.labs import taskqueue
 
 from models import Links, SessionModel, CategoryDomains
 from utils import StatsUtil, LinkUtil, CategoriesUtil
+from simplejson import JSONDecodeError
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
 from link_info import LinkHandler
+from google.appengine.api import urlfetch 
+from google.appengine.api.urlfetch import DownloadError 
 
 class LinkSortHandler(webapp.RequestHandler):
         def get(self):
@@ -64,7 +67,7 @@ class LinkTransformHandler(webapp.RequestHandler):
                         logging.info('error not valid key')
                         return
                 s = SessionModel.gql('WHERE __key__ = :1', key).get()
-                logging.info('feedproxt url %s' % str(s.url))
+                logging.info('feedproxt url %s' % unicode(s.url))
                 util = LinkUtil()
                 url = util.getFeedOriginalUrl(s.url)
                 if url is None:
@@ -155,6 +158,69 @@ class ProcessCategoriesHandler(webapp.RequestHandler):
                 if domain is None:
                         logging.info('no domain is request. skipping...')
                 CategoriesUtil.processDomainCategories(categories, domain)
+class LinkRecommendationTask(webapp.RequestHandler):
+        def __init__(self):
+                conf = ConfigParser.ConfigParser()
+		conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
+                self.z_key=conf.get('zemanta', 'key')
+        def post(self):
+                url=self.request.get('url',None)
+                if url is None:
+                        logging.info('no url no recommendations')
+                        return
+                url_hash = Utils.getUrlHash(url)
+                l = Links.gql('WHERE url = :1' , url).get()
+                if l is None:
+                        logging.info('no link saved with url %s' % url)
+                        l = Links()
+                        l.url  = url
+                        l.put()
+                api_call= 'http://api.zemanta.com/services/rest/0.0/'
+                args ={'method': 'zemanta.suggest',
+                               'api_key': self.z_key,
+                               'text': url,
+                               'return_categories': 'dmoz',
+                               'format': 'json'}
+                args_enc = urllib.urlencode(args)
+                json= None
+                try:
+                        result = urlfetch.fetch(url=api_call, payload=args_enc,method = urlfetch.POST, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+                        json = simplejson.loads(result.content)
+                except JSONDecodeError,DownloadError:
+                        logging.info('bad json data from zemanta: %s' % data)
+
+                if json is None or json['status'] != 'ok':
+                        logging.info('error while fetching recommendations')
+                        return
+                articles = json['articles']
+                categories = json['categories']
+                #relevant_articles = [ (c["title"], c["url"]) for c in articles if c["confidence"] > 0.01 ]
+                relevant_articles = [ (c["title"], c["url"]) for c in articles ]
+                l.recommendation=str(simplejson.dumps(relevant_articles[0:4]))
+                l.put()
+                logging.info('link updated: %s' % l.to_xml())
+
+class LinkRecommendationHandler(webapp.RequestHandler):
+        def get(self):
+                url=self.request.get('url', None)
+                if url is None:
+                        logging.info('no url cant provide rcmds')
+                        return
+                link=Links.gql('WHERE url = :1' , url).get()
+                self.response.headers['Content-Type']="application/json"
+                if link is None:
+                        logging.info('unexisting link , no recommendations')
+                        self.response.out.write("{}")
+                        return
+                if link.recommendation is None:
+                        logging.info('no recommendations started new job')
+                        taskqueue.add(url='/link/recommendation/task', queue_name='link-rcmd-queue', params={'url':url })
+                        self.response.out.write("{}")
+                else:
+                        logging.info(' transforming %s to json output ' % link.recommendation)
+                        self.response.out.write("{}")
+                        #self.response.out.write(simplejson.dumps(link.recommendation, default = lambda l: {'title': l.0, 'url': l.1}))
+
 def main():
         run_wsgi_app(application)
 
@@ -162,6 +228,8 @@ application=webapp.WSGIApplication(
                 [
                         ('/link/stats',LinkSortHandler),
                         ('/link/category/task',LinkDomainCategoriesTask),
+                        ('/link/recommendation/task',LinkRecommendationTask),
+                        ('/link/recommendation',LinkRecommendationHandler),
                         ('/link/category/task/batch',LinkDomainCategoriesBatch),
                         ('/link/transform/feed',LinkTransformHandler),
                         ('/link/transform/short',ShortLinkHandler),

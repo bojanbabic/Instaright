@@ -1,126 +1,202 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
         <head>
-                <link rel="stylesheet" type="text/css" href="../css/style.css" />
+        	<!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script-->
+        	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        	<meta name="viewport" content="width = 900"/>
+        	<meta name="keywords" content="instaright firefox addon, instaright chrome addon, instapaper firefox addon, instapaper chrome addon, export delicious to instapaper, how to export delicious bookmarks to instapaper, instapaper import delicious, delicious to instapaper, import delicious bookmarks, instapaper delicious"/>
+        	<link rel="stylesheet" type="text/css" href="/css/landing_form.css"/>
+        	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
                 <script type="text/javascript" src="/static/javascript/util.js"></script>
                 <script type="text/javascript" src="/static/javascript/chart.js"></script>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-                <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-                <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
                 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
                 <script type="text/javascript">
                         google.load('visualization', '1', {packages: ['imagechart']});
                         google.load('jquery', '1.4.2');
                 </script>
                 <script type="text/javascript">
-                        google.setOnLoadCallback(drawVisualization(6,null, "{{ user.instapaper_account }}"));
+                        google.setOnLoadCallback(drawVisualization(6,null, "{{ instaright_account }}"));
                         google.load(drawVisualization);
                 </script>
+		<script type="text/javascript" src="/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
+		<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+		<script>
+			$(document).ready(function(){
+				try{
+				var show_more = true;
+
+				$('.link_group_date').click(function(){
+					var mode = $(this).find('.show_toggle').html();
+					if (mode == "Collapse"){
+						$(this).find('.show_toggle').html("Expand");
+					} else {
+						$(this).find('.show_toggle').html("Collapse");
+					}
+					$(this).next().toggle('slow');
+					return false;
+				});
+				$("#load_more").click(function(){
+					alert('load more');
+				});
+				$("#usage_stats").fancybox({
+					'scrolling'        :'no',
+					'titleShow'        :false,
+					'onClosed'         :function(){
+					}
+				});
+				$("#trophy_room").fancybox({
+					'scrolling'        :'no',
+					'titleShow'        :false,
+					'onClosed'         :function(){
+					}
+				});
+				}catch(e){alert(e);}
+			});
+		</script>
         </head>
         <body>
-                {% if user %}
-                {% if user.name %}
-                <h2>{{ user.name }}</h2>
-                {% endif %}
-                <div id="table_container" style="width: 700px; height: 200px; margin 0 auto;">
-                <table style="float: left; width:500px;">
-                        <tbody>
-                        <tr>
-                                <td class="avatar">
-                                        {% if user.avatar %}
-                                        <img src="{{ user.avatar }}" />
-                                        {% endif %}</td>
-                                <td class="info">
-                                        <ul>
-                                                <li>
-                                                Instapaper: {{ user.instapaper_account }}
-                                                </li>
-                                                <li>
-                                                Links #{{ user.links_added }}
-                                                </li>
-                                                {% if user.occupations %}
-                                                <ul class="occupations">
-                                                        <li>{{ user.occupations }}</li>
-                                                </ul>
-                                                {% endif %}
-                                        </ul>
-                                </td>
-                                        
-                        </tr>
-                        </tbody> 
-                </table>
-                <table style="float: right;width: 200px;"><tr><td id="visualization" style="width: 200px; height: 200px;  display: inline-block;"></td></tr></table>
-        </div>
-                <div class="social">
-                        {% if user.facebook %}
-                        <a href="{{ user.facebook }}"><img src="/static/images/facebook_small.png"/></a>
-                        {% endif %}
-                        {% if user.bebo %}
-                        <a href="{{ user.bebo }}"><img src="/static/images/bebo_small.png"/></a>
-                        {% endif %}
-                        {% if user.myspace %}
-                        <a href="{{ user.myspace }}"><img src="/static/images/myspace_small.png"/></a>
-                        {% endif %}
-                        {% if user.friendster %}
-                        <a href="{{ user.friendster }}"><img src="/static/images/friendster_small.png"/></a>
-                        {% endif %}
-                        {% if user.linkedin %}
-                        <a href="{{ user.linkedin }}"><img src="/static/images/linkedin_small.png"/></a>
-                        {% endif %}
-                        {% if user.google_reader %}
-                        <a href="{{ user.google_reader }}"><img src="/static/images/google_reader_small.png"/></a>
-                        {% endif %}
-                        {% if user.google_profile%}
-                        <a href="{{ user.google_profile }}"><img src="/static/images/google_profile_small.png"/></a>
-                        {% endif %}
-                        {% if user.twiter %}
-                        <a href="{{ user.twitter }}"><img src="/static/images/twitter_small.png"/></a>
-                        {% endif %}
-                        {% if user.flickr %}
-                        <a href="{{ user.flickr }}"><img src="/static/images/flickr_small.png"/></a>
-                        {% endif %}
-                        {% if user.youtube %}
-                        <a href="{{ user.youtube }}"><img src="/static/images/youtube_small.png"/></a>
-                        {% endif %}
-                        {% if user.hi5 %}
-                        <a href="{{ user.hi5 }}"><img src="/static/images/hi5_small.png"/></a>
-                        {% endif %}
-                        {% if user.picasa %}
-                        <a href="{{ user.bebo }}"><img src="/static/images/bebo_small.png"/></a>
-                        {% endif %}
-                        {% if user.plancast %}
-                        <a href="{{ user.picasa }}"><img src="/static/images/picasa_small.png"/></a>
-                        {% endif %}
-                        {% if user.delicious %}
-                        <a href="{{ user.delicious }}"><img src="/static/images/delicious_small.png"/></a>
-                        {% endif %}
-                        {% if user.multipy %}
-                        <a href="{{ user.multiply }}"><img src="/static/images/multiply_small.png"/></a>
-                        {% endif %}
-                        {% if user.tungle_me %}
-                        <a href="{{ user.tingle_me }}"><img src="/static/images/tingle_me.png"/></a>
-                        {% endif %}
-                        {% if user.livejournal %}
-                        <a href="{{ user.livejournal }}"><img src="/static/images/livejournal_small.png"/></a>
-                        {% endif %}
-                        {% if user.wordpress %}
-                        <a href="{{ user.wordpress }}"><img src="/static/images/wordpress_small.png"/></a>
-                        {% endif %}
-                </div>
-                {% else %}
-                <div>No info for user</div>
-                {% endif %}
-                <br>
-                <div class="links">
-                        <p>Links:</p>
-                        {% regroup links|dictsortreversed:"date" by date|date:"Y-m-d"  as links_by_date %}
+	<div id="nav" >
+		<div class="center clearfix">
+			<h5><a href="/">Instaright - Perfect information for you in realtime.</a></h5>
+                	<ul class="menu borderless clearfix"> 
+				<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
+				<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
+                        	{% if user %}
+					<li><a href="javascript:alert('Dashboard soon available!');"><span>{{ user }}</span></a></li>
+					<li><a href="javascript:alert('Dashboard soon available!');"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+					<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
+                        	{% else %}
+					<li><a id="btn_login" href="/account" title="Login"><span>Login</span></a></li>
+                        	{% endif %}
+                        	<li>
+                        	</li>
+
+                	</ul>
+		</div>
+	</div>	
+	<div style="display: none;">
+		<div id="visualization" style="width: 400px; height: 200px;  display: inline-block;"></div>
+	</div>
+	<div style="display: none;">
+		<div id="badges" style="width: 300px;">
+			{% if badges %}
+				{% for b in badges %}
+					<div class="single_badge"><img width="60" height="60" src="/static/images/{{ b.0 }}.png" /><div class="badge_desc">{{ b.1 }}</div></div>
+				{% endfor %}
+			{% else %}
+			<span>No badges at moment. Hold on, we have something for you <a href="/tools">here</a></span>
+			{% endif %}
+		</div>
+	</div>
+	<div class="profile_block">
+		<div class="profile_top">
+			<div class="profile_top_header">
+				<div class="profile_top_left"></div>
+				<div class="profile_top_center"></div>
+			</div>
+			<div class="profile_content">
+				<div class="profile_content_left_border"></div>
+				<div class="profile_content_right_border"></div>
+				<div class="profile_content_wrapper">
+					<a class="user_image" ref="#"><img src="{{ avatar }}" width="70" height="70" /></a>
+					<div class="profile_text_wrapper">
+						<h1>{{ user }}</h1>
+						<span></span>
+					</div>
+					<div class="actions">
+						<span class="stats text_bubble"><a id="usage_stats" href="#visualization">Statistics</a></span>
+						<span class="badges text_bubble"><a id="trophy_room" href="#badges">Trophy Room</a></span>
+						<span class="edit text_bubble"><a href="#">Edit Account</a></span>
+					</div>
+				</div>
+			</div>
+			<div class="profile_content_bottom">
+				<div class="profile_content_bottom_left"></div>
+				<div class="profile_content_bottom_center"></div>
+			</div>
+		</div>
+		<div class="profile_score">
+			<div class="profile_score_top">
+				<div class="profile_score_top_left"></div>
+				<div class="profile_score_top_center"></div>
+			</div>
+			<div class="profile_score_content">
+				<div class="profile_score_content_left_border"></div>
+				<div class="profile_score_content_right_border"/></div>
+				<div class="profile_score_content_wrapper">
+					<span class="points" >{{ score }}</span><br>
+					<small class="level">Level 2</small>
+				</div>
+			</div>
+			<div class="profile_score_bottom">
+				<div class="profile_score_bottom_left"></div>
+				<div class="profile_score_bottom_center"></div>
+			</div>
+		</div>
+	</div>
+
+	<div id="user_dashboard_content">
+		<div class="link_container_top"></div>
+			<div class="link_container_top_left"></div>
+			<div class="link_container">
+                	<div class="links">
+			{% if links %}
+                        {% regroup links|dictsortreversed:"date" by date|date:"M d"  as links_by_date %}
+
                         {% for links in links_by_date %}
-                        <li>{{ links.grouper }}</li>
+			<div class="link_group">
+				<div class="link_group_date">
+					<a class="date_group" href="#">{{ links.grouper }}</a>
+					<a class="show_toggle" href="#">Collapse</a>
+				</div>
+				<div id="toggle_div">
                         
-                        {% for item in links.list %}
-                        <ul style="padding: 2px;"><a href="{{ item.url }}" target="_new">{{ item.url }}</a></ul>
+                        	{% for item in links.list %}
+				<div class="link_details_container">
+					<div class="link_container_result">
+						<div class="link_container_title">
+							<h4 class="link_title">
+								<img class="link_fav_icon" src="http://{{ item.domain }}/favicon.ico" width="16" height="16" />
+								<a href="{{ item.url }}">{{ item.title }}</a>
+							</h4>
+						</div>
+						<div class="link_container_url">
+							<a href="{{ item.url }}" target="_new">{{ item.url }}</a>
+						</div>
+					</div>
+					<div class="link_options">
+						<ul class="tools_list">
+							<li class="tools_list_item">
+								<a href="#" >Give me more of this</a>
+							</li>
+							<li class="tools_list_item">
+								<a href="#" >View as text only</a>
+							</li>
+							<li class="tools_list_item">
+								<a href="#" >Add note</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+                        	{% endfor %}
+				</div>
+			</div>
                         {% endfor %}
-                        {% endfor %}
-                </div>
+                	</div>
+			</div>
+		</div>
+		<div class="load_more_container">
+			<div id="load_more" >load more</div>
+		</div>
+		{% else %}
+		<div>
+			<div class="promo">
+				<span><a href="/tools" class="span_link">No saves yes ... no worries it will get better! </a></span><br>
+				<span><a href="/tools" class="span_link">Start by downloading addon for your favorite browser here.</a></span></div>
+			</div>
+		{% endif %}
+	</div>
         </body>
 </html>

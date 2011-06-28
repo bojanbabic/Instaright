@@ -11,6 +11,8 @@ class GenericWebHandler(webapp.RequestHandler):
 		self.auth_service=None
                 self.avatar=None
                 self.user_uuid=None
+                self.instaright_account=None
+                self.user_detail_key=None
 		used_data_from_session = False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
@@ -19,13 +21,16 @@ class GenericWebHandler(webapp.RequestHandler):
 		# try to get user name by cookie or from login
 		if uuid_cookie:
 			#Connect uuid with registered user
-			logging.info('reusing uuid: %s' % uuid_cookie)
 			self.user_uuid = uuid_cookie
-			userSession = UserSessionFE.gql('WHERE user_uuid = :1' , self.user_uuid).get()
+			userSession = UserSessionFE.gql('WHERE user_uuid = :1 order by last_updatetime desc' , self.user_uuid).get()
+			logging.info('reusing uuid: %s' % uuid_cookie)
 			if userSession is not None and userSession.user_details is not None:
-				#TODO check why never reached
 				ud = UserDetails.gql('WHERE __key__ = :1', userSession.user_details).get()
 
+                                #fix instaright_account TODO possibly deprecated
+                                if ud is not None and ud.instapaper_account is not None:
+                                        ud.instaright_account=ud.instapaper_account
+                                        ud.put()
 				if ud is None:
 					logging.error('missing proper db entry for cookie %s' % uuid_cookie)
 				else:
@@ -33,6 +38,8 @@ class GenericWebHandler(webapp.RequestHandler):
 					self.screen_name = user_data["screen_name"]
                                         self.avatar = user_data["avatar"]
 					user_data_from_session = True
+                                        self.instaright_account=ud.instaright_account
+                                        self.user_detail_key=str(ud.key())
 					logging.info('using screen name %s from session %s' %(self.screen_name, self.user_uuid))
 			# sanity check
 			if userSession is None:
@@ -55,6 +62,7 @@ class GenericWebHandler(webapp.RequestHandler):
 		if logout_cookie:
 			logging.info('found logout cookie. reseting screen_name')
 			self.screen_name = None
+                        self.instaright_account=None
 		else:
 			user_details = uu.getUserDetails(self)
                         if user_details["screen_name"] is not None:
@@ -66,6 +74,9 @@ class GenericWebHandler(webapp.RequestHandler):
                         if user_details["user_details_key"] is not None:
 			        user_details_key = user_details["user_details_key"]
 			        userSession.user_details = user_details_key
+                                self.user_detail_key=str(user_details["user_details_key"])
+                        if user_details["instaright_account"] is not None:
+                                self.instaright_account=user_details["instaright_account"]
 
 			userSession.active=True
 			

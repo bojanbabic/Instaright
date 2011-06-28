@@ -1,13 +1,26 @@
-import urlparse, urllib,logging, urllib2, datetime, sys, os, ConfigParser
+import urlparse
+import urllib
+import logging
+import urllib2
+import datetime
+import sys
+import os
+import ConfigParser
+import struct
+import base64
+import hashlib
 #urllib.getproxies_macosx_sysconf = lambda: {}
 from google.appengine.api import memcache, mail
 from xml.dom import minidom
-from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats, UserStats, SessionModel, UserBadge, CategoryDomains, LinkCategory
+from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats
+from models import UserStats, SessionModel, UserBadge, CategoryDomains, LinkCategory, ScoreUsersDaily
+from models import Badges
 from google.appengine.api import users
+from google.appengine.api.labs import taskqueue
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import facebook, simplejson
-from oauth_handler import OAuthHandler, OAuthClient
+from oauth_handler import OAuthClient
 
 class StatsUtil(object):
 	@classmethod
@@ -61,19 +74,28 @@ class StatsUtil(object):
 
 
         @classmethod
-        def checkUrl(cls, args):
-                url = cls.getUrl(args)
+        def checkUrl(cls, args, url=None):
+                config=ConfigParser.ConfigParser()
+	        config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
+	        skip_protocols=config.get('protocols', 'skip')
+                url = cls.getUrl(args, url)
+                scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
                 if url is None:
                        return False
-                if url.startswith('file://') or url.startswith('chrome://') or url.startswith('about:') or url.startswith('ed2k:') or url.startswith('liberator:') or url.startswith('irc:'):
-                        logging.info('url not good: %s ' % url)
-                        return False
+
+                logging.info('checking scheme:%s' %scheme)
+                if scheme in skip_protocols:
+                       logging.info('url scheme not good: %s ' % url)
+                       return False
                 return True
 
         @classmethod
-        def getUrl(cls, args):
+        def getUrl(cls, args, url=None):
                 try:
-                        return urllib2.unquote(args[1])
+                        if url is not None:
+                            return urllib2.unquote(url)
+                        else:
+                            return urllib2.unquote(args[1])
                 except:
                         return None
 
@@ -116,6 +138,28 @@ class FeedUtil:
 
 		return item
 class LinkUtil:
+        @classmethod
+        def getLinkTitle(cls,url):
+                        title=None
+                        try:
+		                url=urllib2.quote(url.encode('utf-8'))
+                                api_call="http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22"+url+"%22%20and%20xpath%3D'%2F%2Ftitle'&format=json&callback=" 
+                                json = LinkUtil.getJsonFromApi(api_call)
+                                title=json["query"]["results"]["title"]
+                                if type(title) == list:
+                                        logging.info('LIST')
+                                        s_title=title[-1]
+                                        title = s_title
+                                if type(title) == dict:
+                                        title=title['content']
+                                        logging.info('DICT: %s' % title)
+                                title = " ".join(title.splitlines())
+                                title = (title.encode('ascii')).decode('utf-8')
+                        except:
+                                e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                                logging.info('title %s fetch failed... for %s error: %s ::: %s' %(title, url, e0, e1))
+                        return title
+
         def getFeedOriginalUrl(self,url):
                 try:
                         req=urllib2.Request(url)
@@ -138,13 +182,17 @@ class LinkUtil:
         def shortenLink(self, url):
                 try:
                        url = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+url;
-                       link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(url)+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
+                       link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(unicode(url))+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
                        data=urllib2.urlopen(link)
                        json=simplejson.load(data)
                        short_url = json["data"]["url"]
                        return short_url
                 except:
-                        logging.info('could not expand short url %s' %url)
+                        logging.info('could not short url %s' %unicode(url))
+                        return None
+        @classmethod
+        def getUrlHash(cls, url):
+                return base64.b64encode(hashlib.sha1(url).digest())[:-1]
         def updateStats(self, s):
                 dailyStats = DailyDomainStats.gql('WHERE domain = :1 and date = :2', s.domain, s.date).get()
                 if dailyStats is not None:
@@ -236,7 +284,7 @@ class BadgeUtil:
 	       siteSpecBadge=SiteSpecificBadge(user, url, domain, version)	
                if version is not None and siteSpecBadge.getBadge() is not None:
                         logging.info('initializing site specific badger: %s' %domain)
-                        return 
+                        return siteSpecBadge 
                speedLimitBadger=SpeedLimitBadger(user, url, domain, version)
                clubBadger=ClubBadger(user, url, domain, version)
                if speedLimitBadger.getBadge() is not None:
@@ -277,7 +325,7 @@ class ContinuousUsageBadge:
                                 return None
                        else:
                                 logging.info('user %s active for date %s' %(self.user, yesterday))
-                       yesteday-=datetime.timedelta(days=1)
+                       yesterday-=datetime.timedelta(days=1)
                 if active:        
                         logging.info('user %s has been active in last %s' %(self.user, returnBadge))
                         return '5'
@@ -348,19 +396,26 @@ class SiteSpecificBadge(object):
         def getBadge(self):
                 if self.domain in self.nyDomains:
                         return self.getnytbadge()
+                logging.info('domain %s not in ny domains %s' %(self.domain, self.nyDomains))
                 if self.domain in self.movieDomains:
                         return self.getmoviebadge()
+                logging.info('domain %s not in movie domains %s' %(self.domain, self.movieDomains))
                 if self.domain in self.economyDomains:
                         return self.geteconomybadge()
+                logging.info('domain %s not in economy domains %s' %(self.domain, self.economyDomains))
                 if self.domain in self.gadgetDomains:
                         return self.getgadgetbadge()
+                logging.info('domain %s not in gadget domains %s' %(self.domain, self.gadgetDomains))
                 if self.domain in self.sportDomains:
                         return self.getsportbadge()
+                logging.info('domain %s not in sport domains %s' %(self.domain, self.sportDomains))
                 if self.domain in self.wikiDomains:
                         return self.getwikibadge()
+                logging.info('domain %s not in wiki domains %s' %(self.domain, self.wikiDomains))
                 if self.domain in self.newsDomains:
                         return self.getnewsbadge()
                 else:
+                        logging.info('domain %s not in news domains %s' %(self.domain, self.newsDomains))
                         logging.info('no domain specific badge initialized or no addon version')
                         return None
         def getnytbadge(self):
@@ -513,7 +568,7 @@ class Version:
                         return True
                 badges=BADGES_VERSION[version]
                 if badges is not None and badge in badges:
-                        logging.info('valid badge %s for version %s' %( bVersions[version], version))
+                        logging.info('valid badge %s for version %s' %( badge, version))
                         return True
                 else:
                         logging.info('can\'t find badges for %s' % version)
@@ -528,8 +583,8 @@ class Version:
                         return 1
                 if v1 is None and v2 is None:
                         return 0
-                v1Tokens=v1.split('.')
-                v2Tokens=v2.split('.')
+                #v1Tokens=v1.split('.')
+                #v2Tokens=v2.split('.')
                 for x,y in zip(v1, v2):
                         if x < y: return -1
                         if x > y: return 1
@@ -556,14 +611,14 @@ class LoginUtil():
 
 	def getUserDetails(self, request_handler):
 		
-		google_login_url = users.create_login_url('/') 
-	        twitter_logout_url = '/oauth/twitter/logout'
+		#google_login_url = users.create_login_url('/') 
+	        #twitter_logout_url = '/oauth/twitter/logout'
 
         	twitter_user = OAuthClient('twitter', request_handler)
-        	logged=False
         	screen_name=None
                 avatar=None
 		auth_service=None
+                instaright_account=None
 		# used to connect user details with session
 		user_details_key=None
 
@@ -571,7 +626,6 @@ class LoginUtil():
 		logging.info('trying to connect with fb key %s secret %s' %( self.facebook_key, self.facebook_secret))
         	facebook_user = facebook.get_user_from_cookie(request_handler.request.cookies, self.facebook_key, self.facebook_secret)
         	if google_user:
-                	logged=True
                 	screen_name=google_user.nickname()
 			existing_user= UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
 			if existing_user is None:
@@ -582,6 +636,16 @@ class LoginUtil():
                                 avatar = existing_user.avatar
 			auth_service='google'
 			user_details_key=existing_user.key()
+			user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
+                        if user_signup_badge is None:
+                                user_badge = UserBadge()
+                                user_badge.user = screen_name
+                                user_badge.badge = 'signup'
+                                badge = Badges.gql('WHERE badge_label = :1', 'signup').get()
+                                user_badge.badge_property = badge.key()
+                                user_badge.user_property = existing_user.key()
+                                user_badge.put()
+                        instaright_account=existing_user.instaright_account
         	elif twitter_user.get_cookie():
 			try:
 				info = twitter_user.get('/account/verify_credentials')
@@ -610,6 +674,16 @@ class LoginUtil():
 					existing_user.put()
 				auth_service='twitter'
 				user_details_key=existing_user.key()
+			        user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
+                                if user_signup_badge is None:
+                                        user_badge = UserBadge()
+                                        user_badge.user = screen_name
+                                        user_badge.badge = 'signup'
+                                        badge = Badges.gql('WHERE badge_label = :1', 'signup').get()
+                                        user_badge.badge_property = badge.key()
+                                        user_badge.user_property = existing_user.key()
+                                        user_badge.put()
+                                instaright_account=existing_user.instaright_account
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
         	elif facebook_user:
@@ -644,6 +718,16 @@ class LoginUtil():
 					existing_user.put()
 				auth_service='facebook'
 				user_details_key=existing_user.key()
+			        user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
+                                if user_signup_badge is None:
+                                        user_badge = UserBadge()
+                                        user_badge.user = screen_name
+                                        user_badge.badge = 'signup'
+                                        badge = Badges.gql('WHERE badge_label = :1', 'signup').get()
+                                        user_badge.badge_property = badge.key()
+                                        user_badge.user_property = existing_user.key()
+                                        user_badge.put()
+                                instaright_account=existing_user.instaright_account
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
 				logging.info('error validating token %s === more info: %s' %(e0,e))
@@ -663,7 +747,7 @@ class LoginUtil():
                         logging.info('user %s not in skip list %s ... sending mail' %(screen_name, str(self.skip_list)))
                         mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %( screen_name , avatar, avatar), body='Awesome new user signed up: %s avatar %s' %( screen_name, avatar))
                                         
-                user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar}
+                user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar, 'instaright_account':instaright_account}
 		return user_details
 
 class TaskUtil(object):
@@ -741,3 +825,158 @@ class CategoriesUtil(object):
                                 logging.info('updated time for category %s [ %s ]' % (cat, existingCategory.url))
                                 existingCategory.updated = datetime.datetime.now()
 				existingCategory.put()
+
+class UserScoreUtility(object):
+        @classmethod
+        def getCurrentScore(cls, user):
+                if user is None:
+                        return None
+                userDetails = UserDetails.gql('WHERE  instaright_account = :1', user).get()
+                if userDetails is None:
+                        logging.info('no user with instaright account %s' % user)
+                        userDetails = UserDetails.gql('WHERE  instapaper_account = :1', user).get()
+                        if userDetails is None:
+                                userDetails=UserDetails()
+                                userDetails.instapaper_account=user
+                        userDetails.instaright_account=user
+                        userDetails.put()
+                now =datetime.datetime.now().date()
+                currentScore=ScoreUsersDaily.gql('WHERE user = :1 and date = :2', userDetails.key(), now).get()
+                if currentScore is None:
+                        currentScore = ScoreUsersDaily()
+                        currentScore.user=userDetails.key()
+                        currentScore.date = now
+                return currentScore
+                
+        @classmethod
+        def badgeScore(cls, user, badge):
+                score=0
+                if user is None or badge is None:
+                        logging.info('no user no score or no badge no score')
+                        return score
+                if badge in ['1000','5000','10000']:
+                        logging.info(' %s badge not uncluded into score')
+                        return score
+                logging.info('badge score calc for user %s' %user)
+                badge_cache='score_for_badge_'+user+'_'+badge+'_'+str(datetime.datetime.now().date())
+                badge_added=memcache.get(badge_cache)
+                if badge_added:
+                        logging.info('badge already included in scoring. skipping')
+                        return score
+                #TODO what is this doing here
+                #currentScore=UserScoreUtility.getCurrentScore(user)
+                config=ConfigParser.ConfigParser()
+	        config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/score.ini')
+                score=int(config.get('badge_point',badge))
+                return score
+
+        @classmethod
+        def domainScore(cls,user, domain):
+                score=0
+                if user is None or domain is None:
+                                     logging.info('domain score not enpugh data ... skipping')
+                                     return score
+                logging.info('domain score calc for for user %s' %user)
+                config=ConfigParser.ConfigParser()
+	        config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/score.ini')
+                domain_points=int(config.get('domain_points','new_domain'))
+                domain_memcache_key='visit_'+user+'_domain_'+domain
+                visitedDomain=memcache.get(domain_memcache_key)
+                if visitedDomain is None:
+                        visitedDomain=SessionModel.gql('WHERE domain = :1 and instaright_account = :2', domain, user).get()
+                if visitedDomain is None:
+                        logging.info('new domain %s score for %s ' %(domain, user))
+                        score=domain_points
+                        memcache.set(domain_memcache_key, '1')
+                else:
+                        logging.info('user %s already visited domain %s ' %(user, domain))
+                return score
+
+        @classmethod
+        def linkScore(cls,user, link):
+                score=0
+                if user is None or link is None:
+                                     logging.info('link score not enpugh data ... skipping')
+                                     return score
+                logging.info('link score ...')
+                config=ConfigParser.ConfigParser()
+	        config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/score.ini')
+                link_points=int(config.get('link_points','new_link'))
+                link_memcache_key='visit_'+user+'_domain_'+link
+                visitedLink=memcache.get(link_memcache_key)
+                if visitedLink is None:
+                        try:
+                                visitedLink=SessionModel.gql('WHERE url = :1 and instaright_account = :2', link, user).get()
+                        except:
+                                logging.info('expection fetching %s' % link)
+                if visitedLink is None:
+                        logging.info('new link %s score for %s ' %(link, user))
+                        score=link_points
+                        memcache.set(link_memcache_key, '1')
+                else:
+                        logging.info('user %s already visited link %s ' %(user, link))
+                return score
+        @classmethod
+        def updateLinkScore(cls,user,link):
+                if user is None:
+                        logging.info('no user no link score')
+                        return
+                currentScore=UserScoreUtility.getCurrentScore(user)
+                linkPoints=UserScoreUtility.linkScore(user, link)
+                logging.info('update score user %s score %s for link %s' %(user, linkPoints, link))
+                currentScore.score+=linkPoints
+                currentScore.put()
+                taskqueue.add(url='/user/score/update/task', queue_name='score-queue', params={'user':user})
+
+        @classmethod
+        def updateDomainScore(cls,user,domain):
+                if user is None:
+                        logging.info('no user no domain score')
+                        return
+                currentScore=UserScoreUtility.getCurrentScore(user)
+                domainPoints=UserScoreUtility.domainScore(user, domain)
+                logging.info('update score user %s score %s for domain %s' %(user, domainPoints, domain))
+                currentScore.score+=domainPoints
+                currentScore.put()
+                taskqueue.add(url='/user/score/update/task', queue_name='score-queue', params={'user':user})
+
+        @classmethod
+        def updateBadgeScore(cls,user,badge):
+                if user is None:
+                        logging.info('no user no badge score')
+                        return
+                currentScore=UserScoreUtility.getCurrentScore(user)
+                badgePoints=UserScoreUtility.badgeScore(user, badge)
+                logging.info('update score user %s score %s for badge %s' %(user, badgePoints, badge))
+                currentScore.score+=badgePoints
+                currentScore.put()
+                taskqueue.add(url='/user/score/update/task', queue_name='score-queue', params={'user':user})
+
+        @classmethod
+        def updateScore(cls, user, domain, link, badge):
+                if user is None:
+                        logging.info('no user no score')
+                        return
+                        
+                currentScore=UserScoreUtility.getCurrentScore(user)
+                linkPoints=UserScoreUtility.linkScore(user, link)
+                domainPoints=UserScoreUtility.domainScore(user,domain)
+                badgePoints=UserScoreUtility.badgeScore(user, badge)
+                currentScore.score+=linkPoints + domainPoints + badgePoints
+                currentScore.put()
+                #overAllScore=UserScoreUtility.getOverAllScore(user)
+                #overAllScore.score += currentScore.score
+                #overAllScore.put()
+class EnriptionUtil(object):
+        @classmethod
+        def encode_url(cls, string):
+                data = struct.pack('{{}}', string).rstrip('\x00')
+                if len(data) == 0:
+                        data='\x00'
+                s=base64.urlsafe_b64encode(data).rstrip('=')
+                return s
+        @classmethod
+        def decode_url(cls, string):
+                data = base64.urlsafe_b64decode(string + '==')
+                n = struct.unpack('{{}}', data, '\x00'*(8-len(data)))
+                return n[0]

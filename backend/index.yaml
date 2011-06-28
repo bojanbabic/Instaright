@@ -96,6 +96,12 @@ indexes:
 
 - kind: Links
   properties:
+  - name: domain
+  - name: date_updated
+    direction: desc
+
+- kind: Links
+  properties:
   - name: shared
   - name: date_added
     direction: desc
@@ -105,6 +111,12 @@ indexes:
 - kind: SessionModel
   properties:
   - name: __key__
+    direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: client
+  - name: date
     direction: desc
 
 - kind: SessionModel
@@ -155,7 +167,7 @@ indexes:
 
 - kind: SessionModel
   properties:
-  - name: client
+  - name: url
   - name: date
     direction: desc
 
@@ -182,6 +194,12 @@ indexes:
   - name: user
     direction: desc
 
+- kind: UserSessionFE
+  properties:
+  - name: user_uuid
+  - name: last_updatetime
+    direction: desc
+
 - kind: UserStats
   properties:
   - name: date
@@ -205,4 +223,26 @@ indexes:
   - name: date
     direction: desc
   - name: count
+    direction: desc
+
+- kind: ScoreUsersDaily
+  properties:
+  - name: user
+  - name: date
+
+- kind: UserBadge
+  properties:
+  - name: user
+  - name: date
+    direction: desc
+
+- kind: LinkCategory
+  properties:
+  - name: url
+  - name: category
+
+- kind: ScoreUsersDaily
+  properties:
+  - name: user
+  - name: date
     direction: desc
