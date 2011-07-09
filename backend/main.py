@@ -2,6 +2,7 @@ import sys
 import os
 import datetime
 import logging
+import thread
 
 from utils import StatsUtil,LinkUtil, UserScoreUtility
 
@@ -149,7 +150,7 @@ class MainTaskHandler(webapp.RequestHandler):
 					break
 				except datastore_errors.Timeout:
 					logging.info('model save timeout retrying in %s' % timeout_ms)
-					thread.sleep(timeout_ms)
+					time.sleep(timeout_ms)
 					timeout_ms *= 2
                 	logging.info('model saved: %s %s' % (model.to_xml() , model.client))
 		except BadValueError, apiproxy_errors.DeadlineExceededError:
@@ -167,8 +168,9 @@ class MainTaskHandler(webapp.RequestHandler):
                 #known category
                 category=None
                 cached_category=None
-                if model.url is not None:
-                        mem_key=model.url+'_category'
+                logging.info('looking category cache for url hash %s ( %s )' %(model.url_hash, url))
+                if model.url_hash is not None:
+                        mem_key=model.url_hash+'_category'
                         cached_category=memcache.get(mem_key)
                 if cached_category is not None:
                         category=",".join(cached_category)
@@ -176,15 +178,13 @@ class MainTaskHandler(webapp.RequestHandler):
                 if category is None:
                         linkCategory=None
                         try:
-                                linkCategory=LinkCategory.gql('WHERE category != NULL and url = :1 ' , model.url).fetch(1000)
+                                linkCategory=LinkCategory.gql('WHERE category != NULL and url_hash = :1 ' , model.url_hash).fetch(1000)
                         except NotSavedError:
-                                logging.info('not saved key for url %s' % model.url)
+                                logging.info('not saved key for url hash %s' % model.url_hash)
                         if linkCategory is not None:
                                 logging.info('got %s categories for %s' %( len(linkCategory), model.url))
-
-                                cats_tag=[ l.category  for l in linkCategory if l.category is not None ]
-                                category=simplejson.dumps(cats_tag)
-                                #category=simplejson.dumps(",".join(cats_tag))
+                                cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
+                                category=list(set(cats_tag))
                                 logging.info('got category from query %s' %category)
                 taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 

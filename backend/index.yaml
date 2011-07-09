@@ -28,9 +28,24 @@ indexes:
 
 - kind: LinkCategory
   properties:
+  - name: url
+  - name: category
+
+- kind: LinkCategory
+  properties:
   - name: category
   - name: updated
     direction: desc
+
+- kind: LinkCategory
+  properties:
+  - name: category
+  - name: date
+
+- kind: LinkCategory
+  properties:
+  - name: url_hash
+  - name: category
 
 - kind: LinkStats
   properties:
@@ -171,6 +186,17 @@ indexes:
   - name: date
     direction: desc
 
+- kind: SessionModel
+  properties:
+  - name: url_hash
+  - name: date
+    direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: domain
+  - name: instaright_account
+
 - kind: StatsModel
   properties:
   - name: __key__
@@ -236,13 +262,9 @@ indexes:
   - name: date
     direction: desc
 
-- kind: LinkCategory
-  properties:
-  - name: url
-  - name: category
-
 - kind: ScoreUsersDaily
   properties:
   - name: user
   - name: date
     direction: desc
+

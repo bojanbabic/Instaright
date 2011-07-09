@@ -21,6 +21,7 @@
                         google.load(drawVisualization);
                 </script>
 		<script type="text/javascript" src="/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
+                <script type="text/javascript" src="/static/javascript/jquery.cookie.js"></script>
 		<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
 		<script>
 			$(document).ready(function(){
@@ -37,8 +38,45 @@
 					$(this).next().toggle('slow');
 					return false;
 				});
-				$("#load_more").click(function(){
-					alert('load more');
+				$(".load_more_container").live("click", function(){
+					alert('Coming soon');
+					return;
+					var offset = $(this).attr("id");
+					var cookie = $.cookie("user_uuid");
+					if (!cookie){ 
+						alert("no cookie");
+					}
+					if (!offset){
+						offset=0
+					}
+					$.ajax({
+						type: "GET",
+						url: "/link/user",
+						data: "cookie="+cookie+"&offset="+offset,
+						cache: false,
+						success: function(data){
+							var j = "";
+							try{
+								j = eval(data);
+								a = Array();
+								for (p in j){
+									a.push(p);a.push('=>');
+									for (pp in j[p]){
+										a.push(pp);
+										a.push('==>');
+										a.push(j[p][pp][0]);
+									}
+								}
+								alert(a.join('\n'));
+							for (i=j.length -1; i>=0; i--){
+								alert('elem:'+j[i]);
+								$(this).append('<div>'+j[i]+'</div>');
+							}
+							} catch(e){
+								alert('e:'+e);
+							}
+						}
+					});
 				});
 				$("#usage_stats").fancybox({
 					'scrolling'        :'no',
@@ -108,7 +146,7 @@
 					<div class="actions">
 						<span class="stats text_bubble"><a id="usage_stats" href="#visualization">Statistics</a></span>
 						<span class="badges text_bubble"><a id="trophy_room" href="#badges">Trophy Room</a></span>
-						<span class="edit text_bubble"><a href="#">Edit Account</a></span>
+						<span class="edit text_bubble"><a href="javascript:alert('Coming soon!')">Edit Account</a></span>
 					</div>
 				</div>
 			</div>
@@ -166,7 +204,7 @@
 							<a href="{{ item.url }}" target="_new">{{ item.url }}</a>
 						</div>
 					</div>
-					<div class="link_options">
+					<!--div class="link_options">
 						<ul class="tools_list">
 							<li class="tools_list_item">
 								<a href="#" >Give me more of this</a>
@@ -178,7 +216,7 @@
 								<a href="#" >Add note</a>
 							</li>
 						</ul>
-					</div>
+					</div-->
 				</div>
                         	{% endfor %}
 				</div>
@@ -187,7 +225,7 @@
                 	</div>
 			</div>
 		</div>
-		<div class="load_more_container">
+		<div class="load_more_container" id="1">
 			<div id="load_more" >load more</div>
 		</div>
 		{% else %}

@@ -1,16 +1,19 @@
-import logging, datetime, os, sys
+import logging
+import datetime
+import os
+import sys
+import time
+
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
-from models import UserDetails, SessionModel
+from models import SessionModel
 from users import UserUtil
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
-
-from feedformatter import Feed
 
 DOMAIN = 'http://instaright.appspot.com'
 
@@ -19,6 +22,8 @@ class FeedGenerator(webapp.RequestHandler):
                 memcache_key='feed_json_cache'
                 cached_feed= memcache.get(memcache_key)
 		format = self.request.get('format', None);
+                cache_exp = datetime.datetime.now() + datetime.timedelta(minutes=5)
+                cache_exp_ts = time.mktime(cache_exp.timetuple())
                 userUtil = UserUtil()
                 if format == 'json' and cached_feed:
 			logging.info('getting json from cache')
@@ -27,10 +32,10 @@ class FeedGenerator(webapp.RequestHandler):
                         self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://instaright.appspot.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
                         return
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
-		memcache.set(memcache_key, entries)
+		memcache.set(memcache_key, entries, time = cache_exp_ts)
 		if not entries:
 			self.response.out.write('Nothing here')
-		now = datetime.datetime.now().strftime("%Y-%m-%dT%H\:%i\:%sZ")
+		#now = datetime.datetime.now().strftime("%Y-%m-%dT%H\:%i\:%sZ")
 		if format is None or format == 'xml':
                         template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
 			path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')

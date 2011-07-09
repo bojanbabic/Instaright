@@ -290,7 +290,7 @@ class Links(db.Model):
 	linkedin_share = db.IntegerProperty()
 	buzz_count  = db.IntegerProperty()
 	stumble_upons = db.IntegerProperty()
-        overall_score = db.IntegerProperty()
+        overall_score = db.IntegerProperty(default=0)
         created = db.IntegerProperty()
         date_added = db.DateProperty(auto_now_add=True)
         date_updated = db.DateProperty(auto_now_add=True)
@@ -364,6 +364,19 @@ class LinkCategory(db.Model):
                 sorted_cats = sorted(result.iteritems(), key=operator.itemgetter(1), reverse=True)
                 return dict(sorted_cats)
                 
+        @classmethod
+        def get_trending(cls):
+                last_hour = datetime.datetime.now().date() - datetime.timedelta(hours=1)
+                cats = LinkCategory.gql('WHERE updated > :1 ' , last_hour).fetch(1000)
+                if cats is None:
+                        return None
+                all_cats = [ c.category for c in cats if len(c.category) > 2 ]
+                result = dict( (c, all_cats.count(c)) for c in set(all_cats))
+                logging.info(result)
+                import operator
+                sorted_cats = sorted(result.iteritems(), key=operator.itemgetter(1), reverse=True)
+                return dict(sorted_cats)
+
 
 class ScoreUsersDaily(db.Model):
         user=db.ReferenceProperty(UserDetails)

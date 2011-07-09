@@ -4,6 +4,8 @@ import ConfigParser
 import sys
 import datetime
 import os
+import time
+
 from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
@@ -202,13 +204,11 @@ class LinkCategoryHandler(webapp.RequestHandler):
                                     return
                             memcache_key=url_hash+'_category'
                             current_categories=memcache.get(memcache_key)
-                            merge_cat=None
+                            merge_cat=[]
                             if current_categories is not None:
                                     logging.info('merging with existing cats %s' %current_categories)
-                                    merge_cat=current_categories
-                                    for c in cats:
-                                            merge_cat.add(c)
-                                    merge_cat=set(merge_cat)
+                                    merge_cat.extend(current_categories)
+                                    merge_cat.extend(cats)
                             else: 
                                     merge_cat=cats 
                             model=None 
@@ -226,18 +226,16 @@ class LinkCategoryHandler(webapp.RequestHandler):
                             if linkDetail is None:
                                 linkDetail=Links.gql('WHERE url = :1' , url).get()
                             if linkDetail is not None and linkDetail.categories is not None:
-                                    logging.info('category found from link details')
+                                    logging.info('category found from link details %s' % linkDetail.categories)
                                     delic_cats=eval(linkDetail.categories)
-                                    d_cats=[ c[0] for c in  delic_cats ]
-                                    for c in d_cats:
-                                            cats.add(c)
-                                    cats=set(cats)
+                                    d_cats=[ c for c in  delic_cats ]
+                                    merge_cat.extend(d_cats)
+                            merge_cat=set(merge_cat)
+                            logging.info('caching cats %s for url %s' %(merge_cat, url))
+                            memcache.set(memcache_key, list(set(merge_cat))[:4])
 
-                            logging.info('caching cats %s for url %s' %(current_categories, url))
-                            memcache.set(memcache_key, set(merge_cat))
-
-                            for c in cats:
-                                taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'category':c, 'url': url})
+                            for c in merge_cat:
+                                taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'category':c, 'url': url_hash})
                                 existingLinkCat = LinkCategory.gql('WHERE url_hash = :1 and category = :2', url_hash, c).get()
                                 if existingLinkCat is None:
                                         existingLinkCat = LinkCategory.gql('WHERE url = :1 and category = :2', url, c).get()
@@ -317,17 +315,17 @@ class CategoryHandler(GenericWebHandler):
 class CategoryStreamHandler(webapp.RequestHandler):
         def post(self):
                 category=self.request.get('category', None)
-                url=self.request.get('url', None)
+                url_hash=self.request.get('url', None)
                 userUtil=UserUtil()
                 if category is None or len(category) == 0:
                         logging.info('no category in request. skipping ...')
                         return
-                if url is None:
+                if url_hash is None:
                         logging.info('no url in request. skipping ...')
                         return
-                model = SessionModel.gql('WHERE url = :1', url).get()
+                model = SessionModel.gql('WHERE url_hash = :1 order by date desc', url_hash).get()
                 if model is None:
-                        logging.error('no session model for url %s ' %url)
+                        logging.error('no session model for url hash %s ' %url_hash)
                         return
 
                 category_path='/category/%s' %category
@@ -355,8 +353,10 @@ class CategoryListHandler(GenericWebHandler):
                 if cached_category is not None:
                         categories=cached_category
                 else:
-                        categories = LinkCategory.getAllCategoryCount()
-                        memcache.set(memcache_key, categories)
+                        categories = LinkCategory.get_trending()
+                        next_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
+                        next_hour_ts = time.mktime(next_hour.timetuple())
+                        memcache.set(memcache_key, categories, time = next_hour_ts)
 
 		template_variables = []
                 template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':simplejson.dumps(categories)}

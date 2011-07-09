@@ -192,7 +192,7 @@ class LinkUtil:
                         return None
         @classmethod
         def getUrlHash(cls, url):
-                return base64.b64encode(hashlib.sha1(url).digest())[:-1]
+                return base64.b64encode(hashlib.sha1(unicode(url).encode('utf-8')).digest())[:-1]
         def updateStats(self, s):
                 dailyStats = DailyDomainStats.gql('WHERE domain = :1 and date = :2', s.domain, s.date).get()
                 if dailyStats is not None:
@@ -359,6 +359,7 @@ class SiteSpecificBadge(object):
 	gadgetProps=ConfigParser.ConfigParser()
 	wikiProps=ConfigParser.ConfigParser()
 	sportProps=ConfigParser.ConfigParser()
+	categoryProps=ConfigParser.ConfigParser()
         def __init__(self, user, url, domain, version):
                 self.user = user
                 self.url = url
@@ -392,6 +393,13 @@ class SiteSpecificBadge(object):
 		self.sportProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/sport/sport.properties')
 		self.sportDomains=self.sportProps.get('sport','domains').split(',')
 		self.sport_tresshold=int(self.sportProps.get('sport','tresshold'))
+
+		self.categoryProps.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/badges/category2badge.ini')
+		self.gadgetCategories=self.categoryProps.get('category','gadget').split(',')
+		self.economyCategories=self.categoryProps.get('category','economy').split(',')
+		self.wikiCategories=self.categoryProps.get('category','wiki').split(',')
+		self.sportCategories=self.categoryProps.get('category','sports').split(',')
+		self.newsCategories=self.categoryProps.get('category','news').split(',')
 
         def getBadge(self):
                 if self.domain in self.nyDomains:
@@ -441,8 +449,11 @@ class SiteSpecificBadge(object):
         def geteconomybadge(self):
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.economyDomains, midnight, self.user).count()
-               logging.info('site specific badger(economy): fetched stats %s' % currentCount)
-               if currentCount >= self.economy_tresshold:
+	       categoryCount = LinkCategory.gql('WHERE category in :1 and date >= :2', self.economyCategories, midnight).fetch(1000)
+	       categoryRefined = [ lc for lc in categoryCount if lc.model_details.instaright_account == self.user ]
+	       cat_user_count = len(categoryRefined)
+               logging.info('site specific badger(economy): fetched stats %s economy categories:%s' % (currentCount, cat_user_count))
+               if currentCount + cat_user_count >= self.economy_tresshold:
                         logging.info('setting economy badge for user %s ' %self.user)
                         return 'yen'
                else:
@@ -451,8 +462,11 @@ class SiteSpecificBadge(object):
         def getgadgetbadge(self):
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.gadgetDomains, midnight, self.user).count()
-               logging.info('site specific badger(gadget): fetched stats %s' % currentCount)
-               if currentCount >= self.gadget_tresshold:
+	       categoryCount = LinkCategory.gql('WHERE category in :1 and date >= :2', self.gadgetCategories, midnight).fetch(1000)
+	       categoryRefined = [ lc for lc in categoryCount if lc.model_details.instaright_account == self.user ]
+	       cat_user_count = len(categoryRefined)
+               logging.info('site specific badger(gadget): fetched stats %s and category count %s' % (currentCount, cat_user_count))
+               if currentCount + cat_user_count >= self.gadget_tresshold:
                         logging.info('setting gadget badge for user %s ' %self.user)
                         return 'robot'
                else:
@@ -461,8 +475,11 @@ class SiteSpecificBadge(object):
         def getnewsbadge(self):
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.newsDomains, midnight, self.user).count()
-               logging.info('site specific badger(news): fetched stats %s' % currentCount)
-               if currentCount >= self.news_tresshold:
+	       categoryCount = LinkCategory.gql('WHERE category in :1 and date >= :2', self.newsCategories, midnight).fetch(1000)
+	       categoryRefined = [ lc for lc in categoryCount if lc.model_details.instaright_account == self.user ]
+	       cat_user_count = len(categoryRefined)
+               logging.info('site specific badger(news): fetched stats %s and category count %s' % (currentCount, cat_user_count))
+               if currentCount + cat_user_count >= self.news_tresshold:
                         logging.info('setting news badge for user %s ' %self.user)
                         return 'news'
                else:
@@ -472,8 +489,11 @@ class SiteSpecificBadge(object):
         def getwikibadge(self):
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.wikiDomains, midnight, self.user).count()
-               logging.info('site specific badger(wiki): fetched stats %s' % currentCount)
-               if currentCount >= self.wiki_tresshold:
+	       categoryCount = LinkCategory.gql('WHERE category in :1 and date >= :2', self.wikiCategories, midnight).fetch(1000)
+	       categoryRefined = [ lc for lc in categoryCount if lc.model_details.instaright_account == self.user ]
+	       cat_user_count = len(categoryRefined)
+               logging.info('site specific badger(wiki): fetched stats %s and category %s' % (currentCount, cat_user_count))
+               if currentCount + cat_user_count >= self.wiki_tresshold:
                         logging.info('setting wiki badge for user %s ' %self.user)
                         return 'news'
                else:
@@ -483,8 +503,11 @@ class SiteSpecificBadge(object):
         def getsportbadge(self):
                midnight = datetime.datetime.now().date()
                currentCount=SessionModel.gql('where domain in :1 and date >= :2 and instaright_account = :3', self.sportDomains, midnight, self.user).count()
-               logging.info('site specific badger(sport): fetched stats %s' % currentCount)
-               if currentCount >= self.sport_tresshold:
+	       categoryCount = LinkCategory.gql('WHERE category in :1 and date >= :2', self.sportCategories, midnight).fetch(1000)
+	       categoryRefined = [ lc for lc in categoryCount if lc.model_details.instaright_account == self.user ]
+	       cat_user_count = len(categoryRefined)
+               logging.info('site specific badger(sport): fetched stats %s and category count %s' % (currentCount, cat_user_count))
+               if currentCount + cat_user_count >= self.sport_tresshold:
                         logging.info('setting news badge for user %s ' %self.user)
                         return 'sport'
                else:

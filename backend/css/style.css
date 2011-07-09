@@ -676,7 +676,7 @@ span {
 	margin: 0 16px;
 }
 .profile_score_content_wrapper{
-	margin-left: 165px;
+	margin-left: 145px;
 	height:105px;
 	padding-top: 40px;
 }
@@ -775,6 +775,7 @@ span {
 .level {
 	font-size: small;
 	color: #FF0975;
+	margin-left: 15px;
 }
 .profile_content_wrapper{
 	height: 110px;

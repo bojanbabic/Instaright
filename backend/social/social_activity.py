@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-import datetime, os, sys, urllib2, logging, urllib, time, ConfigParser
+import datetime
+import os
+import sys
+import urllib2
+import logging
+import ConfigParser
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache, urlfetch
@@ -84,8 +89,6 @@ class TweetHotLinks(webapp.RequestHandler):
         def get(self):
                  not_shared=False
                  hotLinks = Links.gql('WHERE shared = :1 ORDER by date_added desc, overall_score desc', not_shared).fetch(30)
-                 linkUtil=LinkUtil()
-                 a=[]
                  for h in hotLinks:
                         if h.domain is None:
                                 h.domain=StatsUtil.getDomain(h.url)
@@ -248,22 +251,25 @@ class Twit:
                                top_category1 = None
                                top_category2 = None
                                try:
-                                        top_category = unicode(sorteddict[0])
-                                        top_category1 = unicode(sorteddict[1])
-                                        top_category2 = unicode(sorteddict[2])
+                                        top_category = sorteddict[0]
+                                        top_category1 = sorteddict[1]
+                                        top_category2 = sorteddict[2]
                                         logging.info('top cats %s' % sorteddict)
                                except:
-                                        logging.info('can\'t get all cats')
+                                        logging.info('can\'t get all cats from %s' % sorteddict)
 			       if short_link is None:
 					self.text=None
 					return
                                self.text=""+unicode(link.title[0:59]) + "... " +short_link
                                if top_category is not None and top_category[0] not in self.text and len(top_category[0]) + len(self.text) +2 <= 140:
-                                        self.text += " #%s" % top_category[0]
+                                        logging.info("appending cat1 to tweet %s ( %s )" % (unicode(top_category[0]) , top_category))
+                                        self.text += " #%s" % unicode(top_category[0])
                                if top_category1 is not None and top_category1[0] not in self.text and len(top_category1[0]) + len(self.text) +2 <= 140:
-                                        self.text += " #%s" % top_category1[0]
+                                        logging.info("appending cat2 to tweet %s ( %s )" % (unicode(top_category1[0]) , top_category1))
+                                        self.text += " #%s" % unicode(top_category1[0])
                                if top_category2 is not None and top_category2[0] not in self.text and len(top_category2[0]) + len(self.text) +2 <= 140:
-                                        self.text += " #%s" % top_category2[0]
+                                        logging.info("appending cat3 to tweet %s ( %s )" % (unicode(top_category2[0]) , top_category2))
+                                        self.text += " #%s" % unicode(top_category2[0])
                 else:
 			if title_from_url is not None and len(title_from_url) > 20:
                         	logging.info('trying from title to get twit text')

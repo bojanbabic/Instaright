@@ -1,8 +1,11 @@
-import logging, datetime ,os, urllib2, urllib, Queue, sys
+import logging
+import os
+import Queue
+import sys
+
 from google.appengine.ext import webapp, db
-from google.appengine.api import xmpp, memcache
+from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
-from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import  BroadcastMessage
 from models import Subscription, SessionModel
@@ -62,7 +65,7 @@ class BroadcastMessageTask(webapp.RequestHandler):
 
                         user = SessionModel.gql('WHERE __key__ = :1', db.Key(user_id)).get()
                         if user is None:
-                                logging.info('can\'t determine user by id: %s' % update.id)
+                                logging.info('can\'t determine user by id: %s' % user_id)
                                 return
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)

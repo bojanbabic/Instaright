@@ -80,7 +80,7 @@ class UserGenericHandler(GenericWebHandler):
                         self.redirect('/')
                         return
                 logging.info('user: %s' %self.instaright_account)
-                sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , self.instaright_account).fetch(40)
+                sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , self.instaright_account).fetch(20)
 
                 score = 0
                 links = None
@@ -90,7 +90,8 @@ class UserGenericHandler(GenericWebHandler):
                 logging.info('user detail key %s' % self.user_detail_key)
                 template_variables=[]
                 now=datetime.datetime.now().date()
-                start_of_week= time.asctime(time.strptime('%s %s 1' %(now.year, now.isocalendar()[1]), '%Y %W %w'))
+                #start_of_week= time.asctime(time.strptime('%s %s 1' %(now.year, now.isocalendar()[1]), '%Y %W %w'))
+                start_of_week= datetime.datetime.strptime('%s %s 1' %(now.year, now.isocalendar()[1]), '%Y %W %w')
                 memcache_key='user_'+self.user_detail_key+'_score'
                 cached_score=memcache.get(memcache_key)
                 if cached_score is not None:
@@ -98,7 +99,8 @@ class UserGenericHandler(GenericWebHandler):
                         score=cached_score
                 else:
                         logging.info('parameters: start of week %s now %s for user_key %s ' % ( start_of_week,now, ud_key))
-                        score_entities = ScoreUsersDaily.gql('WHERE user = :1 and date <= :2 and date >= :3', ud_key, now , start_of_week).fetch(100)
+                        score_entities = ScoreUsersDaily.gql('WHERE user = :1 and date >= :2', ud_key, start_of_week).fetch(100)
+                        #score_entities = ScoreUsersDaily.gql('WHERE user = :1 and date <= :2 and date >= :3', ud_key, now , start_of_week).fetch(100)
                         logging.info('got %s score entities' % len(score_entities))
                         if score_entities is not None:
                                 scores = [ s.score for s in score_entities if s is not None ]
@@ -424,6 +426,9 @@ class ListUserHandler(webapp.RequestHandler):
                         self.response.out.write('\n'.join(buf))
 
 class UserBadgeTaskHandler(webapp.RequestHandler):
+	def __init__(self):
+		self.conf = ConfigParser.ConfigParser()
+	        self.conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/category2badge.ini')
         def post(self):
                 user=self.request.get('user', None)
                 url=self.request.get('url', None)
@@ -482,6 +487,7 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                         userBadge.badge_property = b.key()
                         userBadge.user_property = user_details.key()
                         userBadge.put()
+			
                 UserScoreUtility.updateBadgeScore(user, badge)
 class UserUtil(object):
 
@@ -521,7 +527,7 @@ class UserUtil(object):
 				                        userDetails.put()
 						        break
 					        except datastore_errors.Timeout:
-						        thread.sleep(timeout_ms)
+						        time.sleep(timeout_ms)
 						        timeout_ms *= 2
 			        except apiproxy_errors.DeadlineExceededError:
 				        logging.info('run out of retries for writing to db')

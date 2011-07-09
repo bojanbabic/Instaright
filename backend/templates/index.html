@@ -126,6 +126,7 @@
 						a = e['a'];
 						lc = e['lc'];
 						c=e['c']
+
                         			original_url = e['ol'];
 
                         			container = document.createElement('div');
@@ -164,13 +165,12 @@
                         			container.appendChild(document.createElement('br'));
 
                         			contentParagraph = document.createElement('p');
-						if (typeof(lc) !== 'undefined'){
+						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null'){
 							try{
-							cats=eval(lc);
+							cats=lc.split(',');
 							span_cats=Array();
-							for ( key in cats ){
-								c = cats[key];
-								span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+c+"\">"+c+"</a></span>");
+							for (c in cats){
+								span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
 							}
 							}catch(e){
 								span_cats=Array();
@@ -214,8 +214,8 @@
 			<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
 			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         {% if user %}
-			<li><a href="javascript:alert('Dashboard coming soon!');"><span>{{ user }}</span></a></li>
-			<li><a href="javascript:alert('Dashboard coming soon!');"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+			<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
+			<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" /></a></li>
 			<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
                         {% else %}
 			<li><a id="btn_login" href="/account" title="Login to Instaright"><span>Login</span></a></li>

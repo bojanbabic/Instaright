@@ -1,19 +1,27 @@
-import os, urllib2, logging, sys, ConfigParser, urllib, simplejson
+import os
+import time
+import datetime
+import logging
+import sys
+import ConfigParser
+import urllib
+import simplejson
+import itertools
 from google.appengine.ext import webapp, db
 from google.appengine.api import memcache
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 from google.appengine.api.labs import taskqueue
+from google.appengine.api import datastore_errors
+from google.appengine.runtime import apiproxy_errors
 
-from models import Links, SessionModel, CategoryDomains
-from utils import StatsUtil, LinkUtil, CategoriesUtil
-from simplejson import JSONDecodeError
+from models import Links, SessionModel, UserSessionFE
+from utils import StatsUtil, LinkUtil, CategoriesUtil, Cast
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
 from link_info import LinkHandler
 from google.appengine.api import urlfetch 
-from google.appengine.api.urlfetch import DownloadError 
 
 class LinkSortHandler(webapp.RequestHandler):
         def get(self):
@@ -168,12 +176,18 @@ class LinkRecommendationTask(webapp.RequestHandler):
                 if url is None:
                         logging.info('no url no recommendations')
                         return
-                url_hash = Utils.getUrlHash(url)
-                l = Links.gql('WHERE url = :1' , url).get()
+                url_hash = LinkUtil.getUrlHash(url)
+                try:
+                        l = Links.gql('WHERE url_hash = :1' , url_hash).get()
+                        if l is None:
+                                l = Links.gql('WHERE url = :1' , url).get()
+                except:
+                        l = None
                 if l is None:
                         logging.info('no link saved with url %s' % url)
                         l = Links()
                         l.url  = url
+                        l.url_hash = url_hash
                         l.put()
                 api_call= 'http://api.zemanta.com/services/rest/0.0/'
                 args ={'method': 'zemanta.suggest',
@@ -183,43 +197,77 @@ class LinkRecommendationTask(webapp.RequestHandler):
                                'format': 'json'}
                 args_enc = urllib.urlencode(args)
                 json= None
+                result=None
                 try:
                         result = urlfetch.fetch(url=api_call, payload=args_enc,method = urlfetch.POST, headers={'Content-Type': 'application/x-www-form-urlencoded'})
                         json = simplejson.loads(result.content)
-                except JSONDecodeError,DownloadError:
-                        logging.info('bad json data from zemanta: %s' % data)
+                except:
+                        logging.info('bad json data from zemanta: %s' % result)
 
                 if json is None or json['status'] != 'ok':
                         logging.info('error while fetching recommendations')
                         return
                 articles = json['articles']
+                #TODO apply DMOZ categories
                 categories = json['categories']
                 #relevant_articles = [ (c["title"], c["url"]) for c in articles if c["confidence"] > 0.01 ]
                 relevant_articles = [ (c["title"], c["url"]) for c in articles ]
                 l.recommendation=str(simplejson.dumps(relevant_articles[0:4]))
+                if l.url_hash is None:
+                        l.url_hash = url_hash
                 l.put()
-                logging.info('link updated: %s' % l.to_xml())
 
 class LinkRecommendationHandler(webapp.RequestHandler):
         def get(self):
-                url=self.request.get('url', None)
-                if url is None:
+                url_hash=self.request.get('url_hash', None)
+                if url_hash is None:
                         logging.info('no url cant provide rcmds')
                         return
-                link=Links.gql('WHERE url = :1' , url).get()
+                link=Links.gql('WHERE url_hash = :1' , url_hash).get()
                 self.response.headers['Content-Type']="application/json"
                 if link is None:
-                        logging.info('unexisting link , no recommendations')
+                        logging.info('unexisting link_hash %s, no recommendations' % url_hash)
                         self.response.out.write("{}")
                         return
                 if link.recommendation is None:
                         logging.info('no recommendations started new job')
-                        taskqueue.add(url='/link/recommendation/task', queue_name='link-rcmd-queue', params={'url':url })
+                        taskqueue.add(url='/link/recommendation/task', queue_name='link-rcmd-queue', params={'url_hash':url_hash })
                         self.response.out.write("{}")
                 else:
                         logging.info(' transforming %s to json output ' % link.recommendation)
-                        self.response.out.write("{}")
-                        #self.response.out.write(simplejson.dumps(link.recommendation, default = lambda l: {'title': l.0, 'url': l.1}))
+                        #self.response.out.write(link.recommendation)
+                        self.response.out.write(simplejson.dumps(link.recommendation, default = lambda l: {'title': l[0], 'url': l[1]}))
+
+class LinkUserHandler(webapp.RequestHandler):
+        def get(self):
+                cookie = self.request.get('cookie', None)
+                offset = Cast.toInt(self.request.get('offset', None), 0)
+                if cookie is None:
+                        logging.info('no user info return')
+                        return
+                logging.info('row offset %s' % offset)
+                offset = offset * 20
+                usession = UserSessionFE.gql('WHERE user_uuid = :1', cookie).get()
+                ud = usession.user_details
+                self.response.headers["Content-type"] = "application/json"
+                if ud.instaright_account is None:
+                        logging.info('not user determined from cache')
+                        self.response.out.write('{}')
+                        return 
+                logging.info('user from cookie %s ' % ud.instaright_account)
+                logging.info('offset %s' % offset)
+                sessions = SessionModel.gql('WHERE instaright_account =  :1 ORDER by date desc ', ud.instaright_account ).fetch(20,offset)
+                if sessions is None or len(sessions) == 0:
+                        self.response.out.write('{}')
+                        return
+                d = {}
+                for d_te, j in itertools.groupby(sessions, key= lambda s: s.date.date()):
+                        ss = [ {'t':ss.title,'l':ss.url,'d':ss.domain,'h':ss.url_hash} for ss in list(j) ]
+                        d[str(d_te)] = ss
+                self.response.out.write(simplejson.dumps(d))
+
+
+
 
 def main():
         run_wsgi_app(application)
@@ -233,9 +281,8 @@ application=webapp.WSGIApplication(
                         ('/link/category/task/batch',LinkDomainCategoriesBatch),
                         ('/link/transform/feed',LinkTransformHandler),
                         ('/link/transform/short',ShortLinkHandler),
+                        ('/link/user',LinkUserHandler),
                         ('/domain/categories',ProcessCategoriesHandler),
                         ],debug=True
                 )
 
-if __name__ == "__main__":
-        main()

@@ -3,6 +3,7 @@ import urllib2
 import os
 import logging
 import datetime
+import time
 
 from utils import StatsUtil,Cast, TaskUtil, ConfigParser, LinkUtil
 from users import UserUtil
@@ -76,9 +77,10 @@ class LinkHandler(webapp.RequestHandler):
 			existingLink.domain = link.domain
                         if existingLink.url_hash is None:
                                 existingLink.url_hash = url_hash
-                        existingLink.title = link.title[:199]
+                        if link.title is not None:
+                                existingLink.title = link.title[:199]
                         #if increase in score is more then 20%
-                        if  existingLink.overall_score == 0 or link.overall_score  / existingLink.overall_score >= 1.2:
+                        if  existingLink.overall_score is None or existingLink.overall_score == 0 or link.overall_score  / existingLink.overall_score >= 1.2:
                                 existingLink.shared=False
                         existingLink.overall_score=link.overall_score
                         existingLink.put()
@@ -91,7 +93,7 @@ class LinkHandler(webapp.RequestHandler):
                         			link.put()
 						break
 					except datastore_errors.Timeout:
-						thread.sleep(timeout_ms)
+						time.sleep(timeout_ms)
 						timeout_ms *= 2
 			except apiproxy_errors.DeadlineExceededError:
 				logging.info('run out of retries for writing to db')
@@ -223,7 +225,8 @@ class LinkHandler(webapp.RequestHandler):
                 if json and 'story' in json:
                         try:
                                 link.tweets=Cast.toInt(json['story']['url_count'],0)
-                                link.title=json['story']['title'][:199]
+                                if json['story']['title'] is not None:
+                                        link.title=json['story']['title'][:199]
 			 	if 'excerpt' in json['story']:	
 					logging.info('getting excerpt');
                                 	link.excerpt = db.Text(unicode(json['story']['excerpt']))
@@ -242,7 +245,7 @@ class LinkHandler(webapp.RequestHandler):
                 json =LinkUtil.getJsonFromApi(delicious_api)
                 if json:
                         try:
-                                if not link.title:
+                                if not link.title and json[0]['title']:
                                         link.title = json[0]['title'][:199]
                                 link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
                                 link.delicious_count = Cast.toInt(json[0]['total_posts'],0)
@@ -301,7 +304,7 @@ class LinkHandler(webapp.RequestHandler):
 			try:
 				link.stumble_upons = Cast.toInt(json['result']['views'], 0)
 				logging.info('stumle_score %s' % link.stumble_upons)
-				if not link.title:
+				if not link.title and json['result']['title']:
                                         link.title = json['result']['title'][:199]
 					logging.info('settting stumble title: %s' % link.title)
 			except KeyError:
@@ -419,7 +422,8 @@ class LinkTractionTask(webapp.RequestHandler):
 			share_margin = share_margin * self.klout_correction
 			logging.info('adjusting twit margin: %s' % share_margin)
                 
-		if link.overall_score > share_margin and existingLink is None:
+		logging.info('link score %s tweet margin %s ( existing %s )' %( link.overall_score, share_margin, existingLink))
+		if link.overall_score > share_margin and (existingLink is None or not existingLink.shared):
                         t=Twit()
                         t.style=True
                         t.textFromHotLink(link, title)
@@ -432,6 +436,12 @@ class LinkTractionTask(webapp.RequestHandler):
 			
                         #taskqueue.add(url='/util/twitter/twit/task', eta=execute_time, queue_name='twit-queue', params={'twit':t.text})
                         taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})
+                        if existingLink is not None:
+                                existingLink.shared= True
+                                existingLink.put()
+                        logging.info('updated link share status')
+                else:
+                        logging.info('not scheduled for tweeting')
 		lh.update_link(url, link)
 
 application = webapp.WSGIApplication(

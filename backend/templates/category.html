@@ -231,8 +231,8 @@
 			<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
 			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         {% if user %}
-			<li><a href="javascript:alert('Dashboard coming soon!');"><span>{{ user }}</span></a></li>
-			<li><a href="javascript:alert('Dashboard coming soon!');"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+			<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
+			<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" /></a></li>
 			<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
                         {% else %}
 			<li><a id="btn_login" href="/account" title="Login to Instaright"><span>Login</span></a></li>
