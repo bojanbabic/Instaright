@@ -14,6 +14,7 @@ class SessionModel(db.Model):
         title=db.StringProperty()
         version=db.StringProperty()
         client = db.StringProperty()
+        embeded = db.TextProperty()
 	def count_all(self):
 		count = 0
 		query = SessionModel.all().order('__key__')
@@ -295,6 +296,8 @@ class Links(db.Model):
         date_added = db.DateProperty(auto_now_add=True)
         date_updated = db.DateProperty(auto_now_add=True)
         recommendation = db.TextProperty()
+        desc = db.TextProperty()
+        embeded = db.TextProperty()
         shared = db.BooleanProperty(default=False)
 
 class UserStats(db.Model):

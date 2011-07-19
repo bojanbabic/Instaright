@@ -211,7 +211,7 @@ form input[type="checkbox"], form input[type="radio"] { background:none; border:
    ----------------------------------------------------------------------------------------------------*/
 .round_title { background:transparent url('/static/images/base_title_right_short.png') no-repeat scroll right top; color: #0066CC !important; display:block; float:left; font-size:17px; font-weight:700; height:30px; line-height:30px; margin:-13px 0 0 15px; padding-right:23px; text-decoration:none; }
 .round_title span { background: transparent url('/static/images/base_title_left_long.png') no-repeat; display:block; padding-left:20px; white-space:nowrap; }
-.streamcontent img { float:left; margin:0 10px 0 0; }
+.streamcontent img { float:left; margin:0 10px 0 0; min-height: 80px; }
 /* Containers
    ----------------------------------------------------------------------------------------------------*/
 .container_24 { margin-left:auto; margin-right:auto; width:1000px; }
@@ -455,6 +455,11 @@ span {
 	text-decoration: none !important;
 	margin: 10px;
 }
+.text_bubble a:visited {
+	text-decoration: none !important;
+	margin: 10px;
+	color: #0066CC;
+}
 .text_bubble_cats { 
 	-moz-border-radius:10px; 
 	background:none repeat scroll 0 0 #FFFFFF; 
@@ -470,6 +475,11 @@ span {
 }
 .text_bubble_cats a {
 	text-decoration: none !important;
+	margin: 3px;
+}
+.text_bubble_cats a:visited {
+	text-decoration: none !important;
+	color: #0066CC;
 	margin: 3px;
 }
 .text_bubble_cats:hover {
@@ -835,4 +845,13 @@ span {
 	width: 250px;
 	display: block;
 	text-align: left;
+}
+.stream-article {
+	color: #0066CC;
+}
+.stream-article:visited {
+	color: #0066CC;
+}
+.embeded_content a img {
+	width: 500px;
 }

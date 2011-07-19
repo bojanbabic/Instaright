@@ -28,8 +28,8 @@ indexes:
 
 - kind: LinkCategory
   properties:
-  - name: url
   - name: category
+  - name: date
 
 - kind: LinkCategory
   properties:
@@ -39,8 +39,8 @@ indexes:
 
 - kind: LinkCategory
   properties:
+  - name: url
   - name: category
-  - name: date
 
 - kind: LinkCategory
   properties:
@@ -123,6 +123,17 @@ indexes:
   - name: overall_score
     direction: desc
 
+- kind: ScoreUsersDaily
+  properties:
+  - name: user
+  - name: date
+
+- kind: ScoreUsersDaily
+  properties:
+  - name: user
+  - name: date
+    direction: desc
+
 - kind: SessionModel
   properties:
   - name: __key__
@@ -150,6 +161,11 @@ indexes:
   - name: domain
   - name: date
     direction: desc
+
+- kind: SessionModel
+  properties:
+  - name: domain
+  - name: instaright_account
 
 - kind: SessionModel
   properties:
@@ -192,14 +208,15 @@ indexes:
   - name: date
     direction: desc
 
-- kind: SessionModel
-  properties:
-  - name: domain
-  - name: instaright_account
-
 - kind: StatsModel
   properties:
   - name: __key__
+    direction: desc
+
+- kind: UserBadge
+  properties:
+  - name: user
+  - name: date
     direction: desc
 
 - kind: UserSessionFE
@@ -250,21 +267,3 @@ indexes:
     direction: desc
   - name: count
     direction: desc
-
-- kind: ScoreUsersDaily
-  properties:
-  - name: user
-  - name: date
-
-- kind: UserBadge
-  properties:
-  - name: user
-  - name: date
-    direction: desc
-
-- kind: ScoreUsersDaily
-  properties:
-  - name: user
-  - name: date
-    direction: desc
-

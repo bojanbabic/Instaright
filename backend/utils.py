@@ -137,7 +137,35 @@ class FeedUtil:
 		item["uid"]=str(model.key())
 
 		return item
-class LinkUtil:
+class LinkUtil(object):
+        def __init__(self):
+		config=ConfigParser.ConfigParser()
+		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
+                self.embedly_key=config.get('embedly','key')
+
+        def getEmbededInfo(cls, url):
+                l = Links.gql('WHERE url_hash = :1', url_hash).get()
+                if l is None or l.embeded is None:
+                        return None
+                return l.embeded
+        def getLinkInfo(self, url):
+                api_call="http://api.embed.ly/1/oembed?key="+urllib.quote(self.embedly_key)+"&url="+urllib.quote(url)+"&maxwidth=500&format=json"
+                json = LinkUtil.getJsonFromApi(api_call)
+                title = LinkUtil.getJsonFieldSimple(json, "title")
+                description = LinkUtil.getJsonFieldSimple(json, "description")
+                image = LinkUtil.getJsonFieldSimple(json, "url")
+                html = LinkUtil.getJsonFieldSimple(json, "html")
+                type = LinkUtil.getJsonFieldSimple(json, "type")
+                embeded = ""
+                if image is not None and type == "photo":
+                        embeded = '<a href="%s"><img src="%s" /></a>'  % ( url, image )
+                if html is not None:
+                        embeded = html
+                return {"t":title,"d":description, "e": embeded}
+
+                
+
+        #deprecated
         @classmethod
         def getLinkTitle(cls,url):
                         title=None
@@ -160,6 +188,17 @@ class LinkUtil:
                                 logging.info('title %s fetch failed... for %s error: %s ::: %s' %(title, url, e0, e1))
                         return title
 
+        @classmethod
+        def getJsonFieldSimple(cls, data, parameter=None):
+                            field_value=None
+                            if parameter is None:
+                                return None
+                            try:
+                                field_value = data[parameter]
+                            except:
+                                logging.info("error while retrieving parameter %s from data %s" %( parameter, data))
+                            return field_value
+                        
         def getFeedOriginalUrl(self,url):
                 try:
                         req=urllib2.Request(url)

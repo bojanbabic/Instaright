@@ -3,6 +3,7 @@ import os
 import datetime
 import logging
 import thread
+import time
 
 from utils import StatsUtil,LinkUtil, UserScoreUtility
 
@@ -112,6 +113,12 @@ class MainTaskHandler(webapp.RequestHandler):
                 if not StatsUtil.checkUrl([],url):
                     logging.info('skipping since url is not good!')
                     return
+                lu = LinkUtil()
+                link_info = lu.getLinkInfo(url)
+                description = link_info["d"]
+                embeded = link_info["e"]
+                title_new = link_info["t"]
+                logging.info("link info desc: %s embede: %s" %( description, embeded))
                 if title is None or title == 'None' or title == 'null':
                         title=LinkUtil.getLinkTitle(url)
                 if title is not None:
@@ -143,6 +150,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 	model.title = title
                 	model.version = version
                         model.client = client
+                        model.embeded = embeded
 			while True:
 				timeout_ms= 100
 				try:
@@ -186,7 +194,7 @@ class MainTaskHandler(webapp.RequestHandler):
                                 cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
                                 category=list(set(cats_tag))
                                 logging.info('got category from query %s' %category)
-                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+                                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 
                 
 class ErrorHandling(webapp.RequestHandler):
@@ -241,7 +249,6 @@ class ToolsHandler(GenericWebHandler):
 		path= os.path.join(os.path.dirname(__file__), 'templates/tools.html')
                 self.response.headers["Content-Type"]= "text/html"
 		self.response.out.write(template.render(path,template_variables))
-
                 
 		
 application = webapp.WSGIApplication(

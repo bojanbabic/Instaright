@@ -66,7 +66,7 @@
                 			feed_json_update = JSON.parse(evt.data);
                 			updateDisplayEntry(feed_json_update, stream);
         			} catch(e){
-         			        alert('eee:'+e);
+         			        //alert('eee:'+e);
         			} 
 			};
 			socket.onclose= function(evt){
@@ -128,10 +128,10 @@
 						c=e['c']
 
                         			original_url = e['ol'];
+						embeded = e['e'];
 
                         			container = document.createElement('div');
                         			containerAvatar = document.createElement('div');
-
 
                         			avatarElement = document.createElement('img');
                         			avatarElement.setAttribute('src', a);
@@ -142,6 +142,7 @@
                         			container.setAttribute('id', id);
 
                         			titleElement = document.createElement('a');
+						titleElement.setAttribute('class','stream-article');
                         			titleElement.innerHTML = title;
                         			if (original_url === undefined){
                                 			titleElement.href = link;
@@ -154,6 +155,7 @@
                         			titleParagraph.appendChild(titleElement);
 
                         			domainElement = document.createElement('a');
+						domainElement.className="stream-article";
                         			domainElement.innerHTML = domain;
                         			domainElement.href = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+'http://'+domain;
                         			domainElement.target="_new"
@@ -164,7 +166,15 @@
                         			container.appendChild(domainElement);
                         			container.appendChild(document.createElement('br'));
 
-                        			contentParagraph = document.createElement('p');
+                        			embededParagraph = document.createElement('div');
+						embededParagraph.setAttribute('class', 'embeded_content');
+						if (typeof(embeded) != 'undefined' && embeded != null && embeded.length > 0){
+							//alert(embeded);
+							embededParagraph.innerHTML = embeded;
+							container.appendChild(embededParagraph);
+                        				container.appendChild(document.createElement('br'));
+						}
+                        			contentParagraph = document.createElement('div');
 						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null'){
 							try{
 							cats=lc.split(',');
@@ -249,7 +259,8 @@
                                                 margin:10px 0px 10px 0px;
                                                 padding:10px;
                                                 text-decoration:none;
-						height: 80px;
+						min-height: 80px;
+						overflow: auto;
                                         }
                                 </style>
                                 <div id="stream"></div>

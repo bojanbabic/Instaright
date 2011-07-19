@@ -29,7 +29,7 @@ class FeedGenerator(webapp.RequestHandler):
 			logging.info('getting json from cache')
 			self.response.headers['Content-Type'] = "application/json"
 #			messageAsJSON = [{'u':{'id':update.id, 't':update.title,'l':update.link,'d':update.domain,'u':update.updated}}]
-                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://instaright.appspot.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
+                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://www.instaright.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded }}))
                         return
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
 		memcache.set(memcache_key, entries, time = cache_exp_ts)
@@ -44,7 +44,7 @@ class FeedGenerator(webapp.RequestHandler):
 			return
 		if format == 'json':
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://instaright.appspot.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://www.instaright.com/article/'+str(o.key()), 'd':o.domain, 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded}}))
 			return
 
 			
