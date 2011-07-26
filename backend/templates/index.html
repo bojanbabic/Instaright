@@ -96,9 +96,39 @@
 
 			// Initialize the API.
 			var feed;
+			function updated_string(dateUpdated){
+						/* stupid hack need to remove this*/
+						dateUpdated_time = dateUpdated.getTime() + 12 * 1000 * 60 * 60;
+						now = new Date()
+						updated_ago = now.getTime() - dateUpdated_time;
+						updated_ago_secs = Math.floor(updated_ago / 1000);
+						updated_ago_mins = Math.floor(updated_ago / 1000 / 60);
+						updated_ago_hours = Math.floor(updated_ago / 1000 / 60 / 60);
+						updated_ago_string = '';
+						if (updated_ago_hours > 1){
+							updated_ago_string = updated_ago_hours + " hours ago";
+						} 
+						else if (updated_ago_hours > 0){
+							updated_ago_string = "hour ago";
+						}
+						else if (updated_ago_mins > 1){
+							updated_ago_string = updated_ago_mins + " minutes ago";
+						}
+						else if (updated_ago_mins > 0){
+							updated_ago_string = "minute ago";
+						}
+						else if (updated_ago_secs > 1){
+							updated_ago_string = updated_ago_secs + " seconds ago";
+						}
+						else if (updated_ago_secs >= 0){
+							updated_ago_string = "now";
+						}
+						return updated_ago_string;
+			}
 			function updateDisplayEntry(response, div) {
         			try{
                 			div = document.getElementById('stream');
+					// TODO update timestamps after feed update
                 			for (i = response.length - 1; i >= 0; i--) {
                         			e = response[i]['u'];
                         			domain = e['d'];
@@ -122,6 +152,7 @@
                         			}
                         			link = e['l'];
                         			dateUpdated = new Date(e['u']);
+						updated_ago_string = updated_string(dateUpdated);
                         			id = e['id'];
 						a = e['a'];
 						lc = e['lc'];
@@ -187,14 +218,16 @@
 							}
 							
 							contentParagraph.innerHTML = span_cats.join(" ");
-						} else {
-                        				contentParagraph.innerHTML = dateUpdated;
-						}
+						} 
+						contentParagraph_footer = document.createElement('div');
+						contentParagraph_footer.setAttribute('class', 'content_footer');
+						contentParagraph_footer.innerHTML = updated_ago_string;
 
                         			domainParagraph = document.createElement('p');
                         			domainParagraph.innerHTML = domainElement;
 
                         			container.appendChild(contentParagraph);
+						container.appendChild(contentParagraph_footer);
                        
                         			div.insertBefore(container, div.firstChild);
                         			$("#"+id).hide();

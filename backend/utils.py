@@ -149,7 +149,7 @@ class LinkUtil(object):
                         return None
                 return l.embeded
         def getLinkInfo(self, url):
-                api_call="http://api.embed.ly/1/oembed?key="+urllib.quote(self.embedly_key)+"&url="+urllib.quote(url)+"&maxwidth=500&format=json"
+                api_call="http://api.embed.ly/1/oembed?key="+urllib.quote(self.embedly_key)+"&url="+urllib.quote(unicode(url))+"&maxwidth=500&format=json"
                 json = LinkUtil.getJsonFromApi(api_call)
                 title = LinkUtil.getJsonFieldSimple(json, "title")
                 description = LinkUtil.getJsonFieldSimple(json, "description")

@@ -160,7 +160,7 @@ p { font-size:14px; line-height:1.6em; padding:5px 0 10px; }
    ----------------------------------------------------------------------------------------------------*/
 .left_box_top { background:url('/static/images/base_main_top_710.png') no-repeat top left; height:14px; width:710px; }
 .left_box_mid_no_padding { background:url('/static/images/base_main_mid_710.png') repeat-y top left!important; }
-.left_box_mid { background:url('/static/images/base_main_mid_710.png') repeat-y top left!important; padding: 40px; min-height: 200px;}
+.left_box_mid { background:url('/static/images/base_main_mid_710.png') repeat-y top left!important; padding: 40px; min-height: 400px;}
 .left_box_mid_close { background:url('/static/images/base_main_bot_710.png') no-repeat top left; height:14px; width:710px; }
 .left_box_bot { width:710px; }
 /* Floats and Aligns
@@ -852,6 +852,19 @@ span {
 .stream-article:visited {
 	color: #0066CC;
 }
-.embeded_content a img {
+.embeded_content {
 	width: 500px;
+	margin: 15px;
+	overflow: auto;
+}
+.embeded_content a img {
+	width: auto;
+	height: auto;
+}
+.content_footer{
+	color: #77746B;
+	display: block;
+	font-size: 11px;
+	line-height: 16px;
+	padding-top: 8px;
 }

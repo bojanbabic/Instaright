@@ -375,10 +375,10 @@ class LinkCategory(db.Model):
                         return None
                 all_cats = [ c.category for c in cats if len(c.category) > 2 ]
                 result = dict( (c, all_cats.count(c)) for c in set(all_cats))
-                logging.info(result)
                 import operator
                 sorted_cats = sorted(result.iteritems(), key=operator.itemgetter(1), reverse=True)
-                return dict(sorted_cats)
+                logging.info(sorted_cats)
+                return dict(sorted_cats[:40])
 
 
 class ScoreUsersDaily(db.Model):

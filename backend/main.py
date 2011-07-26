@@ -140,7 +140,7 @@ class MainTaskHandler(webapp.RequestHandler):
                         #remove for local testing
                 	model.ip = self.request.remote_addr
                 	model.instaright_account = user
-                	model.date = datetime.datetime.now()
+                	model.date = datetime.datetime.utcnow()
                 	model.url = url
                         model.url_hash = LinkUtil.getUrlHash(url)
                         model.user_agent=user_agent
@@ -194,7 +194,7 @@ class MainTaskHandler(webapp.RequestHandler):
                                 cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
                                 category=list(set(cats_tag))
                                 logging.info('got category from query %s' %category)
-                                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 
                 
 class ErrorHandling(webapp.RequestHandler):
