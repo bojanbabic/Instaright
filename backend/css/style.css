@@ -868,3 +868,6 @@ span {
 	line-height: 16px;
 	padding-top: 8px;
 }
+.content_category{
+	float: left;
+}
