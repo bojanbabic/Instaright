@@ -13,7 +13,7 @@ import hashlib
 from google.appengine.api import memcache, mail
 from xml.dom import minidom
 from models import UserDetails, DailyDomainStats, WeeklyDomainStats, LinkStats
-from models import UserStats, SessionModel, UserBadge, CategoryDomains, LinkCategory, ScoreUsersDaily
+from models import UserStats, SessionModel, UserBadge, CategoryDomains, LinkCategory, ScoreUsersDaily, Links
 from models import Badges
 from google.appengine.api import users
 from google.appengine.api.labs import taskqueue
@@ -143,13 +143,13 @@ class LinkUtil(object):
 		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
                 self.embedly_key=config.get('embedly','key')
 
-        def getEmbededInfo(cls, url):
+        def getEmbededInfo(cls, url_hash):
                 l = Links.gql('WHERE url_hash = :1', url_hash).get()
                 if l is None or l.embeded is None:
                         return None
                 return l.embeded
         def getLinkInfo(self, url):
-                api_call="http://api.embed.ly/1/oembed?key="+urllib.quote(self.embedly_key)+"&url="+urllib.quote(unicode(url))+"&maxwidth=500&format=json"
+                api_call="http://api.embed.ly/1/oembed?key="+urllib.quote(self.embedly_key)+"&url="+urllib.quote(url.encode('utf-8'))+"&maxwidth=500&format=json"
                 json = LinkUtil.getJsonFromApi(api_call)
                 title = LinkUtil.getJsonFieldSimple(json, "title")
                 description = LinkUtil.getJsonFieldSimple(json, "description")
@@ -192,6 +192,7 @@ class LinkUtil(object):
         def getJsonFieldSimple(cls, data, parameter=None):
                             field_value=None
                             if parameter is None:
+                                logging.info('no parameter provided ... return None')
                                 return None
                             try:
                                 field_value = data[parameter]
@@ -605,6 +606,7 @@ class Cast:
                 try:
                         return int(string)
                 except ValueError:
+                        logging.info('int parse error return default value %s' % default)
                         return default
 
         @classmethod

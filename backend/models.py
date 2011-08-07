@@ -91,9 +91,9 @@ class SessionModel(db.Model):
                 if cursor:
 		        query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate).with_cursor(cursor)
                 else:
-                        logging.info('no key offset fetching first 1K')
+                        logging.info('no key offset fetching first batch 700')
 		        query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate)
-                data = query.fetch(1000)
+                data = query.fetch(700)
                 logging.info('fetched data %d' %len(data))
                 return data
 
@@ -171,6 +171,7 @@ class YearDomainStats(db.Model):
 	date=db.DateProperty(auto_now_add=True)
 class LinkStats(db.Model):
 	link=db.StringProperty()
+        url_hash=db.StringProperty()
 	countUpdated=db.DateTimeProperty(auto_now_add=True)
 	count=db.IntegerProperty(default=0)
 	lastUpdatedBy=db.StringProperty()

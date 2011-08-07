@@ -186,8 +186,16 @@ class LinkHandler(webapp.RequestHandler):
                                 alternate_twitter_score=Cast.toInt(json['Twitter'],0)
                                 alternate_buzz_score=Cast.toInt(json['Buzz'],0)
                                 alternate_digg_score=Cast.toInt(json['Diggs'],0)
-                                alternate_facebook_share_score = Cast.toInt(json['Facebook']['share_count'],0)
-                                alternate_facebook_like_score=Cast.toInt(json['Facebook']['like_count'],0)
+                                facebook_info = LinkUtil.getJsonFieldSimple(json, "Facebook")
+                                logging.info('facebook alternate info %s' % facebook_info)
+                                if type(facebook_info) is int:
+                                        alternate_facebook_share_score = Cast.toInt(facebook_info, 0)
+                                elif type(facebook_info) is dict:
+                                        logging.info('likes: %s' % LinkUtil.getJsonFieldSimple(facebook_info, "like_count"))
+                                        logging.info('shares : %s' % LinkUtil.getJsonFieldSimple(facebook_info, "share_count"))
+                                        alternate_facebook_like_score = Cast.toInt(LinkUtil.getJsonFieldSimple(facebook_info, "like_count"), 0)
+                                        alternate_facebook_share_score = Cast.toInt(LinkUtil.getJsonFieldSimple(facebook_info, "share_count"), 0)
+                                logging.info('alternate fb likes %s fb share %s ' % (alternate_facebook_like_score, alternate_facebook_share_score))
                                 alternate_su_score=Cast.toInt(json['StumbleUpon'],0)
                                 alternate_linkedin_score=Cast.toInt(json['LinkedIn'],0)
 

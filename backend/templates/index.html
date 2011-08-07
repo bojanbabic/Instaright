@@ -2,9 +2,11 @@
 <html>
         <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <meta name="description" content="Instaright Instapaper Firefox addon, realtime addon streaming, xmpp instapaper article updates, article recommendation" />
-                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later" />
+                <meta name="description" content="Instaright Social Bookmarking app and recommendation engine. Increase your productivity by using our browser addons and also let someone discover valuable information." />
+                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
+		<link rel="alternate" type="application/rss+xml" title="Instaright RSS Feed" href="http://feeds.feedburner.com/InstarightFeed" />
+		<link rel="alternate" type="application/atom+xml" title="Instaright Blog RSS Feed" href="http://feeds.feedburner.com/InstarightBlog" />
                 <link rel="stylesheet" type="text/css" href="css/style.css" />
                 <!--script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script>
                 <script src='static/javascript/channel.js'></script-->
@@ -163,6 +165,7 @@
 
                         			container = document.createElement('div');
                         			containerAvatar = document.createElement('div');
+						containerAvatar.setAttribute('class', 'avatar_div');
 
                         			avatarElement = document.createElement('img');
                         			avatarElement.setAttribute('src', a);
@@ -206,6 +209,7 @@
                         				container.appendChild(document.createElement('br'));
 						}
                         			contentParagraph = document.createElement('div');
+						contentParagraph.setAttribute('class','content_category');
 						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null'){
 							try{
 							cats=lc.split(',');
@@ -238,8 +242,9 @@
                                 			last_id = lastElement.getAttribute('id');
                                 			//alert('id:'+ id);
                                 			$("#"+last_id).hide();
-                                			div.removeChild(lastElement)
+                                			div.removeChild(lastElement);
                         			}
+						
                 			}
 
         			}catch(e){
@@ -343,7 +348,7 @@
 <div class="clearfix"></div> 
 <div class="footer-container">
         <div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
-                <p><a href="mailto:gbabun@gmail.com" title="Contact Instaright developer">contact</a> | <a href="http://twitter.com/instaright" title="instaright on twitter">twitter</a> | <a href="http://instaright.tumblr.com" title="instaright blog">blog</a> | <a href="privacy_policy.html" title="Instaright Privacy Policy">Privacy Policy</a></p>
+                <p><a href="mailto:gbabun@gmail.com" title="Contact Instaright developer">contact</a> | <a href="http://twitter.com/instaright" title="instaright on twitter">twitter</a> | <a href="http://instaright.tumblr.com" title="instaright blog">blog</a> | <a href="privacy_policy.html" title="Instaright Privacy Policy">Privacy Policy</a> | <a href="http://feeds.feedburner.com/InstarightFeed" title="Instaright Feed">Feed</a></p>
         </div>
 </div>
 <!-- GETSATISFACTION -->

@@ -46,7 +46,7 @@ class TwitterFollowHandler(webapp.RequestHandler):
                         return
                 logging.info('retreived %d users with twitter account' % len(users))
                 for u in users:
-                        taskqueue.add(url='/util/twitter/follow/'+str(u.key()), queue_name='twitter-follow')
+                        taskqueue.add(url='/util/twitter/follow/'+str(u.key()), queue_name='twit-queue')
 
         def post(self, user_account_key):
                 api = twitter.Api(
@@ -274,7 +274,10 @@ class Twit:
 			if title_from_url is not None and len(title_from_url) > 20:
                         	logging.info('trying from title to get twit text')
                                 short_link = linkUtil.shortenLink(link.url)
-				self.text = unicode(title_from_url[0:80]) + " .... " + short_link + " #recommended"
+				if short_link is None:
+					self.text = None
+				else:
+					self.text = unicode(title_from_url[0:80]) + " .... " + short_link + " #recommended"
 			else:
                         	logging.info('no categories going back to old style')
                         	self.textOldStyle(link)

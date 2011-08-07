@@ -235,7 +235,7 @@ class LinkCategoryHandler(webapp.RequestHandler):
                             memcache.set(memcache_key, list(set(merge_cat))[:4])
 
                             for c in merge_cat:
-                                taskqueue.add(queue_name='category-stream-queue', url='/category/stream', params={'category':c, 'url': url_hash})
+                                taskqueue.add(queue_name='message-broadcast-queue', url='/category/stream', params={'category':c, 'url': url_hash})
                                 existingLinkCat = LinkCategory.gql('WHERE url_hash = :1 and category = :2', url_hash, c).get()
                                 if existingLinkCat is None:
                                         existingLinkCat = LinkCategory.gql('WHERE url = :1 and category = :2', url, c).get()

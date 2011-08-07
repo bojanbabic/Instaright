@@ -231,7 +231,7 @@ class UserHandler(webapp.RequestHandler):
                                                 # send twitter request and need to put since we need key for follow
 						user_detail.twitter_request_sent=True
 						user_detail.put()
-                                                taskqueue.add(url='/util/twitter/follow/'+str(user_detail.key()), queue_name='twitter-follow')
+                                                taskqueue.add(url='/util/twitter/follow/'+str(user_detail.key()), queue_name='twit-queue')
 				except:
 					logging.error('memberships error %s ::: more details %s ' % (sys.exc_info()[0], sys.exc_info()[1]))
 

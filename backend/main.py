@@ -34,7 +34,7 @@ class UserMessager:
 class BroadcastMessage:
 	def send_message(self, message, path=None):
 		last_hour = datetime.datetime.now() - datetime.timedelta(hours = 1)
-                taskqueue.add(queue_name='deactivate-channels', url='/deactivate_channels')
+                taskqueue.add(queue_name='default', url='/deactivate_channels')
                 if path is None:
                         path='/'
                 logging.info('looking for active users on %s from %s' %(path, last_hour))
@@ -81,9 +81,9 @@ class MainHandler(webapp.RequestHandler):
                                 logging.info('skipping since there is no user defined ( client %s )' % client )
                                 return
                         try:
-                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
+                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
                         except TransientError:
-                                taskqueue.add(queue_name='article-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
+                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
 
 			logging.info('triggering feed update')
 
@@ -133,7 +133,7 @@ class MainTaskHandler(webapp.RequestHandler):
 
                 taskqueue.add(url='/user/badge/task', queue_name='badge-queue', params={'url':url, 'domain':domain, 'user':user, 'version': version, 'client': client})
                 taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
-                taskqueue.add(url='/link/recommendation/task', queue_name='link-rcmd-queue', params={'url':url })
+                taskqueue.add(url='/link/recommendation/task', queue_name='default', params={'url':url })
 
 	        model = SessionModel()
 		try:
@@ -167,9 +167,9 @@ class MainTaskHandler(webapp.RequestHandler):
 
 
                 try:
-                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'url': url })
+                        taskqueue.add(queue_name='message-broadcast-queue', url='/link/category', params={'url': url })
                 except TransientError:
-                        taskqueue.add(queue_name='category-stream-queue', url='/link/category', params={'url': url })
+                        taskqueue.add(queue_name='message-broadcast-queue', url='/link/category', params={'url': url })
 
                 # xmpp and main stream update
 		subscribers = Subscription.gql('WHERE active = True and mute = False').fetch(100)

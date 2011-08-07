@@ -1,42 +1,24 @@
 total_storage_limit: 300M
 queue:
 - name: default
-  rate: 1/m
-  bucket_size: 1
+  rate: 50/s
+  bucket_size: 10
 - name: user-info
   rate: 28000/d
   bucket_size: 1
-- name: user-consolidation
-  rate: 5/m
-  bucket_size: 1
 - name: data-consolidation
   rate: 28000/d
-  bucket_size: 1
-- name: link-consolidation
-  rate: 1000/h
-  bucket_size: 1
-- name: redundant
-  rate: 1000/h
-  bucket_size: 1
-- name: deactivate-channels
-  rate: 5/m
-  bucket_size: 1
-- name: twitter-follow
-  rate: 500/d
   bucket_size: 1
 - name: instapaper-import
   rate: 500/h
   bucket_size: 1
 - name: twit-queue
-  rate: 10/h
+  rate: 15/h
   bucket_size: 1
 - name: badge-queue
   rate: 200/m
   bucket_size: 1
 - name: message-broadcast-queue
-  rate: 50/s
-  bucket_size: 10
-- name: article-queue
   rate: 50/s
   bucket_size: 10
 - name: link-queue
@@ -45,11 +27,5 @@ queue:
 - name: category-queue
   rate: 10/s
   bucket_size: 10
-- name: category-stream-queue
-  rate: 50/s
-  bucket_size: 10
 - name: score-queue
   rate: 50/s
-- name: link-rcmd-queue
-  rate: 50/s 
-  bucket_size: 10

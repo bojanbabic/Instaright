@@ -221,14 +221,14 @@ class UserConsolidationTask(webapp.RequestHandler):
 		query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', date, upperLimitDate)
                 data=query.fetch(1000)
                 logging.info('initial fetch got: %s' %len(data))
-                taskqueue.add(queue_name='user-consolidation', url='/user_consolidation', params={'date':date})
+                taskqueue.add(queue_name='data-consolidation', url='/user_consolidation', params={'date':date})
                 logging.info('added to queue task')
                 while len(data) == 1000:
                       cursor=query.cursor()  
                       query= SessionModel.gql(' WHERE date >= :1 and date < :2 ', date, upperLimitDate).with_cursor(cursor)
                       data=query.fetch(1000)
                       logging.info('fetch got: %s' %len(data))
-                      taskqueue.add(queue_name='user-consolidation', url='/user_consolidation', params={'date':date,'last_cursor':cursor})
+                      taskqueue.add(queue_name='data-consolidation', url='/user_consolidation', params={'date':date,'last_cursor':cursor})
                       logging.info('added to queue task')
                 
 class SessionConsolidation_task(webapp.RequestHandler):
@@ -262,7 +262,7 @@ class FeedLinkConsolidation(webapp.RequestHandler):
                                 logging.info('allready processed link %s' % l.url)
                                 continue
                         logging.info('transforming link %s' % l.url)
-                        taskqueue.add(queue_name='link-consolidation', url='/link/transform/feed', params={'key':l.key()})
+                        taskqueue.add(queue_name='default', url='/link/transform/feed', params={'key':l.key()})
                         memcache.set(memcache_key, 1)
 
 class ShortLinkConsolidation(webapp.RequestHandler):
@@ -279,7 +279,7 @@ class ShortLinkConsolidation(webapp.RequestHandler):
                                 logging.info('allready processed link %s' % l.url)
                                 continue
                         logging.info('transforming link %s' % l.url)
-                        taskqueue.add(queue_name='link-consolidation', url='/link/transform/short', params={'key':l.key()})
+                        taskqueue.add(queue_name='link-queue', url='/link/transform/short', params={'key':l.key()})
                         memcache.set(memcache_key, 1)
 
 

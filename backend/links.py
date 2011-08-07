@@ -176,6 +176,7 @@ class LinkRecommendationTask(webapp.RequestHandler):
                 if url is None:
                         logging.info('no url no recommendations')
                         return
+		url = url.encode('utf-8')
                 url_hash = LinkUtil.getUrlHash(url)
                 try:
                         l = Links.gql('WHERE url_hash = :1' , url_hash).get()
@@ -231,7 +232,7 @@ class LinkRecommendationHandler(webapp.RequestHandler):
                         return
                 if link.recommendation is None:
                         logging.info('no recommendations started new job')
-                        taskqueue.add(url='/link/recommendation/task', queue_name='link-rcmd-queue', params={'url_hash':url_hash })
+                        taskqueue.add(url='/link/recommendation/task', queue_name='default', params={'url_hash':url_hash })
                         self.response.out.write("{}")
                 else:
                         logging.info(' transforming %s to json output ' % link.recommendation)

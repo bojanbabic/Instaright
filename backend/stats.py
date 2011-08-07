@@ -81,7 +81,7 @@ class CityRedundantStats(webapp.RequestHandler):
                                 logging.info('processed city %s %s skipping' %( c.city, c.countryCode))
                                 continue
                         logging.info('adding to queue %s %s' % (c.countryCode, c.city))
-                        taskqueue.add(queue_name='redundant',url='/stats/city/redundant/task', params={'city':c.city, 'country':c.countryCode})
+                        taskqueue.add(queue_name='default',url='/stats/city/redundant/task', params={'city':c.city, 'country':c.countryCode})
                         memcache.set(memcache_key, 1)
 class CityRedundantTask(webapp.RequestHandler):
         def post(self):

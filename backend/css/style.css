@@ -174,7 +174,7 @@ hr { border:solid #c3bca8; border-bottom:1px solid #fff; border-top:1px solid #e
 .spaced_hr { margin:0 0 10px; padding:0; }
 /* Content
    ----------------------------------------------------------------------------------------------------*/
-#content { height:auto !important; margin:30px auto; text-shadow:1px 1px 0 #FFFFFF; }
+#content { height:auto !important; margin:30px auto; /* text-shadow:1px 1px 0 #FFFFFF; */ }
 .button { -moz-box-shadow:0 0 4px rgba(0, 0, 0, 0.3); background:#459300 url('/assets/public/img/bg-button-green.gif') top left repeat-x !important; border:1px solid #459300 !important; color:#fff !important; cursor:pointer; display:inline-block; font-size:16px !important; padding:4px 7px !important; }
 .button:hover { background:#78b900 !important; color:#fff !important; text-decoration:none; }
 .button:active { padding:5px 7px 3px !important; }
@@ -869,5 +869,8 @@ span {
 	padding-top: 8px;
 }
 .content_category{
+	float: left;
+}
+.avatar_div{
 	float: left;
 }
