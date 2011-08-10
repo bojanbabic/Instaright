@@ -335,7 +335,7 @@ class CategoryStreamHandler(webapp.RequestHandler):
                         date_published=model.date.strftime("%Y-%m-%dT%I:%M:%SZ")
                         
                 messageAsJSON = [{'u':{'id':str(model.key()), 't':unicode(model.title),'l':model.url,'d':model.domain,'u': date_published, 'a':userUtil.getAvatar(model.instaright_account),'ol':model.url,'c':category, 'lc':category}}]
-                logging.info('sending message %s for users on path %s' % (messageAsJSON, category_path))
+                logging.info('sending category message %s for users on path %s' % (messageAsJSON, category_path))
                 broadcaster.send_message(messageAsJSON,category_path)
 
 class CategoryListHandler(GenericWebHandler):

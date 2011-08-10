@@ -2,7 +2,8 @@ import logging
 import os
 import Queue
 import sys
-
+import time
+import datetime
 from google.appengine.ext import webapp, db
 from google.appengine.api import memcache
 from google.appengine.api.labs import taskqueue
@@ -71,7 +72,7 @@ class BroadcastMessageTask(webapp.RequestHandler):
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)
                         logging.info('avatar %s' %avatar)
-                        messageAsJSON = [{'u':{'id':user_id, 't':title,'l':link,'d':domain,'a':avatar, 'u':updated, 'lc':link_category, 'e': embeded}}]
+                        messageAsJSON = [{'u':{'id':user_id, 't':title,'l':link,'d':domain,'a':avatar, 'u':updated, 'lc':link_category, 'e': embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}]
                         logging.info('sending message %s ' %messageAsJSON)
 			broadcaster.send_message(messageAsJSON)
 			xmpp_handler.send_message(subscribers, message)

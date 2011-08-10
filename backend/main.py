@@ -140,7 +140,7 @@ class MainTaskHandler(webapp.RequestHandler):
                         #remove for local testing
                 	model.ip = self.request.remote_addr
                 	model.instaright_account = user
-                	model.date = datetime.datetime.utcnow()
+                	model.date = datetime.datetime.now()
                 	model.url = url
                         model.url_hash = LinkUtil.getUrlHash(url)
                         model.user_agent=user_agent
@@ -160,7 +160,7 @@ class MainTaskHandler(webapp.RequestHandler):
 					logging.info('model save timeout retrying in %s' % timeout_ms)
 					time.sleep(timeout_ms)
 					timeout_ms *= 2
-                	logging.info('model saved: %s %s' % (model.to_xml() , model.client))
+                        logging.info('send link : url_hash %s title %s user_id %s updated %s client: %s' %(model.url_hash, model.title, str(model.key()), str(model.date), model.client))
 		except BadValueError, apiproxy_errors.DeadlineExceededError:
 		        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
 			logging.error('error while saving url %s ( %s, %s)' % (url, e0, e1))
@@ -194,7 +194,7 @@ class MainTaskHandler(webapp.RequestHandler):
                                 cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
                                 category=list(set(cats_tag))
                                 logging.info('got category from query %s' %category)
-                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': model.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
+                taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': int(time.mktime(model.date.timetuple())), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 
                 
 class ErrorHandling(webapp.RequestHandler):

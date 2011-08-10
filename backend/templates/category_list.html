@@ -2,8 +2,8 @@
 <html>
         <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <meta name="description" content="Instaright Instapaper Firefox addon, realtime addon streaming, xmpp instapaper article updates, article recommendation" />
-                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later" />
+                <meta name="description" content="List of Instaright Categories and topics" />
+                <meta name="keywords" content="Instaright categories, instaright topics, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later" />
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
                 <script src='../static/javascript/invite.js'></script>
@@ -55,23 +55,18 @@
 						});
 					$("#jid_result").hide();
 					$("#invite_jid").focus();
-                			div = document.getElementById('stream');
+                			div = document.getElementById('category_list');
 					var i=1;
 					$H({{ categories }}).each(function(pair){
 						cat = pair.key;
 						element = '<p class="text_bubble"><a href="/category/'+cat+'" title="Instaright popular category '+cat+'"><span>'+cat+'</span></a></p>';
-                        			$("#stream").append(element);
-						if (i % 5 == 0) $("#stream").append('<br><br>');
+                        			$("#category_list").append(element);
+						if (i % 5 == 0) $("#category_list").append('<br><br>');
 						i++;
 					});
 
 			});
 
-			// Create variables to display subscription options using HTML DIVs
-
-			var stream = document.getElementById('stream');
-
-			// Initialize the API.
 			var feed;
 			function noUpdates(){
                         	container = document.createElement('div');
@@ -91,7 +86,7 @@
                         	container.appendChild(domainElement);
                         	container.appendChild(document.createElement('br'));
 
-                		div = document.getElementById('stream');
+                		div = document.getElementById('category_list');
                         	div.insertBefore(container, div.firstChild);
 
 
@@ -105,7 +100,7 @@
 		<div class="center clearfix">
 			<h5><a href="/">Instaright - Perfect information for you in realtime.</a></h5>
                 <ul class="menu borderless clearfix"> 
-			<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
+			<li><a href="/category" title="Instaright most popular category list"><span>Categories</span></a></li>
 			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         {% if user %}
 			<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
@@ -146,26 +141,30 @@
 						height: 80px;
                                         }
                                 </style>
-                                <div id="stream"></div>
+                                <div id="category_list"></div>
                         </div>
-                        <div class="left_box_bot"> 
-                        </div>
+			<div class="left_bot_mid">
+				<div class="left_bot_left"></div>
+				<div class="left_bot_center"></div>
+			</div>
                 </div>
                 <div id="right_col" class="grid_6">
                         <div id="right_box_top">
                                 <p style="text-align: center;">Instaright browser addons</p>
                                 <p style="text-align: center;"><a title="Instapaper firefox addon instapaper chrome extension" href="/tools"><img src="/static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
-                                <p class="social_media">Realtime tracking</p>
+                                <p class="social_media">Want to get updates on IM?</p>
                                 <div class="text-align: center; width: 270px;">
-                                        Track domains on Instaright in realtime<br>
-                                        on your favorite client.
+                                        Instaright provides updates on your favorite IM client. <br>
                                         <p id="jabbers">
                                         <img src="/static/images/messenger.png"/><img src="/static/images/gtalk.png"/><img src="/static/images/aim.png"/></p>
+					<p>To get started enter your jabber id and <span style="color:#0066CC;">press Enter</span></p>
                                         </div><p></p><div>
-                                        <p>To get started enter your jabber id and wait for invite from our bot and <span style="color:#0066CC;">press Enter</span></p>
-
                                         <input type="text" id="invite_jid" value="Enter your jabber id" />
                                         <div id="jid_result" style="text-align: center; "></div>
+					<p>As next step, you'll get contact request from instaright@appspot.com .
+					Accept request from and type <b>/help</b><br>
+					Next? Awesomeness is head of you!</p>
+
                                         <p></p>
                                 </div>
                         </div>
@@ -174,7 +173,7 @@
                                         <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a href="http://twitter.com/instaright">Twitter</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a href="http://www.facebook.com/instaright">Facebook Page</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a href="http://instaright.tumblr.com/">Blog</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Import to Instapaper</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Importer</a></li>
                                 </ul>
                         </div>
                         <div id="right_box_bot">

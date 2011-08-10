@@ -474,6 +474,7 @@ span {
 	font-weight: 0;
 }
 .text_bubble_cats a {
+	color: #0066CC !important;
 	text-decoration: none !important;
 	margin: 3px;
 }
@@ -757,6 +758,14 @@ span {
 	color: #0066CC;
 	padding-top: 22px;
 }
+.left_bot_mid{
+	background-position: 100% -762px;
+	height: 18px;
+	background-position: 100% -51px;
+	background: url("/static/images/rbs-blocks-bgs.png") no-repeat scroll 100% -459px transparent;
+	height: 16px;
+	position: relative;
+}
 .profile_content_bottom{
 	background-position: 100% -762px;
 	height: 18px;
@@ -764,6 +773,24 @@ span {
 	background: url("/static/images/rbs-blocks-bgs.png") no-repeat scroll 100% -51px transparent;
 	height: 16px;
 	position: relative;
+}
+.left_bot_mid_left{
+	background-position: 0 -781px;
+	height: 18px;
+	background: url("/static/images/rbs-blocks-bgs.png") no-repeat scroll 0 -493px transparent;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 16px;
+}
+.left_bot_left{
+	background-position: 0 -781px;
+	height: 18px;
+	background: url("/static/images/rbs-blocks-bgs.png") no-repeat scroll 0 -476px transparent;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 16px;
 }
 .profile_content_bottom_left{
 	background-position: 0 -781px;
@@ -773,6 +800,14 @@ span {
 	position: absolute;
 	top: 0;
 	width: 16px;
+}
+.left_bot_center{
+	background-position: 0 -800px;
+	height: 18px;
+	margin: 0 16px;
+	background: url("/static/images/rbs-blocks-bgs.png") repeat-x scroll 0 -493px transparent;
+	height: 16px;
+	margin: 0 16px;
 }
 .profile_content_bottom_center{
 	background-position: 0 -800px;
@@ -866,11 +901,26 @@ span {
 	display: block;
 	font-size: 11px;
 	line-height: 16px;
-	padding-top: 8px;
+	padding-top: 2px;
+	padding-left: 90px;
 }
 .content_category{
 	float: left;
 }
 .avatar_div{
 	float: left;
+}
+#category_list{
+	overflow: auto;
+}
+.category_div {
+	padding-top: 8px;
+	overflow: auto;
+}
+.round_title span a {
+	text-decoration: none;
+}
+.round_title span a:visited {
+	text-decoration: none;
+	color: #0066CC;
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
-        <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="description" content="Instaright Social Bookmarking app and recommendation engine. Increase your productivity by using our browser addons and also let someone discover valuable information." />
                 <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
@@ -12,6 +12,7 @@
                 <script src='static/javascript/channel.js'></script-->
 		<script type="text/javascript" src="/_ah/channel/jsapi"></script>
                 <script src='static/javascript/invite.js'></script>
+                <script src='static/javascript/instaright.js'></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
                 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -98,35 +99,6 @@
 
 			// Initialize the API.
 			var feed;
-			function updated_string(dateUpdated){
-						/* stupid hack need to remove this*/
-						dateUpdated_time = dateUpdated.getTime() + 12 * 1000 * 60 * 60;
-						now = new Date()
-						updated_ago = now.getTime() - dateUpdated_time;
-						updated_ago_secs = Math.floor(updated_ago / 1000);
-						updated_ago_mins = Math.floor(updated_ago / 1000 / 60);
-						updated_ago_hours = Math.floor(updated_ago / 1000 / 60 / 60);
-						updated_ago_string = '';
-						if (updated_ago_hours > 1){
-							updated_ago_string = updated_ago_hours + " hours ago";
-						} 
-						else if (updated_ago_hours > 0){
-							updated_ago_string = "hour ago";
-						}
-						else if (updated_ago_mins > 1){
-							updated_ago_string = updated_ago_mins + " minutes ago";
-						}
-						else if (updated_ago_mins > 0){
-							updated_ago_string = "minute ago";
-						}
-						else if (updated_ago_secs > 1){
-							updated_ago_string = updated_ago_secs + " seconds ago";
-						}
-						else if (updated_ago_secs >= 0){
-							updated_ago_string = "now";
-						}
-						return updated_ago_string;
-			}
 			function updateDisplayEntry(response, div) {
         			try{
                 			div = document.getElementById('stream');
@@ -139,6 +111,7 @@
                         			}catch(e){
                                 			title="Instaright article from domain "+domain;
                         			}
+						orig_title = title;
                         			if (title == null || title == 'None' || title == 'null' || title.length == 0){
                                 			title="Instaright article from domain "+domain;
                         			} else {
@@ -153,8 +126,9 @@
                                 			}
                         			}
                         			link = e['l'];
-                        			dateUpdated = new Date(e['u']);
-						updated_ago_string = updated_string(dateUpdated);
+						var dateUpdated_int = parseInt(e['u']);
+						var dateNow_int = parseInt(e['n']);
+						updated_ago_string = updated_string(dateUpdated_int, dateNow_int);
                         			id = e['id'];
 						a = e['a'];
 						lc = e['lc'];
@@ -177,6 +151,7 @@
 
                         			titleElement = document.createElement('a');
 						titleElement.setAttribute('class','stream-article');
+						titleElement.setAttribute('title', orig_title);
                         			titleElement.innerHTML = title;
                         			if (original_url === undefined){
                                 			titleElement.href = link;
@@ -209,7 +184,7 @@
                         				container.appendChild(document.createElement('br'));
 						}
                         			contentParagraph = document.createElement('div');
-						contentParagraph.setAttribute('class','content_category');
+						contentParagraph.setAttribute('class','category_div');
 						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null'){
 							try{
 							cats=lc.split(',');
@@ -225,6 +200,7 @@
 						} 
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
+						contentParagraph_footer.setAttribute('info', dateUpdated_int);
 						contentParagraph_footer.innerHTML = updated_ago_string;
 
                         			domainParagraph = document.createElement('p');
@@ -246,6 +222,24 @@
                         			}
 						
                 			}
+					// adjust image width
+					$(".embeded_content a img").load(function(){
+									var max_width = 480;
+									var w = $(this).width();
+									var h = $(this).height();
+									if (w > max_width){
+										var r = w/h;
+										$(this).css('height', max_width/r);
+										$(this).css('width', max_width);
+									}
+					});
+					// adjust times
+					$(".content_footer").each(function(){
+							milis = $(this).attr('info');
+							updated_ago = updated_string(milis, dateNow_int);
+							$(this).html(updated_ago);
+							
+					}); 
 
         			}catch(e){
                 			alert("while adding new element :" +e);
@@ -257,9 +251,9 @@
 <div class="wrapper"> 
 	<div id="nav" >
 		<div class="center clearfix">
-			<h5><a href="/">Instaright - Perfect information for you in realtime.</a></h5>
+			<h5><a href="/" alt="Instaright - Social Bookmarks and Recommendation Engine" title="Instaright - Social Bookmarks and Recommendation Engine">Instaright - Perfect information for you in realtime.</a></h5>
                 <ul class="menu borderless clearfix"> 
-			<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
+			<li><a href="/category" title="Instaright most popular category list"><span>Categories</span></a></li>
 			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         {% if user %}
 			<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
@@ -278,7 +272,7 @@
                 <div id="left_col" class="grid_18"> 
                         <div class="left_box_top"> 
                                 <h2 class="round_title"> 
-                                        <span>Instaright Stream</span> 
+					<span><a href='/' alt='Instaright Realtime Updates' title='Instaright Social Bookmarks and Recommendation Engine'>Instaright Stream</a></span> 
                                 </h2> 
                         </div> 
                         <div class="left_box_mid">
@@ -303,24 +297,28 @@
                                 </style>
                                 <div id="stream"></div>
                         </div>
-                        <div class="left_box_bot"> 
-                        </div>
+			<div class="left_bot_mid">
+				<div class="left_bot_left"></div>
+				<div class="left_bot_center"></div>
+			</div>
                 </div>
                 <div id="right_col" class="grid_6">
                         <div id="right_box_top">
                                 <p style="text-align: center;">Instaright browser addons</p>
-                                <p style="text-align: center;"><a title="Instapaper firefox addon instapaper chrome extension" href="/tools"><img src="static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
-                                <p class="social_media">Realtime tracking</p>
+                                <p style="text-align: center;"><a title="Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools"><img src="static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
+                                <p class="social_media">Want to get updates on IM?</p>
                                 <div class="text-align: center; width: 270px;">
-                                        Track domains on Instaright in realtime<br>
-                                        on your favorite client.
+                                        Instaright provides updates on your favorite IM client. <br>
                                         <p id="jabbers">
                                         <img src="/static/images/messenger.png"/><img src="/static/images/gtalk.png"/><img src="/static/images/aim.png"/></p>
+					<p>To get started enter your jabber id and <span style="color:#0066CC;">press Enter</span></p>
                                         </div><p></p><div>
-                                        <p>To get started enter your jabber id and wait for invite from our bot and <span style="color:#0066CC;">press Enter</span></p>
-
                                         <input type="text" id="invite_jid" value="Enter your jabber id" />
                                         <div id="jid_result" style="text-align: center; "></div>
+					<p>As next step, you'll get contact request from instaright@appspot.com .
+					Accept request from and type <b>/help</b><br>
+					Next? Awesomeness is head of you!</p>
+
                                         <p></p>
                                 </div>
                         </div>
@@ -329,7 +327,7 @@
                                         <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a href="http://twitter.com/instaright">Twitter</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a href="http://www.facebook.com/instaright">Facebook Page</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a href="http://instaright.tumblr.com/">Blog</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Import</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Importer</a></li>
                                 </ul>
                         </div>
                         <div id="right_box_bot">
