@@ -17,6 +17,7 @@ from models import UserStats, SessionModel, UserBadge, CategoryDomains, LinkCate
 from models import Badges
 from google.appengine.api import users
 from google.appengine.api.labs import taskqueue
+#from zbase62 import zbase62
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import facebook, simplejson
@@ -310,6 +311,10 @@ class LinkUtil(object):
                         	e0, e1 = sys.exc_info()[0],sys.exc_info()[1]
                         	logging.info('error %s %s, while getting link %s'  %( e0, e1, url))
                         	return None
+
+        @classmethod
+        def generateUrlTitle(cls, title):
+                   return title
 
 
 class BadgeUtil:

@@ -1,29 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html>
-        <head>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-        <script>
-        /*$(document).ready(function(){
-                var j$ = jQuery.noConflict();
-                var frames = j$('.frameToChange');
-                alert('here:');
 
-                //frames.each(function(index) {
-                       $('.frameToChange').slideDown('fast');
-                       $('.frameToChange').attr('src', $('.frameToChange').attr('link'));
-                //});
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="description" content="Instaright Story - {{ title }}" />
+                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
+		<meta name="title" content="Instaright Story - {{ title }}" />
+                <link rel="stylesheet" type="text/css" href="http://www.instaright.com/css/style.css" />
+                <script type="text/javascript" src="http://www.instaright.com/static/javascript/instaright.js"></script>
+                <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
-                
-        });
-         */       
-	window.location.href="{{ url }}";
+		<!-- fancybox -->
+		<script type="text/javascript" src="http://www.instaright.com/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
+		<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+		<title>Instaright Story - {{ title }}</title>
+
+                <!-- google analytics -->
+                <script type="text/javascript">
+
+                        var _gaq = _gaq || [];
+                        _gaq.push(['_setAccount', 'UA-9005862-5']);
+                        _gaq.push(['_trackPageview']);
+
+                        (function() {
+                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                         })();
+                 </script>
+                 <!-- Google Website Optimizer Tracking Script -->
+         </head>
+         <body>
+		<div class="wrapper"> 
+			<div id="nav" >
+				<div class="center clearfix">
+					<h5><a href="/" title="Instaright - Social Bookmarks and Recommendation Engine">Instaright - Perfect information for you in realtime.</a></h5>
+                		<ul class="menu borderless clearfix"> 
+					<li><a href="/category" title="Instaright most popular category list"><span>Categories</span></a></li>
+					<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
+                        		{% if user %}
+					<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
+					<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+					<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
+                        		{% else %}
+			<li><a id="btn_login" href="/account" title="Login to Instaright"><span>Login</span></a></li>
+                        {% endif %}
+                        <li>
+                        </li>
+
+                </ul>
+		</div>
+	</div>
+        <div id="content" class="article_container_24"> 
+                <div id="left_col" class="article_grid_18"> 
+                        <div class="article_left_box_top"> 
+                                <h2 class="round_title"> 
+					<span><a href='/' title='Instaright Article'>Instaright Article</a></span> 
+                                </h2> 
+                        </div> 
+                        <div class="article_left_box_mid">
+                                <style type="text/css"> 
+                                        #streammap{
+                                                border:8px solid #ffffff;
+                                                height:230px;
+                                                margin:0px 0px 10px 0px;
+                                                width:660px;
+                                        }
+                                        .scan, .streamcontent {
+                                                -moz-border-radius:15px;
+                                                border:1px solid #ADA699;
+                                                clear:both;
+                                                display:block;
+                                                margin:10px 0px 10px 0px;
+                                                padding:10px;
+                                                text-decoration:none;
+						min-height: 80px;
+						overflow: auto;
+                                        }
+                                </style>
+				<div id="stream">
+					<div class="streamcontent" id="{{ id }}" style="display: block;">
+						<div class="avatar_div"><img src="{{ story_avatar }}" class="avatar" alt="Instaright User {{ story_user }} avatar" /></div>
+						<p><a class="stream-article" title="{{ title }}" href="{{ link }}" target="_new">{{ title }}</a></p>
+						<br/>
+						<a class="stream-article" href="http://{{ domain }}" target="_new">{{ domain }}</a>
+						<br />
+						{% if category %}
+						<div class="category_div">{{ category }}</div>
+						{% endif %}
+						<div class="content_footer" info="{{ updated }}"><a href="{{ instaright_link }}" title="{{ title }}">now</a></div>
+					</div>
+				</div>
+                        </div>
+			<div class="left_bot_mid">
+				<div class="left_bot_left"></div>
+				<div class="left_bot_center"></div>
+			</div>
+                </div>
+                <div id="right_col" class="grid_6">
+                </div>
+        <div class="clear"></div> 
+        <div class="push"></div> 
+</div>
+<div class="clearfix"></div> 
+</div>
+
+<div class="clearfix"></div> 
+<div class="footer-container">
+        <div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
+                <p><a href="mailto:gbabun@gmail.com" title="Contact Instaright developer">contact</a> | <a href="http://twitter.com/instaright" title="instaright on twitter">twitter</a> | <a href="http://instaright.tumblr.com" title="instaright blog">blog</a> | <a href="privacy_policy.html" title="Instaright Privacy Policy">Privacy Policy</a> | <a href="http://feeds.feedburner.com/InstarightFeed" title="Instaright Feed">Feed</a></p>
+        </div>
+</div>
+<!-- GETSATISFACTION -->
+<script type="text/javascript" charset="utf-8">
+        var is_ssl = ("https:" == document.location.protocol);
+        var asset_host = is_ssl ? "https://s3.amazonaws.com/getsatisfaction.com/" : "http://s3.amazonaws.com/getsatisfaction.com/";
+        document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
         </script>
-                 <!--script type="text/javascript" src="http://platform.visibli.com/js/jquery/jquery-1.3.2.min.js"></script>
-                 <script type="text/javascript" src="http://platform.visibli.com/js/adanywhere.js?apikey=a947824b599193b3&amp;v=1&amp;sharedomain=links.visibli.com&amp;rootdomain=instaright.appspot.com"></script-->
-        </head>
-<body>
-        <p>test</p>
-        <a href="{{ url }}">{{ url }}</a>
-        <!--iframe class="frameToChange" link="{{ url }}" style="display: none" ></iframe-->
-</body>
+
+        <script type="text/javascript" charset="utf-8">
+                var feedback_widget_options = {};
+
+feedback_widget_options.display = "overlay";  
+feedback_widget_options.company = "instaright";
+feedback_widget_options.placement = "left";
+feedback_widget_options.color = "#222";
+feedback_widget_options.style = "idea";
+var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
+</script>
+<!-- End GETSATISFACTION -->
+<!-- Google Website Optimizer Tracking Script -->
+<script type="text/javascript">
+        if(typeof(_gat)!='object')document.write('<sc'+'ript src="http'+
+                        (document.location.protocol=='https:'?'s://ssl':'://www')+
+                        '.google-analytics.com/ga.js"></sc'+'ript>')</script>
+                <script type="text/javascript">
+                        try {
+                                var gwoTracker=_gat._getTracker("UA-9005862-6");
+                                gwoTracker._trackPageview("/2188815013/test");
+                                }catch(err){}
+                </script>
+<!-- End of Google Website Optimizer Tracking Script -->
+<!-- apture bar -->
+<script id="aptureScript" type="text/javascript">
+(function (){var a=document.createElement("script");a.defer="true";a.src="http://www.apture.com/js/apture.js?siteToken=7TzNhnW";document.getElementsByTagName("head")[0].appendChild(a);})();
+</script>
+
+<!-- end apture bar -->
+
+        </body>
 </html>

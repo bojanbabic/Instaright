@@ -1,4 +1,6 @@
 import datetime, logging
+import random
+
 from google.appengine.ext import db 
 
 class SessionModel(db.Model): 
@@ -7,6 +9,8 @@ class SessionModel(db.Model):
 	ip=db.StringProperty()
 	url=db.LinkProperty()
         url_hash = db.StringProperty()
+        url_encode26 = db.StringProperty()
+        url_counter_id = db.IntegerProperty()
         short_url=db.LinkProperty()
         feed_url=db.LinkProperty()
 	date=db.DateTimeProperty()
@@ -386,3 +390,4 @@ class ScoreUsersDaily(db.Model):
         user=db.ReferenceProperty(UserDetails)
         score=db.IntegerProperty(default=0)
         date=db.DateProperty()
+

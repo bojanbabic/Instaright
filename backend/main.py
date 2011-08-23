@@ -18,7 +18,9 @@ from google.appengine.runtime import apiproxy_errors
 from google.appengine.api.taskqueue import TransientError
 
 from models import UserSessionFE, SessionModel, Subscription, LinkCategory
+import generic_counter
 from generic_handler import GenericWebHandler
+from link_utils import EncodeUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
@@ -135,6 +137,14 @@ class MainTaskHandler(webapp.RequestHandler):
                 taskqueue.add(url='/link/traction/task', queue_name='link-queue', params={'url':url, 'user': user, 'title': title})
                 taskqueue.add(url='/link/recommendation/task', queue_name='default', params={'url':url })
 
+                name = "url"
+                generic_counter.increment(name)
+                url_cnt = generic_counter.get_count(name)
+                logging.info("total url count %s " % url_cnt)
+                e = EncodeUtils()
+                enbased=e.encode(url_cnt)
+                url_encode26 = e.enbase(enbased)
+                logging.info("url encode: %s and enbase : %s" % (enbased, url_encode26))
 	        model = SessionModel()
 		try:
                         #remove for local testing
@@ -143,6 +153,8 @@ class MainTaskHandler(webapp.RequestHandler):
                 	model.date = datetime.datetime.now()
                 	model.url = url
                         model.url_hash = LinkUtil.getUrlHash(url)
+                        model.url_counter_id = url_cnt
+                        model.url_encode26 = url_encode26
                         model.user_agent=user_agent
                 	model.domain = domain
                 	model.short_link = None

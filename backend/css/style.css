@@ -159,8 +159,11 @@ p { font-size:14px; line-height:1.6em; padding:5px 0 10px; }
 /* Boxes
    ----------------------------------------------------------------------------------------------------*/
 .left_box_top { background:url('/static/images/base_main_top_710.png') no-repeat top left; height:14px; width:710px; }
+.article_left_box_top { background:url('/static/images/base_main_top_810.png') no-repeat top left; height:14px; width:810px; }
 .left_box_mid_no_padding { background:url('/static/images/base_main_mid_710.png') repeat-y top left!important; }
+.article_left_box_mid_no_padding { background:url('/static/images/base_main_mid_810.png') repeat-y top left!important; }
 .left_box_mid { background:url('/static/images/base_main_mid_710.png') repeat-y top left!important; padding: 40px; min-height: 400px;}
+.article_left_box_mid { background:url('/static/images/base_main_mid_810.png') repeat-y top left!important; padding: 40px; }
 .left_box_mid_close { background:url('/static/images/base_main_bot_710.png') no-repeat top left; height:14px; width:710px; }
 .left_box_bot { width:710px; }
 /* Floats and Aligns
@@ -215,6 +218,7 @@ form input[type="checkbox"], form input[type="radio"] { background:none; border:
 /* Containers
    ----------------------------------------------------------------------------------------------------*/
 .container_24 { margin-left:auto; margin-right:auto; width:1000px; }
+.article_container_24 { margin-left:auto; margin-right:auto; width:810px; }
 /* Grid >> Global
    ----------------------------------------------------------------------------------------------------*/
 .grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12, .grid_13, .grid_14, .grid_15, .grid_16, .grid_17, .grid_18, .grid_19, .grid_20, .grid_21, .grid_22, .grid_23, .grid_24 { display:inline; float:left; margin-left:5px; margin-right:5px; position:relative; }
@@ -245,6 +249,7 @@ form input[type="checkbox"], form input[type="radio"] { background:none; border:
 .container_24 .grid_16 { width:630px; }
 .container_24 .grid_17 { width:670px; }
 .container_24 .grid_18 { width:710px; }
+.article_grid_18 { width:810px; }
 .container_24 .grid_19 { width:750px; }
 .container_24 .grid_20 { width:790px; }
 .container_24 .grid_21 { width:830px; }
@@ -904,6 +909,14 @@ span {
 	padding-top: 2px;
 	padding-left: 90px;
 }
+.content_footer a {
+	text-decoration: none;
+	color: #0066CC;
+}
+.content_footer a:visited {
+	text-decoration: none;
+	color: #0066CC;
+}
 .content_category{
 	float: left;
 }
@@ -919,8 +932,12 @@ span {
 }
 .round_title span a {
 	text-decoration: none;
+	color: #0066CC;
 }
 .round_title span a:visited {
 	text-decoration: none;
 	color: #0066CC;
+}
+.footer-container {
+	margin-top: 130px;
 }

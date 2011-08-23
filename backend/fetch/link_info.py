@@ -440,7 +440,7 @@ class LinkTractionTask(webapp.RequestHandler):
 				return
 			execute_time=TaskUtil.execution_time()
 			logging.info('scheduling tweet for %s' %str(execute_time))
-                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Twit to queue!', html='Twitt: %s <br> score: %s' %( t.text, link.overall_score), body='Twitt: %s <br> score: %s' %(t.text, link.overall_score))
+                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Twit to queue!', html='Twitt: %s <br> score: %s' %( t.text, link.overall_score), body='Twitt: %s <br> score: %s' %(t.text[:500], link.overall_score))
 			
                         #taskqueue.add(url='/util/twitter/twit/task', eta=execute_time, queue_name='twit-queue', params={'twit':t.text})
                         taskqueue.add(url='/util/twitter/twit/task', queue_name='twit-queue', params={'twit':t.text})

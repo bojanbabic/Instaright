@@ -181,6 +181,8 @@ handlers:
 - url: /example
   script: example.py
 
+- url: /sitemap.xml
+  script: articles.py
 - url: /.*
   script: main.py
 

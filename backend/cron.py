@@ -1,4 +1,4 @@
-import sys, os, time, datetime, cgi, logging
+import sys, datetime, logging
 #import multiprocessing
 
 from google.appengine.ext import webapp
@@ -7,8 +7,6 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
 from models import SessionModel
-from google.appengine.ext.webapp import template
-from utils import StatsUtil
 
 class StatsModel(db.Model):
 	totalNumber=db.IntegerProperty(default=0)
@@ -117,8 +115,8 @@ class CronTask(webapp.RequestHandler):
 				logging.info('retieved %s ' % len(allWeeklyStats))
 				self.calculateStatsPerDomain(allWeeklyStats, 'weekly', targetDate)
 		except:
-			e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
-			logging.error('Error while running weekly cron task. %s. More info %s' % (e, e0))
+			e, e1 = sys.exc_info()[0], sys.exc_info()[1]
+			logging.error('Error while running weekly cron task. %s. More info %s' % (e, e1))
 
 	def yearStats(self, tDate):
 		try:
