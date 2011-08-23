@@ -106,6 +106,7 @@
                 			for (i = response.length - 1; i >= 0; i--) {
                         			e = response[i]['u'];
                         			domain = e['d'];
+                        			instaright_domain = e['dd'];
                         			try{
                                 			title=e['t'];
                         			}catch(e){
@@ -126,9 +127,10 @@
                                 			}
                         			}
                         			link = e['l'];
-						var dateUpdated_int = parseInt(e['u']);
-						var dateNow_int = parseInt(e['n']);
-						updated_ago_string = updated_string(dateUpdated_int, dateNow_int);
+						dateUpdated = new Date(e['u']);
+						dateUpdated_int = parseInt(e['u']);
+						dateNow_int = parseInt(e['n']);
+						updated_ago_string = "<a href=\""+link+"\">"+updated_string(dateUpdated)+"</a>";
                         			id = e['id'];
 						a = e['a'];
 						lc = e['lc'];
@@ -153,12 +155,7 @@
 						titleElement.setAttribute('class','stream-article');
 						titleElement.setAttribute('title', orig_title);
                         			titleElement.innerHTML = title;
-                        			if (original_url === undefined){
-                                			titleElement.href = link;
-                        			} else{
-                                			// visibli link
-                                			titleElement.href ='http://links.instaright.com/a947824b599193b3/?web=058421&dst='+original_url;
-                        			}
+                                		titleElement.href = original_url;
                         			titleElement.target="_new"
                         			titleParagraph = document.createElement('p');
                         			titleParagraph.appendChild(titleElement);
@@ -166,7 +163,7 @@
                         			domainElement = document.createElement('a');
 						domainElement.className="stream-article";
                         			domainElement.innerHTML = domain;
-                        			domainElement.href = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+'http://'+domain;
+                        			domainElement.href = instaright_domain;
                         			domainElement.target="_new"
 
                         			container.appendChild(containerAvatar);
@@ -236,8 +233,8 @@
 					// adjust times
 					$(".content_footer").each(function(){
 							milis = $(this).attr('info');
-							updated_ago = updated_string(milis, dateNow_int);
-							$(this).html(updated_ago);
+							//updated_ago = updated_string(milis, dateNow_int);
+							//$(this).html(updated_ago);
 							
 					}); 
 

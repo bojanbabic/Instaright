@@ -208,6 +208,12 @@ indexes:
   - name: date
     direction: desc
 
+- kind: SessionModel
+  properties:
+  - name: domain
+  - name: date
+    direction: desc
+
 - kind: StatsModel
   properties:
   - name: __key__

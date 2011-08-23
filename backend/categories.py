@@ -18,6 +18,7 @@ from utils import StatsUtil, LinkUtil, Cast, CategoriesUtil
 from users import UserUtil
 from generic_handler import GenericWebHandler
 from main import UserMessager
+from link_utils import LinkUtils
 from google.appengine.ext.db import BadValueError
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
@@ -289,14 +290,14 @@ class CategoryFeedHandler(webapp.RequestHandler):
                         allentries = LinkCategory.gql('WHERE category = :1 order by updated desc', category).fetch(50)
                         entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None]
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'l': 'http://instaright.appspot.com/article/'+str(o.model_details.key()), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':category}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'dd': LinkUtils.generate_domain_link(o.model_details.domain),'l':LinkUtils.generate_instaright_link(o.model_details.url_encode26, LinkUtils.make_title(o.model_details.title), o.model_details.url), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':category}}))
 			return
                 self.reponse.headers['Content-Type'] = "application/json"
                 self.response.out.write("[{}]")
 
 class CategoryHandler(GenericWebHandler):
         def get(self,category):
-                logging.info('category handler ')
+                logging.info('category handler')
                 self.redirect_perm()
                 self.get_user()
                 logging.info('category screen_name %s' %self.screen_name)

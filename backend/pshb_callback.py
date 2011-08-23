@@ -12,6 +12,7 @@ from main import  BroadcastMessage
 from models import Subscription, SessionModel
 from users import UserUtil
 from xmpp_handler import XMPPHandler 
+from link_utils import LinkUtils
 
 import feedparser
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -72,7 +73,7 @@ class BroadcastMessageTask(webapp.RequestHandler):
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)
                         logging.info('avatar %s' %avatar)
-                        messageAsJSON = [{'u':{'id':user_id, 't':title,'l':link,'d':domain,'a':avatar, 'u':updated, 'lc':link_category, 'e': embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}]
+                        messageAsJSON = [{'u':{'id':user_id, 't':title,'ol':link, 'l':LinkUtils.generate_instaright_link(user.url_encode26, LinkUtils.make_title(title)),'d':domain,'dd': LinkUtils.generate_domain_link(domain), 'a':avatar, 'u':updated, 'lc':link_category, 'e': embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}]
                         logging.info('sending message %s ' %messageAsJSON)
 			broadcaster.send_message(messageAsJSON)
 			xmpp_handler.send_message(subscribers, message)

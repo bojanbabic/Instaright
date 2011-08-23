@@ -30,7 +30,8 @@ class FeedGenerator(webapp.RequestHandler):
 			logging.info('getting json from cache')
 			self.response.headers['Content-Type'] = "application/json"
 #			messageAsJSON = [{'u':{'id':update.id, 't':update.title,'l':update.link,'d':update.domain,'u':update.updated}}]
-                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://www.instaright.com/article/'+str(o.key()), 'd':o.domain, 'u': int(time.mktime(o.date.timetuple())), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
+                        #TODO no lc and c in feed
+                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'dd': LinkUtils.generate_domain_link(o.domain), 'd':o.domain, 'u': int(time.mktime(o.date.timetuple())), 'l':LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)),'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
                         return
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
 		memcache.set(memcache_key, entries, time = cache_exp_ts)
@@ -38,14 +39,16 @@ class FeedGenerator(webapp.RequestHandler):
 			self.response.out.write('Nothing here')
 		#now = datetime.datetime.now().strftime("%Y-%m-%dT%H\:%i\:%sZ")
 		if format is None or format == 'xml':
-                        template_variables = { 'entries' : entries, 'dateupdated' : datetime.datetime.today()}
+                        updated_entries = [ (str(o.key()), unicode(o.title), o.domain, LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)),userUtil.getAvatar(o.instaright_account), o.date ) for o in entries ]
+                        template_variables = { 'entries' : updated_entries, 'dateupdated' : datetime.datetime.today()}
 			path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
 			self.response.headers['Content-Type'] = "application/atom+xml"
 			self.response.out.write(template.render(path,template_variables))
 			return
 		if format == 'json':
+                        #TODO no lc in c from index.html
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': 'http://www.instaright.com/article/'+str(o.key()), 'd':o.domain, 'u': int(time.mktime(o.date.timetuple())), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'dd': LinkUtils.generate_domain_link(o.domain), 'd':o.domain, 'u': int(time.mktime(o.date.timetuple())), 'l':LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
 			return
 
 			

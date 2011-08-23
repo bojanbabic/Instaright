@@ -2,7 +2,7 @@
 <html>
         <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <meta name="keywords" content="Instaright categories, instaright topics" />
+                <meta name="keywords" content="Instaright articles by domains, instaright topics" />
 		<meta name="title" content="Instaright Categories and Topics"  />
 		<meta name="description" content="Instaright Categories orginized data by topics help you easy infromation discovery" />
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
@@ -80,7 +80,7 @@
 					$("#invite_jid").focus(function(){
 						$(this).val("");
 						});
-					$.get('/category/{{ category }}/feed?out=json', {}, updateDisplayEntry)
+					$.get('/domain/{{ domain }}/feed?out=json', {}, updateDisplayEntry)
 					$("#jid_result").hide();
 					$("#invite_jid").focus();
 			});
@@ -97,11 +97,11 @@
 
 
                         	titleElement = document.createElement('a');
-                        	titleElement.innerHTML = 'Meh ... this category is kinda empty';
+				titleElement.innerHTML = 'Meh ... no articles for domain {{ domain }}';
 
                         	domainElement = document.createElement('a');
-                        	domainElement.innerHTML = 'Don\'t worry, there are lots of interesting categories one click away :)';
-                        	domainElement.href = '/category';
+                        	domainElement.innerHTML = 'Don\'t worry, there are lots of interesting articles one click away :)';
+                        	domainElement.href = '/';
 
                         	container.appendChild(titleElement);
                         	container.appendChild(document.createElement('br'));
@@ -151,11 +151,10 @@
 						updated_ago_string = "<a href=\""+link+"\">"+updated_string(dateUpdated)+"</a>";
                         			lc = e['lc'];
                         			id = e['id'];
+                        			original_link = e['ol'];
 						a = e['a'];
-                        			original_url = e['ol'];
-						category=e['lc'];
-						if (typeof(category) == 'undefined' || (category != '{{ category }}')){
-							//alert('sanity check did not pass ('+category+' != {{ category }}..continue');
+						if (typeof(domain) == 'undefined' || (domain != '{{ domain }}')){
+							//alert('sanity check did not pass ('+domain+' != {{ domain }}..continue');
 							continue;
 						} 
 
@@ -173,13 +172,16 @@
 
                         			titleElement = document.createElement('a');
                         			titleElement.innerHTML = title;
-                                		titleElement.href = original_url;
+						titleElement.setAttribute('class', 'stream-article');
+                               			titleElement.href = original_link;
+                               			titleElement.title = title;
                         			titleElement.target="_new"
                         			titleParagraph = document.createElement('p');
                         			titleParagraph.appendChild(titleElement);
 
                         			domainElement = document.createElement('a');
                         			domainElement.innerHTML = domain;
+						domainElement.setAttribute('class', 'stream-article');
                         			domainElement.href = instaright_domain;
                         			domainElement.target="_new"
 
@@ -190,12 +192,7 @@
                         			container.appendChild(document.createElement('br'));
 
                         			contentParagraph = document.createElement('div');
-						contentParagraph.setAttribute('class', 'category_div');
-						if (typeof(lc) !== 'undefined' ){
-							contentParagraph.innerHTML = "<span class=\"text_bubble_cats\"><a href=\"/category/"+lc+"\">"+lc+"</a></span>";
-						} else {
-                        				contentParagraph.innerHTML = dateUpdated;
-						}
+						contentParagraph.setAttribute('class', 'domain_div');
 
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
@@ -221,7 +218,7 @@
                 			}
 
         			}catch(e){
-                			alert("while adding new element :" +e);
+                			alert("while adding new element :"+e.message);
         			}
 			}
 </script>
@@ -251,7 +248,7 @@
                 <div id="left_col" class="grid_18"> 
                         <div class="left_box_top"> 
                                 <h2 class="round_title"> 
-					<span>Instaright Stream about {{ category }}</span> 
+					<span>Instaright Stream articles from {{ domain }}</span> 
                                 </h2> 
                         </div> 
                         <div class="left_box_mid">

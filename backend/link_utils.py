@@ -33,7 +33,12 @@ class EncodeUtils(object):
 			
 class LinkUtils(object):
         @classmethod
-        def generate_instaright_link(cls, url_hash, generated_title):
+        def generate_domain_link(cls, domain):
+                return "http://www.instaright.com/domain/%s" % domain
+        @classmethod
+        def generate_instaright_link(cls, url_hash, generated_title, default=None):
+                if url_hash is None or generated_title is None:
+                        return default
                 return "http://www.instaright.com/article/"+url_hash+"/"+generated_title
         @classmethod
         def make_title(cls, title):

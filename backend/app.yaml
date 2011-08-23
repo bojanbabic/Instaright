@@ -140,6 +140,9 @@ handlers:
 
 - url: /domain/categories.*
   script: links.py
+
+- url: /domain/.*
+  script: domain.py
   
 - url: /category.*
   script: categories.py
