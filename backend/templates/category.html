@@ -154,9 +154,24 @@
 						a = e['a'];
                         			original_url = e['ol'];
 						category=e['lc'];
-						if (typeof(category) == 'undefined' || (category != '{{ category }}')){
-							//alert('sanity check did not pass ('+category+' != {{ category }}..continue');
+						cats=lc.split(',');
+						if (typeof(category) == 'undefined' || lc.length == 0 || (lc.indexOf(category) == -1)){
+							//alert('sanity check did not pass ('+category+' != '+lc+'..continue');
 							continue;
+						} 
+                        			contentParagraph = document.createElement('div');
+						contentParagraph.setAttribute('class', 'category_div');
+						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
+							try{
+								span_cats=Array();
+								for (c in cats){
+									span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
+								}
+							}catch(e){
+								alert(e);
+								span_cats=Array();
+							}
+							contentParagraph.innerHTML = span_cats.join(" ");
 						} 
 
                         			container = document.createElement('div');
@@ -172,6 +187,7 @@
                         			container.setAttribute('id', id);
 
                         			titleElement = document.createElement('a');
+						titleElement.setAttribute('class', 'stream-article');
                         			titleElement.innerHTML = title;
                                 		titleElement.href = original_url;
                         			titleElement.target="_new"
@@ -182,20 +198,13 @@
                         			domainElement.innerHTML = domain;
                         			domainElement.href = instaright_domain;
                         			domainElement.target="_new"
+						domainElement.setAttribute('class', 'stream-article');
 
                         			container.appendChild(containerAvatar);
                         			container.appendChild(titleParagraph);
                         			container.appendChild(document.createElement('br'));
                         			container.appendChild(domainElement);
                         			container.appendChild(document.createElement('br'));
-
-                        			contentParagraph = document.createElement('div');
-						contentParagraph.setAttribute('class', 'category_div');
-						if (typeof(lc) !== 'undefined' ){
-							contentParagraph.innerHTML = "<span class=\"text_bubble_cats\"><a href=\"/category/"+lc+"\">"+lc+"</a></span>";
-						} else {
-                        				contentParagraph.innerHTML = dateUpdated;
-						}
 
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');

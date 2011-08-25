@@ -79,7 +79,7 @@ class ArticleHandler(GenericWebHandler):
                         if links is not None:
                                 category = links.categories
                         sessionTitle = LinkUtil.generateUrlTitle(sessionModel.title)
-                        template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'story_avatar': userUtil.getAvatar(sessionModel.instaright_account), 'story_user': sessionModel.instaright_account, 'domain': sessionModel.domain, 'category':category,'title':sessionModel.title, 'link': sessionModel.url, 'updated':sessionModel.date, 'id': str(sessionModel.key()), 'instaright_link': instaright_link}
+                        template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'story_avatar': userUtil.getAvatar(sessionModel.instaright_account), 'story_user': sessionModel.instaright_account, 'domain': sessionModel.domain, 'title':sessionModel.title, 'link': sessionModel.url, 'updated':sessionModel.date, 'id': str(sessionModel.key()), 'instaright_link': instaright_link, 'category': LinkUtils.getLinkCategoryHTML(sessionModel), 'dd': LinkUtils.generate_domain_link(sessionModel.domain)}
 		        path = os.path.join(os.path.dirname(__file__), 'templates/article.html')
                         self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		        self.response.out.write(template.render(path, template_variables))

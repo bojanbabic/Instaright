@@ -288,9 +288,10 @@ class CategoryFeedHandler(webapp.RequestHandler):
                         logging.info('catefory %s json feed' % category)
                         userUtil = UserUtil()
                         allentries = LinkCategory.gql('WHERE category = :1 order by updated desc', category).fetch(50)
-                        entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None]
+                        entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None ]
+                        entries = entries[:10]
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'dd': LinkUtils.generate_domain_link(o.model_details.domain),'l':LinkUtils.generate_instaright_link(o.model_details.url_encode26, LinkUtils.make_title(o.model_details.title), o.model_details.url), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':category}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'dd': LinkUtils.generate_domain_link(o.model_details.domain),'l':LinkUtils.generate_instaright_link(o.model_details.url_encode26, LinkUtils.make_title(o.model_details.title), o.model_details.url), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':LinkUtils.getLinkCategory(o.model_details)}}))
 			return
                 self.reponse.headers['Content-Type'] = "application/json"
                 self.response.out.write("[{}]")
@@ -360,6 +361,8 @@ class CategoryListHandler(GenericWebHandler):
                         memcache.set(memcache_key, categories, time = next_hour_ts)
 
 		template_variables = []
+                #TODO what if zero categories retrieved?
+                logging.info("got %s categories" % len(categories))
                 template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':simplejson.dumps(categories)}
 		path= os.path.join(os.path.dirname(__file__), 'templates/category_list.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"

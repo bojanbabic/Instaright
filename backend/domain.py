@@ -45,7 +45,7 @@ class DomainFeedHandler(webapp.RequestHandler):
                         entries = SessionModel.gql('WHERE domain = :1 order by date desc', domain).fetch(10)
 			self.response.headers['Content-Type'] = "application/json"
 			#TODO insert categories for domain's view
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': LinkUtils.generate_instaright_link(o.url_encode26, LinkUtils.make_title(o.title), o.url), 'd': o.domain, 'dd':LinkUtils.generate_domain_link(o.domain), 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': LinkUtils.generate_instaright_link(o.url_encode26, LinkUtils.make_title(o.title), o.url), 'd': o.domain, 'lc': LinkUtils.getLinkCategory(o), 'dd':LinkUtils.generate_domain_link(o.domain), 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
 			return
                 self.reponse.headers['Content-Type'] = "application/json"
                 self.response.out.write("[{}]")

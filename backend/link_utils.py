@@ -1,4 +1,10 @@
 import re
+import logging
+from google.appengine.api import memcache
+from models import LinkCategory
+from google.appengine.ext.db import NotSavedError
+
+#DO NOT TOUCH!!!!
 chars='abcdefghijklmnopqrstuvwxyz'
 mapping=range(28)
 mapping.reverse()
@@ -45,3 +51,53 @@ class LinkUtils(object):
                 #TODO solve chinese/japan chars ie iemcps
                 title = re.sub(r'\W+', '-', unicode(title))
                 return title
+        @classmethod
+        def getLinkCategory(cls, link_model):
+                category=''
+                logging.info('looking category cache for url hash %s ( %s )' %(link_model.url_hash, link_model.url))
+                if link_model is None or link_model.url_hash is None:
+                        return category
+                mem_key = link_model.url_hash+'_category'
+                cached_category=memcache.get(mem_key)
+                if cached_category is not None:
+                        logging.info('got category from cache %s' %cached_category)
+                        return ','.join(cached_category)
+                linkCategory=None
+                try:
+                        linkCategory=LinkCategory.gql('WHERE category != NULL and url_hash = :1 ' , link_model.url_hash).fetch(1000)
+                except NotSavedError:
+                        logging.info('not saved key for url hash %s' % link_model.url_hash)
+                if linkCategory is not None:
+                        logging.info('got %s categories for %s' %( len(linkCategory), link_model.url))
+                        cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
+                        category=list(set(cats_tag))
+                        logging.info('got category from query %s' %category)
+                        memcache.set(mem_key, category)
+                return ','.join(category)
+
+        @classmethod
+        def getLinkCategoryHTML(cls, link_model):
+                category=None
+                logging.info('looking category cache for url hash %s ( %s )' %(link_model.url_hash, link_model.url))
+                if link_model is None or link_model.url_hash is None:
+                        return category
+                mem_key = link_model.url_hash+'_category'
+                cached_category=memcache.get(mem_key)
+                if cached_category is not None:
+                        logging.info('got category from cache %s' %cached_category)
+                        category=cached_category
+                linkCategory=None
+                try:
+                        linkCategory=LinkCategory.gql('WHERE category != NULL and url_hash = :1 ' , link_model.url_hash).fetch(1000)
+                except NotSavedError:
+                        logging.info('not saved key for url hash %s' % link_model.url_hash)
+                if linkCategory is not None and category is None:
+                        logging.info('got %s categories for %s' %( len(linkCategory), link_model.url))
+                        cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
+                        category=list(set(cats_tag))
+                        logging.info('got category from query %s' %category)
+                        memcache.set(mem_key, category)
+                #NOTE: static css , error
+                html = [ "<span class=\"text_bubble_cats\"><a href=\"/category/"+c+"\">"+c+"</a></span>" for c in category ]
+                return " ".join(html)
+

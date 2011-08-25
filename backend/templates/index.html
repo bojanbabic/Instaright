@@ -182,13 +182,13 @@
 						}
                         			contentParagraph = document.createElement('div');
 						contentParagraph.setAttribute('class','category_div');
-						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null'){
+						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length > 1){
 							try{
-							cats=lc.split(',');
-							span_cats=Array();
-							for (c in cats){
-								span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
-							}
+								cats=lc.split(',');
+								span_cats=Array();
+								for (c in cats){
+									span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
+								}
 							}catch(e){
 								span_cats=Array();
 							}

@@ -20,7 +20,7 @@ from google.appengine.api.taskqueue import TransientError
 from models import UserSessionFE, SessionModel, Subscription, LinkCategory
 import generic_counter
 from generic_handler import GenericWebHandler
-from link_utils import EncodeUtils
+from link_utils import EncodeUtils, LinkUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
@@ -187,25 +187,27 @@ class MainTaskHandler(webapp.RequestHandler):
 		subscribers = Subscription.gql('WHERE active = True and mute = False').fetch(100)
                 #known category
                 category=None
-                cached_category=None
-                logging.info('looking category cache for url hash %s ( %s )' %(model.url_hash, url))
-                if model.url_hash is not None:
-                        mem_key=model.url_hash+'_category'
-                        cached_category=memcache.get(mem_key)
-                if cached_category is not None:
-                        category=",".join(cached_category)
-                        logging.info('got category from cache %s' %category)
-                if category is None:
-                        linkCategory=None
-                        try:
-                                linkCategory=LinkCategory.gql('WHERE category != NULL and url_hash = :1 ' , model.url_hash).fetch(1000)
-                        except NotSavedError:
-                                logging.info('not saved key for url hash %s' % model.url_hash)
-                        if linkCategory is not None:
-                                logging.info('got %s categories for %s' %( len(linkCategory), model.url))
-                                cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
-                                category=list(set(cats_tag))
-                                logging.info('got category from query %s' %category)
+                #cached_category=None
+                #logging.info('looking category cache for url hash %s ( %s )' %(model.url_hash, url))
+                #if model.url_hash is not None:
+                #        mem_key=model.url_hash+'_category'
+                #        cached_category=memcache.get(mem_key)
+                #if cached_category is not None:
+                #        category=",".join(cached_category)
+                #        logging.info('got category from cache %s' %category)
+                #if category is None:
+                #        linkCategory=None
+                #        try:
+                #                linkCategory=LinkCategory.gql('WHERE category != NULL and url_hash = :1 ' , model.url_hash).fetch(1000)
+                #        except NotSavedError:
+                #                logging.info('not saved key for url hash %s' % model.url_hash)
+                #        if linkCategory is not None:
+                #                logging.info('got %s categories for %s' %( len(linkCategory), model.url))
+                #                cats_tag=[ l.category  for l in linkCategory if l.category is not None and len(l.category) > 2 ]
+                #                category=list(set(cats_tag))
+                #                logging.info('got category from query %s' %category)
+                #                memcache.set(mem_key, category)
+                category = LinkUtils.getLinkCategory(model)
                 taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': int(time.mktime(model.date.timetuple())), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 
                 

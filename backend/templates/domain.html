@@ -192,7 +192,21 @@
                         			container.appendChild(document.createElement('br'));
 
                         			contentParagraph = document.createElement('div');
-						contentParagraph.setAttribute('class', 'domain_div');
+						contentParagraph.setAttribute('class', 'category_div');
+
+						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
+							try{
+								cats=lc.split(',');
+								span_cats=Array();
+								for (c in cats){
+									span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
+								}
+							}catch(e){
+								alert(e);
+								span_cats=Array();
+							}
+							contentParagraph.innerHTML = span_cats.join(" ");
+						} 
 
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
