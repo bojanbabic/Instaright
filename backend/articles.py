@@ -39,7 +39,7 @@ class FeedGenerator(webapp.RequestHandler):
 			self.response.out.write('Nothing here')
 		#now = datetime.datetime.now().strftime("%Y-%m-%dT%H\:%i\:%sZ")
 		if format is None or format == 'xml':
-                        updated_entries = [ (str(o.key()), unicode(o.title), o.domain, LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)),userUtil.getAvatar(o.instaright_account), o.date ) for o in entries ]
+                        updated_entries = [ (str(o.key()), unicode(o.title), LinkUtils.generate_domain_link(o.domain), LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)),userUtil.getAvatar(o.instaright_account), o.date ) for o in entries ]
                         template_variables = { 'entries' : updated_entries, 'dateupdated' : datetime.datetime.today()}
 			path= os.path.join(os.path.dirname(__file__), 'templates/feed.html')
 			self.response.headers['Content-Type'] = "application/atom+xml"

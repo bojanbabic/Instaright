@@ -72,6 +72,7 @@
 			};
 
 			$(document).ready(function(){
+					$("#stream_loader").hide();
 					$("#invite_jid").bind('keypress', function(e){
 						if (e.keyCode == 13){
 						check_and_send_jid();
@@ -83,6 +84,13 @@
 					$.get('/category/{{ category }}/feed?out=json', {}, updateDisplayEntry)
 					$("#jid_result").hide();
 					$("#invite_jid").focus();
+			});
+
+			$(document).ajaxStart(function(){
+				$("#stream_loader").show();
+			});
+			$(document).ajaxStop(function(){
+				$("#stream_loader").hide();
 			});
 
 			// Create variables to display subscription options using HTML DIVs
@@ -282,6 +290,7 @@
 						overflow: auto;
                                         }
                                 </style>
+				<div id="stream_loader"><p><img src="/static/images/loader.gif" /> Loading Stream ...</p></div>
                                 <div id="stream"></div>
                         </div>
 			<div class="left_bot_mid">
@@ -365,6 +374,11 @@ var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
                                 gwoTracker._trackPageview("/2188815013/test");
                                 }catch(err){}
                 </script>
+		<noscript>
+			<h1>Instaright {{ category }} Article Stream </h1>
+			<h2>Check out Instaright articles about {{ category }}</h2>
+			<h3>Looking for more to read? Take a look at <a href="http://www.instaright.com/category/{{ category }}/feed?out=json" title="Instaright Articles about {{ category }}">Instaright articles from {{ category }}</a></h3>
+		</noscript>
 <!-- End of Google Website Optimizer Tracking Script -->
 <!-- apture bar -->
 <script id="aptureScript">

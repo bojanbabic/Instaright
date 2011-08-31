@@ -80,6 +80,7 @@
 			};
 
 			$(document).ready(function(){
+				$("#stream_loader").hide();
 				$("#invite_jid").bind('keypress', function(e){
 					if (e.keyCode == 13){
 					check_and_send_jid();
@@ -93,6 +94,12 @@
 				$("#invite_jid").focus();
                 	});
 
+			//$(#stream").ajaxStart(function(){
+			//	$("#stream_loader").show();
+			//});
+			//$("#stream").ajaxStop(function(){
+			//	$("#stream_loader").hide();
+			//});
 			// Create variables to display subscription options using HTML DIVs
 
 			var stream = document.getElementById('stream');
@@ -292,7 +299,8 @@
 						overflow: auto;
                                         }
                                 </style>
-                                <div id="stream"></div>
+				<div id="stream_loader"><p><img src="/static/images/loader.gif" /> Loading Stream ...</p></div>
+				<div id="stream"><div id="stream_loader"><p><img src="/static/images/loader.gif" /> Loading Stream ...</p></div></div>
                         </div>
 			<div class="left_bot_mid">
 				<div class="left_bot_left"></div>
@@ -380,6 +388,54 @@ var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 <script id="aptureScript">
 (function (){var a=document.createElement("script");a.defer="true";a.src="http://www.apture.com/js/apture.js?siteToken=7TzNhnW";document.getElementsByTagName("head")[0].appendChild(a);})();
 </script>
+<noscript>
+	<h1>Instaright Realtime Bookmarking and recommendation engine<h1>
+	<h2>Instaright Categories</h2>
+	<h3>Following Instaright categories</h3><p> are most popular over internet</p>
+	<p>
+	<h5>Apple<h5>
+	<a href="http://www.instaright.com/category/apple" title="Instaright category - apple">Instaright category - Apple</a>
+	<h5>Hacking<h5>
+	<a href="http://www.instaright.com/category/hack" title="Instaright category - hack">Instaright category - Hack</a>
+	<h5>Steve Jobs<h5>
+	<a href="http://www.instaright.com/category/stevejobs" title="Instaright category - steve jobs">Instaright category - Steve Jobs</a>
+	<h5>Wealth<h5>
+	<a href="http://www.instaright.com/category/wealth" title="Instaright category - wealth">Instaright category - Wealth</a>
+	<h5>Culture<h5>
+	<a href="http://www.instaright.com/category/cultutre" title="Instaright category - cultutre">Instaright category - cultutre</a>
+	<h5>Computer<h5>
+	<a href="http://www.instaright.com/category/computer" title="Instaright category - computer">Instaright category - computer</a>
+	<h5>Design<h5>
+	<a href="http://www.instaright.com/category/design" title="Instaright category - design">Instaright category - design</a>
+	<h5>World<h5>
+	<a href="http://www.instaright.com/category/world" title="Instaright category - world">Instaright category - world</a>
+	<h5>Politics<h5>
+	<a href="http://www.instaright.com/category/politics" title="Instaright category - politics">Instaright category - politics</a>
+	<h5>Crime<h5>
+	<a href="http://www.instaright.com/category/crime" title="Instaright category - crime">Instaright category - crime</a>
+	<h5>Technology<h5>
+	<a href="http://www.instaright.com/category/technology" title="Instaright category - technology">Instaright category - technology</a>
+	<h5>Tutorial<h5>
+	<a href="http://www.instaright.com/category/tutorial" title="Instaright category - tutorial">Instaright category - tutorial</a>
+	<h5>Toread<h5>
+	<a href="http://www.instaright.com/category/toread" title="Instaright category - toread">Instaright category - toread</a>
+	<h5>Arts<h5>
+	<a href="http://www.instaright.com/category/arts" title="Instaright category - arts">Instaright category - arts</a>
+	<h5>Psychology<h5>
+	<a href="http://www.instaright.com/category/psychology" title="Instaright category - psychology">Instaright category - psychology</a>
+	<h5>Entertainment<h5>
+	<a href="http://www.instaright.com/category/entertainment" title="Instaright category - entertainment">Instaright category - entertainment</a>
+	<h5>Sports<h5>
+	<a href="http://www.instaright.com/category/sports" title="Instaright category - sports">Instaright category - sports</a>
+	<h5>Religion<h5>
+	<a href="http://www.instaright.com/category/religion" title="Instaright category - religion">Instaright category - religion</a>
+	<h5>Health<h5>
+	<a href="http://www.instaright.com/category/health" title="Instaright category - health">Instaright category - health</a>
+	<h5>Internet<h5>
+	<a href="http://www.instaright.com/category/internet" title="Instaright category - internet">Instaright category - internet</a>
+	<p>Check out more Instaright Articles<p><a href="http://www.instaright.com/feed?out=json" title="Instaright Article Feed">Instaright Article Feed</a></p></p>
+	</p>
+</noscript>
 
 <!-- end apture bar -->
 
