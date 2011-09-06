@@ -40,14 +40,8 @@
                 		<ul class="menu borderless clearfix"> 
 					<li><a href="/category" title="Instaright most popular category list"><span>Categories</span></a></li>
 					<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
-                        		{% if user %}
-					<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
-					<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" /></a></li>
-					<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
-                        		{% else %}
 					<li><a id="btn_login" href="/account" title="Login to Instaright"><span>Login</span></a></li>
-                        		{% endif %}
-                        <li>
+                        		<li>
                         </li>
 
                 </ul>
@@ -57,7 +51,11 @@
                 <div id="left_col" class="article_grid_18"> 
                         <div class="article_left_box_top"> 
                                 <h2 class="round_title"> 
+					{% if condition and type %}
+					<span><a href='/' title='Instaright {{ type }} articles - {{ condition }} '>Instaright {{ type }} articles - {{ condition }} </a></span> 
+					{% else %}
 					<span><a href='/' title='Instaright Article'>Instaright Article</a></span> 
+					{% endif %}
                                 </h2> 
                         </div> 
                         <div class="article_left_box_mid">
@@ -81,17 +79,19 @@
                                         }
                                 </style>
 				<div id="stream">
-					<div class="streamcontent" id="{{ id }}" style="display: block;">
-						<div class="avatar_div"><img src="{{ story_avatar }}" class="avatar" alt="Instaright User {{ story_user|escape }} avatar" /></div>
-						<p><a class="stream-article" title="{{ title }}" href="{{ link }}" target="_new">{{ title }}</a></p>
+					{% for l in links %}
+					<div class="streamcontent" id="{{ l.u.id }}" style="display: block;">
+						<div class="avatar_div"><img src="{{ l.u.a }}" class="avatar" alt="Instaright User {{ l.u.user }} avatar" /></div>
+						<p><a class="stream-article" title="{{ l.u.t }}" href="{{ l.u.l }}" target="_new">{{ l.u.t }}</a></p>
 						<br/>
-						<a class="stream-article" href="{{ dd }}" target="_new">{{ domain }}</a>
+						<a class="stream-article" href="{{ l.u.dd }}" target="_new">{{ l.u.d }}</a>
 						<br />
-						{% if category %}
-						<div class="category_div">{{ category }}</div>
+						{% if l.u.lc %}
+						<div class="category_div">{{ l.u.html_lc }}</div>
 						{% endif %}
-						<div class="content_footer" info="{{ updated }}"><a href="{{ instaright_link }}" title="{{ title }}">now</a></div>
+						<div class="content_footer" info="{{ l.u.u }}"><a href="{{ l.u.l }}" title="{{ l.u.t }}">as seen now on Instaright {{ l.u.source }} </a></div>
 					</div>
+					{% endfor %}
 				</div>
                         </div>
 			<div class="left_bot_mid">

@@ -73,7 +73,7 @@ class BroadcastMessageTask(webapp.RequestHandler):
                         logging.info('user %s' % user.instaright_account)
                         avatar = userUtil.getAvatar(user.instaright_account)
                         logging.info('avatar %s' %avatar)
-                        messageAsJSON = [{'u':{'id':user_id, 't':title,'ol':link, 'l':LinkUtils.generate_instaright_link(user.url_encode26, LinkUtils.make_title(title)),'d':domain,'dd': LinkUtils.generate_domain_link(domain), 'a':avatar, 'u':updated, 'lc':link_category, 'e': embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}]
+                        messageAsJSON = [{'u':{'id':user_id, 't':title,'ol':link, 'l':LinkUtils.generate_instaright_link(user.url_encode26, LinkUtils.make_title(title)),'d':domain,'dd': LinkUtils.generate_domain_link(domain), 'a':avatar, 'u':updated, 'source': user.client, 'lc':link_category, 'html_lc':LinkUtils.getLinkCategoryHTML(user),  'e': embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}]
                         logging.info('sending message %s ' %messageAsJSON)
 			broadcaster.send_message(messageAsJSON)
 			xmpp_handler.send_message(subscribers, message)

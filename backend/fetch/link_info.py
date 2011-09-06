@@ -54,7 +54,7 @@ class LinkHandler(webapp.RequestHandler):
                 link.url_hash = url_hash
                 #qfix for title TODO: find proper solution
                 if link.title is not None:
-                        link.title=link.title[:199]
+                        link.title=link.title.strip()[:199]
 		try:
                 	existingLink = Links.gql('WHERE url_hash  = :1', url_hash).get()
                         if existingLink is None:
@@ -78,7 +78,7 @@ class LinkHandler(webapp.RequestHandler):
                         if existingLink.url_hash is None:
                                 existingLink.url_hash = url_hash
                         if link.title is not None:
-                                existingLink.title = link.title[:199]
+                                existingLink.title = link.title.strip()[:199]
                         #if increase in score is more then 20%
                         if  existingLink.overall_score is None or existingLink.overall_score == 0 or link.overall_score  / existingLink.overall_score >= 1.2:
                                 existingLink.shared=False
@@ -111,7 +111,7 @@ class LinkHandler(webapp.RequestHandler):
                 if json:
                         try:
                                 if not link.title:
-                                        link.title = json[0]['title']
+                                        link.title = json[0]['title'].strip()
                                 link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
                                 if link.categories is not None:
                                         taskqueue.add(queue_name='category-queue', url='/link/category/delicious', params={'url':url, 'categories':link.categories})
@@ -172,7 +172,7 @@ class LinkHandler(webapp.RequestHandler):
                         link.date_updated = datetime.datetime.now().date()
 			link.domain = domain
                         if link.title:
-                                link.title=link.title[:199]
+                                link.title=link.title.strip()[:199]
                         if link.url_hash is None:
                                 link.url_hash =url_hash 
 
@@ -234,7 +234,7 @@ class LinkHandler(webapp.RequestHandler):
                         try:
                                 link.tweets=Cast.toInt(json['story']['url_count'],0)
                                 if json['story']['title'] is not None:
-                                        link.title=json['story']['title'][:199]
+                                        link.title=json['story']['title'].strip()[:199]
 			 	if 'excerpt' in json['story']:	
 					logging.info('getting excerpt');
                                 	link.excerpt = db.Text(unicode(json['story']['excerpt']))
@@ -254,7 +254,7 @@ class LinkHandler(webapp.RequestHandler):
                 if json:
                         try:
                                 if not link.title and json[0]['title']:
-                                        link.title = json[0]['title'][:199]
+                                        link.title = json[0]['title'].strip()[:199]
                                 link.categories = db.Text(unicode(simplejson.dumps(json[0]['top_tags'])))
                                 link.delicious_count = Cast.toInt(json[0]['total_posts'],0)
 				logging.info('delicious count %s' % link.delicious_count)
@@ -313,7 +313,7 @@ class LinkHandler(webapp.RequestHandler):
 				link.stumble_upons = Cast.toInt(json['result']['views'], 0)
 				logging.info('stumle_score %s' % link.stumble_upons)
 				if not link.title and json['result']['title']:
-                                        link.title = json['result']['title'][:199]
+                                        link.title = json['result']['title'].strip()[:199]
 					logging.info('settting stumble title: %s' % link.title)
 			except KeyError:
                                 e0, e1 = sys.exc_info()[0],sys.exc_info()[1]

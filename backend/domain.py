@@ -1,4 +1,5 @@
 import logging
+import urllib
 import sys
 import os
 
@@ -17,6 +18,10 @@ import simplejson
 
 class DomainHandler(GenericWebHandler):
         def get(self,domain):
+                crawler = self.request.get('_escaped_fragment_', None)
+                if crawler is not None:
+                        self.html_snapshot(domain,'domain')
+                        return
                 logging.info('domain handler ')
                 self.redirect_perm()
                 self.get_user()
@@ -35,7 +40,7 @@ class DomainHandler(GenericWebHandler):
 
 class DomainFeedHandler(webapp.RequestHandler):
         def get(self, domain):
-                format=self.request.get('out',None)
+                format=self.request.get('format',None)
                 if domain is None or len(domain) == 0:
                         logging.info('not category in request. return empty')
                         return
@@ -45,9 +50,9 @@ class DomainFeedHandler(webapp.RequestHandler):
                         entries = SessionModel.gql('WHERE domain = :1 order by date desc', domain).fetch(10)
 			self.response.headers['Content-Type'] = "application/json"
 			#TODO insert categories for domain's view
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': LinkUtils.generate_instaright_link(o.url_encode26, LinkUtils.make_title(o.title), o.url), 'd': o.domain, 'lc': LinkUtils.getLinkCategory(o), 'dd':LinkUtils.generate_domain_link(o.domain), 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'l': LinkUtils.generate_instaright_link(o.url_encode26, LinkUtils.make_title(o.title), o.url), 'user': urllib.unquote(o.instaright_account), 'source': o.client, 'html_lc':LinkUtils.getLinkCategoryHTML(o), 'd': o.domain, 'lc': LinkUtils.getLinkCategory(o), 'dd':LinkUtils.generate_domain_link(o.domain), 'u': o.date.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url}}))
 			return
-                self.reponse.headers['Content-Type'] = "application/json"
+                self.response.headers['Content-Type'] = "application/json"
                 self.response.out.write("[{}]")
 
 def main():

@@ -4,7 +4,8 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="keywords" content="Instaright categories, instaright topics" />
 		<meta name="title" content="Instaright Categories and Topics"  />
-		<meta name="description" content="Instaright Categories orginized data by topics help you easy infromation discovery" />
+		<meta name="description" content="Instaright Categories  {{ category }} - discover {{ categoty }} topic. Instaright prodives easy infromation discovery" />
+		<meta name="fragment" content="!" />
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
                 <!--script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script-->
 		<script type="text/javascript" src="/_ah/channel/jsapi"></script>
@@ -81,7 +82,7 @@
 					$("#invite_jid").focus(function(){
 						$(this).val("");
 						});
-					$.get('/category/{{ category }}/feed?out=json', {}, updateDisplayEntry)
+					$.get('/category/{{ category }}/feed?format=json', {}, updateDisplayEntry)
 					$("#jid_result").hide();
 					$("#invite_jid").focus();
 			});
@@ -161,15 +162,18 @@
                         			id = e['id'];
 						a = e['a'];
                         			original_url = e['ol'];
+						source = e['source'];
 						category=e['lc'];
 						cats=lc.split(',');
+						html_lc = e['html_lc'];
 						if (typeof(category) == 'undefined' || lc.length == 0 || (lc.indexOf(category) == -1)){
 							//alert('sanity check did not pass ('+category+' != '+lc+'..continue');
 							continue;
 						} 
+						updated_ago_string = "<a href=\""+link+"\">as seen "+updated_string(dateUpdated)+" on Instaright "+ source+"</a>";
                         			contentParagraph = document.createElement('div');
 						contentParagraph.setAttribute('class', 'category_div');
-						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
+						/*if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
 							try{
 								span_cats=Array();
 								for (c in cats){
@@ -180,7 +184,8 @@
 								span_cats=Array();
 							}
 							contentParagraph.innerHTML = span_cats.join(" ");
-						} 
+						}*/ 
+						contentParagraph.innerHTML = html_lc;
 
                         			container = document.createElement('div');
                         			containerAvatar = document.createElement('div');
@@ -377,7 +382,7 @@ var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 		<noscript>
 			<h1>Instaright {{ category }} Article Stream </h1>
 			<h2>Check out Instaright articles about {{ category }}</h2>
-			<h3>Looking for more to read? Take a look at <a href="http://www.instaright.com/category/{{ category }}/feed?out=json" title="Instaright Articles about {{ category }}">Instaright articles from {{ category }}</a></h3>
+			<h3>Looking for more to read? Take a look at <a href="http://www.instaright.com/category/{{ category }}/feed?format=json" title="Instaright Articles about {{ category }}">Instaright articles from {{ category }}</a></h3>
 		</noscript>
 <!-- End of Google Website Optimizer Tracking Script -->
 <!-- apture bar -->

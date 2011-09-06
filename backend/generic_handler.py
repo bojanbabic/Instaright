@@ -1,9 +1,27 @@
-import logging, ConfigParser, urlparse, os, datetime, time, uuid
+import logging, ConfigParser, urlparse, os, datetime, uuid
 from google.appengine.ext import webapp
-from utils import LoginUtil
+from utils import LoginUtil, LinkUtil
 from models import UserSessionFE, UserDetails
+from google.appengine.ext.webapp import template
 
 class GenericWebHandler(webapp.RequestHandler):
+	def html_snapshot(self, condition=None, type=None):
+		template_variables=[]
+                if condition is None and type is None:
+                        url = 'http://www.instaright.com/feed?format=json'
+                elif type is not None and condition is not None:
+                        #NOTE: condition contains trailing slash
+                        url = 'http://www.instaright.com/%s/%sfeed?format=json' %(type, condition)
+                logging.info('feed lookup %s ' % url)
+                json = LinkUtil.getJsonFromApi(url)
+		if json is None:
+			return None
+                logging.info('list of links: %s ' % len(json))
+                template_variables = { 'links': json, 'condition': condition, 'type': type }
+		path = os.path.join(os.path.dirname(__file__), 'templates/html_snapshot.html')
+		self.response.out.write(template.render(path, template_variables))
+		
+		
         def get_user(self):
 		uu = LoginUtil()
 		userSession = None

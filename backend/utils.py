@@ -142,7 +142,8 @@ class LinkUtil(object):
         def __init__(self):
 		config=ConfigParser.ConfigParser()
 		config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
-                self.embedly_key=config.get('embedly','key')
+		key_key = ( datetime.datetime.now().day - 1 ) // 7 + 1
+                self.embedly_key=config.get('embedly','key_'+ str(key_key))
 
         def getEmbededInfo(cls, url_hash):
                 l = Links.gql('WHERE url_hash = :1', url_hash).get()

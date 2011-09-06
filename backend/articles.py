@@ -29,9 +29,7 @@ class FeedGenerator(webapp.RequestHandler):
                 if format == 'json' and cached_feed:
 			logging.info('getting json from cache')
 			self.response.headers['Content-Type'] = "application/json"
-#			messageAsJSON = [{'u':{'id':update.id, 't':update.title,'l':update.link,'d':update.domain,'u':update.updated}}]
-                        #TODO no lc and c in feed
-                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'dd': LinkUtils.generate_domain_link(o.domain), 'd':o.domain, 'u': int(time.mktime(o.date.timetuple())), 'l':LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)),'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
+                        self.response.out.write(simplejson.dumps(cached_feed, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'dd': LinkUtils.generate_domain_link(o.domain), 'd':o.domain, 'user': urllib.unquote(o.instaright_account), 'source': o.client, 'u': int(time.mktime(o.date.timetuple())), 'l':LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)),'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'lc':LinkUtils.getLinkCategory(o), 'html_lc':LinkUtils.getLinkCategoryHTML(o), 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
                         return
 		entries = SessionModel.gql('ORDER by date DESC').fetch(10)
 		memcache.set(memcache_key, entries, time = cache_exp_ts)
@@ -46,9 +44,8 @@ class FeedGenerator(webapp.RequestHandler):
 			self.response.out.write(template.render(path,template_variables))
 			return
 		if format == 'json':
-                        #TODO no lc in c from index.html
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'dd': LinkUtils.generate_domain_link(o.domain), 'd':o.domain, 'u': int(time.mktime(o.date.timetuple())), 'l':LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'e': o.embeded, 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.key()), 't':unicode(o.title), 'dd': LinkUtils.generate_domain_link(o.domain), 'd':o.domain, 'user': o.instaright_account, 'u': int(time.mktime(o.date.timetuple())), 'l':LinkUtils.generate_instaright_link(o.url_encode26,LinkUtils.make_title(o.title)), 'a':userUtil.getAvatar(o.instaright_account),'ol':o.url, 'source': o.client, 'e': o.embeded, 'lc':LinkUtils.getLinkCategory(o), 'html_lc':LinkUtils.getLinkCategoryHTML(o), 'n': int(time.mktime(datetime.datetime.now().timetuple()))}}))
 			return
 
 			
@@ -97,10 +94,32 @@ class BlogLoader(webapp.RequestHandler):
 class SitemapHandler(webapp.RequestHandler):
         def get(self):
 		template_variables=[]
-                self.response.headers["Content-Type"] = "text/xml; charset=utf-8"
-		path = os.path.join(os.path.dirname(__file__), 'templates/sitemap.xml')
-		self.response.out.write(template.render(path, template_variables))
-
+                json = LinkUtil.getJsonFromApi('http://www.instaright.com/feed?format=json')
+                if json is None:
+                        logging.info('default view')
+                        self.response.headers["Content-Type"] = "text/xml; charset=utf-8"
+		        path = os.path.join(os.path.dirname(__file__), 'templates/sitemap.xml')
+		        self.response.out.write(template.render(path, template_variables))
+                else:
+                        logging.info('dynamic view')
+                        links = []
+                        for j in json:
+                                logging.info('json entry: %s' % j)
+                                dd = j['u']['dd']
+                                if dd is not None:
+                                        links.append(dd)
+                                l = j['u']['l']
+                                if l is not None:
+                                        links.append(l)
+                                lc = j['u']['lc']
+                                if lc is not None:
+                                        llc = lc.split(',')
+                                        for ll in llc:
+                                                links.append('http://www.instaright.com/%s' % ll)
+                        logging.info('list of links: %s ' % len(links))
+                        template_variables = { 'links': links }
+		        path = os.path.join(os.path.dirname(__file__), 'templates/sitemap_dyn.xml')
+		        self.response.out.write(template.render(path, template_variables))
 		
 class ArticleEncodeCorrectHandler(webapp.RequestHandler):
 	def get(self):

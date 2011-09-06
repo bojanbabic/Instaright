@@ -4,7 +4,8 @@
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="keywords" content="Instaright articles by domains, instaright topics" />
 		<meta name="title" content="Instaright Categories and Topics"  />
-		<meta name="description" content="Instaright Categories orginized data by topics help you easy infromation discovery" />
+		<meta name="fragment" content="!" />
+		<meta name="description" content="Instaright data from {{ domain }} - data by domains. Instaright provides easy per domain infromation discovery" />
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
                 <!--script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script-->
 		<script type="text/javascript" src="/_ah/channel/jsapi"></script>
@@ -80,7 +81,7 @@
 					$("#invite_jid").focus(function(){
 						$(this).val("");
 						});
-					$.get('/domain/{{ domain }}/feed?out=json', {}, updateDisplayEntry)
+					$.get('/domain/{{ domain }}/feed?format=json', {}, updateDisplayEntry)
 					$("#jid_result").hide();
 					$("#invite_jid").focus();
 			});
@@ -148,16 +149,18 @@
                         			}
                         			link = e['l'];
                         			dateUpdated = new Date(e['u']);
-						updated_ago_string = "<a href=\""+link+"\">"+updated_string(dateUpdated)+"</a>";
                         			lc = e['lc'];
                         			id = e['id'];
                         			original_link = e['ol'];
 						a = e['a'];
+						html_lc = e['html_lc'];
+						source = e['source'];
 						if (typeof(domain) == 'undefined' || (domain != '{{ domain }}')){
 							//alert('sanity check did not pass ('+domain+' != {{ domain }}..continue');
 							continue;
 						} 
 
+						updated_ago_string = "<a href=\""+link+"\">as seen "+updated_string(dateUpdated)+" on Instaright "+ source+"</a>";
                         			container = document.createElement('div');
                         			containerAvatar = document.createElement('div');
 
@@ -194,7 +197,7 @@
                         			contentParagraph = document.createElement('div');
 						contentParagraph.setAttribute('class', 'category_div');
 
-						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
+						/*if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
 							try{
 								cats=lc.split(',');
 								span_cats=Array();
@@ -206,8 +209,9 @@
 								span_cats=Array();
 							}
 							contentParagraph.innerHTML = span_cats.join(" ");
-						} 
+						}*/ 
 
+						contentParagraph.innerHTML = html_lc;
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
 						contentParagraph_footer.innerHTML = updated_ago_string;
@@ -360,7 +364,7 @@ var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 		<noscript>
 			<h1>Instaright {{ domain }} Article Stream </h1>
 			<h2>Check out Instaright articles about {{ domain }}</h2>
-			<h3>Looking for more to read? Take a look at <a href="http://www.instaright.com/category/{{ domain }}/feed?out=json" title="Instaright Articles about {{ domain }}">Instaright articles from {{ domain }}</a></h3>
+			<h3>Looking for more to read? Take a look at <a href="http://www.instaright.com/category/{{ domain }}/feed?format=json" title="Instaright Articles about {{ domain }}">Instaright articles from {{ domain }}</a></h3>
 		</noscript>
 <script type="text/javascript">
         if(typeof(_gat)!='object')document.write('<sc'+'ript src="http'+

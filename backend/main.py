@@ -224,6 +224,10 @@ class ErrorHandling(webapp.RequestHandler):
 
 class IndexHandler(GenericWebHandler):
 	def get(self):
+                crawler = self.request.get('_escaped_fragment_', None)
+                if crawler is not None:
+                        self.html_snapshot()
+                        return
                 #redirect from appengine domain
                 self.redirect_perm()
                 self.get_user()

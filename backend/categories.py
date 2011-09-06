@@ -1,4 +1,5 @@
 import urllib2
+import urllib
 import logging
 import ConfigParser
 import sys
@@ -280,7 +281,7 @@ class LinkCategoryDeliciousHandler(webapp.RequestHandler):
 
 class CategoryFeedHandler(webapp.RequestHandler):
         def get(self, category):
-                format=self.request.get('out',None)
+                format=self.request.get('format',None)
                 if category is None or category == 0:
                         logging.info('not category in request. return empty')
                         return
@@ -291,13 +292,17 @@ class CategoryFeedHandler(webapp.RequestHandler):
                         entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None ]
                         entries = entries[:10]
 			self.response.headers['Content-Type'] = "application/json"
-                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'dd': LinkUtils.generate_domain_link(o.model_details.domain),'l':LinkUtils.generate_instaright_link(o.model_details.url_encode26, LinkUtils.make_title(o.model_details.title), o.model_details.url), 'd':o.model_details.domain, 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':LinkUtils.getLinkCategory(o.model_details)}}))
+                        self.response.out.write(simplejson.dumps(entries, default=lambda o: {'u':{'id':str(o.model_details.key()), 't':unicode(o.model_details.title), 'dd': LinkUtils.generate_domain_link(o.model_details.domain),'l':LinkUtils.generate_instaright_link(o.model_details.url_encode26, LinkUtils.make_title(o.model_details.title), o.model_details.url), 'd':o.model_details.domain, 'user': urllib.unquote(o.model_details.instaright_account), 'source': o.model_details.client, 'html_lc':LinkUtils.getLinkCategoryHTML(o), 'u': o.updated.strftime("%Y-%m-%dT%I:%M:%SZ"), 'a':userUtil.getAvatar(o.model_details.instaright_account),'ol':o.url,'c':category, 'lc':LinkUtils.getLinkCategory(o.model_details)}}))
 			return
-                self.reponse.headers['Content-Type'] = "application/json"
+                self.response.headers['Content-Type'] = "application/json"
                 self.response.out.write("[{}]")
 
 class CategoryHandler(GenericWebHandler):
         def get(self,category):
+                crawler = self.request.get('_escaped_fragment_', None)
+                if crawler is not None:
+                        self.html_snapshot(category,'category')
+                        return
                 logging.info('category handler')
                 self.redirect_perm()
                 self.get_user()

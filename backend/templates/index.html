@@ -4,6 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="description" content="Instaright Social Bookmarking app and recommendation engine. Increase your productivity by using our browser addons and also let someone discover valuable information." />
                 <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
+		<meta name="fragment" content="!" />
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
 		<link rel="alternate" type="application/rss+xml" title="Instaright RSS Feed" href="http://feeds.feedburner.com/InstarightFeed" />
 		<link rel="alternate" type="application/atom+xml" title="Instaright Blog RSS Feed" href="http://feeds.feedburner.com/InstarightBlog" />
@@ -137,15 +138,17 @@
 						dateUpdated = new Date(e['u']);
 						dateUpdated_int = parseInt(e['u']);
 						dateNow_int = parseInt(e['n']);
-						updated_ago_string = "<a href=\""+link+"\">"+updated_string(dateUpdated)+"</a>";
                         			id = e['id'];
 						a = e['a'];
 						lc = e['lc'];
+						html_lc = e['html_lc'];
 						c=e['c']
+						source = e['source'];
 
                         			original_url = e['ol'];
 						embeded = e['e'];
 
+						updated_ago_string = "<a href=\""+link+"\">as seen "+updated_string(dateUpdated)+" on Instaright "+ source+"</a>";
                         			container = document.createElement('div');
                         			containerAvatar = document.createElement('div');
 						containerAvatar.setAttribute('class', 'avatar_div');
@@ -189,7 +192,7 @@
 						}
                         			contentParagraph = document.createElement('div');
 						contentParagraph.setAttribute('class','category_div');
-						if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length > 1){
+						/*if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length > 1){
 							try{
 								cats=lc.split(',');
 								span_cats=Array();
@@ -201,7 +204,8 @@
 							}
 							
 							contentParagraph.innerHTML = span_cats.join(" ");
-						} 
+						}*/ 
+						contentParagraph.innerHTML = html_lc;
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
 						contentParagraph_footer.setAttribute('info', dateUpdated_int);
