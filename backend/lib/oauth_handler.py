@@ -1,6 +1,6 @@
 # Released into the Public Domain by tav@espians.com
 
-import sys, logging
+import sys, logging, os
 
 from datetime import datetime, timedelta
 from hashlib import sha1
@@ -12,7 +12,8 @@ from urllib import urlencode, quote as urlquote
 from uuid import uuid4
 from wsgiref.handlers import CGIHandler
 
-sys.path.insert(0, join_path(dirname(__file__), 'lib')) # extend sys.path
+#sys.path.insert(0, join_path(dirname(__file__), 'lib')) # extend sys.path
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 
 from demjson import decode as decode_json
 
@@ -47,7 +48,20 @@ OAUTH_APP_SETTINGS = {
 
         },
 
+
+    'evernote': {
+
+	'consumer_key':'bojanbabic-9482',
+	'consumer_secret':'3e4e861ac2c0b758',
+	
+	'request_token_url': 'https://www.evernote.com/oauth',
+	'access_token_url': 'https://www.evernote.com/oauth',
+	'user_auth_url':'https://www.evernote.com/OAuth.action',
+        'oauth_callback': 'http://www.instaright.com/oauth/evernote/callback',
+
+        },
     }
+
 
 CLEANUP_BATCH_SIZE = 100
 EXPIRATION_WINDOW = timedelta(seconds=60*60*1) # 1 hour
@@ -105,6 +119,7 @@ class OAuthClient(object):
         self.request_params = request_params
         self.oauth_callback = oauth_callback
         self.token = None
+        self.oauth_verifier = None
 
     # public methods
 
@@ -201,18 +216,27 @@ class OAuthClient(object):
     def callback(self, return_to='/'):
 
         oauth_token = self.handler.request.get("oauth_token")
+        oauth_verifier = self.handler.request.get("oauth_verifier")
+        edamUserID = self.handler.request.get("edam_userId")
 
         if not oauth_token:
-            return get_request_token()
+            return self.get_request_token()
+        if oauth_verifier is not None:
+                self.oauth_verifier = oauth_verifier
+
 
         oauth_token = OAuthRequestToken.all().filter(
             'oauth_token =', oauth_token).filter(
             'service =', self.service).fetch(1)[0]
 
+        logging.info('callback')
+        logging.info('oauth_token %s' % oauth_token)
+        logging.info('oauth_verifier %s' % oauth_verifier)
         token_info = self.get_data_from_signed_url(
-            self.service_info['access_token_url'], oauth_token
+                self.service_info['access_token_url'], oauth_token
             )
 
+        logging.info('callback token info: %s' % token_info)
         key_name = create_uuid()
 
         self.token = OAuthAccessToken(
@@ -226,6 +250,9 @@ class OAuthClient(object):
                 'specifier =', specifier).filter(
                 'service =', self.service)
             db.delete(old)
+        elif edamUserID is not None:
+                specifier = self.token.specifier = edamUserID
+        
 
         self.token.put()
         self.set_cookie(key_name)
@@ -247,6 +274,7 @@ class OAuthClient(object):
             )).content
 
     def get_signed_url(self, __url, __token=None, __meth='GET',**extra_params):
+        logging.info('%s?%s'%(__url, self.get_signed_body(__url, __token, __meth, **extra_params)))
         return '%s?%s'%(__url, self.get_signed_body(__url, __token, __meth, **extra_params))
 
     def get_signed_body(self, __url, __token=None, __meth='GET',**extra_params):
@@ -262,6 +290,10 @@ class OAuthClient(object):
             }
 
         kwargs.update(extra_params)
+        if self.service == 'evernote':
+                kwargs.update({'oauth_callback': 'http://www.instaright.com/oauth/evernote/callback'})
+        if self.oauth_verifier is not None:
+                kwargs.update({'oauth_verifier': self.oauth_verifier})
 
         if self.service_key is None:
             self.service_key = get_service_key(self.service)
@@ -282,6 +314,7 @@ class OAuthClient(object):
             key, message, sha1
             ).digest().encode('base64')[:-1]
 
+        logging.info('oauth url args: %s' % kwargs )
         return urlencode(kwargs)
 
     # who stole the cookie from the cookie jar?
@@ -316,6 +349,7 @@ class OAuthHandler(RequestHandler):
 
         client = OAuthClient(service, self)
 
+        logging.info('action %s ' % action)
         if action in client.__public__:
             self.response.out.write(getattr(client, action)())
         else:

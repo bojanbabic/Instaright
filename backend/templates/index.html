@@ -164,6 +164,7 @@
                         			titleElement = document.createElement('a');
 						titleElement.setAttribute('class','stream-article');
 						titleElement.setAttribute('title', orig_title);
+						titleElement.setAttribute('rel', 'nofollow');
                         			titleElement.innerHTML = title;
                                 		titleElement.href = original_url;
                         			titleElement.target="_new"
@@ -333,9 +334,9 @@
                         </div>
                         <div id="right_box_mid">
                                 <ul>
-                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a href="http://twitter.com/instaright">Twitter</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a href="http://www.facebook.com/instaright">Facebook Page</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a href="http://instaright.tumblr.com/">Blog</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a rel="me" href="http://twitter.com/instaright">Twitter</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a rel="me" href="http://www.facebook.com/instaright">Facebook Page</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a rel="me" href="http://instaright.tumblr.com/">Blog</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Importer</a></li>
                                 </ul>
                         </div>

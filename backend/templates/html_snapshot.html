@@ -3,9 +3,9 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="description" content="Instaright Story - {{ title }}" />
-                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
-		<meta name="title" content="Instaright Story - {{ title }}" />
+		<meta name="description" content="{{ description }}"/>
+		<meta name="keywords" content="Instaright, articles, {{ title }}, {{ condition }}, instaright firefox addon ,  instaright chrome extension, read it later" />
+		<meta name="title" content="{{ title }}" />
                 <link rel="stylesheet" type="text/css" href="http://www.instaright.com/css/style.css" />
                 <script type="text/javascript" src="http://www.instaright.com/static/javascript/instaright.js"></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -15,7 +15,7 @@
 		<!-- fancybox -->
 		<script type="text/javascript" src="http://www.instaright.com/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
 		<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
-		<title>Instaright Story - {{ title }}</title>
+		<title>{{ title }}</title>
 
                 <!-- google analytics -->
                 <script type="text/javascript">
@@ -52,7 +52,7 @@
                         <div class="article_left_box_top"> 
                                 <h2 class="round_title"> 
 					{% if condition and type %}
-					<span><a href='/' title='Instaright {{ type }} articles - {{ condition }} '>Instaright {{ type }} articles - {{ condition }} </a></span> 
+					<span><a href='/' title='Instaright {{ type }} articles - {{ condition }} ' rel="nofollow">Instaright {{ type }} articles - {{ condition }} </a></span> 
 					{% else %}
 					<span><a href='/' title='Instaright Article'>Instaright Article</a></span> 
 					{% endif %}

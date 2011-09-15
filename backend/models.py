@@ -247,6 +247,7 @@ class UserDetails(db.Model):
 	facebook_id=db.StringProperty()
 	facebook_friends=db.TextProperty()
 	facebook_profile=db.StringProperty()
+        evernote_profile=db.StringProperty()
         
 	@classmethod
 	def getAll(cls):

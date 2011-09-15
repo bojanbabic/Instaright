@@ -23,11 +23,20 @@
 		<script type="text/javascript" src="/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
                 <script type="text/javascript" src="/static/javascript/jquery.cookie.js"></script>
 		<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+        	<script src="/static/javascript/jquery.form.js"></script>
+        	<script type="text/javascript" src="http://github.com/malsup/form/raw/master/jquery.form.js?v2.44"></script>
+        	<link rel="stylesheet" type="text/css" href="/css/landing_form.css"/>
 		<script>
 			$(document).ready(function(){
 				try{
 				var show_more = true;
 
+				$('.user_data').ajaxForm({
+					target: "#response",
+					success: function(){
+						$("#response").fadeIn("slow");
+					}
+				});
 				$('.link_group_date').click(function(){
 					var mode = $(this).find('.show_toggle').html();
 					if (mode == "Collapse"){
@@ -90,6 +99,12 @@
 					'onClosed'         :function(){
 					}
 				});
+				$("#user_account").fancybox({
+					'scrolling'        :'no',
+					'titleShow'        :false,
+					'onClosed'         :function(){
+					}
+				});
 				}catch(e){alert(e);}
 			});
 		</script>
@@ -102,8 +117,8 @@
 				<li><a href="/category" title="Instaright most populat category list"><span>Categories</span></a></li>
 				<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         	{% if user %}
-					<li><a href="javascript:alert('Dashboard soon available!');"><span>{{ user }}</span></a></li>
-					<li><a href="javascript:alert('Dashboard soon available!');"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+					<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
+					<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" /></a></li>
 					<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
                         	{% else %}
 					<li><a id="btn_login" href="/account" title="Login"><span>Login</span></a></li>
@@ -118,7 +133,80 @@
 		<div id="visualization" style="width: 400px; height: 200px;  display: inline-block;"></div>
 	</div>
 	<div style="display: none;">
-		<div id="badges" style="width: 300px;">
+		<div id="edit_account" style="width: 600px;">
+			<div id="form">
+			    <div id="form_inner">
+			        <form action="/user/edit" method="post" id="user_data">
+            
+				    <h5><span>Services</span></h5>
+				    <div style="display: block">
+						<div class="account_field_column_left">
+			            			<label for="iuser" style="width: 100%">Instaright Account</label>
+							<input type="text" name="iuser" id="iuser" class="required text_field" value="{{ instaright_account }}"/>
+						</div>
+						<div class="account_field_column_right">
+			            			<label for="ipass" style="width: 100%">Instaright Password</label>
+							<input type="password" name="ipass" class="text_field"/>
+						</div>
+						<br style="clear:both;"/>
+			    	    </div>
+			            <div class="account_field_label">Evernote Account</div>
+				    <div class="account_field">
+					    {% if evernote_profile %}
+					    	<div class="account_field_data"><img src="/static/images/evernote_small.png" />&nbsp;&nbsp;{{ evernote_profile }}</div>
+					    	<div class="profile_remove"><a href="/user/evernote/remove">Remove</a></div>
+					    {% else %}
+					    	<div class="account_field_data"><img src="/static/images/evernote_small.png" />&nbsp;&nbsp;</div>
+					    	<div class="profile_remove"><a href="/oauth/evernote/login">Connect</a></div>
+					    {% endif %}
+				    	    <br style="clear:both;"/>
+				    </div>
+				    <h5><span>Identities</span></h5>
+			            <div class="account_field_label">Facebook Account</div>
+				    <div class="account_field">
+					    {% if facebook_profile %}
+					    	<div class="account_field_data"><img src="/static/images/facebook_small.png"/>&nbsp;&nbsp;{{ facebook_profile }}</div>
+					    	<div class="profile_remove"><a href="/user/facebook/remove">Remove</a></div>
+					    {% else %}
+					    	<div class="account_field_data"><img src="/static/images/facebook_small.png"/>&nbsp;&nbsp;</div>
+					    	<div class="profile_remove"><a href="/user/facebook/connect">Connect</a></div>
+					    {% endif %}
+				    	    <br style="clear:both;"/>
+				    </div>
+			            <div class="account_field_label">Twitter Account</div>
+				    <div class="account_field">
+					    {% if twitter_profile %}
+					    	<div class="account_field_data"><img src="/static/images/twitter_small.png"/>&nbsp;&nbsp;{{ twitter_profile }}</div>
+					    	<div class="profile_remove"><a href="/user/twitter/remove">Remove</a></div>
+					    {% else %}
+					    	<div class="account_field_data"><img src="/static/images/twitter_small.png"/>&nbsp;&nbsp;</div>
+					    	<div class="profile_remove"><a href="/user/twitter/connect">Connect</a></div>
+					    {% endif %}
+				    	    <br style="clear:both;"/>
+				    </div>
+			            <div class="account_field_label">Google Account</div>
+				    <div class="account_field">
+					    {% if google_profile %}
+					    	<div class="account_field_data"><img src="/static/images/google_small.png" />&nbsp;&nbsp;{{ google_profile }}</div>
+					    	<div class="profile_remove"><a href="/user/google/remove">Remove</a></div>
+					    {% else %}
+					    	<div class="account_field_data"><img src="/static/images/google_small.png" />&nbsp;&nbsp;</div>
+					    	<div class="profile_remove"><a href="/user/google/connect">Connect</a></div>
+					    {% endif %}
+				    	    <br style="clear:both;"/>
+				    </div>
+				    <br style="clear:both;"/>
+			            <div>
+			                <input type="submit" value="Save" class="big_button" />
+			            </div>
+			       </form>
+			    </div>
+			 </div>
+			<div id="response"></div>
+		</div>
+	</div>
+	<div style="display: none;">
+		<div id="badges" style="width: 400px;">
 			{% if badges %}
 				{% for b in badges %}
 					<div class="single_badge"><img width="60" height="60" src="/static/images/{{ b.0 }}.png" /><div class="badge_desc">{{ b.1 }}</div></div>
@@ -146,7 +234,8 @@
 					<div class="actions">
 						<span class="stats text_bubble"><a id="usage_stats" href="#visualization">Statistics</a></span>
 						<span class="badges text_bubble"><a id="trophy_room" href="#badges">Trophy Room</a></span>
-						<span class="edit text_bubble"><a href="javascript:alert('Coming soon!')">Edit Account</a></span>
+						<span class="edit text_bubble"><a id="user_account" href="#edit_account">Edit Account</a></span>
+						<!--span class="edit text_bubble"><a id="user_account" href="#edit_account">Edit Account</a></span-->
 					</div>
 				</div>
 			</div>

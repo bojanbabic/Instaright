@@ -113,7 +113,7 @@ class UserGenericHandler(GenericWebHandler):
                 all_badges = UserBadge.gql('WHERE user = :1 order by date desc', self.instaright_account).fetch(1000)
                 if all_badges is not None:
                         badges = set([ (b.badge, b.badge_property.badge_desc) for b in all_badges if b is not None and b.badge_property is not None ])
-                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'links':links, 'score': score, 'visible_items_num': self.visible_links, 'badges': badges,'logout_url':'/account/logout'}
+                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'facebook_profile': self.facebook_profile, 'twitter_profile': self.twitter_profile, 'google_profile': self.google_profile, 'evernote_profile': self.evernote_profile, 'links':links, 'score': score, 'visible_items_num': self.visible_links, 'badges': badges,'logout_url':'/account/logout'}
                 logging.info('templates %s' %template_variables)
                 path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
                 self.response.headers["Content-type"] = "text/html"

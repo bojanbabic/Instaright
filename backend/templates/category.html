@@ -2,9 +2,9 @@
 <html>
         <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <meta name="keywords" content="Instaright categories, instaright topics" />
-		<meta name="title" content="Instaright Categories and Topics"  />
-		<meta name="description" content="Instaright Categories  {{ category }} - discover {{ categoty }} topic. Instaright prodives easy infromation discovery" />
+		<meta name="keywords" content="Instaright categories, instaright {{ category }} , instaright topics, instaright firefox addon, instaright chrome extenson" />
+		<meta name="title" content="Instaright category articles - {{ category }} "  />
+		<meta name="description" content="Discover, save and share trending stories from {{ category }}." />
 		<meta name="fragment" content="!" />
                 <link rel="stylesheet" type="text/css" href="../css/style.css" />
                 <!--script src="http://www.google.com/jsapi?key=AIzaSyDu78p4P0qEe3CTU4GssVBz_crZemld_eg" type="text/javascript" charset="utf-8"></script-->
@@ -19,193 +19,193 @@
 		<!-- fancybox -->
 		<script type="text/javascript" src="/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
 		<link rel="stylesheet" href="/css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
-                <title>Instaright - SocialBookmarking and recommendation engine</title>
+			<title>Instaright Stream about {{ category }}</title> 
 
-                <!-- google analytics -->
-                <script type="text/javascript">
+			<!-- google analytics -->
+			<script type="text/javascript">
 
-                        var _gaq = _gaq || [];
-                        _gaq.push(['_setAccount', 'UA-9005862-5']);
-                        _gaq.push(['_trackPageview']);
+				var _gaq = _gaq || [];
+				_gaq.push(['_setAccount', 'UA-9005862-5']);
+				_gaq.push(['_trackPageview']);
 
-                        (function() {
-                         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-                         })();
-                 </script>
-                 <!-- Google Website Optimizer Tracking Script -->
-         </head>
-         <body>
-		<script type="text/javascript" charset="utf-8">
-		$(document).ready(function(){
-			$("#btn_login").fancybox({
-				'scrolling'		: 'no',
-				'titleShow'		: false,
-				'onClosed'		: function(){
-				}
-			});
-		});
-		</script>
-                <script type="text/javascript" charset="utf-8">
-                         if( !window.XMLHttpRequest ) XMLHttpRequest = function(){
-        			try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
-        			try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
-        			try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
-        			try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
-        			throw new Error("Could not find an XMLHttpRequest alternative.")
-			};
-			var channel_id= '{{ channel_id }}';
-			var channel = new goog.appengine.Channel(channel_id);
-			var socket = channel.open();
-			var maxElementsInStream=4;
-			var maxHotLinks = 3;
-			socket.onopen = function(){
-			        //alert('connected');
-			}
-			socket.onmessage = function(evt){
-			        try{
-			                feed_json_update = JSON.parse(evt.data);
-			                updateDisplayEntry(feed_json_update, stream);
-			        } catch(e){
-			         //       alert('eee:'+e);
-			        } 
-			};
-
+				(function() {
+				 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+				 })();
+			 </script>
+			 <!-- Google Website Optimizer Tracking Script -->
+		 </head>
+		 <body>
+			<script type="text/javascript" charset="utf-8">
 			$(document).ready(function(){
-					$("#stream_loader").hide();
-					$("#invite_jid").bind('keypress', function(e){
-						if (e.keyCode == 13){
-						check_and_send_jid();
-						}
-						});
-					$("#invite_jid").focus(function(){
-						$(this).val("");
-						});
-					$.get('/category/{{ category }}/feed?format=json', {}, updateDisplayEntry)
-					$("#jid_result").hide();
-					$("#invite_jid").focus();
-			});
-
-			$(document).ajaxStart(function(){
-				$("#stream_loader").show();
-			});
-			$(document).ajaxStop(function(){
-				$("#stream_loader").hide();
-			});
-
-			// Create variables to display subscription options using HTML DIVs
-
-			var stream = document.getElementById('stream');
-
-			// Initialize the API.
-			var feed;
-			function noUpdates(){
-                        	container = document.createElement('div');
-                        	containerAvatar = document.createElement('div');
-
-
-                        	titleElement = document.createElement('a');
-                        	titleElement.innerHTML = 'Meh ... this category is kinda empty';
-
-                        	domainElement = document.createElement('a');
-                        	domainElement.innerHTML = 'Don\'t worry, there are lots of interesting categories one click away :)';
-                        	domainElement.href = '/category';
-
-                        	container.appendChild(titleElement);
-                        	container.appendChild(document.createElement('br'));
-                        	container.appendChild(document.createElement('br'));
-                        	container.appendChild(domainElement);
-                        	container.appendChild(document.createElement('br'));
-
-                		div = document.getElementById('stream');
-                        	div.insertBefore(container, div.firstChild);
-
-
-			}
-
-			function updateDisplayEntry(response, div) {
-        			try{
-					// check if it is page load
-                        		sElements = $("#stream").children();
-					if ((typeof(response) == 'undefined' || response.length == 0) && sElements.length == 0){
-						noUpdates();
-						return;
+				$("#btn_login").fancybox({
+					'scrolling'		: 'no',
+					'titleShow'		: false,
+					'onClosed'		: function(){
 					}
-                			div = document.getElementById('stream');
-                			for (i = response.length - 1; i >= 0; i--) {
-                        			e = response[i]['u'];
-                        			domain = e['d'];
-                        			instaright_domain = e['dd'];
-                        			try{
-                                			title=e['t'];
-                        			}catch(e){
-                                			title="Instaright article from domain "+domain;
-                        			}
-                        			if (title == null || title == 'None' || title == 'null' || title.length == 0){
-                                			title="Instaright article from domain "+domain;
-                        			} else {
-                                			try{
-                                			if ((title.charCodeAt(0) > 256 || title.charCodeAt(title.length/2) > 256)   && title.length >= 40){
-                                        			title = title.substr(0,37) + ' ...';
-                                			}
-                                			else if (title.length >= 70){
-                                        			title = title.substr(0,67) + ' ...';
-                                			}
-                                			} catch(e){
-                                			}
-                        			}
-                        			link = e['l'];
-                        			dateUpdated = new Date(e['u']);
-						updated_ago_string = "<a href=\""+link+"\">"+updated_string(dateUpdated)+"</a>";
-                        			lc = e['lc'];
-                        			id = e['id'];
-						a = e['a'];
-                        			original_url = e['ol'];
-						source = e['source'];
-						category=e['lc'];
-						cats=lc.split(',');
-						html_lc = e['html_lc'];
-						if (typeof(category) == 'undefined' || lc.length == 0 || (lc.indexOf(category) == -1)){
-							//alert('sanity check did not pass ('+category+' != '+lc+'..continue');
-							continue;
-						} 
-						updated_ago_string = "<a href=\""+link+"\">as seen "+updated_string(dateUpdated)+" on Instaright "+ source+"</a>";
-                        			contentParagraph = document.createElement('div');
-						contentParagraph.setAttribute('class', 'category_div');
-						/*if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
-							try{
-								span_cats=Array();
-								for (c in cats){
-									span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
-								}
-							}catch(e){
-								alert(e);
-								span_cats=Array();
+				});
+			});
+			</script>
+			<script type="text/javascript" charset="utf-8">
+				 if( !window.XMLHttpRequest ) XMLHttpRequest = function(){
+					try{ return new ActiveXObject("Msxml2.XMLHTTP.6.0") }catch(e){}
+					try{ return new ActiveXObject("Msxml2.XMLHTTP.3.0") }catch(e){}
+					try{ return new ActiveXObject("Msxml2.XMLHTTP") }catch(e){}
+					try{ return new ActiveXObject("Microsoft.XMLHTTP") }catch(e){}
+					throw new Error("Could not find an XMLHttpRequest alternative.")
+				};
+				var channel_id= '{{ channel_id }}';
+				var channel = new goog.appengine.Channel(channel_id);
+				var socket = channel.open();
+				var maxElementsInStream=4;
+				var maxHotLinks = 3;
+				socket.onopen = function(){
+					//alert('connected');
+				}
+				socket.onmessage = function(evt){
+					try{
+						feed_json_update = JSON.parse(evt.data);
+						updateDisplayEntry(feed_json_update, stream);
+					} catch(e){
+					 //       alert('eee:'+e);
+					} 
+				};
+
+				$(document).ready(function(){
+						$("#stream_loader").hide();
+						$("#invite_jid").bind('keypress', function(e){
+							if (e.keyCode == 13){
+							check_and_send_jid();
 							}
-							contentParagraph.innerHTML = span_cats.join(" ");
-						}*/ 
-						contentParagraph.innerHTML = html_lc;
+							});
+						$("#invite_jid").focus(function(){
+							$(this).val("");
+							});
+						$.get('/category/{{ category }}/feed?format=json', {}, updateDisplayEntry)
+						$("#jid_result").hide();
+						$("#invite_jid").focus();
+				});
 
-                        			container = document.createElement('div');
-                        			containerAvatar = document.createElement('div');
+				$(document).ajaxStart(function(){
+					$("#stream_loader").show();
+				});
+				$(document).ajaxStop(function(){
+					$("#stream_loader").hide();
+				});
+
+				// Create variables to display subscription options using HTML DIVs
+
+				var stream = document.getElementById('stream');
+
+				// Initialize the API.
+				var feed;
+				function noUpdates(){
+					container = document.createElement('div');
+					containerAvatar = document.createElement('div');
 
 
-                        			avatarElement = document.createElement('img');
-                        			avatarElement.setAttribute('src', a);
-                        			avatarElement.setAttribute('class', 'avatar');
+					titleElement = document.createElement('a');
+					titleElement.innerHTML = 'Meh ... this category is kinda empty';
 
-                        			containerAvatar.appendChild(avatarElement);
-                        			container.setAttribute('class', 'streamcontent');
-                        			container.setAttribute('id', id);
+					domainElement = document.createElement('a');
+					domainElement.innerHTML = 'Don\'t worry, there are lots of interesting categories one click away :)';
+					domainElement.href = '/category';
 
-                        			titleElement = document.createElement('a');
-						titleElement.setAttribute('class', 'stream-article');
-                        			titleElement.innerHTML = title;
-                                		titleElement.href = original_url;
-                        			titleElement.target="_new"
-                        			titleParagraph = document.createElement('p');
-                        			titleParagraph.appendChild(titleElement);
+					container.appendChild(titleElement);
+					container.appendChild(document.createElement('br'));
+					container.appendChild(document.createElement('br'));
+					container.appendChild(domainElement);
+					container.appendChild(document.createElement('br'));
+
+					div = document.getElementById('stream');
+					div.insertBefore(container, div.firstChild);
+
+
+				}
+
+				function updateDisplayEntry(response, div) {
+					try{
+						// check if it is page load
+						sElements = $("#stream").children();
+						if ((typeof(response) == 'undefined' || response.length == 0) && sElements.length == 0){
+							noUpdates();
+							return;
+						}
+						div = document.getElementById('stream');
+						for (i = response.length - 1; i >= 0; i--) {
+							e = response[i]['u'];
+							domain = e['d'];
+							instaright_domain = e['dd'];
+							try{
+								title=e['t'];
+							}catch(e){
+								title="Instaright article from domain "+domain;
+							}
+							if (title == null || title == 'None' || title == 'null' || title.length == 0){
+								title="Instaright article from domain "+domain;
+							} else {
+								try{
+								if ((title.charCodeAt(0) > 256 || title.charCodeAt(title.length/2) > 256)   && title.length >= 40){
+									title = title.substr(0,37) + ' ...';
+								}
+								else if (title.length >= 70){
+									title = title.substr(0,67) + ' ...';
+								}
+								} catch(e){
+								}
+							}
+							link = e['l'];
+							dateUpdated = new Date(e['u']);
+							lc = e['lc'];
+							id = e['id'];
+							a = e['a'];
+							original_url = e['ol'];
+							source = e['source'];
+							category=e['lc'];
+							cats=lc.split(',');
+							html_lc = e['html_lc'];
+							if (typeof(category) == 'undefined' || lc.length == 0 || (lc.indexOf(category) == -1)){
+								//alert('sanity check did not pass ('+category+' != '+lc+'..continue');
+								continue;
+							} 
+							updated_ago_string = "<a href=\""+link+"\">as seen "+updated_string(dateUpdated)+" on Instaright "+ source+"</a>";
+							contentParagraph = document.createElement('div');
+							contentParagraph.setAttribute('class', 'category_div');
+							/*if (typeof(lc) !== 'undefined' && lc != null && lc != 'null' && lc.length >  1){
+								try{
+									span_cats=Array();
+									for (c in cats){
+										span_cats.push("<span class=\"text_bubble_cats\"><a href=\"/category/"+cats[c]+"\">"+cats[c]+"</a></span>");
+									}
+								}catch(e){
+									alert(e);
+									span_cats=Array();
+								}
+								contentParagraph.innerHTML = span_cats.join(" ");
+							}*/ 
+							contentParagraph.innerHTML = html_lc;
+
+							container = document.createElement('div');
+							containerAvatar = document.createElement('div');
+
+
+							avatarElement = document.createElement('img');
+							avatarElement.setAttribute('src', a);
+							avatarElement.setAttribute('class', 'avatar');
+
+							containerAvatar.appendChild(avatarElement);
+							container.setAttribute('class', 'streamcontent');
+							container.setAttribute('id', id);
+
+							titleElement = document.createElement('a');
+							titleElement.setAttribute('class', 'stream-article');
+							titleElement.setAttribute('rel', 'nofollow');
+							titleElement.innerHTML = title;
+							titleElement.href = original_url;
+							titleElement.target="_new"
+							titleParagraph = document.createElement('p');
+							titleParagraph.appendChild(titleElement);
 
                         			domainElement = document.createElement('a');
                         			domainElement.innerHTML = domain;
@@ -325,9 +325,9 @@
                         </div>
                         <div id="right_box_mid">
                                 <ul>
-                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a href="http://twitter.com/instaright">Twitter</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a href="http://www.facebook.com/instaright">Facebook Page</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a href="http://instaright.tumblr.com/">Blog</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a rel="me" href="http://twitter.com/instaright">Twitter</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a rel="me" href="http://www.facebook.com/instaright">Facebook Page</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a rel="me" href="http://instaright.tumblr.com/">Blog</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Delicious Import">Delicious Importer</a></li>
                                 </ul>
                         </div>

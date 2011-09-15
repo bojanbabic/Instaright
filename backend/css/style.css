@@ -187,7 +187,7 @@ hr { border:solid #c3bca8; border-bottom:1px solid #fff; border-top:1px solid #e
 /* Forms
    ----------------------------------------------------------------------------------------------------*/
 form { background: transparent!important; margin:0px; padding: 0px; }
-form label { display:block; font-weight:bold; padding:0 0 10px; }
+form label { display:block; font-weight:bold; padding:0 0 10px; width: 30% }
 form input { font-size:16px; font-weight:bold; margin:3px 0 5px; padding:8px; -moz-border-radius:4px;  }
 form legend { font-weight:bold; margin-bottom:10px; padding-top:10px; }
 fieldset { border: none !important; margin:0 !important; }
@@ -885,6 +885,10 @@ span {
 	width: 250px;
 	display: block;
 	text-align: left;
+	margin-bottom: 20px;
+	margin-top: 10px;
+	padding-left: 20px;
+	padding-top: 10px;
 }
 .stream-article {
 	color: #0066CC;
@@ -943,4 +947,38 @@ span {
 }
 #stream_loader p{ 	
 	padding-left: 130px; 
+}
+#article_view{
+	float: right;
+}
+.account_field_column_left {
+	margin-right: 20px;
+	margin-bottom: 20px;
+	float: left;
+}
+.account_field_column_right {
+	margin-bottom: 20px;
+	float: right;
+	margin-right: 20px;
+}
+.account_field {
+	margin-bottom: 20px;
+	width: 100%;
+}
+.account_field_data {
+	float: left;
+	padding-left: 30px;
+}
+.account_field_data img {
+	width: 16px;
+	height: 16px;
+}
+.account_field_label {
+	font-weight: bold;
+	padding: 15px;
+	border-top: 1px solid #DDDDDD;
+}
+.profile_remove {
+	float: right;
+	padding-right: 30px;
 }

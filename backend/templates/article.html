@@ -4,13 +4,16 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="description" content="Instaright Story - {{ title }}" />
-                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
+		<meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, {{ title }}, read it later" />
 		<meta name="title" content="Instaright Story - {{ title }}" />
                 <link rel="stylesheet" type="text/css" href="http://www.instaright.com/css/style.css" />
                 <script type="text/javascript" src="http://www.instaright.com/static/javascript/instaright.js"></script>
                 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
                 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
                 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+                <script type="text/javascript" src="http://www.instaright.com/static/javascript/jquery.xdomainajax.js"></script>
+                <script type="text/javascript" src="../../../static/javascript/readability.js"></script>
+                <!--script type="text/javascript" src="http://www.instaright.com/static/javascript/readability.js"></script-->
 
 		<!-- fancybox -->
 		<script type="text/javascript" src="http://www.instaright.com/static/javascript/jquery.fancybox-1.3.4.pack.js"></script>
@@ -33,6 +36,39 @@
                  <!-- Google Website Optimizer Tracking Script -->
          </head>
          <body>
+		 <script type="text/javascript">
+			 $(document).ready(function(){
+					 /*$(".extLink").fancybox({
+								'width': '75%',
+								'height': '75%',
+								'autoScale': false,
+								'transitionIn': 'none',
+								'transitionOut': 'none',
+								'type': 'iframe'
+					 });*/
+				$(".extLink").click(function(e){
+					$.ajax({
+						url: "{{ link }}",
+						type: 'GET',
+						success: function(res){
+							alert("success click :"+ res.responseText);
+							clean_text = grabArticle_new($(res.responseText));
+							alert("clean text:"+ clean_text);
+							$.fancybox( clean_text, 
+								{
+								'width': '75%',
+								'height': '75%',
+								'autoScale': false,
+								'transitionIn': 'none',
+								'transitionOut': 'none',
+								'type': 'iframe'
+								});
+						}
+					});
+					e.preventDefault();
+				});
+			});
+		 </script>
 		<div class="wrapper"> 
 			<div id="nav" >
 				<div class="center clearfix">
@@ -68,7 +104,7 @@
                                                 margin:0px 0px 10px 0px;
                                                 width:660px;
                                         }
-                                        .scan, .streamcontent {
+                                        .streamcontent {
                                                 -moz-border-radius:15px;
                                                 border:1px solid #ADA699;
                                                 clear:both;
@@ -90,6 +126,7 @@
 						{% if category %}
 						<div class="category_div">{{ category }}</div>
 						{% endif %}
+						<!--div id="article_view" ><a class="extLink" href="{{ link }}">View article text version</a></div-->
 						<div class="content_footer" info="{{ updated }}"><a href="{{ instaright_link }}" title="{{ title }}">now</a></div>
 					</div>
 				</div>

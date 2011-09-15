@@ -9,15 +9,21 @@ class GenericWebHandler(webapp.RequestHandler):
 		template_variables=[]
                 if condition is None and type is None:
                         url = 'http://www.instaright.com/feed?format=json'
+                        title = 'Instaright - SocialBookmarking and recommendation engine'
+                        description = 'Instaright provides most productive tools for reading, sharing and discovering online content. Install Instaright addon for Firefox, Chrome or bookmarlet. Discover content using Instaright Realtime Stream or receive message via Instant Messanger of your choice.' 
                 elif type is not None and condition is not None:
                         #NOTE: condition contains trailing slash
-                        url = 'http://www.instaright.com/%s/%sfeed?format=json' %(type, condition)
+                        if condition[-1] == '/':
+                                condition = condition[:-1]
+                        url = 'http://www.instaright.com/%s/%s/feed?format=json' %(type, condition)
+                        title = 'Instaright %s articles - %s ' % ( type, condition)
+                        description = 'Discover, save and share trending stories from %s' % condition 
                 logging.info('feed lookup %s ' % url)
                 json = LinkUtil.getJsonFromApi(url)
 		if json is None:
 			return None
                 logging.info('list of links: %s ' % len(json))
-                template_variables = { 'links': json, 'condition': condition, 'type': type }
+                template_variables = { 'links': json, 'condition': condition, 'type': type, 'title': title, 'description': description }
 		path = os.path.join(os.path.dirname(__file__), 'templates/html_snapshot.html')
 		self.response.out.write(template.render(path, template_variables))
 		
@@ -31,6 +37,10 @@ class GenericWebHandler(webapp.RequestHandler):
                 self.user_uuid=None
                 self.instaright_account=None
                 self.user_detail_key=None
+                self.facebook_profile = None
+                self.twitter_profile = None
+                self.google_profile = None
+                self.evernote_profile = None
 		used_data_from_session = False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
@@ -53,6 +63,10 @@ class GenericWebHandler(webapp.RequestHandler):
 					logging.error('missing proper db entry for cookie %s' % uuid_cookie)
 				else:
 					user_data = ud.getUserInfo()
+                                        self.facebook_profile = ud.facebook_profile
+                                        self.twitter_profile = ud.twitter
+                                        self.google_profile = ud.google_profile
+                                        self.evernote_profile = ud.evernote_profile
 					self.screen_name = user_data["screen_name"]
                                         self.avatar = user_data["avatar"]
 					user_data_from_session = True
