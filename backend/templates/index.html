@@ -2,10 +2,12 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <meta name="description" content="Instaright Social Bookmarking app and recommendation engine. Increase your productivity by using our browser addons and also let someone discover valuable information." />
-                <meta name="keywords" content="Instaright, social bookmark, social bookmarking, social recommendation, Instapaper firefox, Instapaper for firefox, instapaper import delicious, import delicious bookmarks, instapaper delicious, delicious importer, export delicious bookmarks to instapaper, instapaper addon for firefox, instapaper add-on firefox, instapaper add-on, social bookmark, read it later, instapaper chrome extension" />
+                <meta name="description" content="Instaright Social Bookmarking app and recommendation engine. Discover, save and share trending articles while increasing your productivity." />
+                <meta name="keywords" content="Instaright, discover, social discovery, share, social recommendation, read, read it later, download instaright firefox addon, download instaright chrome extension, Instapaper addon for firefox,instapaper chrome extension, import delicious bookmarks to instapaper, export delicious bookmarks to instapaper" />
 		<meta name="fragment" content="!" />
 		<meta name="title" content="Instaright Social Bookmarking and recommendation app" />
+		<meta name="msvalidate.01" content="528D5BB57C5DA4E8D9687FC13298CDC9" />
+		<META name="y_key" content="a62335d350422a9a" />
 		<link rel="alternate" type="application/rss+xml" title="Instaright RSS Feed" href="http://feeds.feedburner.com/InstarightFeed" />
 		<link rel="alternate" type="application/atom+xml" title="Instaright Blog RSS Feed" href="http://feeds.feedburner.com/InstarightBlog" />
                 <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -60,7 +62,7 @@
 			var channel_id= '{{ channel_id }}';
 			var channel = new goog.appengine.Channel(channel_id);
 			var socket = channel.open();
-			var maxElementsInStream=4;
+			var maxElementsInStream=6;
 			var maxHotLinks = 3;
 			socket.onopen = function(){
 				//alert('connected:{{ channel_id }}');
@@ -266,7 +268,7 @@
 			<li><a href="/tools" title="Instaright tools"><span>Tools</span></a></li>
                         {% if user %}
 			<li><a href="/user/dashboard"><span>{{ user }}</span></a></li>
-			<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" /></a></li>
+			<li><a href="/user/dashboard"><img src="{{ avatar }}" width="20" height="20" alt="Instaright user {{ user }} avatar" /></a></li>
 			<li><a href="{{ logout_url }}"><span>Logout</span></a></li>
                         {% else %}
 			<li><a id="btn_login" href="/account" title="Login to Instaright"><span>Login</span></a></li>
@@ -304,8 +306,8 @@
 						overflow: auto;
                                         }
                                 </style>
-				<div id="stream_loader"><p><img src="/static/images/loader.gif" /> Loading Stream ...</p></div>
-				<div id="stream"><div id="stream_loader"><p><img src="/static/images/loader.gif" /> Loading Stream ...</p></div></div>
+				<div id="stream_loader"><p><img src="/static/images/loader.gif" alt="Instaright Stream Loading"/> Loading Stream ...</p></div>
+				<div id="stream"><div id="stream_loader"><p><img src="/static/images/loader.gif" alt="Instaright Stream Loading"/> Loading Stream ...</p></div></div>
                         </div>
 			<div class="left_bot_mid">
 				<div class="left_bot_left"></div>
@@ -314,13 +316,20 @@
                 </div>
                 <div id="right_col" class="grid_6">
                         <div id="right_box_top">
-                                <p style="text-align: center;">Instaright browser addons</p>
-                                <p style="text-align: center;"><a title="Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools"><img src="static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
-                                <p class="social_media">Want to get updates on IM?</p>
+				<p class="social_media"><b>What is Instaright?</b></p>
                                 <div class="text-align: center; width: 270px;">
-                                        Instaright provides updates on your favorite IM client. <br>
+					<p>The fast, easy and effort-free way to <b>save</b>, <b>discover</b> and <b>share</b> information all over web. Easy to start, easy to use. Organizes and streamlines infromation into categories providing clear presentation. </p>
+				</div>
+				<p class="social_media"><b>Save: Instaright browser plugins</b></p>
+                                <div class="text-align: center; width: 270px;">
+					<p style="text-align: center;"><a title="Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools" ><span>Instaright Firefox addon and Chrome Extension</span></a></p>
+                                	<p style="text-align: center;"><a title="Download Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools"><img src="static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
+				</div>
+				<p class="social_media"><b>Discover: Realtime Notifications</b></p>
+                                <div class="text-align: center; width: 270px;">
+					<p>Discover infromation in realtime article feed or via Instant messenger. Subscribe to categories and topics of your interest. Instaright provides updates on your favorite IM client. <br></p>
                                         <p id="jabbers">
-                                        <img src="/static/images/messenger.png"/><img src="/static/images/gtalk.png"/><img src="/static/images/aim.png"/></p>
+                                        <img src="/static/images/messenger.png" alt="Instaright Yahoo Messenger Support"/><img src="/static/images/gtalk.png" alt="Instaright Google Talk support"/><img src="/static/images/aim.png" alt="Instaright AIM support"/></p>
 					<p>To get started enter your jabber id and <span style="color:#0066CC;">press Enter</span></p>
                                         </div><p></p><div>
                                         <input type="text" id="invite_jid" value="Enter your jabber id" />
@@ -331,13 +340,17 @@
 
                                         <p></p>
                                 </div>
+				<p class="social_media"><b>Share: Instaright on social media</b></p>
+                                <div class="text-align: center; width: 270px;">
+					<p>Instaright detects highly engaged content and leverage it across social networks</p>
+				</div>
                         </div>
                         <div id="right_box_mid">
                                 <ul>
-                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a rel="me" href="http://twitter.com/instaright">Twitter</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a rel="me" href="http://www.facebook.com/instaright">Facebook Page</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a rel="me" href="http://instaright.tumblr.com/">Blog</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Importer</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instaright on twitter" alt="Instaright on Twitter"/><a rel="me" href="http://twitter.com/instaright">Twitter</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instaright on facebook" alt="Instaright on Facebook"/><a rel="me" href="http://www.facebook.com/instaright">Facebook Page</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instaright blog" alt="Instaright blog"/><a rel="me" href="http://instaright.tumblr.com/">Blog</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png" alt="Instapaper Delicious Importer"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Importer</a></li>
                                 </ul>
                         </div>
                         <div id="right_box_bot">
@@ -389,10 +402,6 @@ var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
                                 }catch(err){}
                 </script>
 <!-- End of Google Website Optimizer Tracking Script -->
-<!-- apture bar -->
-<script id="aptureScript">
-(function (){var a=document.createElement("script");a.defer="true";a.src="http://www.apture.com/js/apture.js?siteToken=7TzNhnW";document.getElementsByTagName("head")[0].appendChild(a);})();
-</script>
 <noscript>
 	<h1>Instaright Realtime Bookmarking and recommendation engine<h1>
 	<h2>Instaright Categories</h2>
@@ -442,7 +451,6 @@ var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 	</p>
 </noscript>
 
-<!-- end apture bar -->
 
         </body>
 </html>

@@ -982,3 +982,10 @@ span {
 	float: right;
 	padding-right: 30px;
 }
+#right_box_top a {
+	text-decoration: none;
+}
+#right_box_top a span {
+	text-decoration: none;
+}
+
