@@ -58,6 +58,7 @@ OAUTH_APP_SETTINGS = {
 	'access_token_url': 'https://www.evernote.com/oauth',
 	'user_auth_url':'https://www.evernote.com/OAuth.action',
         'oauth_callback': 'http://www.instaright.com/oauth/evernote/callback',
+        'return_to': '/user/dashboard'
 
         },
     }
@@ -88,7 +89,11 @@ def encode(text):
 def twitter_specifier_handler(client):
     return client.get('/account/verify_credentials')['screen_name']
 
+def evernote_specifier_handler(client):
+    return "test"
+
 OAUTH_APP_SETTINGS['twitter']['specifier_handler'] = twitter_specifier_handler
+OAUTH_APP_SETTINGS['evernote']['specifier_handler'] = evernote_specifier_handler
 
 class OAuthRequestToken(db.Model):
     """OAuth Request Token."""
@@ -105,6 +110,7 @@ class OAuthAccessToken(db.Model):
     specifier = db.StringProperty()
     oauth_token = db.StringProperty()
     oauth_token_secret = db.StringProperty()
+    additional_info=db.StringProperty()
     created = db.DateTimeProperty(auto_now_add=True)
 
 class OAuthClient(object):
@@ -217,7 +223,6 @@ class OAuthClient(object):
 
         oauth_token = self.handler.request.get("oauth_token")
         oauth_verifier = self.handler.request.get("oauth_verifier")
-        edamUserID = self.handler.request.get("edam_userId")
 
         if not oauth_token:
             return self.get_request_token()
@@ -232,6 +237,7 @@ class OAuthClient(object):
         logging.info('callback')
         logging.info('oauth_token %s' % oauth_token)
         logging.info('oauth_verifier %s' % oauth_verifier)
+
         token_info = self.get_data_from_signed_url(
                 self.service_info['access_token_url'], oauth_token
             )
@@ -244,15 +250,21 @@ class OAuthClient(object):
             **dict(token.split('=') for token in token_info.split('&'))
             )
 
+        if self.service == 'evernote':
+                token_dict=dict(s.split('=') for s in token_info.split('&'))    
+                edamShard = token_dict["edam_shard"]
+                edamUserID = token_dict["edam_userId"]
+                logging.info('edam user id %s' % edamUserID)
+                logging.info('edam shard %s' % edamShard)
+                self.token.additional_info='edam_userId=%s&edam_shard=%s' %(edamUserID, edamShard)
+                return_to=OAUTH_APP_SETTINGS[self.service]['return_to']
+
         if 'specifier_handler' in self.service_info:
             specifier = self.token.specifier = self.service_info['specifier_handler'](self)
             old = OAuthAccessToken.all().filter(
                 'specifier =', specifier).filter(
                 'service =', self.service)
             db.delete(old)
-        elif edamUserID is not None:
-                specifier = self.token.specifier = edamUserID
-        
 
         self.token.put()
         self.set_cookie(key_name)
