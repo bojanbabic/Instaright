@@ -6,8 +6,8 @@
 	http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 	{% for l in links %}
 	<url>
-		<loc>{{ l }}</loc>
-		<changefreq>daily</changefreq>
+		<loc>{{ l.0 }}</loc>
+		<changefreq>{{ l.1 }}</changefreq>
 	</url>
 	{% endfor %}
 </urlset>

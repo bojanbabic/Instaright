@@ -107,15 +107,15 @@ class SitemapHandler(webapp.RequestHandler):
                                 logging.info('json entry: %s' % j)
                                 dd = j['u']['dd']
                                 if dd is not None:
-                                        links.append(dd)
+                                        links.append((dd, 'hourly'))
                                 l = j['u']['l']
                                 if l is not None:
-                                        links.append(l)
+                                        links.append((l, 'daily'))
                                 lc = j['u']['lc']
                                 if lc is not None:
                                         llc = lc.split(',')
                                         for ll in llc:
-                                                links.append('http://www.instaright.com/%s' % ll)
+                                                links.append(('http://www.instaright.com/%s' % ll, 'hourly'))
                         logging.info('list of links: %s ' % len(links))
                         template_variables = { 'links': links }
 		        path = os.path.join(os.path.dirname(__file__), 'templates/sitemap_dyn.xml')
