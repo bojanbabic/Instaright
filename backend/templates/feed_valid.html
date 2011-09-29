@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<id>http://instaright.appspot.com/</id>
+<title>Instaright Live Feed</title>
+<link rel="self" href="http://instaright.appspot.com/feed" type="application/atom+xml"/>
+<link rel="hub" href="http://pubsubhubbub.appspot.com/" />
+<updated>{{ dateupdated|date:"Y-m-d\TH:i:s\Z" }}</updated>
+<author>
+	<name>Bojan Babic</name>
+	<email>gbabun@gmail.com</email>
+</author>
+{% for entry in entries %}
+<entry>
+	<id>{{ entry.6 }}</id>
+        {% if entry.1 %}
+        <title>{{ entry.1|escape }}</title>
+        {% else %}
+	<title>Instaright article from domain: {{ entry.2 }} </title>
+        {% endif %} 
+	<link href="{{ entry.3 }}" />
+	<updated>{{ entry.5|date:"Y-m-d\TH:i:s\Z" }}</updated>
+	<summary>{{ entry.2 }}</summary>
+</entry>
+{% endfor %}
+</feed>

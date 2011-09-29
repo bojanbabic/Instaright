@@ -21,7 +21,7 @@ from google.appengine.api.labs import taskqueue
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import facebook, simplejson
-from oauth_handler import OAuthClient
+from oauth_handler import OAuthClient, OAuthAccessToken
 
 class StatsUtil(object):
 	@classmethod
@@ -73,6 +73,17 @@ class StatsUtil(object):
                         e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
                 return client
 
+        @classmethod
+        def getSelection(cls, args):
+                selection=None
+                try:
+                        selection = urllib2.unquote(args[5].encode('ascii')).decode('utf-8')
+                        selection = ' '.join(unicode(selection).split())
+                        logging.info('selection decoded %s' % selection)
+                except:
+                        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                return selection
+
 
         @classmethod
         def checkUrl(cls, args, url=None):
@@ -103,7 +114,7 @@ class StatsUtil(object):
         @classmethod
         def getUser(cls, args):
                 try:
-                        return args[0]
+                        return urllib2.unquote(args[0])
                 except:
                         return None
 
@@ -685,25 +696,39 @@ class LoginUtil():
 	        #twitter_logout_url = '/oauth/twitter/logout'
 
         	twitter_user = OAuthClient('twitter', request_handler)
+        	evernote_user = OAuthClient('evernote', request_handler)
+        	flickr_user = OAuthClient('flickr', request_handler)
         	screen_name=None
                 avatar=None
 		auth_service=None
                 instaright_account=None
 		# used to connect user details with session
 		user_details_key=None
+                evernote_username=None
+                flickr_username=None
 
 		google_user = users.get_current_user()
-		logging.info('trying to connect with fb key %s secret %s' %( self.facebook_key, self.facebook_secret))
+		#logging.info('trying to connect with fb key %s secret %s' %( self.facebook_key, self.facebook_secret))
         	facebook_user = facebook.get_user_from_cookie(request_handler.request.cookies, self.facebook_key, self.facebook_secret)
+                facebook_access_token=None
+                existing_user = None
         	if google_user:
                 	screen_name=google_user.nickname()
-			existing_user= UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
-			if existing_user is None:
+			existing_user= UserDetails.gql('WHERE google_profile=\'%s\'' %google_user.email()).get()
+			existing_user_by_mail = UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
+			if existing_user is None and existing_user_by_mail is not None:
+                                existing_user_by_mail.google_profile = google_user.email()
+                                existing_user_by_mail.put()
+                                existing_user = existing_user_by_mail
+                        if existing_user is None:
+                                #TODO update google profile
 				existing_user = UserDetails()
 				existing_user.mail=google_user.email()
+                                existing_user.google_profile=google_user.email()
 				existing_user.put()
                         elif existing_user.avatar is not None:
                                 avatar = existing_user.avatar
+				existing_user.mail=google_user.email()
 			auth_service='google'
 			user_details_key=existing_user.key()
 			user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
@@ -798,10 +823,33 @@ class LoginUtil():
                                         user_badge.user_property = existing_user.key()
                                         user_badge.put()
                                 instaright_account=existing_user.instaright_account
+                                facebook_access_token=facebook_user["access_token"]
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
 				logging.info('error validating token %s === more info: %s' %(e0,e))
 		
+                if evernote_user.get_cookie() is not None and len(evernote_user.get_cookie()) > 0:
+                        logging.info('evernote token active: %s' % evernote_user)
+                        logging.info('evernote access token id: %s' % evernote_user.get_cookie())
+                        evernote_access = evernote_user.get_cookie()
+                        access_token = OAuthAccessToken.get_by_key_name(evernote_access)
+                        if access_token is not None and access_token.service == 'evernote':
+                                evernote_username = access_token.specifier
+                                if existing_user is not None:
+                                        existing_user.evernote_profile = evernote_username
+                                        existing_user.put()
+                        
+                if flickr_user.get_cookie() is not None and len(flickr_user.get_cookie()) > 0:
+                        logging.info('flickr token active: %s' % flickr_user)
+                        logging.info('flickr access token id: %s' % flickr_user.get_cookie())
+                        flickr_access = flickr_user.get_cookie()
+                        access_token = OAuthAccessToken.get_by_key_name(flickr_access)
+                        if access_token is not None and access_token.service == 'flickr':
+                                flickr_username = access_token.specifier
+                                if existing_user is not None:
+                                        existing_user.flickr_profile = flickr_username
+                                        existing_user.put()
+
 		log_out_cookie = request_handler.request.cookies.get('user_logged_out')
 		path=request_handler.request.path
 		logging.info('path: %s' %path)
@@ -817,7 +865,7 @@ class LoginUtil():
                         logging.info('user %s not in skip list %s ... sending mail' %(screen_name, str(self.skip_list)))
                         mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %( screen_name , avatar, avatar), body='Awesome new user signed up: %s avatar %s' %( screen_name, avatar))
                                         
-                user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar, 'instaright_account':instaright_account}
+                user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar, 'instaright_account':instaright_account,'facebook_access_token': facebook_access_token, 'evernote_name': evernote_username, 'flickr_name': flickr_username}
 		return user_details
 
 class TaskUtil(object):

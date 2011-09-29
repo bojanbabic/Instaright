@@ -1,4 +1,5 @@
 function insta_notify(response,isNotification){
+	alert(lc);
 	var notification_details = mapResponse(response);
 	if (isNotification){
 		var notification = webkitNotifications.createNotification(
@@ -39,7 +40,7 @@ function sendToBackend(loc, title){
 	data="[\""+instapaper_account+"\",\""+encodeURIComponent(loc)+"\",\""+title+"\",\"0.1\",\"chrome\"]";
 	$.ajax({
 		type:'POST', 
-		url:'http://instaright.appspot.com/rpc', 
+		url:'http://50.latest.instaright.appspot.com/rpc', 
 		dataType: "json",
 		data: data,
 		success: function(response){

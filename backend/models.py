@@ -18,7 +18,11 @@ class SessionModel(db.Model):
         title=db.StringProperty()
         version=db.StringProperty()
         client = db.StringProperty()
+        selection = db.TextProperty()
         embeded = db.TextProperty()
+        def isImage(self):
+                #TODO - this is lame. Solution combine addon with backed
+                return self.url.endswith('.jpg') or self.url.endswith('.png') or self.url.endswith('.gif') 
 	def count_all(self):
 		count = 0
 		query = SessionModel.all().order('__key__')
@@ -222,7 +226,7 @@ class UserDetails(db.Model):
         friendster = db.LinkProperty()
         linkedin = db.LinkProperty()
         google_reader = db.LinkProperty()
-        google_profile = db.LinkProperty()
+        google_profile = db.StringProperty()
         twitter = db.LinkProperty()
 	klout_score=db.IntegerProperty()
         flickr = db.LinkProperty()
@@ -248,6 +252,7 @@ class UserDetails(db.Model):
 	facebook_friends=db.TextProperty()
 	facebook_profile=db.StringProperty()
         evernote_profile=db.StringProperty()
+        flickr_profile=db.StringProperty()
         
 	@classmethod
 	def getAll(cls):
@@ -275,6 +280,20 @@ class UserDetails(db.Model):
 			avatar = self.avatar
 		user_info={'screen_name':screen_name, 'avatar': avatar}
 		return user_info
+
+class UserTokens(db.Model):
+        user_details=db.ReferenceProperty(UserDetails)
+        facebook_token=db.StringProperty()
+        facebook_enabled = db.BooleanProperty(default=True)
+        twitter_token=db.StringProperty()
+        twitter_enabled = db.BooleanProperty(default=True)
+        evernote_token=db.StringProperty()
+        evernote_enabled = db.BooleanProperty(default=True)
+        evernote_additional_info=db.StringProperty()
+        flickr_enabled = db.BooleanProperty(default=True)
+        flickr_token = db.StringProperty()
+        flickr_additional_info = db.StringProperty()
+        date=db.DateTimeProperty(auto_now_add=True)
 
 class Links(db.Model):
         url=db.TextProperty()
@@ -374,11 +393,13 @@ class LinkCategory(db.Model):
                 return dict(sorted_cats)
                 
         @classmethod
-        def get_trending(cls):
-                last_hour = datetime.datetime.now().date() - datetime.timedelta(hours=1)
-                cats = LinkCategory.gql('WHERE updated > :1 ' , last_hour).fetch(1000)
-                if cats is None:
+        def get_trending(cls, history=1):
+                hour_start = datetime.datetime.now().date() - datetime.timedelta(hours=history)
+                cats = LinkCategory.gql('WHERE updated > :1 ' , hour_start).fetch(1000)
+                if cats is None or len(cats) == 0:
+                        logging.info('got no cats in last %s hours' % len(cats))
                         return None
+                logging.info('total cats in last %s hour %s ' % (history, len(cats)))
                 all_cats = [ c.category for c in cats if len(c.category) > 2 ]
                 result = dict( (c, all_cats.count(c)) for c in set(all_cats))
                 import operator

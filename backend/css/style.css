@@ -988,4 +988,20 @@ span {
 #right_box_top a span {
 	text-decoration: none;
 }
-
+.scan, .streamcontent {
+	-moz-border-radius:15px;
+	border:1px solid #ADA699;
+	clear:both;
+	display:block;
+	margin:10px 0px 10px 0px;
+	padding:10px;
+	text-decoration:none;
+	min-height: 80px;
+	overflow: auto;
+}
+#streammap{
+	border:8px solid #ffffff;
+	height:230px;
+	margin:0px 0px 10px 0px;
+	width:660px;
+}

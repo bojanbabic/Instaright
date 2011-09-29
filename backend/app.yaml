@@ -186,6 +186,10 @@ handlers:
 
 - url: /sitemap.xml
   script: articles.py
+
+- url: /service/submit
+  script: service.py
+
 - url: /.*
   script: main.py
 

@@ -76,6 +76,19 @@ class LinkUtils(object):
                 return ','.join(category)
 
         @classmethod
+        def getCategoryListHTML(cls, categories):
+                if categories is None:
+                        return ''
+                cats = []
+                logging.info('categories: %s' % categories)
+                for i,c in enumerate(categories):
+                        cats.append('<p class="text_bubble"><a href="/category/'+c+'" title="Instaright popular category '+c+'"><span>'+c+'</span></a></p>')
+                        if i % 5 == 0:
+                                cats.append('<br><br>')
+                logging.info('got category list: %s' % categories)
+                return ''.join(cats)
+
+        @classmethod
         def getLinkCategoryHTML(cls, link_model):
                 category=None
                 logging.info('looking category cache for url hash %s ( %s )' %(link_model.url_hash, link_model.url))

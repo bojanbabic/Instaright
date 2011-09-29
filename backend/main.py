@@ -4,6 +4,7 @@ import datetime
 import logging
 import thread
 import time
+import urllib
 
 from utils import StatsUtil,LinkUtil, UserScoreUtility
 
@@ -17,7 +18,7 @@ from google.appengine.ext.db import BadValueError
 from google.appengine.runtime import apiproxy_errors
 from google.appengine.api.taskqueue import TransientError
 
-from models import UserSessionFE, SessionModel, Subscription, LinkCategory
+from models import UserSessionFE, SessionModel, Subscription, LinkCategory, UserDetails
 import generic_counter
 from generic_handler import GenericWebHandler
 from link_utils import EncodeUtils, LinkUtils
@@ -78,14 +79,17 @@ class MainHandler(webapp.RequestHandler):
                         title = StatsUtil.getTitle(args)
                         version = StatsUtil.getVersion(args)
                         client = StatsUtil.getClient(args)
+                        selection = StatsUtil.getSelection(args)
+                        if selection is not None:
+                                selection = selection[:500]
                 	user_agent = self.request.headers['User-agent']
                         if user is None or user == 'undefined':
                                 logging.info('skipping since there is no user defined ( client %s )' % client )
                                 return
                         try:
-                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
+                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent})
                         except TransientError:
-                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'user_agent': user_agent})
+                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent})
 
 			logging.info('triggering feed update')
 
@@ -109,6 +113,7 @@ class MainHandler(webapp.RequestHandler):
 class MainTaskHandler(webapp.RequestHandler):
         def post(self):
 		user=self.request.get('user',None)
+		user=urllib.unquote(user)
 		url=self.request.get('url',None)
 		domain=self.request.get('domain',None)
                 title=self.request.get('title',None)
@@ -128,6 +133,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 logging.info('link title %s' %title)
                 version=self.request.get('version',None)
                 client=self.request.get('client',None)
+                selection = self.request.get('selection', None)
                 user_agent = self.request.get('user_agent',None)
 
                 UserScoreUtility.updateLinkScore(user,url)
@@ -162,6 +168,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 	model.title = title
                 	model.version = version
                         model.client = client
+                        model.selection = selection 
                         model.embeded = embeded
 			while True:
 				timeout_ms= 100
@@ -208,6 +215,9 @@ class MainTaskHandler(webapp.RequestHandler):
                 #                logging.info('got category from query %s' %category)
                 #                memcache.set(mem_key, category)
                 category = LinkUtils.getLinkCategory(model)
+                ud=UserDetails.gql('WHERE instaright_account = :1', user).get()
+                if ud is not None:
+                        taskqueue.add(url='/service/submit', params={'user_details_key': str(ud.key()), 'session_key': str(model.key())})
                 taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': int(time.mktime(model.date.timetuple())), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 
                 

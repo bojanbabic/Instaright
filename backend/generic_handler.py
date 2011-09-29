@@ -1,8 +1,18 @@
-import logging, ConfigParser, urlparse, os, datetime, uuid
+import logging
+import ConfigParser
+import urlparse
+import os
+import datetime
+import uuid
+import sys
+
 from google.appengine.ext import webapp
 from utils import LoginUtil, LinkUtil
-from models import UserSessionFE, UserDetails
+from models import UserSessionFE, UserDetails, UserTokens
 from google.appengine.ext.webapp import template
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
+from oauth_handler import OAuthAccessToken
 
 class GenericWebHandler(webapp.RequestHandler):
 	def html_snapshot(self, condition=None, type=None):
@@ -40,12 +50,17 @@ class GenericWebHandler(webapp.RequestHandler):
                 self.facebook_profile = None
                 self.twitter_profile = None
                 self.google_profile = None
-                self.evernote_profile = None
+                self.evernote_name = None
+                self.flickr_name = None
 		used_data_from_session = False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
+                evernote_cookie = self.request.cookies.get('oauth.evernote')
+                twitter_cookie = self.request.cookies.get('oauth.twitter')
+                flickr_cookie = self.request.cookies.get('oauth.flickr')
 		logout_cookie = self.request.cookies.get('user_logged_out')
-
+                user_details=None
+                ud=None
 		# try to get user name by cookie or from login
 		if uuid_cookie:
 			#Connect uuid with registered user
@@ -66,7 +81,8 @@ class GenericWebHandler(webapp.RequestHandler):
                                         self.facebook_profile = ud.facebook_profile
                                         self.twitter_profile = ud.twitter
                                         self.google_profile = ud.google_profile
-                                        self.evernote_profile = ud.evernote_profile
+                                        self.evernote_name = ud.evernote_profile
+                                        self.flickr_name = ud.flickr_profile
 					self.screen_name = user_data["screen_name"]
                                         self.avatar = user_data["avatar"]
 					user_data_from_session = True
@@ -104,11 +120,16 @@ class GenericWebHandler(webapp.RequestHandler):
                         if user_details["auth_service"] is not None:
 			        self.auth_service = user_details["auth_service"]
                         if user_details["user_details_key"] is not None:
+                                #NOTE: it is very important to set user details key!!!!
 			        user_details_key = user_details["user_details_key"]
 			        userSession.user_details = user_details_key
                                 self.user_detail_key=str(user_details["user_details_key"])
                         if user_details["instaright_account"] is not None:
                                 self.instaright_account=user_details["instaright_account"]
+                        if user_details["evernote_name"] is not None:
+                                self.evernote_name = user_details["evernote_name"]
+                        if user_details["flickr_name"] is not None:
+                                self.flickr_name = user_details["flickr_name"]
 
 			userSession.active=True
 			
@@ -132,7 +153,48 @@ class GenericWebHandler(webapp.RequestHandler):
                         newPathUserSession.path=path
                         newPathUserSession.put()
 		#userSession.put()
-                
+
+                user_token=None
+                if ud is not None:
+                        user_token=UserTokens.gql('WHERE user_details = :1', ud.key()).get()
+                if user_token is None:
+                        user_token=UserTokens()
+
+                user_token_modified=False
+                evernote_oauth = None
+                if evernote_cookie is not None:
+                        evernote_oauth = OAuthAccessToken.get_by_key_name(evernote_cookie)
+                if evernote_oauth is not None and ud is not None:
+                        evernote_token = evernote_oauth.oauth_token
+                        logging.info('User Details modified ... updating evetnote token')
+                        user_token.evernote_token=evernote_token
+                        user_token.evernote_additional_info=evernote_oauth.additional_info
+                        user_token_modified=True
+                twitter_oauth = None
+                if twitter_cookie is not None:
+                        twitter_oauth = OAuthAccessToken.get_by_key_name(twitter_cookie)
+                if twitter_oauth is not None and ud is not None:
+                        twitter_token = twitter_oauth.oauth_token
+                        logging.info('User Details modified ... updating twitter token')
+                        user_token.twitter_token=twitter_token
+                        user_token_modified=True
+                flickr_oauth = None
+                if flickr_oauth is not None:
+                        flickr_oauth = OAuthAccessToken.get_by_key_name(flickr_cookie)
+                if flickr_oauth is not None and ud is not None:
+                        flickr_token = flickr_oauth.oauth_token
+                        logging.info('User Details modified ... updating flickr token')
+                        user_token.flickr_token=flickr_token
+                        user_token_modified=True
+                if user_details is not None and user_details["facebook_access_token"] is not None:
+                        user_token.facebook_token=user_details["facebook_access_token"]
+                        user_token_modified=True
+                logging.info('user details modified: %s' % user_token_modified)
+                if user_token_modified:
+                        logging.info('User Details modified ... updating ')
+                        if user_token.user_details is None:
+                                user_token.user_details=ud
+                        user_token.put()
 
         def get_redirect(self, url):
              config=ConfigParser.ConfigParser()

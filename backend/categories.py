@@ -358,17 +358,22 @@ class CategoryListHandler(GenericWebHandler):
                 cached_category=memcache.get(memcache_key)
                 categories={}
                 if cached_category is not None:
+                        logging.info('picking up cats from cache')
                         categories=cached_category
                 else:
+                        logging.info('fetching trending cats' )
                         categories = LinkCategory.get_trending()
                         next_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
                         next_hour_ts = time.mktime(next_hour.timetuple())
-                        memcache.set(memcache_key, categories, time = next_hour_ts)
+                        if categories is not None and len(categories) > 0:
+                                memcache.set(memcache_key, categories, time = next_hour_ts)
 
 		template_variables = []
-                #TODO what if zero categories retrieved?
-                logging.info("got %s categories" % len(categories))
-                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':simplejson.dumps(categories)}
+                if categories is None:
+                        categories = LinkCategory.get_trending(24)
+                else:
+                        logging.info("got %s categories" % len(categories))
+                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':LinkUtils.getCategoryListHTML(categories)}
 		path= os.path.join(os.path.dirname(__file__), 'templates/category_list.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))

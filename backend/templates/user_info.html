@@ -159,6 +159,19 @@
 					    	<div class="account_field_data"><img src="/static/images/evernote_small.png" />&nbsp;&nbsp;</div>
 					    	<div class="profile_remove"><a href="/oauth/evernote/login">Connect</a></div>
 					    {% endif %}
+					    <div class="profile_remove"><a href="/oauth/evernote/login">Update</a></div>
+				    	    <br style="clear:both;"/>
+				    </div>
+			            <div class="account_field_label">Flickr Account</div>
+				    <div class="account_field">
+					    {% if flickr_profile %}
+					    	<div class="account_field_data"><img src="/static/images/flickr_small.png" />&nbsp;&nbsp;{{ flickr_profile }}</div>
+					    	<div class="profile_remove"><a href="/user/flickr/remove">Remove</a></div>
+					    {% else %}
+					    	<div class="account_field_data"><img src="/static/images/flickr_small.png" />&nbsp;&nbsp;</div>
+					    	<div class="profile_remove"><a href="/oauth/flickr/login">Connect</a></div>
+					    {% endif %}
+					    <div class="profile_remove"><a href="/oauth/flickr/login">Update</a></div>
 				    	    <br style="clear:both;"/>
 				    </div>
 				    <h5><span>Identities</span></h5>

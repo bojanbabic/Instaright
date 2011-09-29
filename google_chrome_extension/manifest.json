@@ -18,7 +18,7 @@
 	"icons":{
 		"16":"img/instaright_16.png",
 		"48":"img/instaright_48.png",
-		"128":"img/instaright_48.png"
+		"128":"img/instaright_128.png"
 	},
 	"background_page": "background.htm"
 }

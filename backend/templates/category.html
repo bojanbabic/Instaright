@@ -58,7 +58,7 @@
 				var channel_id= '{{ channel_id }}';
 				var channel = new goog.appengine.Channel(channel_id);
 				var socket = channel.open();
-				var maxElementsInStream=4;
+				var maxElementsInStream=6;
 				var maxHotLinks = 3;
 				socket.onopen = function(){
 					//alert('connected');
@@ -277,24 +277,6 @@
                                 </h2> 
                         </div> 
                         <div class="left_box_mid">
-                                <style> 
-                                        #streammap{
-                                                border:8px solid #ffffff;
-                                                height:230px;
-                                                margin:0px 0px 10px 0px;
-                                                width:660px;
-                                        }
-                                        .scan, .streamcontent {
-                                                -moz-border-radius:15px;
-                                                border:1px solid #ADA699;
-                                                clear:both;
-                                                display:block;
-                                                margin:10px 0px 10px 0px;
-                                                padding:10px;
-                                                text-decoration:none;
-						overflow: auto;
-                                        }
-                                </style>
 				<div id="stream_loader"><p><img src="/static/images/loader.gif" /> Loading Stream ...</p></div>
                                 <div id="stream"></div>
                         </div>
@@ -305,13 +287,20 @@
                 </div>
                 <div id="right_col" class="grid_6">
                         <div id="right_box_top">
-                                <p style="text-align: center;">Instaright browser addons</p>
-                                <p style="text-align: center;"><a title="Instapaper firefox addon instapaper chrome extension" href="/tools"><img src="/static/images/install_now.png" style="width:220px; height: 60px;" alt="Instapaper firefox addon"/></a></p>
-                                <p class="social_media">Want to get updates on IM?</p>
+				<p class="social_media"><b>What is Instaright?</b></p>
                                 <div class="text-align: center; width: 270px;">
-                                        Instaright provides updates on your favorite IM client. <br>
+					<p>The fast, easy and effort-free way to <b>save</b>, <b>discover</b> and <b>share</b> information all over web. Easy to start, easy to use. Organizes and streamlines infromation into categories providing clear presentation. </p>
+				</div>
+				<p class="social_media"><b>Save: Instaright browser plugins</b></p>
+                                <div class="text-align: center; width: 270px;">
+					<p style="text-align: center;"><a title="Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools" ><span>Instaright Firefox addon and Chrome Extension</span></a></p>
+                                	<p style="text-align: center;"><a title="Download Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools"><img src="static/images/install_now.png" style="width:220px; height: 60px;" alt="Instaright firefox addon"/></a></p>
+				</div>
+				<p class="social_media"><b>Discover: Realtime Notifications</b></p>
+                                <div class="text-align: center; width: 270px;">
+					<p>Discover infromation in realtime article feed or via Instant messenger. Subscribe to categories and topics of your interest. Instaright provides updates on your favorite IM client. <br></p>
                                         <p id="jabbers">
-                                        <img src="/static/images/messenger.png"/><img src="/static/images/gtalk.png"/><img src="/static/images/aim.png"/></p>
+                                        <img src="/static/images/messenger.png" alt="Instaright Yahoo Messenger Support"/><img src="/static/images/gtalk.png" alt="Instaright Google Talk support"/><img src="/static/images/aim.png" alt="Instaright AIM support"/></p>
 					<p>To get started enter your jabber id and <span style="color:#0066CC;">press Enter</span></p>
                                         </div><p></p><div>
                                         <input type="text" id="invite_jid" value="Enter your jabber id" />
@@ -322,12 +311,16 @@
 
                                         <p></p>
                                 </div>
+				<p class="social_media"><b>Share: Instaright on social media</b></p>
+                                <div class="text-align: center; width: 270px;">
+					<p>Instaright detects highly engaged content and leverage it across social networks</p>
+				</div>
                         </div>
                         <div id="right_box_mid">
                                 <ul>
-                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instapaper tools on twitter"/><a rel="me" href="http://twitter.com/instaright">Twitter</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instapaper tools on facebook"/><a rel="me" href="http://www.facebook.com/instaright">Facebook Page</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instapaper tools blog"/><a rel="me" href="http://instaright.tumblr.com/">Blog</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instaright twitter account"/><a rel="me" href="http://twitter.com/instaright">Twitter</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instaright facebook page"/><a rel="me" href="http://www.facebook.com/instaright">Facebook Page</a></li>
+                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instaright blog"/><a rel="me" href="http://blog.instaright.com/">Blog</a></li>
                                         <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Delicious Import">Delicious Importer</a></li>
                                 </ul>
                         </div>
@@ -347,7 +340,7 @@
 <div class="clearfix"></div> 
 <div class="footer-container">
         <div style="position: relative; text-align: center; color: rgb(0, 0, 204); font-size: small;">
-                <p><a href="mailto:gbabun@gmail.com" title="Contact Instaright developer">contact</a> | <a href="http://twitter.com/instaright" title="instaright on twitter">twitter</a> | <a href="http://instaright.tumblr.com" title="instaright blog">blog</a> | <a href="privacy_policy.html" title="Instaright Privacy Policy">Privacy Policy</a> | <a href="/feed" title="Instaright Feed">Feed</a></p>
+                <p><a href="mailto:gbabun@gmail.com" title="Contact Instaright developer">contact</a> | <a href="http://twitter.com/instaright" title="instaright on twitter">twitter</a> | <a href="http://blog.instaright.com" title="instaright blog">blog</a> | <a href="privacy_policy.html" title="Instaright Privacy Policy">Privacy Policy</a> | <a href="/feed" title="Instaright Feed">Feed</a></p>
         </div>
 </div>
 <!-- GETSATISFACTION -->

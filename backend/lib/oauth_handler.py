@@ -1,6 +1,8 @@
 # Released into the Public Domain by tav@espians.com
 
 import sys, logging, os
+import urllib2
+import service_util
 
 from datetime import datetime, timedelta
 from hashlib import sha1
@@ -16,6 +18,12 @@ from wsgiref.handlers import CGIHandler
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 
 from demjson import decode as decode_json
+
+import thrift.protocol.TBinaryProtocol as TBinaryProtocol
+import thrift.transport.THttpClient as THttpClient
+import evernote.edam.userstore.UserStore as UserStore
+import evernote.edam.userstore.constants as UserStoreConstants
+import evernote.edam.error.ttypes as Errors
 
 from google.appengine.api.urlfetch import fetch as urlfetch, GET, POST
 from google.appengine.ext import db
@@ -34,6 +42,7 @@ OAUTH_APP_SETTINGS = {
 
         'default_api_prefix': 'http://twitter.com',
         'default_api_suffix': '.json',
+        'return_to': '/'
 
         },
 
@@ -45,6 +54,7 @@ OAUTH_APP_SETTINGS = {
         'request_token_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
         'access_token_url': 'https://www.google.com/accounts/OAuthGetAccessToken',
         'user_auth_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
+        'return_to': '/'
 
         },
 
@@ -58,6 +68,18 @@ OAUTH_APP_SETTINGS = {
 	'access_token_url': 'https://www.evernote.com/oauth',
 	'user_auth_url':'https://www.evernote.com/OAuth.action',
         'oauth_callback': 'http://www.instaright.com/oauth/evernote/callback',
+        'return_to': '/user/dashboard'
+
+        },
+    'flickr': {
+
+	'consumer_key':'3cf3ac115819762cc381b9a62d4a79ac',
+	'consumer_secret':'d9249d1ffa11fae0',
+	
+        'request_token_url': 'http://www.flickr.com/services/oauth/request_token',
+        'access_token_url': 'http://www.flickr.com/services/oauth/access_token',
+        'user_auth_url':'http://www.flickr.com/services/oauth/authorize',
+        'oauth_callback': 'http://www.instaright.com/oauth/flickr/callback',
         'return_to': '/user/dashboard'
 
         },
@@ -90,10 +112,18 @@ def twitter_specifier_handler(client):
     return client.get('/account/verify_credentials')['screen_name']
 
 def evernote_specifier_handler(client):
-    return "test"
+    userStoreHttpClient = THttpClient.THttpClient(service_util.userStoreUri)
+    userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
+    userStore = UserStore.Client(userStoreProtocol)
+    user= userStore.getUser(urllib2.unquote(client.token.oauth_token))
+        
+    return user.username
 
+def flickr_specifier_handler(client):
+        return client.get('')
 OAUTH_APP_SETTINGS['twitter']['specifier_handler'] = twitter_specifier_handler
 OAUTH_APP_SETTINGS['evernote']['specifier_handler'] = evernote_specifier_handler
+OAUTH_APP_SETTINGS['flickr']['specifier_handler'] = flickr_specifier_handler
 
 class OAuthRequestToken(db.Model):
     """OAuth Request Token."""
@@ -184,7 +214,12 @@ class OAuthClient(object):
         if proxy_id:
 	    if self.service == 'twitter':
 	    	self.handler.redirect(self.handler.request.get("return_to", '/'))
-            return "FOO%rFF" % proxy_id
+	    if self.service == 'evernote':
+                self.expire_cookie()
+                #return_to=OAUTH_APP_SETTINGS[self.service]['return_to']
+	    	#self.handler.redirect(self.handler.request.get("return_to", return_to))
+            #else:
+            #    return "FOO%rFF" % proxy_id
             self.expire_cookie()
 
 
@@ -230,13 +265,12 @@ class OAuthClient(object):
                 self.oauth_verifier = oauth_verifier
 
 
+        specifier = None
         oauth_token = OAuthRequestToken.all().filter(
             'oauth_token =', oauth_token).filter(
             'service =', self.service).fetch(1)[0]
 
         logging.info('callback')
-        logging.info('oauth_token %s' % oauth_token)
-        logging.info('oauth_verifier %s' % oauth_verifier)
 
         token_info = self.get_data_from_signed_url(
                 self.service_info['access_token_url'], oauth_token
@@ -257,9 +291,15 @@ class OAuthClient(object):
                 logging.info('edam user id %s' % edamUserID)
                 logging.info('edam shard %s' % edamShard)
                 self.token.additional_info='edam_userId=%s&edam_shard=%s' %(edamUserID, edamShard)
-                return_to=OAUTH_APP_SETTINGS[self.service]['return_to']
+        if self.service == 'flickr':
+                token_dict =dict(s.split('=') for s in token_info.split('&'))
+                logging.info('flickr token info %s' % token_dict)
+                specifier = self.token.specifier = urllib2.unquote(token_dict["username"])
 
-        if 'specifier_handler' in self.service_info:
+        return_to=OAUTH_APP_SETTINGS[self.service]['return_to']
+
+        if 'specifier_handler' in self.service_info and specifier is None:
+            logging.info('specifier_handler %s for %s' %(self.service_info, self.service))
             specifier = self.token.specifier = self.service_info['specifier_handler'](self)
             old = OAuthAccessToken.all().filter(
                 'specifier =', specifier).filter(
@@ -302,8 +342,8 @@ class OAuthClient(object):
             }
 
         kwargs.update(extra_params)
-        if self.service == 'evernote':
-                kwargs.update({'oauth_callback': 'http://www.instaright.com/oauth/evernote/callback'})
+        if self.service == 'evernote' or self.service == 'flickr':
+                kwargs.update({'oauth_callback': OAUTH_APP_SETTINGS[self.service]['oauth_callback']})
         if self.oauth_verifier is not None:
                 kwargs.update({'oauth_verifier': self.oauth_verifier})
 

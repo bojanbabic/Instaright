@@ -1,0 +1,59 @@
+import urllib
+import logging
+import os
+import sys
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.ext import db
+
+from models import UserTokens, SessionModel
+from service_util import ServiceUtil
+
+class ServiceSubmitHandler(webapp.RequestHandler):
+        def post(self):
+                user_details_key=self.request.get('user_details_key', None)
+                if user_details_key is None:
+                        logging.info('user details key not defined ... skipping services submit')
+                        return
+                session_key=self.request.get('session_key', None)
+                if session_key is None:
+                        logging.info('session key not defined ... skipping services submit')
+                        return
+		session=SessionModel.gql('WHERE __key__ = :1', db.Key(session_key)).get()
+		user_token = UserTokens.gql('WHERE user_details = :1', db.Key(user_details_key)).get()
+                if user_token is None:
+                        logging.info('skipping service submit no tokens found')
+                        return
+		service_util = ServiceUtil()
+		evernote_token = user_token.evernote_token
+                evernote_token_additional_info = user_token.evernote_additional_info
+                evernote_enabled = user_token.evernote_enabled
+
+		flickr_token = user_token.flickr_token
+                flickr_token_additional_info = user_token.flickr_additional_info
+                flickr_enabled = user_token.flickr_enabled
+
+		facebook_token = user_token.facebook_token
+                facebook_enabled = user_token.facebook_enabled
+
+		twitter_token = user_token.twitter_token
+                twitter_enabled = user_token.twitter_enabled
+
+                if evernote_token is not None and evernote_enabled == True and session.selection is not None and session.selection != 'None':
+			service_util.send_to_evernote(urllib.unquote(evernote_token), session, evernote_token_additional_info)
+#		if flickr_token is not None and flickr_enabled == True and session.isImage():
+#			service_util.send_to_flickr(flickr_token, session, flickr_token_additional_info)
+		if facebook_token is not None and facebook_enabled == True:
+			service_util.send_to_facebook(facebook_token, session)
+		if twitter_token is not None and twitter_enabled == True:
+			service_util.send_to_twitter(twitter_token, session)
+
+app = webapp.WSGIApplication([
+                                ('/service/submit', ServiceSubmitHandler),
+                                        ], debug = True)
+def main():
+        run_wsgi_app(app)
+
+if __name__ == "__main__":
+        main()
+
