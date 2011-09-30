@@ -175,8 +175,10 @@ class GenericWebHandler(webapp.RequestHandler):
                         twitter_oauth = OAuthAccessToken.get_by_key_name(twitter_cookie)
                 if twitter_oauth is not None and ud is not None:
                         twitter_token = twitter_oauth.oauth_token
+                        twitter_secret= twitter_oauth.oauth_token_secret
                         logging.info('User Details modified ... updating twitter token')
                         user_token.twitter_token=twitter_token
+                        user_token.twitter_secret=twitter_secret
                         user_token_modified=True
                 flickr_oauth = None
                 if flickr_oauth is not None:

@@ -18,7 +18,6 @@ from utils import LinkUtil,StatsUtil
 sys.path.append('social')
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
-
 import twitter
 
 tweet_replies = [ 
@@ -106,6 +105,11 @@ class TweetHotLinks(webapp.RequestHandler):
                         h.put()
 
 class TweetHotLinksTask(webapp.RequestHandler):
+        def __init__(self):
+               config=ConfigParser.ConfigParser()
+               config.read(os.path.split(os.path.append(__file__)[0]+'/../properties/general.ini'))
+               self.access_token_key=config.get('twit','access_token_key')
+               self.access_token_secret=config.get('twit','access_token_secret')
         def post(self):
                twit=self.request.get('twit', None)
                if twit is None or twit == 'None' or 'story: None' in twit:
@@ -115,8 +119,8 @@ class TweetHotLinksTask(webapp.RequestHandler):
                api = twitter.Api(
                                 consumer_key='WZ9re48FXCmnaNlN4rbuhg',
                                 consumer_secret='jEQ7gDsE2aR9AXrA6aMZHBvKvvFgurjXoSiYLiyjQ', 
-                                access_token_key='193034839-oI43CpQA6Mf1JC2no0mKwGxgT7wyWdDL6HpSKlMz', 
-                                access_token_secret='q2CP7JR8wNrMNbqgRs9YezZtdMtZO7OgcgTRjCSY'
+                                access_token_key=self.access_token_key,
+                                access_token_secret=self.access_token_secret
                                 ) 
                try:
                         api.PostUpdate(twit)

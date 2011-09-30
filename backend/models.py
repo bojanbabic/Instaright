@@ -286,6 +286,7 @@ class UserTokens(db.Model):
         facebook_token=db.StringProperty()
         facebook_enabled = db.BooleanProperty(default=True)
         twitter_token=db.StringProperty()
+        twitter_secret=db.StringProperty()
         twitter_enabled = db.BooleanProperty(default=True)
         evernote_token=db.StringProperty()
         evernote_enabled = db.BooleanProperty(default=True)
