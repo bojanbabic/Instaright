@@ -18,7 +18,8 @@ from google.appengine.runtime import apiproxy_errors
 
 from models import UserDetails, SessionModel, Badges
 from models import UserStats, UserBadge, ScoreUsersDaily
-from utils import BadgeUtil, UserScoreUtility
+from utils import UserScoreUtility
+from badge_utils import BadgeUtil
 from generic_handler import GenericWebHandler
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))

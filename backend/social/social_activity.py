@@ -13,7 +13,8 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from models import UserDetails, Links
-from utils import LinkUtil,StatsUtil
+from utils import LinkUtil
+from handler_utils import RequestUtils
 
 sys.path.append('social')
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -90,7 +91,7 @@ class TweetHotLinks(webapp.RequestHandler):
                  hotLinks = Links.gql('WHERE shared = :1 ORDER by date_added desc, overall_score desc', not_shared).fetch(30)
                  for h in hotLinks:
                         if h.domain is None:
-                                h.domain=StatsUtil.getDomain(h.url)
+                                h.domain=RequestUtils.getDomain(h.url)
                                 h.put()
 
                         if h.domain in self.skip_domains:
@@ -107,7 +108,7 @@ class TweetHotLinks(webapp.RequestHandler):
 class TweetHotLinksTask(webapp.RequestHandler):
         def __init__(self):
                config=ConfigParser.ConfigParser()
-               config.read(os.path.split(os.path.append(__file__)[0]+'/../properties/general.ini'))
+               config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
                self.access_token_key=config.get('twit','access_token_key')
                self.access_token_secret=config.get('twit','access_token_secret')
         def post(self):

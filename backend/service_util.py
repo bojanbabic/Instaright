@@ -25,14 +25,16 @@ from google.appengine.api import mail
 class ServiceUtil(object):
         def __init__(self):
                 config=ConfigParser.ConfigParser()
+                logging.info('reading props from %s' % os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
                 config.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/general.ini')
-                self.twitter_access_token_key=config.get('twit','access_token_key')
                 self.flickr_key=config.get('flickr', 'key')
                 self.flickr_secret=config.get('flickr', 'secret')
 
                 self.evernoteHost="www.evernote.com"
                 self.noteStoreUriBase = "https://" + self.evernoteHost + "/edam/note/"
                 self.userStoreUri = "https://" + self.evernoteHost + "/edam/user"
+                self.twitter_consumer_key=config.get('twit','consumer_key')
+                self.twitter_consumer_secret=config.get('twit','consumer_secret')
                 self.twitter_access_token_secret=config.get('twit','access_token_secret')
         def send_to_flickr(self, flickr_token, session, additionalInfo=None):
                 try:
@@ -90,21 +92,20 @@ class ServiceUtil(object):
 	def send_to_facebook(self, facebook_token, session):
 		return
 	def send_to_twitter(self, twitter_token, twitter_secret, session):
+               logging.info('sending to twitter :user token %s and secret %s ' % (twitter_token , twitter_secret))
+               logging.info('client:consumer key %s and consumer secret %s ' % (self.twitter_consumer_key, self.twitter_consumer_secret))
                api = twitter.Api(
-                                consumer_key=twitter_token,
-                                consumer_secret=twitter_secret,
-                                access_token_key=self.twitter_access_token_key,
-                                access_token_secret=self.twitter_access_token_secret
+                                consumer_key=self.twitter_consumer_key,
+                                consumer_secret=self.twitter_consumer_secret,
+                                access_token_key=twitter_token,
+                                access_token_secret=twitter_secret
                                 ) 
-               try:
-                       #TODO totally deprecated use some-utils after refactoring utils 
-                       url = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+session.url;
-                       link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(unicode(url))+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
-                       data=urllib2.urlopen(link)
-                       json=simplejson.load(data)
-                       short_url = json["data"]["url"]
-                       twit = 'Just market awesome article %s via:instaright' % short_url
-                       api.PostUpdate(twit)
-                       logging.info('twit: %s' % twit)
-               except:
-                       logging.info('tweeting error %s => %s' % (sys.exc_info()[0],sys.exc_info()[1]))
+               #TODO totally deprecated use some-utils after refactoring utils 
+               url = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+session.url;
+               link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(unicode(url))+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
+               data=urllib2.urlopen(link)
+               json=simplejson.load(data)
+               short_url = json["data"]["url"]
+               twit = 'Just market awesome article %s via:instaright' % short_url
+               api.PostUpdate(twit)
+               logging.info('twit: %s' % twit)

@@ -37,17 +37,17 @@ class ServiceSubmitHandler(webapp.RequestHandler):
                 facebook_enabled = user_token.facebook_enabled
 
 		twitter_token = user_token.twitter_token
-		twitter_secret = user_token.twitter_token
+		twitter_secret = user_token.twitter_secret
                 twitter_enabled = user_token.twitter_enabled
 
                 if evernote_token is not None and evernote_enabled == True and session.selection is not None and session.selection != 'None':
 			service_util.send_to_evernote(urllib.unquote(evernote_token), session, evernote_token_additional_info)
-		if flickr_token is not None and flickr_enabled == True and session.isImage():
-			service_util.send_to_flickr(flickr_token, session, flickr_token_additional_info)
+		#if flickr_token is not None and flickr_enabled == True and session.isImage():
+		#	service_util.send_to_flickr(flickr_token, session, flickr_token_additional_info)
 		if facebook_token is not None and facebook_enabled == True:
 			service_util.send_to_facebook(facebook_token, session)
-		#if twitter_token is not None and twitter_enabled == True and session.instaright_account == 'gbabun@gmail.com':
-		#	service_util.send_to_twitter(twitter_token, twitter_secret, session)
+		if twitter_token is not None and twitter_enabled == True and session.instaright_account == 'gbabun@gmail.com':
+			service_util.send_to_twitter(twitter_token, twitter_secret, session)
 
 app = webapp.WSGIApplication([
                                 ('/service/submit', ServiceSubmitHandler),

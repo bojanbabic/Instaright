@@ -10,7 +10,7 @@ from google.appengine.ext.webapp import xmpp_handlers
 
 from cron import WeeklyDomainStats
 from models import Subscription,IMInvite
-from utils import StatsUtil
+from handler_utils import RequestUtils
 
 		
 #class XMPPHandler(webapp.RequestHandler):
@@ -38,7 +38,7 @@ class XMPPHandler(xmpp_handlers.CommandHandler):
 		subscriber_mail = self.user_mail(message.sender)
 		logging.info('subscribing user: %s' % subscriber_mail)
 		im_from = db.IM('xmpp', message.sender)
-		domain = StatsUtil.getDomain(message.arg)
+		domain = RequestUtils.getDomain(message.arg)
 		if message.arg == 'all':
 			domain = 'all'
 		if not domain:

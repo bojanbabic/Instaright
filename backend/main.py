@@ -6,7 +6,8 @@ import thread
 import time
 import urllib
 
-from utils import StatsUtil,LinkUtil, UserScoreUtility
+from utils import LinkUtil, UserScoreUtility
+from handler_utils import RequestUtils
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -70,16 +71,16 @@ class MainHandler(webapp.RequestHandler):
                        
                         logging.info('Received args:%s' % args)
 
-                        if not StatsUtil.checkUrl(args):
+                        if not RequestUtils.checkUrl(args):
                                 logging.info('skipping since url is not good!')
                                 return
-		        user=StatsUtil.getUser(args)
-		        url=StatsUtil.getUrl(args)
-		        domain=StatsUtil.getDomain(url)
-                        title = StatsUtil.getTitle(args)
-                        version = StatsUtil.getVersion(args)
-                        client = StatsUtil.getClient(args)
-                        selection = StatsUtil.getSelection(args)
+		        user=RequestUtils.getUser(args)
+		        url=RequestUtils.getUrl(args)
+		        domain=RequestUtils.getDomain(url)
+                        title = RequestUtils.getTitle(args)
+                        version = RequestUtils.getVersion(args)
+                        client = RequestUtils.getClient(args)
+                        selection = RequestUtils.getSelection(args)
                         if selection is not None:
                                 selection = selection[:500]
                 	user_agent = self.request.headers['User-agent']
@@ -93,7 +94,7 @@ class MainHandler(webapp.RequestHandler):
 
 			logging.info('triggering feed update')
 
-                        user = StatsUtil.getUser(args)
+                        user = RequestUtils.getUser(args)
 
                         cachedBadge = memcache.get('badge_'+user)
                         logging.info('looking for badge %s' % 'badge_'+user)
@@ -117,7 +118,7 @@ class MainTaskHandler(webapp.RequestHandler):
 		url=self.request.get('url',None)
 		domain=self.request.get('domain',None)
                 title=self.request.get('title',None)
-                if not StatsUtil.checkUrl([],url):
+                if not RequestUtils.checkUrl([],url):
                     logging.info('skipping since url is not good!')
                     return
                 lu = LinkUtil()

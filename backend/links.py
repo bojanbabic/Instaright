@@ -16,7 +16,8 @@ from google.appengine.api import datastore_errors
 from google.appengine.runtime import apiproxy_errors
 
 from models import Links, SessionModel, UserSessionFE
-from utils import StatsUtil, LinkUtil, CategoriesUtil, Cast
+from utils import LinkUtil, CategoriesUtil, Cast
+from handler_utils import RequestUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
@@ -56,7 +57,7 @@ class LinkSortHandler(webapp.RequestHandler):
                         links = Links.gql('ORDER by date_added desc, overall_score desc').fetch(100)
                         logging.info('pre link count: %s' %len(links))
                         order = 'overall_score'
-                urls = [ (l.url, str(getattr(l,order)), str(l.date_updated)) for l in links  if l.url != StatsUtil.getDomain(l.url)]
+                urls = [ (l.url, str(getattr(l,order)), str(l.date_updated)) for l in links  if l.url != RequestUtils.getDomain(l.url)]
                 logging.info('link count: %s' %len(urls))
                 if order and hasattr(l,order): 
                         template_variables = {'links' : urls }
@@ -82,7 +83,7 @@ class LinkTransformHandler(webapp.RequestHandler):
                         logging.info('could not fetch original url. skipping.')
                         return
                 logging.info('original url %s' % url)
-                domain = StatsUtil.getDomain(url)
+                domain = RequestUtils.getDomain(url)
                 s.domain = domain
                 s.feed_url=s.url
                 s.url=url
@@ -104,7 +105,7 @@ class ShortLinkHandler(webapp.RequestHandler):
                 if long_url.startswith('itms://'):
                         logging.info('Skipping itunes item: %s' % long_url)
                         return
-                domain = StatsUtil.getDomain(long_url)
+                domain = RequestUtils.getDomain(long_url)
                 s.short_url = s.url
                 s.url = long_url
                 s.domain = domain

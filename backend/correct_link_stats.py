@@ -1,6 +1,6 @@
 #!/usr/bin/python 
 import sys
-from utils import StatsUtil
+from handler_utils import RequestUtils
 
 class StatsAnalyzer:
 	def __init__(self):
@@ -16,7 +16,7 @@ class StatsAnalyzer:
 		handle = open(file)
 		for l in handle:
 			url, count = l.split("\t")
-			domain = StatsUtil.getDomain(url)
+			domain = RequestUtils.getDomain(url)
 			if domain in self.map:
 				current_links = self.map[domain]
 			else:

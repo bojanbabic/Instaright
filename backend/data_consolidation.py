@@ -1,17 +1,17 @@
-import datetime, logging, os, urllib2, urllib
+import datetime
+import logging
+import urllib2
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
-from google.appengine.ext.webapp import template
 from google.appengine.api.labs import taskqueue
 
-from utils import StatsUtil
+from handler_utils import RequestUtils
 from models import UserLocationModel, CityStats, CountryStats, LinkStats, UserDetails, SessionModel, UserStats
 class GeneralConsolidation(webapp.RequestHandler):
 	def post(self):
-		message = []
 		#lower_limit_date = datetime.datetime.strptime('2009-11-15', '%Y-%m-%d').date()
 		dateStr = self.request.get('date',None)
 	        if dateStr is None :
@@ -48,7 +48,7 @@ class AggregateDataHandler(webapp.RequestHandler):
 
 	def aggregateData(self, currentSession, upper_limit_date):
 		logging.info('agregate data for %s' % currentSession.date)
-		locationData =StatsUtil.ipResolverAPI(currentSession.ip)
+		locationData =RequestUtils.ipResolverAPI(currentSession.ip)
 		if len(locationData) == 2:
 			logging.info('updating location data')
 			city= locationData[0]
@@ -122,7 +122,7 @@ class AggregateDataHandler(webapp.RequestHandler):
 		shouldUpdateSession = 0
 		mode = ''
 		if currentSession.domain is None or currentSession.domain == '':
-			currentSession.domain = StatsUtil.getDomain(currentSession.url)
+			currentSession.domain = RequestUtils.getDomain(currentSession.url)
 			shouldUpdateSession = 1
 			mode='domain change: %s' % currentSession.domain
 		if currentSession.date is None or currentSession.date == '':

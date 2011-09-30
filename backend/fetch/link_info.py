@@ -5,7 +5,8 @@ import logging
 import datetime
 import time
 
-from utils import StatsUtil,Cast, TaskUtil, ConfigParser, LinkUtil
+from utils import Cast, TaskUtil, ConfigParser, LinkUtil
+from handler_utils import RequestUtils
 from users import UserUtil
 from models import Links
 from google.appengine.ext import webapp
@@ -38,7 +39,7 @@ class LinkHandler(webapp.RequestHandler):
                 count = self.request.get('count',None)
                 url = self.request.get('url',None)
                 url = urllib2.unquote(url)
-                domain = StatsUtil.getDomain(url)
+                domain = RequestUtils.getDomain(url)
                 if not domain or len(domain) == 0:
                         self.response.out.write('not url: %s skipping!\n' %url)
                         return
@@ -124,7 +125,7 @@ class LinkHandler(webapp.RequestHandler):
 
         def getAllData(self,url, count=0):
 
-		domain = StatsUtil.getDomain(url)
+		domain = RequestUtils.getDomain(url)
 		logging.info('from %s domain %s' %( url, domain))
 		url=urllib2.quote(url.encode('utf-8'))
                 url_hash = LinkUtil.getUrlHash(url)
@@ -401,7 +402,7 @@ class LinkTractionTask(webapp.RequestHandler):
 		
                 count = 1
                 url = urllib2.unquote(url)
-                domain = StatsUtil.getDomain(url)
+                domain = RequestUtils.getDomain(url)
                 if not domain or len(domain) == 0:
                         self.response.out.write('not url: %s skipping!\n' %url)
                         return
