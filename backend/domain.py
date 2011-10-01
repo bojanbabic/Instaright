@@ -8,10 +8,11 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 
 from models import SessionModel
-from users import UserUtil
 from generic_handler import GenericWebHandler
 from main import UserMessager
-from link_utils import LinkUtils
+
+from utils.link import LinkUtils
+from utils.user import UserUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 import simplejson
@@ -46,7 +47,7 @@ class DomainFeedHandler(webapp.RequestHandler):
                         return
                 if format == 'json':
                         logging.info('domain %s json feed' % domain)
-                        userUtil = UserUtil()
+                        userUtil = UserUtils()
                         entries = SessionModel.gql('WHERE domain = :1 order by date desc', domain).fetch(10)
 			self.response.headers['Content-Type'] = "application/json"
 			#TODO insert categories for domain's view

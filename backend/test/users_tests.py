@@ -1,6 +1,7 @@
-import unittest, logging, ConfigParser, sys, os
+import unittest, logging, ConfigParser, os
 from google.appengine.api import urlfetch
-from users import UserUtil
+
+from utils.user import UserUtils
 
 class AppEngineAPITest(unittest.TestCase):
     
@@ -13,6 +14,6 @@ class KloutScoreTest(unittest.TestCase):
 	config=ConfigParser.ConfigParser()
 	config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
 	klout_api_key=config.get('social', 'klout_api_key')
-	score = UserUtil.getKloutScore(user,klout_api_key)
+	score = UserUtils.getKloutScore(user,klout_api_key)
 	logging.info('got score %s for %s ' %(score, user))
 	self.assertTrue( score > 0)

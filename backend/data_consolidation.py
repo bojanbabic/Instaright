@@ -8,7 +8,8 @@ from google.appengine.api import memcache
 from google.appengine.runtime import DeadlineExceededError
 from google.appengine.api.labs import taskqueue
 
-from handler_utils import RequestUtils
+from utils.handler import RequestUtils
+
 from models import UserLocationModel, CityStats, CountryStats, LinkStats, UserDetails, SessionModel, UserStats
 class GeneralConsolidation(webapp.RequestHandler):
 	def post(self):

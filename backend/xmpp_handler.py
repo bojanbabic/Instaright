@@ -10,8 +10,8 @@ from google.appengine.ext.webapp import xmpp_handlers
 
 from cron import WeeklyDomainStats
 from models import Subscription,IMInvite
-from handler_utils import RequestUtils
 
+from utils.handler import RequestUtils
 		
 #class XMPPHandler(webapp.RequestHandler):
 class XMPPHandler(xmpp_handlers.CommandHandler):

@@ -7,7 +7,6 @@ import os
 import sys
 import ConfigParser
 from google.appengine.ext import webapp
-from google.appengine.api import urlfetch
 from google.appengine.api import datastore_errors
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
@@ -18,8 +17,11 @@ from google.appengine.runtime import apiproxy_errors
 
 from models import UserDetails, SessionModel, Badges
 from models import UserStats, UserBadge, ScoreUsersDaily
-from utils import UserScoreUtility
-from badge_utils import BadgeUtil
+
+from utils.score import UserScoreUtility
+from utils.user import UserUtils
+from utils.badge import BadgeUtil
+
 from generic_handler import GenericWebHandler
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
@@ -174,94 +176,6 @@ class UserHandler(webapp.RequestHandler):
                 self.response.headers["Content-type"] = "text/html"
 		self.response.out.write(template.render(path,template_variables))
 
-        def gather_info(self, user):
-                if not '@' in user:
-			logging.info('not email address: skipping ...')
-                        user_detail = UserDetails()
-			return user_detail
-                user_detail = UserDetails.gql('where instapaper_account = :1' , user).get()
-		if user_detail is None:
-			user_detail = UserDetails()
-		if user_detail.mail is None:
-			logging.info('updating user details setting user mail %s' % user)
-			user_detail.mail = user
-                if user_detail.instaright_account is None:
-                        logging.info('update instaright account for user %s' % user)
-                        user_detail.instaright_account = user
-
-                #PREPARE for request
-                #time_milis = time.time() * 1000
-                logging.info("user encoded %s" % user)
-                RAPPORTIVE_LINK = "https://rapportive.com/contacts/email/%s" % user
-		logging.info('fetchin url:%s' %RAPPORTIVE_LINK)
-		#TILL here
-                try:
-                        response = urlfetch.fetch(RAPPORTIVE_LINK)
-                except:
-                        logging.info('error downloading rapportive info. reTRYing')
-			try:
-                        	response = urlfetch.fetch(RAPPORTIVE_LINK)
-			except:
-                        	e, e1 = sys.exc_info()[0], sys.exc_info()[1]
-                        	return user_detail
-                if response.status_code == 200:
-
-                        json_string_response = simplejson.loads(simplejson.dumps(response.content))
-                        json = simplejson.loads(json_string_response)
-			name = None
-			try:
-                        	name = json["contact"]["name"]
-			except:
-				logging.info("unable to gather name from rapportive")
-
-                        if name is None or len(name) < 1 or unicode(name).startswith('Thanks') or unicode(name).startswith('Sorry'):
-				logging.info('did not find name for account %s' % user)
-                                return user_detail
-                        
-                        logging.info('name: %s' % unicode(name))
-                        user_detail.name = unicode(name)
-                        memberships = json["contact"]["memberships"] 
-                        memships = {}
-                        for m in memberships:
-                                service_name = m['site_name'].lower().replace(' ','_').replace('.','_')
-                                memships[service_name]=m['profile_url']
-				try:
-                                	setattr(user_detail, service_name, m['profile_url'])
-					logging.info('service %s profile %s' % (service_name, m['profile_url']))
-                                        if service_name == 'twitter' and not user_detail.twitter_request_sent:
-                                                # send twitter request and need to put since we need key for follow
-						user_detail.twitter_request_sent=True
-						user_detail.put()
-                                                taskqueue.add(url='/util/twitter/follow/'+str(user_detail.key()), queue_name='twit-queue')
-				except:
-					logging.error('memberships error %s ::: more details %s ' % (sys.exc_info()[0], sys.exc_info()[1]))
-
-                        user_detail.social_data = simplejson.dumps(memships)
-                        occupations = json["contact"]["occupations"]
-                        occups = []
-                        for o in occupations:
-                                tmp_o = o['job_title'] + " ^_^ " + o['company']
-                                occups.append(tmp_o)
-                        user_detail.occupations = '; '.join(occups)
-			logging.info('occupations %s' %user_detail.occupations)
-			avatar = None
-			try:
-                        	avatar = json["contact"]["images"][0]["url"]
-                        	logging.info('avatar %s' % avatar)
-			except:
-				logging.info('no image info cause of %s' % sys.exc_info()[0])
-                        if avatar is not None and len(avatar) > 0:
-                                user_detail.avatar = avatar
-			location = None
-			try:
-				location = json["contact"]["location"]
-			except:
-				logging.info('no location info cause of %' %sys.exc_info()[0])
-			if location is not None and len(location):
-				location_lines = location.splitlines()
-				user_detail.location = ' '.join(location_lines)
-                return user_detail
-
 class UserDeleteHandler(webapp.RequestHandler):
         def get(self):
                 user_details =  UserDetails.all()
@@ -273,11 +187,10 @@ class UserDeleteHandler(webapp.RequestHandler):
 class UserInfoFetchHandler(webapp.RequestHandler):
         def post(self, user):
                 logging.info('fetching info for user %s' % user)
-                userhandler = UserHandler()
                 user_decoded = urllib.unquote(user)
                 user_decoded = user_decoded.strip()
                 logging.info('fetching info for user %s' % user_decoded)
-                userDetail = userhandler.gather_info(user_decoded)
+                userDetail = UserUtils.gather_info(user_decoded)
                 if userDetail.name:
                         userDetail.put()
 	                logging.info('done fetching info for user %s' % user_decoded)
@@ -490,75 +403,6 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                         userBadge.put()
 			
                 UserScoreUtility.updateBadgeScore(user, badge)
-class UserUtil(object):
-
-	@classmethod
-        def getAvatar(cls,instapaper_account):
-                if instapaper_account is None:
-                        return '/static/images/noavatar.png'
-		memcache_key='avatar_'+instapaper_account
-		cached_avatar = memcache.get(memcache_key)
-		if cached_avatar:
-                        logging.info('getting avatar from cache: %s for user %s' %(cached_avatar, instapaper_account))
-			return cached_avatar
-		userDetails = UserDetails.gql('WHERE instapaper_account = :1', instapaper_account).get()
-		if userDetails and userDetails.avatar is not None:
-                        logging.info('%s avatar %s' % (instapaper_account, userDetails.avatar))
-			memcache.set(memcache_key, userDetails.avatar)
-			return userDetails.avatar
-		else:
-			return '/static/images/noavatar.png'
-
-
-	@classmethod
-	def getKloutScore(cls, user, klout_api_key):
-		score = None
-		logging.info('klout score for %s' % user)
-		userDetails=UserDetails.gql('WHERE instapaper_account = :1' , user).get()
-		if userDetails is None or userDetails.twitter is None:
-                	userhandler = UserHandler()
-                	logging.info(' trying get more info for user %s' % user)
-                	userDetails = userhandler.gather_info(user)
-			if userDetails is not None:
-				logging.info('saving user info %s' %userDetails.mail)
-			        try:
-				        while True:
-					        timeout_ms = 100
-					        try:
-				                        userDetails.put()
-						        break
-					        except datastore_errors.Timeout:
-						        time.sleep(timeout_ms)
-						        timeout_ms *= 2
-			        except apiproxy_errors.DeadlineExceededError:
-				        logging.info('run out of retries for writing to db')
-		if userDetails is None or userDetails.twitter is None:
-			logging.info('no twitter account for user %s . aborting' % user)
-			return
-			
-                screen_name = str(userDetails.twitter).replace('http://twitter.com/', '')
-		KLOUT_SCORE_URL='http://api.klout.com/1/klout.json?key=%s&users=%s' %(klout_api_key, screen_name)
-		response = None
-		try:
-                        response = urlfetch.fetch(KLOUT_SCORE_URL)
-		except:
-			logging.info('error fetching url %s' % KLOUT_SCORE_URL)
-		if response is None or response.status_code != 200:
-               		logging.info('unexpected response') 
-			return
-		logging.info('klout api response %s' % response.content)
-		json = eval(response.content)
-		try:
-			score = json["users"][0]["kscore"]
-			logging.info('klout api returned score %s for user %s' % ( str(score), screen_name))
-		except:
-                        e, e1 = sys.exc_info()[0], sys.exc_info()[1]
-                        logging.info('error: %s, %s for response: %s' %(e, e1, json))
-		if score is not None:
-			userDetails.klout_score=int(score)
-			userDetails.put()
-		return score
-		
 
 app = webapp.WSGIApplication([
                                 ('/user/stats/top/(.*)', TopUserHandler),

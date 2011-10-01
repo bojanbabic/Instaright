@@ -16,13 +16,14 @@ from google.appengine.api import memcache
 from models import Links, SessionModel, LinkCategory
 from main import BroadcastMessage
 
-from utils import LinkUtil, Cast, CategoriesUtil
-from handler_utils import RequestUtils
+from utils.general import Cast
+from utils.category import CategoryUtil
+from utils.link import LinkUtils
+from utils.handler import RequestUtils
+from utils.user import UserUtils
 
-from users import UserUtil
 from generic_handler import GenericWebHandler
 from main import UserMessager
-from link_utils import LinkUtils
 from google.appengine.ext.db import BadValueError
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
@@ -130,7 +131,7 @@ class LinkTransformHandler(webapp.RequestHandler):
                         return
                 s = SessionModel.gql('WHERE __key__ = :1', key).get()
                 logging.info('feedproxt url %s' % str(s.url))
-                util = LinkUtil()
+                util = LinkUtils()
                 url = util.getFeedOriginalUrl(s.url)
                 if url is None:
                         logging.info('could not fetch original url. skipping.')
@@ -149,7 +150,7 @@ class ShortLinkHandler(webapp.RequestHandler):
                 k = self.request.get('key')
                 key = db.Key(k)
                 s = SessionModel.gql('WHERE __key__ = :1', key).get()
-                util = LinkUtil()
+                util = LinkUtils()
                 long_url=util.getShortOriginalUrl(s.url)
                 if long_url is None:
                         logging.info('could not retrieve long link.skipping')
@@ -173,7 +174,7 @@ class LinkCategoryHandler(webapp.RequestHandler):
 		self.alchemy_key=config.get('social', 'alchemy_api_key')
         def post(self):
 		url=self.request.get('url',None)
-                url_hash = LinkUtil.getUrlHash(url)
+                url_hash = LinkUtils.getUrlHash(url)
                 if url is None:
                         logging.info('no link in request. skipping')
                         return
@@ -193,7 +194,7 @@ class LinkCategoryHandler(webapp.RequestHandler):
                         link = Links()
                 else:
                         link.date_updated = datetime.datetime.now().date()
-                json = LinkUtil.getJsonFromApi(category_api)
+                json = LinkUtils.getJsonFromApi(category_api)
                 if json is None:
                         logging.info('alchemy api returned no category.skipping')
                         return
@@ -280,7 +281,7 @@ class LinkCategoryDeliciousHandler(webapp.RequestHandler):
                         logging.info('no url skipping')
                         return
                 logging.info('processing categories %s for url %s' %(category, url))
-                CategoriesUtil.processLinkCategoriesFromJson(category, url)
+                CategoryUtil.processLinkCategoriesFromJson(category, url)
 
 class CategoryFeedHandler(webapp.RequestHandler):
         def get(self, category):
@@ -290,7 +291,7 @@ class CategoryFeedHandler(webapp.RequestHandler):
                         return
                 if format == 'json':
                         logging.info('catefory %s json feed' % category)
-                        userUtil = UserUtil()
+                        userUtil = UserUtils()
                         allentries = LinkCategory.gql('WHERE category = :1 order by updated desc', category).fetch(50)
                         entries= [ e for e in allentries if hasattr(e,'model_details') and e.model_details is not None ]
                         entries = entries[:10]
@@ -326,7 +327,7 @@ class CategoryStreamHandler(webapp.RequestHandler):
         def post(self):
                 category=self.request.get('category', None)
                 url_hash=self.request.get('url', None)
-                userUtil=UserUtil()
+                userUtil=UserUtils()
                 if category is None or len(category) == 0:
                         logging.info('no category in request. skipping ...')
                         return

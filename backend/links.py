@@ -16,8 +16,11 @@ from google.appengine.api import datastore_errors
 from google.appengine.runtime import apiproxy_errors
 
 from models import Links, SessionModel, UserSessionFE
-from utils import LinkUtil, CategoriesUtil, Cast
-from handler_utils import RequestUtils
+
+from utils.general import Cast
+from utils.category import CategoryUtil
+from utils.link import LinkUtils
+from utils.handler import RequestUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
@@ -77,7 +80,7 @@ class LinkTransformHandler(webapp.RequestHandler):
                         return
                 s = SessionModel.gql('WHERE __key__ = :1', key).get()
                 logging.info('feedproxt url %s' % unicode(s.url))
-                util = LinkUtil()
+                util = LinkUtils()
                 url = util.getFeedOriginalUrl(s.url)
                 if url is None:
                         logging.info('could not fetch original url. skipping.')
@@ -96,7 +99,7 @@ class ShortLinkHandler(webapp.RequestHandler):
                 k = self.request.get('key')
                 key = db.Key(k)
                 s = SessionModel.gql('WHERE __key__ = :1', key).get()
-                util = LinkUtil()
+                util = LinkUtils()
                 long_url=util.getShortOriginalUrl(s.url)
                 if long_url is None:
                         logging.info('could not retrieve long link.skipping')
@@ -155,7 +158,7 @@ class LinkDomainCategoriesTask(webapp.RequestHandler):
 			if link is None or link.categories is None:
 				logging.info('no categories for link %s' % url)
 				return
-                CategoriesUtil.processDomainCategories(link.categories, domain)
+                CategoryUtil.processDomainCategories(link.categories, domain)
                 
 class ProcessCategoriesHandler(webapp.RequestHandler):
         def post(self):
@@ -166,7 +169,7 @@ class ProcessCategoriesHandler(webapp.RequestHandler):
 
                 if domain is None:
                         logging.info('no domain is request. skipping...')
-                CategoriesUtil.processDomainCategories(categories, domain)
+                CategoryUtil.processDomainCategories(categories, domain)
 class LinkRecommendationTask(webapp.RequestHandler):
         def __init__(self):
                 conf = ConfigParser.ConfigParser()
@@ -178,7 +181,7 @@ class LinkRecommendationTask(webapp.RequestHandler):
                         logging.info('no url no recommendations')
                         return
 		url = url.encode('utf-8')
-                url_hash = LinkUtil.getUrlHash(url)
+                url_hash = LinkUtils.getUrlHash(url)
                 try:
                         l = Links.gql('WHERE url_hash = :1' , url_hash).get()
                         if l is None:

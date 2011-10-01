@@ -1,6 +1,6 @@
 import unittest
 import logging
-from link_utils import EncodeUtils
+from utils.link import  EncodeUtils 
 from models import SessionModel
 
 class EncodeTest(unittest.TestCase):

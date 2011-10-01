@@ -1,27 +1,16 @@
-import sys, os, urllib2, datetime, logging, cgi, uuid
+import os, datetime, logging
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
-from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
-from utils import LoginUtil
 
-from models import UserSessionFE, SessionModel, Links
-from main import UserMessager
-
-sys.path.append(os.path.join(os.path.dirname(__file__),'lib')) 
-
-import facebook, simplejson
-from oauth_handler import OAuthHandler, OAuthClient
-
-key='180962951948062'
-secret='9ae7202531b3b813baf1bca1fcea6178'
+from utils.user import UserUtils
 
 class AccountHandler(webapp.RequestHandler):
     def get(self):
 
-	uu = LoginUtil()
+	uu = UserUtils()
         logout_cookie = self.request.cookies.get('user_logged_out')
 	user_details = uu.getUserDetails(self)
 	screen_name = user_details["screen_name"]

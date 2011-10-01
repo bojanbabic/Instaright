@@ -10,9 +10,11 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
 from main import  BroadcastMessage
 from models import Subscription, SessionModel
-from users import UserUtil
+
 from xmpp_handler import XMPPHandler 
-from link_utils import LinkUtils
+
+from utils.link import LinkUtils
+from utils.user import UserUtils
 
 import feedparser
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -54,7 +56,7 @@ class CallbackHandler(webapp.RequestHandler):
 class BroadcastMessageTask(webapp.RequestHandler):
         def post(self):
 		        broadcaster = BroadcastMessage()
-                        userUtil = UserUtil()
+                        userUtil = UserUtils()
 			title = self.request.get('title', None)
 			link = self.request.get('link', None)
 			domain = self.request.get('domain', None)

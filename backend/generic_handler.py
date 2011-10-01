@@ -7,7 +7,9 @@ import uuid
 import sys
 
 from google.appengine.ext import webapp
-from utils import LoginUtil, LinkUtil
+from utils.link import LinkUtils
+from utils.user import UserUtils
+
 from models import UserSessionFE, UserDetails, UserTokens
 from google.appengine.ext.webapp import template
 
@@ -29,7 +31,7 @@ class GenericWebHandler(webapp.RequestHandler):
                         title = 'Instaright %s articles - %s ' % ( type, condition)
                         description = 'Discover, save and share trending stories from %s' % condition 
                 logging.info('feed lookup %s ' % url)
-                json = LinkUtil.getJsonFromApi(url)
+                json = LinkUtils.getJsonFromApi(url)
 		if json is None:
 			return None
                 logging.info('list of links: %s ' % len(json))
@@ -39,7 +41,7 @@ class GenericWebHandler(webapp.RequestHandler):
 		
 		
         def get_user(self):
-		uu = LoginUtil()
+		uu = UserUtils()
 		userSession = None
 		self.screen_name=None
 		self.auth_service=None
@@ -52,7 +54,6 @@ class GenericWebHandler(webapp.RequestHandler):
                 self.google_profile = None
                 self.evernote_name = None
                 self.flickr_name = None
-		used_data_from_session = False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
                 evernote_cookie = self.request.cookies.get('oauth.evernote')
@@ -85,7 +86,6 @@ class GenericWebHandler(webapp.RequestHandler):
                                         self.flickr_name = ud.flickr_profile
 					self.screen_name = user_data["screen_name"]
                                         self.avatar = user_data["avatar"]
-					user_data_from_session = True
                                         self.instaright_account=ud.instaright_account
                                         self.user_detail_key=str(ud.key())
 					logging.info('using screen name %s from session %s' %(self.screen_name, self.user_uuid))

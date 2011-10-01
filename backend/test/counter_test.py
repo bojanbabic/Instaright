@@ -1,7 +1,7 @@
 import unittest
 import logging
 import random
-from link_utils import  EncodeUtils
+from utils.link import  EncodeUtils 
 from generic_counter import GeneralCounterShardNew
 import generic_counter
 

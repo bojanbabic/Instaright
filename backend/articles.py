@@ -9,11 +9,13 @@ from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
+
 from models import SessionModel, Links
-from users import UserUtil
+
+from utils.user import UserUtils
+from utils.link import LinkUtils, EncodeUtils
+
 from generic_handler import GenericWebHandler
-from utils import LinkUtil
-from link_utils import EncodeUtils, LinkUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
@@ -25,7 +27,7 @@ class FeedGenerator(webapp.RequestHandler):
 		format = self.request.get('format', None);
                 cache_exp = datetime.datetime.now() + datetime.timedelta(minutes=5)
                 cache_exp_ts = time.mktime(cache_exp.timetuple())
-                userUtil = UserUtil()
+                userUtil = UserUtils()
                 if format == 'json' and cached_feed:
 			logging.info('getting json from cache')
 			self.response.headers['Content-Type'] = "application/json"
@@ -75,10 +77,10 @@ class ArticleHandler(GenericWebHandler):
                                 return
                         instaright_link =  LinkUtils.generate_instaright_link(url_hash, generated_title)
                         links = Links.gql('where url_hash = :1', url_hash).get()
-			userUtil = UserUtil()
+			userUtil = UserUtils()
                         if links is not None:
                                 category = links.categories
-                        sessionTitle = LinkUtil.generateUrlTitle(sessionModel.title)
+                        sessionTitle = LinkUtils.generateUrlTitle(sessionModel.title)
                         template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'story_avatar': userUtil.getAvatar(sessionModel.instaright_account), 'story_user': sessionModel.instaright_account, 'domain': sessionModel.domain, 'title':sessionModel.title, 'link': sessionModel.url, 'updated':sessionModel.date, 'id': str(sessionModel.key()), 'instaright_link': instaright_link, 'category': LinkUtils.getLinkCategoryHTML(sessionModel), 'dd': LinkUtils.generate_domain_link(sessionModel.domain)}
 		        path = os.path.join(os.path.dirname(__file__), 'templates/article.html')
                         self.response.headers["Content-Type"] = "text/html; charset=utf-8"
@@ -97,7 +99,7 @@ class BlogLoader(webapp.RequestHandler):
 class SitemapHandler(webapp.RequestHandler):
         def get(self):
 		template_variables=[]
-                json = LinkUtil.getJsonFromApi('http://www.instaright.com/feed?format=json')
+                json = LinkUtils.getJsonFromApi('http://www.instaright.com/feed?format=json')
                 if json is None:
                         logging.info('default view')
                         self.response.headers["Content-Type"] = "text/xml; charset=utf-8"

@@ -13,8 +13,9 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from models import UserDetails, Links
-from utils import LinkUtil
-from handler_utils import RequestUtils
+
+from utils.link import LinkUtils
+from utils.handler import RequestUtils
 
 sys.path.append('social')
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
@@ -194,8 +195,8 @@ class Twit:
                         logging.info('picking old style')
                         return self.textOldStyle(link)
         def textOldStyle(self,link):
-                linkUtil=LinkUtil()
-                short_link = linkUtil.shortenLink(link.url)
+                lu=LinkUtils()
+                short_link = lu.shortenLink(link.url)
 		if short_link is None:
 			self.text=None
 			return
@@ -227,8 +228,8 @@ class Twit:
                                         self.text +=" #digg %s" % link.diggs
                 logging.info('self.text: %s' % self.text)
         def textNewStyle(self,link, title_from_url=None):
-                linkUtil=LinkUtil()
-                short_link = linkUtil.shortenLink(link.url)
+                lu=LinkUtils()
+                short_link = lu.shortenLink(link.url)
                 logging.info('new style title %s' %title_from_url)
 
                 if (not link.title or link.title is None) and title_from_url is None:
@@ -278,7 +279,7 @@ class Twit:
                 else:
 			if title_from_url is not None and len(title_from_url) > 20:
                         	logging.info('trying from title to get twit text')
-                                short_link = linkUtil.shortenLink(link.url)
+                                short_link = lu.shortenLink(link.url)
 				if short_link is None:
 					self.text = None
 				else:

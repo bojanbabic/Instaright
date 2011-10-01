@@ -1,6 +1,6 @@
 import os, ConfigParser, urllib2, urllib, unittest, logging, time, threading, sys
-from google.appengine.api import urlfetch, memcache
-from users import UserUtil
+from google.appengine.api import memcache
+
 
 class BadgesTest(unittest.TestCase):
 
@@ -21,8 +21,7 @@ class BadgesTest(unittest.TestCase):
                 memcache_thread=threading.Thread(target=BadgesTest.get_badge)
                 memcache_thread.start()
 
-        @classmethod
-        def get_badge(cls):
+        def get_badge(self):
                 time.sleep(15)
                 user='gbabun@gmail.com'
                 badge_key='badge_'+user

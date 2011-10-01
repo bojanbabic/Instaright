@@ -6,8 +6,9 @@ import thread
 import time
 import urllib
 
-from utils import LinkUtil, UserScoreUtility
-from handler_utils import RequestUtils
+from utils.handler import RequestUtils
+from utils.link import LinkUtils, EncodeUtils
+from utils.score import UserScoreUtility
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -19,10 +20,9 @@ from google.appengine.ext.db import BadValueError
 from google.appengine.runtime import apiproxy_errors
 from google.appengine.api.taskqueue import TransientError
 
-from models import UserSessionFE, SessionModel, Subscription, LinkCategory, UserDetails
+from models import UserSessionFE, SessionModel, Subscription, UserDetails
 import generic_counter
 from generic_handler import GenericWebHandler
-from link_utils import EncodeUtils, LinkUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
@@ -121,14 +121,14 @@ class MainTaskHandler(webapp.RequestHandler):
                 if not RequestUtils.checkUrl([],url):
                     logging.info('skipping since url is not good!')
                     return
-                lu = LinkUtil()
+                lu = LinkUtils()
                 link_info = lu.getLinkInfo(url)
                 description = link_info["d"]
                 embeded = link_info["e"]
                 title_new = link_info["t"]
                 logging.info("link info desc: %s embede: %s" %( description, embeded))
                 if title is None or title == 'None' or title == 'null':
-                        title=LinkUtil.getLinkTitle(url)
+                        title=LinkUtils.getLinkTitle(url)
                 if title is not None:
                         title = title[:199]
                 logging.info('link title %s' %title)
@@ -159,7 +159,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 	model.instaright_account = user
                 	model.date = datetime.datetime.now()
                 	model.url = url
-                        model.url_hash = LinkUtil.getUrlHash(url)
+                        model.url_hash = LinkUtils.getUrlHash(url)
                         model.url_counter_id = url_cnt
                         model.url_encode26 = url_encode26
                         model.user_agent=user_agent

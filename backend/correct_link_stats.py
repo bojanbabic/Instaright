@@ -1,6 +1,6 @@
 #!/usr/bin/python 
 import sys
-from handler_utils import RequestUtils
+from utils.handler import RequestUtils
 
 class StatsAnalyzer:
 	def __init__(self):
