@@ -2,6 +2,7 @@ import logging
 import datetime
 
 from models import CategoryDomains, LinkCategory
+skip_cats=['via:packrati.us']
 class CategoryUtil(object):
         @classmethod
         def processDomainCategories(cls, categories, domain):
@@ -52,3 +53,22 @@ class CategoryUtil(object):
                                 logging.info('updated time for category %s [ %s ]' % (cat, existingCategory.url))
                                 existingCategory.updated = datetime.datetime.now()
 				existingCategory.put()
+        @classmethod
+        def getTwitCategories(cls, categories):
+                formated_cats=[]
+                if categories is None or len(categories) == 0:
+                        return []
+                dicti = eval(str(categories))
+                if len(dicti) == 0:
+                        formated_cats.append('recommended')
+                if categories is None or len(categories) == 0:
+                        formated_cats.append('recommended')
+                else:
+                    import operator
+                    logging.info('categories:'+str(dicti))
+                    sorteddict = sorted(dicti.iteritems(), key=operator.itemgetter(1), reverse=True)
+                    formated_cats = [ c[0] for c in sorteddict if c is not skip_cats ]
+                logging.info('all twit categories %s' % str(formated_cats))
+                return formated_cats
+
+

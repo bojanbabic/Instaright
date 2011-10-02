@@ -1,13 +1,13 @@
 import os
 import logging
-import urllib
-import urllib2
 import sys
 import ConfigParser
 
+from utils.link import LinkUtils
+from utils.social import Twit
+
 from xml.sax.saxutils import escape
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
-import simplejson
 import thrift.protocol.TBinaryProtocol as TBinaryProtocol
 import thrift.transport.THttpClient as THttpClient
 import evernote.edam.userstore.UserStore as UserStore
@@ -92,20 +92,24 @@ class ServiceUtil(object):
 	def send_to_facebook(self, facebook_token, session):
 		return
 	def send_to_twitter(self, twitter_token, twitter_secret, session):
-               logging.info('sending to twitter :user token %s and secret %s ' % (twitter_token , twitter_secret))
-               logging.info('client:consumer key %s and consumer secret %s ' % (self.twitter_consumer_key, self.twitter_consumer_secret))
                api = twitter.Api(
                                 consumer_key=self.twitter_consumer_key,
                                 consumer_secret=self.twitter_consumer_secret,
                                 access_token_key=twitter_token,
                                 access_token_secret=twitter_secret
                                 ) 
-               #TODO totally deprecated use some-utils after refactoring utils 
-               url = 'http://links.instaright.com/a947824b599193b3/?web=058421&dst='+session.url;
-               link='http://api.bit.ly/v3/shorten?longUrl='+urllib.quote(unicode(url))+'&login=bojanbabic&apiKey=R_62dc6488dc4125632884f32b84e7572b&hash=in&format=json'  
-               data=urllib2.urlopen(link)
-               json=simplejson.load(data)
-               short_url = json["data"]["url"]
-               twit = 'Just market awesome article %s via:instaright' % short_url
-               api.PostUpdate(twit)
-               logging.info('twit: %s' % twit)
+               twit = Twit()
+               lu=LinkUtils()
+               link = lu.getAllData(session.url)
+               if link.overall_score == 0:
+                       logging.debug('skipping to send twitt since content is not popular %s ' % session.url)
+                       return
+               twit.generate_content(link, session.title, "via:@instaright")
+               logging.info('twit: %s' % twit.text)
+               if twit.text is None:
+                       logging.info('twit has no text ... skipping')
+                       return
+               try:
+                   api.PostUpdate(twit.text)
+               except:
+                   logging.error('Error while sending tweet %s: %s => %s ' % (twit.text, sys.exc_info()[0],sys.exc_info()[1]))
