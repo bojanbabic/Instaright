@@ -7,6 +7,8 @@ import uuid
 import sys
 
 from google.appengine.ext import webapp
+from google.appengine.api.labs import taskqueue
+from google.appengine.ext import db
 from utils.link import LinkUtils
 from utils.user import UserUtils
 
@@ -54,6 +56,9 @@ class GenericWebHandler(webapp.RequestHandler):
                 self.google_profile = None
                 self.evernote_name = None
                 self.flickr_name = None
+                self.ud=None
+                ud_modified=None
+                new_session=False
 
 		uuid_cookie = self.request.cookies.get('user_uuid')
                 evernote_cookie = self.request.cookies.get('oauth.evernote')
@@ -61,34 +66,35 @@ class GenericWebHandler(webapp.RequestHandler):
                 flickr_cookie = self.request.cookies.get('oauth.flickr')
 		logout_cookie = self.request.cookies.get('user_logged_out')
                 user_details=None
-                ud=None
 		# try to get user name by cookie or from login
 		if uuid_cookie:
 			#Connect uuid with registered user
+			logging.info('reusing uuid: %s' % uuid_cookie)
 			self.user_uuid = uuid_cookie
 			userSession = UserSessionFE.gql('WHERE user_uuid = :1 order by last_updatetime desc' , self.user_uuid).get()
-			logging.info('reusing uuid: %s' % uuid_cookie)
 			if userSession is not None and userSession.user_details is not None:
-				ud = UserDetails.gql('WHERE __key__ = :1', userSession.user_details).get()
+				self.ud = UserDetails.gql('WHERE __key__ = :1', userSession.user_details).get()
 
                                 #fix instaright_account TODO possibly deprecated
-                                if ud is not None and ud.instapaper_account is not None:
-                                        ud.instaright_account=ud.instapaper_account
-                                        ud.put()
-				if ud is None:
+                                if self.ud is not None and self.ud.instapaper_account is not None:
+                                        self.ud.instaright_account=self.ud.instapaper_account
+                                        ud_modified=True
+				if self.ud is None:
 					logging.error('missing proper db entry for cookie %s' % uuid_cookie)
 				else:
-					user_data = ud.getUserInfo()
-                                        self.facebook_profile = ud.facebook_profile
-                                        self.twitter_profile = ud.twitter
-                                        self.google_profile = ud.google_profile
-                                        self.evernote_name = ud.evernote_profile
-                                        self.flickr_name = ud.flickr_profile
+					user_data = self.ud.getUserInfo()
+                                        self.facebook_profile = self.ud.facebook_profile
+                                        self.twitter_profile = self.ud.twitter
+                                        self.google_profile = self.ud.google_profile
+                                        self.evernote_name = self.ud.evernote_profile
+                                        self.flickr_name = self.ud.flickr_profile
 					self.screen_name = user_data["screen_name"]
                                         self.avatar = user_data["avatar"]
-                                        self.instaright_account=ud.instaright_account
-                                        self.user_detail_key=str(ud.key())
+                                        self.instaright_account=self.ud.instaright_account
+                                        self.user_detail_key=str(self.ud.key())
 					logging.info('using screen name %s from session %s' %(self.screen_name, self.user_uuid))
+                        if userSession is not None and userSession.user_details is None:
+                                logging.info('user details not defined for session ... need to fix this with oauth')
 			# sanity check
 			if userSession is None:
 				logging.info('smth wicked ')
@@ -96,6 +102,7 @@ class GenericWebHandler(webapp.RequestHandler):
                         if userSession and userSession.user_uuid is None:
                                 userSession.user_uuid = str(self.user_uuid)
 		else:
+                        new_session=True
 			self.user_uuid = uuid.uuid4()
 			logging.info('generated new uuid: %s' % self.user_uuid)
                         expires = datetime.datetime.now() + datetime.timedelta(minutes=60)
@@ -104,7 +111,7 @@ class GenericWebHandler(webapp.RequestHandler):
 			self.response.headers.add_header('Set-Cookie', 'user_uuid=%s; expires=%s; path=/' %( self.user_uuid, exp_format))
 
 			userSession = UserSessionFE()
-			userSession.user_uuid = str(self.user_uuid)
+			userSession.user_uuuid = str(self.user_uuid)
 
 		# not pretty but working
 		if logout_cookie:
@@ -124,6 +131,10 @@ class GenericWebHandler(webapp.RequestHandler):
 			        user_details_key = user_details["user_details_key"]
 			        userSession.user_details = user_details_key
                                 self.user_detail_key=str(user_details["user_details_key"])
+                                #if ud changed? what then?
+                                if self.ud is None:
+                                        ud = UserDetails.gql('WHERE __key__ = :1' , db.Key(self.user_detail_key)).get()
+                                        self.ud = ud
                         if user_details["instaright_account"] is not None:
                                 self.instaright_account=user_details["instaright_account"]
                         if user_details["evernote_name"] is not None:
@@ -155,16 +166,17 @@ class GenericWebHandler(webapp.RequestHandler):
 		#userSession.put()
 
                 user_token=None
-                if ud is not None:
-                        user_token=UserTokens.gql('WHERE user_details = :1', ud.key()).get()
+                if self.ud is not None:
+                        user_token=UserTokens.gql('WHERE user_details = :1', self.ud.key()).get()
                 if user_token is None:
                         user_token=UserTokens()
 
                 user_token_modified=False
                 evernote_oauth = None
+                #NOTE: ud can be null on visits that include no auth
                 if evernote_cookie is not None:
                         evernote_oauth = OAuthAccessToken.get_by_key_name(evernote_cookie)
-                if evernote_oauth is not None and ud is not None:
+                if evernote_oauth is not None and self.ud is not None:
                         evernote_token = evernote_oauth.oauth_token
                         logging.info('User Details modified ... updating evetnote token')
                         user_token.evernote_token=evernote_token
@@ -172,18 +184,24 @@ class GenericWebHandler(webapp.RequestHandler):
                         user_token_modified=True
                 twitter_oauth = None
                 if twitter_cookie is not None:
+                        logging.info('twitter cookie defined %s' % twitter_cookie)
                         twitter_oauth = OAuthAccessToken.get_by_key_name(twitter_cookie)
-                if twitter_oauth is not None and ud is not None:
+                if twitter_oauth is not None and self.ud is not None:
                         twitter_token = twitter_oauth.oauth_token
                         twitter_secret= twitter_oauth.oauth_token_secret
                         logging.info('User Details modified ... updating twitter token')
                         user_token.twitter_token=twitter_token
                         user_token.twitter_secret=twitter_secret
                         user_token_modified=True
+                        logging.info('twitter promo sent? %s' % self.ud.twitter_promo_sent)
+                        if self.ud.twitter_promo_sent == False:
+                                taskqueue.add(url='/service/submit/twitter/promo', params={'user_token': twitter_token, 'user_secret': twitter_secret, 'user_details_key': str(self.ud.key())})
+                                self.ud.twitter_promo_sent=True
+                                ud_modified=True
                 flickr_oauth = None
                 if flickr_oauth is not None:
                         flickr_oauth = OAuthAccessToken.get_by_key_name(flickr_cookie)
-                if flickr_oauth is not None and ud is not None:
+                if flickr_oauth is not None and self.ud is not None:
                         flickr_token = flickr_oauth.oauth_token
                         logging.info('User Details modified ... updating flickr token')
                         user_token.flickr_token=flickr_token
@@ -191,12 +209,14 @@ class GenericWebHandler(webapp.RequestHandler):
                 if user_details is not None and user_details["facebook_access_token"] is not None:
                         user_token.facebook_token=user_details["facebook_access_token"]
                         user_token_modified=True
-                logging.info('user details modified: %s' % user_token_modified)
                 if user_token_modified:
-                        logging.info('User Details modified ... updating ')
+                        logging.info('User token modified ... updating ')
                         if user_token.user_details is None:
-                                user_token.user_details=ud
+                                user_token.user_details=self.ud
                         user_token.put()
+                if ud_modified:
+                        logging.info('user details modified updating ...' )
+                        self.ud.put()
 
         def get_redirect(self, url):
              config=ConfigParser.ConfigParser()

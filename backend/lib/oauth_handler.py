@@ -264,7 +264,6 @@ class OAuthClient(object):
         if oauth_verifier is not None:
                 self.oauth_verifier = oauth_verifier
 
-
         specifier = None
         oauth_token = OAuthRequestToken.all().filter(
             'oauth_token =', oauth_token).filter(
@@ -307,6 +306,7 @@ class OAuthClient(object):
             db.delete(old)
 
         self.token.put()
+        logging.info('setting cookie %s' % key_name)
         self.set_cookie(key_name)
         self.handler.redirect(return_to)
 

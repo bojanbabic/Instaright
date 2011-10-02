@@ -1,13 +1,26 @@
 import urllib
 import logging
-import os
-import sys
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
 from models import UserTokens, SessionModel
 from service_util import ServiceUtil
+from utils.social import Twit
+
+class ServicePromoSubmitHandler(webapp.RequestHandler):
+        def post(self, service):
+                twitter_token=self.request.get('user_token', None)
+                twitter_secret=self.request.get('user_secret', None)
+                logging.info('sending promo twit')
+                if twitter_token is None or twitter_secret is None:
+                        logging.info('aborting tweet since to credentials from user provided')
+                        return
+                if service == 'twitter':
+                        service_util = ServiceUtil()
+                        service_util.send_tweet_promo(Twit.promo_tweet(), twitter_token, twitter_secret)
+                if service == 'facebook':
+                        return
 
 class ServiceSubmitHandler(webapp.RequestHandler):
         def post(self):
@@ -50,6 +63,7 @@ class ServiceSubmitHandler(webapp.RequestHandler):
 			service_util.send_to_twitter(twitter_token, twitter_secret, session)
 
 app = webapp.WSGIApplication([
+                                ('/service/submit/(.*)/promo', ServicePromoSubmitHandler),
                                 ('/service/submit', ServiceSubmitHandler),
                                         ], debug = True)
 def main():

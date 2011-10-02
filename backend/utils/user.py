@@ -31,7 +31,7 @@ class UserUtils(object):
 		#google_login_url = users.create_login_url('/') 
 	        #twitter_logout_url = '/oauth/twitter/logout'
 
-        	twitter_user = OAuthClient('twitter', request_handler)
+                twitter_cookie = request_handler.request.cookies.get('oauth.twitter')
         	evernote_user = OAuthClient('evernote', request_handler)
         	flickr_user = OAuthClient('flickr', request_handler)
         	screen_name=None
@@ -52,6 +52,14 @@ class UserUtils(object):
                 	screen_name=google_user.nickname()
 			existing_user= UserDetails.gql('WHERE google_profile=\'%s\'' %google_user.email()).get()
 			existing_user_by_mail = UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
+                        if self.ud is None:
+                                self.ud = existing_user
+                                if self.ud.mail is None:
+                                        self.ud.mail = google_user.email()
+                        #TODO what is both are not None and pointing to different entities
+                        if existing_user is not None and existing_user_by_mail is not None and str(existing_user.key()) != str(existing_user_by_mail.key()):
+                                logging.error('data inconsistancy for google user %s ' % google_user.email())
+                        #NOTE: data consistency 
 			if existing_user is None and existing_user_by_mail is not None:
                                 existing_user_by_mail.google_profile = google_user.email()
                                 existing_user_by_mail.put()
@@ -61,10 +69,10 @@ class UserUtils(object):
 				existing_user = UserDetails()
 				existing_user.mail=google_user.email()
                                 existing_user.google_profile=google_user.email()
-				existing_user.put()
                         elif existing_user.avatar is not None:
                                 avatar = existing_user.avatar
 				existing_user.mail=google_user.email()
+                        existing_user.put()
 			auth_service='google'
 			user_details_key=existing_user.key()
 			user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
@@ -77,34 +85,35 @@ class UserUtils(object):
                                 user_badge.user_property = existing_user.key()
                                 user_badge.put()
                         instaright_account=existing_user.instaright_account
-        	elif twitter_user.get_cookie():
+                elif twitter_cookie is not None and len(twitter_cookie) > 0:
 			try:
+                        	twitter_user = OAuthClient('twitter', request_handler)
 				info = twitter_user.get('/account/verify_credentials')
-                		following = twitter_user.get('/friends/ids')
-                		followers = twitter_user.get('/followers/ids')
                 		screen_name = "%s" % info['screen_name']
 				profile_image_url = "%s" %info['profile_image_url']
                                 avatar=profile_image_url
 				existing_user = UserDetails.gql('WHERE twitter = \'http://twitter.com/%s\'' % screen_name).get()
 				if existing_user is None:
 					logging.info('new twitter user login %s' % screen_name)
-					ud=UserDetails()
-					ud.twitter_followers=simplejson.dumps(followers)
-					ud.twitter_following=simplejson.dumps(following)
-					ud.twitter='http://twitter.com/%s' %screen_name
-					ud.avatar = profile_image_url
-					ud.put()
+					existing_user=UserDetails()
+					existing_user.twitter='http://twitter.com/%s' %screen_name
+					existing_user.avatar = profile_image_url
 				else:
 					logging.info('existing twitter user login %s' % screen_name)
-					existing_user.twitter_followers=simplejson.dumps(followers)
-					existing_user.twitter_following=simplejson.dumps(following)
 					if existing_user.avatar is None:
 						existing_user.avatar = profile_image_url
                                         else:
                                                 avatar = existing_user.avatar
-					existing_user.put()
-				auth_service='twitter'
+                                existing_user.put()
 				user_details_key=existing_user.key()
+                                twitter_cookie = request_handler.request.cookies.get('oauth.twitter')
+                                twitter_oauth = OAuthAccessToken.get_by_key_name(twitter_cookie)
+                                if twitter_oauth is not None and existing_user is not None:
+                                        twitter_token = twitter_oauth.oauth_token
+                                        twitter_secret= twitter_oauth.oauth_token_secret
+                                        taskqueue.add(url='/util/twitter/get_friends', params={'user_details_key': str(existing_user.key()),'user_token':twitter_token, 'user_secret': twitter_secret})
+				auth_service='twitter'
+                                logging.info('updating user score ...')
 			        user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
                                 if user_signup_badge is None:
                                         user_badge = UserBadge()
@@ -117,6 +126,7 @@ class UserUtils(object):
                                 instaright_account=existing_user.instaright_account
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
+                                logging.error('got error while using twitter oauth: %s => %s' %(e0, e))
         	elif facebook_user:
                 	graph = facebook.GraphAPI(facebook_user["access_token"])
 			try:

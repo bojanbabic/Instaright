@@ -113,3 +113,16 @@ class ServiceUtil(object):
                    api.PostUpdate(twit.text)
                except:
                    logging.error('Error while sending tweet %s: %s => %s ' % (twit.text, sys.exc_info()[0],sys.exc_info()[1]))
+        def send_tweet_promo(self, tweet, twitter_token, twitter_secret):
+               api = twitter.Api(
+                                consumer_key=self.twitter_consumer_key,
+                                consumer_secret=self.twitter_consumer_secret,
+                                access_token_key=twitter_token,
+                                access_token_secret=twitter_secret
+               )
+               try:
+		       logging.info('sending promo tweet %s' % tweet)
+                       api.PostUpdate(tweet)
+               except:
+                       logging.error('Error while sending promo tweet:%s ( %s => %s )' % (tweet, sys.exc_info()[0],sys.exc_info()[1]))
+

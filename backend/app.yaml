@@ -187,7 +187,7 @@ handlers:
 - url: /sitemap.xml
   script: articles.py
 
-- url: /service/submit
+- url: /service/.*
   script: service.py
 
 - url: /.*

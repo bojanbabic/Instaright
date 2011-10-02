@@ -13,7 +13,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from models import UserDetails
 
-sys.path.append(os.path.join(os.path.dirname(__file__),'/../lib'))
+sys.path.append(os.path.join(os.path.dirname(__file__),'../lib'))
 import twitter
 
 class TwitterFollowHandler(webapp.RequestHandler):
@@ -65,6 +65,50 @@ class TwitterFollowHandler(webapp.RequestHandler):
                 user.twitter_request_sent = True
                 user.put()
 
+class TweetGetFriends(webapp.RequestHandler):
+        def __init__(self):
+               config=ConfigParser.ConfigParser()
+               config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
+               self.instaright_consumer_key=config.get('twit','instaright_consumer_key')
+               self.instaright_consumer_secret=config.get('twit','instaright_consumer_secret')
+               self.access_token_key=config.get('twit','access_token_key')
+               self.access_token_secret=config.get('twit','access_token_secret')
+        def post(self):
+                user_details_key=self.request.get('user_details_key',None)
+                user_token=self.request.get('user_token',None)
+                user_secret=self.request.get('user_secret', None)
+                if user_token is None or user_secret is None:
+                        logging.info('no user key or secret ... skipping ')
+                        return
+                userDetails=UserDetails.gql('WHERE __key__ = :1', db.Key(user_details_key)).get()
+                if userDetails is None:
+                        logging.info('key %s is wrong ...' % user_details_key)
+                        return
+                logging.info('accessing twitter api: consumer key %s consumer secret %s' %( self.instaright_consumer_key, self.instaright_consumer_secret))
+                logging.info('user tokens: key %s secret %s' %( user_token, user_secret))
+                api = twitter.Api(
+                                consumer_key=self.instaright_consumer_key,
+                                consumer_secret=self.instaright_consumer_secret,
+                                access_token_key=user_token,
+                                access_token_secret=user_secret
+                                ) 
+                try:
+                        followers=api.GetFollowers()
+                        u=False
+                        if followers is not None:
+                                userDetails.twitter_following=','.join(''.join([ u.id for u in followers ]));
+                                logging.info('fetched followers for %s: %s' % userDetails.twitter, len(followers))
+                                u = True
+                        friends=api.GetFriends()
+                        if friends is not None:
+                                userDetails.twitter_following=','.join(''.join([ u.id for u in friends ]));
+                                logging.info('fetched friends for %s: %s' % userDetails.twitter, len(friends))
+                                u = True
+                        if u == True:
+                                userDetails.put()
+                except:
+                        logging.info('tweet friends fetchd error %s => %s' % (sys.exc_info()[0], sys.exc_info()[1]))
+
 class TweetHotLinksTask(webapp.RequestHandler):
         def __init__(self):
                config=ConfigParser.ConfigParser()
@@ -107,6 +151,7 @@ class TwitterResetSendHandler(webapp.RequestHandler):
 application = webapp.WSGIApplication(
                                         [
                                                 ('/util/twitter/follow/(.*)', TwitterFollowHandler),
+                                                ('/util/twitter/get_friends', TweetGetFriends),
                                                 ('/util/twitter/twit/task', TweetHotLinksTask), 
                                                 ('/util/twitter/reset_sent', TwitterResetSendHandler),
                                                 ], debug=True
