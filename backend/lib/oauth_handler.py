@@ -48,8 +48,8 @@ OAUTH_APP_SETTINGS = {
 
     'google': {
 
-        'consumer_key': '',
-        'consumer_secret': '',
+        'consumer_key': '943960239515.apps.googleusercontent.com',
+        'consumer_secret': 'dfST9jwUrx5NoiLs-fF2Ryvw',
 
         'request_token_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
         'access_token_url': 'https://www.google.com/accounts/OAuthGetAccessToken',

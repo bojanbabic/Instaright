@@ -43,7 +43,7 @@
 		function fblogin(){
 			FB.login(function(response){
 				window.location.reload();
-			}, {perms:'read_stream,publish_stream, email'});
+			}, {perms:'read_stream,publish_stream, email, offline_access'});
 		}
 	</script>
 </td>

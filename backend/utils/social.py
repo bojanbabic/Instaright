@@ -2,6 +2,26 @@ import logging
 from utils.link import LinkUtils
 from utils.category import CategoryUtil
 
+class FBMessage(object):
+        @classmethod
+        def promo_message(cls):
+                return "I've started using Instaright - Read Save Discover web http://bit.ly/instarightapp"
+        @classmethod
+        def generateText(cls, session, promo):
+                if promo == True:
+                        return FBMessage.promo_message()
+                else:
+                        return FBMessage.generate_post_message(session)
+        @classmethod
+        def generate_post_message(cls, session):
+                if session is None or session.title is None or session.url is None:
+                        return None
+                lu = LinkUtils()
+                short_link = lu.shortenLink(session.url)
+                if short_link is None:
+                        return None
+                return "%s %s via http://www.bit.ly/instarightapp"  % (session.title[0:59], short_link)
+                #return "%s %s via @[105396136190038:1:Instaright]"  % (session.title[0:59], short_link)
 class Twit(object):
         def generate_content(self, link, link_title, prepend=None):
                 return self.textNewStyle(link, link_title, prepend)
@@ -75,5 +95,5 @@ class Twit(object):
                         i = i + 1
                 return ttext + unicode(" "+prepend_text.decode('utf-8')).encode('utf-8')
         @classmethod
-        def promo_tweet(cls):
+        def promo_message(cls):
                 return "Just discovered #instaright #app http://bit.ly/instarightapp - helps you #read #save #discover online content :) via:@instaright"

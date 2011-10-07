@@ -252,6 +252,7 @@ class UserDetails(db.Model):
 	facebook_id=db.StringProperty()
 	facebook_friends=db.TextProperty()
 	facebook_profile=db.StringProperty()
+        facebook_promo_sent = db.BooleanProperty(default=False)
         evernote_profile=db.StringProperty()
         flickr_profile=db.StringProperty()
         
@@ -295,6 +296,8 @@ class UserTokens(db.Model):
         flickr_enabled = db.BooleanProperty(default=True)
         flickr_token = db.StringProperty()
         flickr_additional_info = db.StringProperty()
+        picplz_enabled = db.BooleanProperty(default=True)
+        picplz_token = db.StringProperty()
         date=db.DateTimeProperty(auto_now_add=True)
 
 class Links(db.Model):

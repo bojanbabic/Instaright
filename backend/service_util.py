@@ -4,7 +4,7 @@ import sys
 import ConfigParser
 
 from utils.link import LinkUtils
-from utils.social import Twit
+from utils.social import Twit, FBMessage
 
 from xml.sax.saxutils import escape
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
@@ -18,6 +18,7 @@ import evernote.edam.error.ttypes as Errors
 
 import flickrapi
 import twitter
+import facebook
 
 from google.appengine.api import mail
 
@@ -36,17 +37,15 @@ class ServiceUtil(object):
                 self.twitter_consumer_key=config.get('twit','consumer_key')
                 self.twitter_consumer_secret=config.get('twit','consumer_secret')
                 self.twitter_access_token_secret=config.get('twit','access_token_secret')
-        def send_to_flickr(self, flickr_token, session, additionalInfo=None):
-                try:
-                        logging.info('flickr token %s' % flickr_token)
-                        flickr = flickrapi.FlickrAPI(self.flickr_key, self.flickr_secret, token=flickr_token)
-			rsp=flickr.auth_checkToken(auth_token=flickr_token, format='xmlnode')
-			logging.info('response %s' % rsp)
-			logging.info('permissions %s' % rsp.auth[0].perms[0].text)
-                        flickr.upload(filename=session.url, title="%s via Instaright" % session.title)
-                except:
-		        e0,e = sys.exc_info()[0], sys.exc_info()[1]
-                        logging.error('error while uploading img to flickr: %s => %s' %( e0, e))
+        def send_to_picplz(self, picplz_token, session):
+#                try:
+                        from picplz.api import PicplzAPI
+                        api = PicplzAPI()
+                        response=api.upload_pic_url(session.title, session.url, picplz_token)
+                        logging.info('picplz upload reponse %s' % response)
+#                except:
+#		        e0,e = sys.exc_info()[0], sys.exc_info()[1]
+#                        logging.error('error while uploading img to flickr: %s => %s' %( e0, e))
 	def send_to_evernote(self, evernote_token, session, additionalInfo=None):
                 if additionalInfo is None:
                         logging.info('not additional info for token %s trying alternative view to get shared id' % evernote_token)
@@ -74,7 +73,10 @@ class ServiceUtil(object):
                 noteStore = NoteStore.Client(noteStoreProtocol)
 
                 note = Types.Note()
-                note.title = "{Instaright-Evernote update - %s}" % session.title
+                if session.title is None:
+                        note.title = "{Instaright-Evernote article}" 
+                else:
+                        note.title = "{Instaright-Evernote update - %s}" % session.title.encode('utf-8')
                 note.content = '<?xml version="1.0" encoding="UTF-8"?>'
                 note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
                 if session.selection is not None or session.selection != 'None':
@@ -82,14 +84,26 @@ class ServiceUtil(object):
                 else:
                         note.content += '<en-note>%s<br/>' % escape(session.url)
                         note.content += '</en-note>'
-                #note.content = unicode(note.content)
-                logging.info('note content:%s' % note.content)
+                note.content = note.content.encode('utf-8')
+                note.title = 'Sample'
+                logging.info('note content:%s ' % note.content)
 
                 createdNote = noteStore.createNote(evernote_token, note)
                 logging.info(' create note with GUID %s' % createdNote.guid)
 
+	def send_to_facebook(self, facebook_token, session, promo=False):
+                message=FBMessage.generateText(session,promo)
+                if message is None:
+                        logging.info('skipping sending fb message - not defined ')
+                        return
+                logging.info('sending  fb message: %s' % (message))
+                message=message.encode('utf-8')
+                try:
+                        api= facebook.GraphAPI(facebook_token)
+                        api.put_wall_post(message)
+                except: 
+                        logging.error('Error while sending fbmessage %s: %s => %s ' % (message, sys.exc_info()[0],sys.exc_info()[1]))
 
-	def send_to_facebook(self, facebook_token, session):
 		return
 	def send_to_twitter(self, twitter_token, twitter_secret, session):
                api = twitter.Api(

@@ -21,6 +21,7 @@ from utils.category import CategoryUtil
 from utils.link import LinkUtils
 from utils.handler import RequestUtils
 from utils.user import UserUtils
+from utils.page import PageUtils
 
 from generic_handler import GenericWebHandler
 from main import UserMessager
@@ -317,8 +318,7 @@ class CategoryHandler(GenericWebHandler):
 		userMessager = UserMessager(str(self.user_uuid))
 		channel_id = userMessager.create_channel()
 
-		template_variables = []
-                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'category':category}
+                template_variables = {'page_footer': PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'category':category}
 		path= os.path.join(os.path.dirname(__file__), 'templates/category.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
@@ -377,7 +377,7 @@ class CategoryListHandler(GenericWebHandler):
                         categories = LinkCategory.get_trending(24)
                 else:
                         logging.info("got %s categories" % len(categories))
-                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':LinkUtils.getCategoryListHTML(categories)}
+                template_variables = {'page_footer': PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'categories':LinkUtils.getCategoryListHTML(categories)}
 		path= os.path.join(os.path.dirname(__file__), 'templates/category_list.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))

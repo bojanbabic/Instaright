@@ -98,6 +98,9 @@ handlers:
   static_files: static/images/favicon.ico
   upload: static/images/favicon.ico
 
+- url: /oauth2/.*
+  script: lib/oauth2_handler.py
+
 - url: /oauth/.*
   script: lib/oauth_handler.py
 

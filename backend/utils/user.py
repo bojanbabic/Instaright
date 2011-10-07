@@ -25,6 +25,7 @@ class UserUtils(object):
 		self.facebook_secret=config.get('facebook','secret')
 		config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/users.ini')
                 self.skip_list=config.get('notification','skip_notification').split(',')
+                self.ud=None
 
 	def getUserDetails(self, request_handler):
 		
@@ -34,12 +35,15 @@ class UserUtils(object):
                 twitter_cookie = request_handler.request.cookies.get('oauth.twitter')
         	evernote_user = OAuthClient('evernote', request_handler)
         	flickr_user = OAuthClient('flickr', request_handler)
+
+                #return variables
         	screen_name=None
                 avatar=None
 		auth_service=None
+		user_details_key=None
+
                 instaright_account=None
 		# used to connect user details with session
-		user_details_key=None
                 evernote_username=None
                 flickr_username=None
 
@@ -49,7 +53,6 @@ class UserUtils(object):
                 facebook_access_token=None
                 existing_user = None
         	if google_user:
-                	screen_name=google_user.nickname()
 			existing_user= UserDetails.gql('WHERE google_profile=\'%s\'' %google_user.email()).get()
 			existing_user_by_mail = UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
                         if self.ud is None:
@@ -73,8 +76,11 @@ class UserUtils(object):
                                 avatar = existing_user.avatar
 				existing_user.mail=google_user.email()
                         existing_user.put()
+
 			auth_service='google'
+                	screen_name=google_user.nickname()
 			user_details_key=existing_user.key()
+
 			user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
                         if user_signup_badge is None:
                                 user_badge = UserBadge()
@@ -85,13 +91,11 @@ class UserUtils(object):
                                 user_badge.user_property = existing_user.key()
                                 user_badge.put()
                         instaright_account=existing_user.instaright_account
-                elif twitter_cookie is not None and len(twitter_cookie) > 0:
+                if twitter_cookie is not None and len(twitter_cookie) > 0:
 			try:
                         	twitter_user = OAuthClient('twitter', request_handler)
 				info = twitter_user.get('/account/verify_credentials')
-                		screen_name = "%s" % info['screen_name']
 				profile_image_url = "%s" %info['profile_image_url']
-                                avatar=profile_image_url
 				existing_user = UserDetails.gql('WHERE twitter = \'http://twitter.com/%s\'' % screen_name).get()
 				if existing_user is None:
 					logging.info('new twitter user login %s' % screen_name)
@@ -112,7 +116,10 @@ class UserUtils(object):
                                         twitter_token = twitter_oauth.oauth_token
                                         twitter_secret= twitter_oauth.oauth_token_secret
                                         taskqueue.add(url='/util/twitter/get_friends', params={'user_details_key': str(existing_user.key()),'user_token':twitter_token, 'user_secret': twitter_secret})
-				auth_service='twitter'
+                                if screen_name is None:
+                		        screen_name = "%s" % info['screen_name']
+                                        avatar=profile_image_url
+				        auth_service='twitter'
                                 logging.info('updating user score ...')
 			        user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
                                 if user_signup_badge is None:
@@ -126,16 +133,14 @@ class UserUtils(object):
                                 instaright_account=existing_user.instaright_account
 			except:
 				e0,e = sys.exc_info()[0], sys.exc_info()[1]
-                                logging.error('got error while using twitter oauth: %s => %s' %(e0, e))
-        	elif facebook_user:
+                                logging.info('got error while using twitter oauth: %s => %s' %(e0, e))
+        	if facebook_user:
                 	graph = facebook.GraphAPI(facebook_user["access_token"])
 			try:
                 		profile = graph.get_object("me")
 				profile_link=profile["link"]
 				profile_id=profile["id"]
                 		friends = graph.get_connections("me", "friends")
-                		screen_name = profile["name"]
-                                avatar='http://graph.facebook.com/%s/picture?typequare' % profile_id
 				existing_user=UserDetails.gql('WHERE facebook = \'%s\'' % profile_link).get()
 				if existing_user is not None:
 					logging.info('existing facebook logging %s' % profile_link)
@@ -157,7 +162,10 @@ class UserUtils(object):
 					existing_user.facebook_id=profile_id
 					existing_user.avatar = avatar
 					existing_user.put()
-				auth_service='facebook'
+                                if screen_name is None:
+                		        screen_name = profile["name"]
+				        auth_service='facebook'
+                                        avatar=existing_user.avatar
 				user_details_key=existing_user.key()
 			        user_signup_badge = UserBadge.gql('WHERE user_property = :1 and badge = :2', existing_user.key(),'signup').get()
                                 if user_signup_badge is None:

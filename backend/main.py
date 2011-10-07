@@ -9,6 +9,7 @@ import urllib
 from utils.handler import RequestUtils
 from utils.link import LinkUtils, EncodeUtils
 from utils.score import UserScoreUtility
+from utils.page import PageUtils
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
@@ -248,8 +249,7 @@ class IndexHandler(GenericWebHandler):
 		login_url = users.create_login_url('/')	
                 if self.avatar is None:
                         self.avatar='/static/images/noavatar.png'
-		template_variables = []
-                template_variables = {'user':self.screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':self.avatar}
+                template_variables = {'user':self.screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':self.avatar, 'page_footer': PageUtils.get_footer()}
 		path= os.path.join(os.path.dirname(__file__), 'templates/index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
@@ -260,7 +260,7 @@ class YahooVerificationFile(webapp.RequestHandler):
 
 class PrivacyPolicyHandler(webapp.RequestHandler):
         def get(self):
-		template_variables = []
+                template_variables = {'page_footer': PageUtils.get_footer() }
 		path= os.path.join(os.path.dirname(__file__), 'templates/privacy_policy.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
@@ -274,7 +274,7 @@ class ToolsHandler(GenericWebHandler):
                 if self.avatar is None:
                         self.avatar='/static/images/noavatar.png'
 		template_variables = []
-                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar}
+                template_variables = {'page_footer':PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar}
 		path= os.path.join(os.path.dirname(__file__), 'templates/tools.html')
                 self.response.headers["Content-Type"]= "text/html"
 		self.response.out.write(template.render(path,template_variables))

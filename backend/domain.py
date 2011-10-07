@@ -13,6 +13,7 @@ from main import UserMessager
 
 from utils.link import LinkUtils
 from utils.user import UserUtils
+from utils.page import PageUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib'))
 import simplejson
@@ -34,7 +35,7 @@ class DomainHandler(GenericWebHandler):
 		channel_id = userMessager.create_channel()
 
 		template_variables = []
-                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'domain':domain}
+                template_variables = {'page_footer': PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'domain':domain}
 		path= os.path.join(os.path.dirname(__file__), 'templates/domain.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))

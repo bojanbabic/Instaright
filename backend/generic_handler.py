@@ -64,6 +64,7 @@ class GenericWebHandler(webapp.RequestHandler):
                 evernote_cookie = self.request.cookies.get('oauth.evernote')
                 twitter_cookie = self.request.cookies.get('oauth.twitter')
                 flickr_cookie = self.request.cookies.get('oauth.flickr')
+                picplz_cookie = self.request.cookies.get('oauth.picplz')
 		logout_cookie = self.request.cookies.get('user_logged_out')
                 user_details=None
 		# try to get user name by cookie or from login
@@ -198,17 +199,30 @@ class GenericWebHandler(webapp.RequestHandler):
                                 taskqueue.add(url='/service/submit/twitter/promo', params={'user_token': twitter_token, 'user_secret': twitter_secret, 'user_details_key': str(self.ud.key())})
                                 self.ud.twitter_promo_sent=True
                                 ud_modified=True
+                picplz_oauth = None
+                if picplz_cookie is not None:
+                        picplz_oauth = OAuthAccessToken.get_by_key_name(picplz_cookie)
+                        logging.info('picplz cookie defined %s' % picplz_cookie)
+                if picplz_oauth is not None:
+                        picplz_token = picplz_oauth.oauth_token
+                        user_token.picplz_token = picplz_token
+                        user_token_modified=True
                 flickr_oauth = None
-                if flickr_oauth is not None:
+                if flickr_cookie is not None:
                         flickr_oauth = OAuthAccessToken.get_by_key_name(flickr_cookie)
+                        logging.info('flickr cookie defined %s' % flickr_cookie)
                 if flickr_oauth is not None and self.ud is not None:
                         flickr_token = flickr_oauth.oauth_token
-                        logging.info('User Details modified ... updating flickr token')
+                        logging.info('User Details modified ... updating flickr token %s' % flickr_token)
                         user_token.flickr_token=flickr_token
                         user_token_modified=True
                 if user_details is not None and user_details["facebook_access_token"] is not None:
                         user_token.facebook_token=user_details["facebook_access_token"]
                         user_token_modified=True
+                        if self.ud.facebook_promo_sent == False:
+                                taskqueue.add(url='/service/submit/facebook/promo', params={'user_token': user_token.facebook_token, 'user_details_key': str(self.ud.key())})
+                                self.ud.facebook_promo_sent=True
+                                ud_modified=True
                 if user_token_modified:
                         logging.info('User token modified ... updating ')
                         if user_token.user_details is None:

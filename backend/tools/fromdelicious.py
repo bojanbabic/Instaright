@@ -10,13 +10,15 @@ from google.appengine.ext.webapp import template
 from models import UserDetails, SessionModel, UserStats, DeliciousImporter
 from generic_handler import GenericWebHandler
 
+from utils.page import PageUtils
+
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
 
 class DeliciousImportHandler(GenericWebHandler):
         def get(self):
                 self.redirect_perm()
-		template_variables = []
+		template_variables = { 'page_footer': PageUtils.get_footer() }
 		path= os.path.join(os.path.dirname(__file__), '../templates/import_tool.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
