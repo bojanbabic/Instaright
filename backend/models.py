@@ -1,5 +1,4 @@
 import datetime, logging
-import random
 
 from google.appengine.ext import db 
 

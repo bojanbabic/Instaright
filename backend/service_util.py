@@ -17,7 +17,6 @@ import evernote.edam.notestore.NoteStore as NoteStore
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 
-import flickrapi
 import twitter
 import facebook
 import urllib2
@@ -47,12 +46,12 @@ class ServiceUtil(object):
                 self.twitter_consumer_secret=config.get('twit','consumer_secret')
                 self.twitter_access_token_secret=config.get('twit','access_token_secret')
         def send_to_picplz(self, picplz_token, session):
-                try:
+                #try:
                         api = PicplzAPI()
                         response=api.upload_pic_url(picplz_token, session.url)
                         logging.info('picplz api response %s' %response)
-                except:
-                        logging.error('Error while sending to picplz: %s => %s ' % (sys.exc_info()[0],sys.exc_info()[1]))
+                #except:
+                #        logging.error('Error while sending to picplz: %s => %s ' % (sys.exc_info()[0],sys.exc_info()[1]))
 	def send_to_evernote(self, evernote_token, session, additionalInfo=None):
                 if additionalInfo is None:
                         logging.info('not additional info for token %s trying alternative view to get shared id' % evernote_token)

@@ -11,6 +11,7 @@ from google.appengine.api import datastore_errors
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 from google.appengine.api import memcache
+from google.appengine.api import mail
 from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import template
 from google.appengine.runtime import apiproxy_errors
@@ -361,6 +362,9 @@ class UserBadgeTaskHandler(webapp.RequestHandler):
                 client_badge = UserBadge.gql('WHERE badge = :1 and user = :2', client, user).get()
                 if client_badge is None:
                         badge = Badges.gql('WHERE badge_label = :1' , client).get()
+			if badge is None:
+                        	mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Unknown client!', html='user %s saved link %s using unrecognised client %s' %( user,url, client ), body='user %s saved link %s using unrecognised client %s' %( user,url, client))
+				return
                         client_badge = UserBadge()
                         client_badge.badge = client
                         client_badge.badge_property = badge.key()

@@ -55,7 +55,7 @@ class UserUtils(object):
         	if google_user:
 			existing_user= UserDetails.gql('WHERE google_profile=\'%s\'' %google_user.email()).get()
 			existing_user_by_mail = UserDetails.gql('WHERE mail=\'%s\'' %google_user.email()).get()
-                        if self.ud is None:
+                        if self.ud is None and existing_user is not None:
                                 self.ud = existing_user
                                 if self.ud.mail is None:
                                         self.ud.mail = google_user.email()

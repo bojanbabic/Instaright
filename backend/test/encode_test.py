@@ -15,7 +15,7 @@ class EncodeTest(unittest.TestCase):
 		encoded = e.encode(4)
 		self.assertEquals(encoded, 33554432)
 		encoded = e.encode(55)
-		self.assertEquals(encoded, 33554432)
+		self.assertEquals(encoded, 247463936)
         def test_enbase(self): 
                 e = EncodeUtils()
                 enbased = e.enbase(134217728)

@@ -172,6 +172,11 @@ class GenericWebHandler(webapp.RequestHandler):
                 if user_token is None:
                         user_token=UserTokens()
 
+		#token=UserTokens()
+		#token.user_details = userSession.user_details
+		#token.picplz_token= '1|oauth_secret=UxY3gF4CXmRt3tYqgYg4Ed49YbZLGuDx&oauth_token=dNyt8uanrG9sRXBse6P7uaPyZSDpwK26'
+		#token.put()
+
                 user_token_modified=False
                 evernote_oauth = None
                 #NOTE: ud can be null on visits that include no auth
