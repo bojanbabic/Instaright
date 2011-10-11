@@ -40,6 +40,7 @@ class SimpleOAuthHandler(webapp.RequestHandler):
                         logging.info('code %s' % oauth_code)
                         json=LinkUtils.getJsonFromApi('https://picplz.com/oauth2/access_token?client_id=BnYEDMYMrqaKP7DYvQS55meeMHG6s2CA&client_secret=DjZ7DEjzT273tFHvdRPQ49kTA3XJXKpk&grant_type=authorization_code&redirect_uri=http://www.instaright.com/oauth2/picplz/callback&code=%s' % oauth_code)
                 	if json is not None:
+                                logging.info('picplz response %s' % json)
                         	oauth_token = json['access_token']
                         	logging.info('just got picplz access token %s' % oauth_token)
 		self.token = OAuthAccessToken(key_name=key_name, service=service, oauth_token=oauth_token)

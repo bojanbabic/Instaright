@@ -164,14 +164,14 @@
 				    </div>
 			            <div class="account_field_label">Flickr Account</div>
 				    <div class="account_field">
-					    {% if flickr_profile %}
-					    	<div class="account_field_data"><img src="/static/images/flickr_small.png" />&nbsp;&nbsp;{{ flickr_profile }}</div>
-					    	<div class="profile_remove"><a href="/user/flickr/remove">Remove</a></div>
+					    {% if picplz_profile %}
+					    	<div class="account_field_data"><img src="/static/images/picplz_small.png" />&nbsp;&nbsp;{{ picplz_profile }}</div>
+					    	<div class="profile_remove"><a href="/user/picplz/remove">Remove</a></div>
+					    	<div class="profile_remove"><a href="https://picplz.com/oauth2/authenticate?client_id=BnYEDMYMrqaKP7DYvQS55meeMHG6s2CA&response_type=code&redirect_uri=http%3A//www.instaright.com/oauth2/picplz/callback">Update</a></div>
 					    {% else %}
-					    	<div class="account_field_data"><img src="/static/images/flickr_small.png" />&nbsp;&nbsp;</div>
-					    	<div class="profile_remove"><a href="/oauth/flickr/login">Connect</a></div>
+					    	<div class="account_field_data"><img src="/static/images/picplz_small.png" />&nbsp;&nbsp;</div>
+					    	<div class="profile_remove"><a href="/oauth/picplz/login">Connect</a></div>
 					    {% endif %}
-					    <div class="profile_remove"><a href="https://picplz.com/oauth2/authenticate?client_id=BnYEDMYMrqaKP7DYvQS55meeMHG6s2CA&response_type=code&redirect_uri=http%3A//www.instaright.com/oauth2/picplz/callback">Update Picplz</a></div>
 
 				    	    <br style="clear:both;"/>
 				    </div>
