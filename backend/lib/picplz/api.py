@@ -195,7 +195,7 @@ class PicplzAPI():
         #parameters['suppress_sharing'] = 1
         
         form = MultiPartForm()
-        sb=StringIO(unicode(urllib2.urlopen(upload_pic_url).read(), encoding='iso_8859_1'))
+        sb=StringIO(urllib2.urlopen(upload_pic_url).read())
         form.add_field('oauth_token', oauth_token)
         #form.add_field('oauth_token', self.authenticator.access_token.to_string())
         for key in parameters.keys():

@@ -67,5 +67,5 @@ class MultiPartForm(object):
         flattened = list(itertools.chain(*parts))
         flattened.append('--' + self.boundary + '--')
         flattened.append('')
-        return '\r\n'.join([ el.encode('utf-8') for el in flattened])
+        return '\r\n'.join([element.decode('string_escape') for element in flattened])
         #return '\r\n'.join(["%s" % el for el in flattened])
