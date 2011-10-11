@@ -55,15 +55,11 @@ class ServiceSubmitHandler(webapp.RequestHandler):
 
 		picplz_token = user_token.picplz_token
                 picplz_enabled = user_token.picplz_enabled
-                logging.info('picplz token %s' % picplz_token)
-                logging.info('picplz enabled %s' % picplz_enabled)
 
                 if evernote_token is not None and evernote_enabled == True and session.selection is not None and session.selection != 'None':
 			service_util.send_to_evernote(urllib.unquote(evernote_token), session, evernote_token_additional_info)
 		if picplz_token is not None and session.isImage():
 			service_util.send_to_picplz(picplz_token, session)
-#		if flickr_token is not None and flickr_enabled == True and session.isImage():
-#			service_util.send_to_flickr(flickr_token, session, flickr_token_additional_info)
 		#if facebook_token is not None and facebook_enabled == True:
 		#	service_util.send_to_facebook(facebook_token, session)
 		#if twitter_token is not None and twitter_enabled == True and session.instaright_account == 'gbabun@gmail.com':

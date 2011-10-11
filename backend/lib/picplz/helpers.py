@@ -1,13 +1,10 @@
 import itertools
-import logging
-from google.appengine.api import urlfetch
-import time, datetime
-from uuid import uuid4
 import mimetools
 import mimetypes
 from cStringIO import StringIO
 import urllib
 import urllib2
+import uuid
 
 class MultiPartForm(object):
     """Accumulate the data to be used when posting a form."""
@@ -15,7 +12,7 @@ class MultiPartForm(object):
     def __init__(self):
         self.form_fields = []
         self.files = []
-        self.boundary = "instaright."+str(uuid4())+"."+str(int(time.mktime(datetime.datetime.now().timetuple())))
+        self.boundary = "instaright-%s" % uuid.uuid4()# mimetools.choose_boundary()
         return
     
     def get_content_type(self):
@@ -34,19 +31,6 @@ class MultiPartForm(object):
         self.files.append((fieldname, filename, mimetype, body))
         return
     
-    def add_url(self, fieldname, title, url, mimetype=None):
-        body=None
-        try:
-	        response = urlfetch.fetch(url)
-                if response.status_code == 200:
-                        logging.info('fetched %s ' % len(response.content))
-                        body = response.content
-	        #body = urllib2.urlopen(url)
-        except:
-                logging.error("can't load url stram %s" % url)
-	if mimetype is None:
-		mimetype = 'application/octet-stream'
-	self.files.append((fieldname, title, mimetype, body))
     def __str__(self):
         """Return a string representing the form data, including attached files."""
         # Build a list of lists, each containing "lines" of the
@@ -69,7 +53,7 @@ class MultiPartForm(object):
         # Add the files to upload
         parts.extend(
             [ part_boundary,
-              'Content-Disposition: file; name="%s"; filename="%s"' % \
+              'Content-Disposition: attachment; name="%s"; filename="%s"' % \
                  (field_name, filename),
               'Content-Type: %s' % content_type,
               '',
@@ -83,5 +67,4 @@ class MultiPartForm(object):
         flattened = list(itertools.chain(*parts))
         flattened.append('--' + self.boundary + '--')
         flattened.append('')
-        #return '\r\n'.join(["%s" % el for el in flattened])
-        return '\r\n'.join([el.decode('string_escape') for el in flattened])
+        return '\r\n'.join(["%s" % el for el in flattened])

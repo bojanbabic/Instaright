@@ -2,6 +2,7 @@ import os
 import logging
 import sys
 import ConfigParser
+import urllib
 
 from utils.link import LinkUtils
 from utils.social import Twit, FBMessage
@@ -19,8 +20,16 @@ import evernote.edam.error.ttypes as Errors
 import flickrapi
 import twitter
 import facebook
+import urllib2
+from picplz.api import PicplzAPI
 
 from google.appengine.api import mail
+from google.appengine.api import urlfetch
+
+sys.path.append(os.path.join(os.path.dirname(__file__),'/lib'))
+from StringIO import StringIO
+import uuid
+
 
 
 class ServiceUtil(object):
@@ -38,14 +47,12 @@ class ServiceUtil(object):
                 self.twitter_consumer_secret=config.get('twit','consumer_secret')
                 self.twitter_access_token_secret=config.get('twit','access_token_secret')
         def send_to_picplz(self, picplz_token, session):
-#                try:
-                        from picplz.api import PicplzAPI
+                try:
                         api = PicplzAPI()
-                        response=api.upload_pic_url(session.title, session.url, picplz_token)
-                        logging.info('picplz upload reponse %s' % response)
-#                except:
-#		        e0,e = sys.exc_info()[0], sys.exc_info()[1]
-#                        logging.error('error while uploading img to flickr: %s => %s' %( e0, e))
+                        response=api.upload_pic_url(picplz_token, session.url)
+                        logging.info('picplz api response %s' %response)
+                except:
+                        logging.error('Error while sending to picplz: %s => %s ' % (sys.exc_info()[0],sys.exc_info()[1]))
 	def send_to_evernote(self, evernote_token, session, additionalInfo=None):
                 if additionalInfo is None:
                         logging.info('not additional info for token %s trying alternative view to get shared id' % evernote_token)
