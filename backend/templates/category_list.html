@@ -131,48 +131,11 @@
                 </div>
                 <div id="right_col" class="grid_6">
                         <div id="right_box_top">
-				<p class="social_media"><b>What is Instaright?</b></p>
-                                <div class="text-align: center; width: 270px;">
-					<p>The fast, easy and effort-free way to <b>save</b>, <b>discover</b> and <b>share</b> information all over web. Easy to start, easy to use. Organizes and streamlines infromation into categories providing clear presentation. </p>
-				</div>
-				<p class="social_media"><b>Save: Instaright browser plugins</b></p>
-                                <div class="text-align: center; width: 270px;">
-					<p style="text-align: center;"><a title="Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools" ><span>Instaright Firefox addon and Chrome Extension</span></a></p>
-                                	<p style="text-align: center;"><a title="Download Instaright Browser addons - Instaright Firefox and Chrome addons" href="/tools"><img src="/static/images/download_instaright.png" style="width:220px; height: 60px;" alt="Instaright firefox addon"/></a></p>
-				</div>
-				<p class="social_media"><b>Discover: Realtime Notifications</b></p>
-                                <div class="text-align: center; width: 270px;">
-					<p>Discover infromation in realtime article feed or via Instant messenger. Subscribe to categories and topics of your interest. Instaright provides updates on your favorite IM client. <br></p>
-                                        <p id="jabbers">
-                                        <img src="/static/images/messenger.png" alt="Instaright Yahoo Messenger Support"/><img src="/static/images/gtalk.png" alt="Instaright Google Talk support"/><img src="/static/images/aim.png" alt="Instaright AIM support"/></p>
-					<p>To get started enter your jabber id and <span style="color:#0066CC;">press Enter</span></p>
-                                        </div><p></p><div>
-                                        <input type="text" id="invite_jid" value="Enter your jabber id" />
-                                        <div id="jid_result" style="text-align: center; "></div>
-					<p>As next step, you'll get contact request from instaright@appspot.com .
-					Accept request from and type <b>/help</b><br>
-					Next? Awesomeness is head of you!</p>
-
-                                        <p></p>
-                                </div>
-				<p class="social_media"><b>Share: Instaright on social media</b></p>
-                                <div class="text-align: center; width: 270px;">
-					<p>Instaright detects highly engaged content and leverage it across social networks</p>
-				</div>
-                        </div>
+			</div>
                         <div id="right_box_mid">
-                                <ul>
-                                        <li class="social_media"><img align="left" src="/static/images/twitter.png" title="Instaright twitter account"/><a href="http://twitter.com/instaright">Twitter</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/facebook.png" title="Instaright facebook page"/><a href="http://www.facebook.com/instaright">Facebook Page</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/blog.png" title="Instaright blog"/><a href="http://blog.instaright.com/">Blog</a></li>
-                                        <li class="social_media"><img align="left" src="/static/images/arrow_right.png"/><a href="/tools/delicious" title="Import Delicious Bookmarks to Instapaper">Delicious Importer</a></li>
-                                </ul>
+				{% include 'right_mid.html' %}
                         </div>
                         <div id="right_box_bot">
-                                <div>
-
-                                </div>
-
                         </div>
                 </div>
         <div class="clear"></div> 
@@ -182,7 +145,7 @@
 </div>
 
 <div class="clearfix"></div> 
-{% extends 'footer.html' %}
+{% include 'footer.html' %}
 
 <!-- GETSATISFACTION -->
 <script type="text/javascript" charset="utf-8">
