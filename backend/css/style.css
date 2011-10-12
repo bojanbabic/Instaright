@@ -1045,7 +1045,7 @@ span {
 	-moz-background-size: auto auto;
 	background-attachment: scroll;
 	background-color: #F4F4F4;
-	background-image: url("http://media.smashingmagazine.com/themes/smashing/images/footer-border.png");
+	background-image: url("/static/images/footer-border.png");
 	background-position: center top;
 	background-repeat: repeat-x;
 	margin-top: 80px;
