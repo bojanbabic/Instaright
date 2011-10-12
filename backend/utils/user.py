@@ -16,7 +16,7 @@ import simplejson
 import facebook
 from oauth_handler import OAuthClient, OAuthAccessToken
 
-from models import UserBadge, UserDetails, Badges
+from models import UserBadge, UserDetails, Badges, UserSessionFE
 class UserUtils(object):
 	def __init__(self):
 		config=ConfigParser.ConfigParser()
@@ -26,6 +26,16 @@ class UserUtils(object):
 		config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/users.ini')
                 self.skip_list=config.get('notification','skip_notification').split(',')
                 self.ud=None
+
+	@classmethod
+	def getUserDetailsFromCookie(cls, cookie):
+                if cookie is None:
+                        logging.info('no user info return')
+                        return None
+                usession = UserSessionFE.gql('WHERE user_uuid = :1 order by last_updatetime desc', cookie).get()
+		if usession is None:
+			return None
+		return usession.user_details
 
 	def getUserDetails(self, request_handler):
 		

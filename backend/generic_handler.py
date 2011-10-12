@@ -56,6 +56,7 @@ class GenericWebHandler(webapp.RequestHandler):
                 self.google_profile = None
                 self.evernote_name = None
                 self.flickr_name = None
+		self.picplz_name = None
                 self.ud=None
                 ud_modified=None
                 new_session=False
@@ -188,6 +189,7 @@ class GenericWebHandler(webapp.RequestHandler):
                         user_token.evernote_token=evernote_token
                         user_token.evernote_additional_info=evernote_oauth.additional_info
                         user_token_modified=True
+			#TODO remove cookie -> after write not needed any more
                 twitter_oauth = None
                 if twitter_cookie is not None:
                         logging.info('twitter cookie defined %s' % twitter_cookie)
@@ -212,6 +214,7 @@ class GenericWebHandler(webapp.RequestHandler):
                         picplz_token = picplz_oauth.oauth_token
                         user_token.picplz_token = picplz_token
                         user_token_modified=True
+			#TODO remove cookie -> after write not needed any more
                 flickr_oauth = None
                 if flickr_cookie is not None:
                         flickr_oauth = OAuthAccessToken.get_by_key_name(flickr_cookie)

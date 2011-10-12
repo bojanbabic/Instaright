@@ -254,6 +254,7 @@ class UserDetails(db.Model):
         facebook_promo_sent = db.BooleanProperty(default=False)
         evernote_profile=db.StringProperty()
         flickr_profile=db.StringProperty()
+	picplz_profile=db.StringProperty()
         
 	@classmethod
 	def getAll(cls):
@@ -284,6 +285,8 @@ class UserDetails(db.Model):
 
 class UserTokens(db.Model):
         user_details=db.ReferenceProperty(UserDetails)
+	google_token=db.StringProperty()
+	google_enabled=db.BooleanProperty(default=True)
         facebook_token=db.StringProperty()
         facebook_enabled = db.BooleanProperty(default=True)
         twitter_token=db.StringProperty()

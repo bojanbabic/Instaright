@@ -7,7 +7,7 @@
         	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         	<meta name="viewport" content="width = 900"/>
         	<meta name="keywords" content="instaright firefox addon, instaright chrome addon, instapaper firefox addon, instapaper chrome addon, export delicious to instapaper, how to export delicious bookmarks to instapaper, instapaper import delicious, delicious to instapaper, import delicious bookmarks, instapaper delicious"/>
-        	<link rel="stylesheet" type="text/css" href="/css/landing_form.css"/>
+        	<!--link rel="stylesheet" type="text/css" href="/css/landing_form.css"/-->
         	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
                 <script type="text/javascript" src="/static/javascript/util.js"></script>
                 <script type="text/javascript" src="/static/javascript/chart.js"></script>
@@ -28,9 +28,27 @@
         	<link rel="stylesheet" type="text/css" href="/css/landing_form.css"/>
 		<script>
 			$(document).ready(function(){
+				var instaright_cookie = $.cookie("user_uuid");
 				try{
 				var show_more = true;
 
+				$('.remove_user_info').click(function(){
+					loc=$(this).attr('href')
+					try{
+					$.ajax({
+						type: "GET",
+						url: loc,
+						data: "cookie="+instaright_cookie,
+						cache: false,
+						success: function(data){
+							$(this).text(data);
+						}
+					})
+					} catch(e){
+					alert(e);
+					}
+					return false;
+				})
 				$('.user_data').ajaxForm({
 					target: "#response",
 					success: function(){
@@ -154,7 +172,7 @@
 				    <div class="account_field">
 					    {% if evernote_profile %}
 					    	<div class="account_field_data"><img src="/static/images/evernote_small.png" />&nbsp;&nbsp;{{ evernote_profile }}</div>
-					    	<div class="profile_remove"><a href="/user/evernote/remove">Remove</a></div>
+					    	<div class="profile_remove"><a class="remove_user_info" href="/user/evernote/remove">Remove</a></div>
 					    {% else %}
 					    	<div class="account_field_data"><img src="/static/images/evernote_small.png" />&nbsp;&nbsp;</div>
 					    	<div class="profile_remove"><a href="/oauth/evernote/login">Connect</a></div>
@@ -162,11 +180,11 @@
 					    <div class="profile_remove"><a href="/oauth/evernote/login">Update</a></div>
 				    	    <br style="clear:both;"/>
 				    </div>
-			            <div class="account_field_label">Flickr Account</div>
+			            <div class="account_field_label">Picplz Account</div>
 				    <div class="account_field">
 					    {% if picplz_profile %}
 					    	<div class="account_field_data"><img src="/static/images/picplz_small.png" />&nbsp;&nbsp;{{ picplz_profile }}</div>
-					    	<div class="profile_remove"><a href="/user/picplz/remove">Remove</a></div>
+					    	<div class="profile_remove"><a class="remove_user_info" href="/user/picplz/remove">Remove</a></div>
 					    	<div class="profile_remove"><a href="https://picplz.com/oauth2/authenticate?client_id=BnYEDMYMrqaKP7DYvQS55meeMHG6s2CA&response_type=code&redirect_uri=http%3A//www.instaright.com/oauth2/picplz/callback">Update</a></div>
 					    {% else %}
 					    	<div class="account_field_data"><img src="/static/images/picplz_small.png" />&nbsp;&nbsp;</div>
@@ -202,7 +220,7 @@
 				    <div class="account_field">
 					    {% if google_profile %}
 					    	<div class="account_field_data"><img src="/static/images/google_small.png" />&nbsp;&nbsp;{{ google_profile }}</div>
-					    	<div class="profile_remove"><a href="/user/google/remove">Remove</a></div>
+					    	<div class="profile_remove"><a id="google" class="remove_user_info" href="/user/google/remove">Remove</a></div>
 					    {% else %}
 					    	<div class="account_field_data"><img src="/static/images/google_small.png" />&nbsp;&nbsp;</div>
 					    	<div class="profile_remove"><a href="/user/google/connect">Connect</a></div>

@@ -18,6 +18,7 @@ from google.appengine.runtime import apiproxy_errors
 
 from models import UserDetails, SessionModel, Badges
 from models import UserStats, UserBadge, ScoreUsersDaily
+from models import UserTokens
 
 from utils.score import UserScoreUtility
 from utils.user import UserUtils
@@ -185,6 +186,28 @@ class UserDeleteHandler(webapp.RequestHandler):
                         logging.info('deleting %s' %(u.instapaper_account))
                         u.delete()
 
+class UserInfoRemoveHandler(webapp.RequestHandler):
+	def get(self, service):
+		cookie=self.request.get('cookie', None)
+		ud = UserUtils.getUserDetailsFromCookie(cookie)
+		if ud is None:
+			logging.error('remove user info based on bad cookie. hack')
+			self.response.out.write('Done')
+			return 
+		ut=UserTokens.gql('WHERE user_details = :1', ud.key()).get()
+		if ut is None:
+			logging.error('user defined by cookie %s has no tokens' % cookie)
+			self.response.out.write('Done')
+			return
+		logging.info('fetched user %s' % ud.instaright_account)
+		if getattr(ut, "%s_token" % service) is None:
+			logging.error('remove unexisting service %s for cookie %s' % (service, cookie))
+			self.response.out.write('Done')
+			return 
+		ut["%s_token" %service]=None
+		ut.put()
+		#TODO remove cookie
+		self.response.out.write('Done')
 class UserInfoFetchHandler(webapp.RequestHandler):
         def post(self, user):
                 logging.info('fetching info for user %s' % user)
@@ -418,6 +441,7 @@ app = webapp.WSGIApplication([
                                 ('/user/dashboard', UserGenericHandler),
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
+                                ('/user/(.*)/remove', UserInfoRemoveHandler),
                                 ('/user/task/update_all', UserUpdate),
                                 ('/user/badge/task', UserBadgeTaskHandler),
                                 ('/user/(.*)/(.*)', UserFormKeyHandler),
