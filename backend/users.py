@@ -118,7 +118,7 @@ class UserGenericHandler(GenericWebHandler):
                 all_badges = UserBadge.gql('WHERE user = :1 order by date desc', self.instaright_account).fetch(1000)
                 if all_badges is not None:
                         badges = set([ (b.badge, b.badge_property.badge_desc) for b in all_badges if b is not None and b.badge_property is not None ])
-                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'facebook_profile': self.facebook_profile, 'twitter_profile': self.twitter_profile, 'google_profile': self.google_profile, 'picplz_profile': self.picplz_name, 'evernote_profile': self.evernote_name, 'links':links, 'score': score, 'visible_items_num': self.visible_links, 'badges': badges,'logout_url':'/account/logout'}
+                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'facebook_token':self.facebook_oauth_token,'facebook_profile': self.facebook_profile, 'twitter_profile': self.twitter_profile, 'twitter_token': self.twitter_oauth_token, 'google_profile': self.google_profile, 'google_token':self.google_oauth_token, 'picplz_profile': self.picplz_name, 'picplz_token': self.picplz_oauth_token, 'evernote_profile': self.evernote_name, 'evernote_token': self.evernote_oauth_token, 'links':links, 'score': score, 'visible_items_num': self.visible_links, 'badges': badges,'logout_url':'/account/logout'}
                 logging.info('templates %s' %template_variables)
                 path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
                 self.response.headers["Content-type"] = "text/html"
@@ -186,6 +186,23 @@ class UserDeleteHandler(webapp.RequestHandler):
                         logging.info('deleting %s' %(u.instapaper_account))
                         u.delete()
 
+class UserUpdateHandler(webapp.RequestHandler):
+	def get(self):
+                cookie=self.request.get('cookie', None);
+                instapaper_username = self.request.get('instapaper_username', None)
+		if instapaper_username is None:
+			logging.error('update user info based on bad instapaper account.hack')
+			self.response.out.write('Done')
+			return 
+		ud = UserUtils.getUserDetailsFromCookie(cookie)
+		if ud is None:
+			logging.error('update user info based on bad cookie. hack')
+			self.response.out.write('Done')
+			return 
+                ud.instapaper_account=instapaper_username
+                ud.instaright_account=instapaper_username
+                ud.put()
+		self.response.out.write('Done')
 class UserInfoRemoveHandler(webapp.RequestHandler):
 	def get(self, service):
 		cookie=self.request.get('cookie', None)
@@ -204,7 +221,8 @@ class UserInfoRemoveHandler(webapp.RequestHandler):
 			logging.error('remove unexisting service %s for cookie %s' % (service, cookie))
 			self.response.out.write('Done')
 			return 
-		ut["%s_token" %service]=None
+                service_token_name="%s_token" %service
+		ut.service_token_name=None
 		ut.put()
 		#TODO remove cookie
 		self.response.out.write('Done')
@@ -442,6 +460,7 @@ app = webapp.WSGIApplication([
                                 ('/user/(.*)/links', UserLinksHandler),
                                 ('/user/(.*)/fetch', UserInfoFetchHandler),
                                 ('/user/(.*)/remove', UserInfoRemoveHandler),
+                                ('/user/update', UserUpdateHandler),
                                 ('/user/task/update_all', UserUpdate),
                                 ('/user/badge/task', UserBadgeTaskHandler),
                                 ('/user/(.*)/(.*)', UserFormKeyHandler),

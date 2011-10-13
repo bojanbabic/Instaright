@@ -1,5 +1,5 @@
 application: instaright
-version: 50
+version: 49
 runtime: python 
 api_version: 1
 builtins:

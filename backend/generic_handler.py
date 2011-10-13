@@ -52,11 +52,17 @@ class GenericWebHandler(webapp.RequestHandler):
                 self.instaright_account=None
                 self.user_detail_key=None
                 self.facebook_profile = None
+                self.facebook_oauth_token = None
                 self.twitter_profile = None
+                self.twitter_oauth_token = None
                 self.google_profile = None
+                self.google_oauth_token = None
                 self.evernote_name = None
+                self.evernote_oauth_token = None
                 self.flickr_name = None
+                self.flickr_oauth_token = None
 		self.picplz_name = None
+		self.picplz_oauth_token = None
                 self.ud=None
                 ud_modified=None
                 new_session=False
@@ -176,6 +182,7 @@ class GenericWebHandler(webapp.RequestHandler):
 		#token=UserTokens()
 		#token.user_details = userSession.user_details
 		#token.picplz_token= '1|oauth_secret=UxY3gF4CXmRt3tYqgYg4Ed49YbZLGuDx&oauth_token=dNyt8uanrG9sRXBse6P7uaPyZSDpwK26'
+		#token.google_token= 'google|oauth_secret=UxY3gF4CXmRt3tYqgYg4Ed49YbZLGuDx&oauth_token=dNyt8uanrG9sRXBse6P7uaPyZSDpwK26'
 		#token.put()
 
                 user_token_modified=False
@@ -232,13 +239,15 @@ class GenericWebHandler(webapp.RequestHandler):
                                 self.ud.facebook_promo_sent=True
                                 ud_modified=True
                 if user_token_modified:
-                        logging.info('User token modified ... updating ')
                         if user_token.user_details is None:
+                                logging.info('user details for token not defined: ud = %s' %str(self.ud.key()))
                                 user_token.user_details=self.ud
+                        logging.info('user_token modified ... updating:for user details %s' % str(user_token.user_details.key()))
                         user_token.put()
                 if ud_modified:
                         logging.info('user details modified updating ...' )
                         self.ud.put()
+                self.google_oauth_token, self.twitter_oauth_token, self.facebook_oauth_token, self.evernote_oauth_token, self.picplz_oauth_token= user_token.google_token, user_token.twitter_token, user_token.facebook_token, user_token.evernote_token, user_token.picplz_token
 
         def get_redirect(self, url):
              config=ConfigParser.ConfigParser()

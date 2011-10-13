@@ -230,6 +230,7 @@ class UserUtils(object):
                         mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %( screen_name , avatar, avatar), body='Awesome new user signed up: %s avatar %s' %( screen_name, avatar))
                                         
                 user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar, 'instaright_account':instaright_account,'facebook_access_token': facebook_access_token, 'evernote_name': evernote_username, 'flickr_name': flickr_username}
+		logging.info('[utils] user details:%s' % user_details)
 		return user_details
 
 	@classmethod
