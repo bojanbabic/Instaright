@@ -239,11 +239,14 @@ class GenericWebHandler(webapp.RequestHandler):
                                 self.ud.facebook_promo_sent=True
                                 ud_modified=True
                 if user_token_modified:
-                        if user_token.user_details is None:
+                        if user_token.user_details is None and self.ud is not None:
                                 logging.info('user details for token not defined: ud = %s' %str(self.ud.key()))
                                 user_token.user_details=self.ud
-                        logging.info('user_token modified ... updating:for user details %s' % str(user_token.user_details.key()))
-                        user_token.put()
+			if user_token.user_details is not None:
+                        	logging.info('user_token modified ... updating:for user details %s' % str(user_token.user_details.key()))
+                        	user_token.put()
+			else:
+                        	logging.info('user_token user details not defined ....' )
                 if ud_modified:
                         logging.info('user details modified updating ...' )
                         self.ud.put()

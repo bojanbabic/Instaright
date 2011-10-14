@@ -1,0 +1,1 @@
+javascript:void((function(){var%20e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('src','http://www.instaright.com/bookmarklet/javascript');document.body.appendChild(e)})())

@@ -193,6 +193,9 @@ handlers:
 - url: /service/.*
   script: service.py
 
+- url: /bookmarklet/.*
+  script: bookmarklet.py
+
 - url: /.*
   script: main.py
 
