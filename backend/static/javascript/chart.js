@@ -11,6 +11,7 @@ function drawVisualization(type, statsForDate, user) {
                                                         var y = new Date((new Date()).getTime() - 86400000);
                                                         statsForDate = y.getFullYear() +'-'+ y.getMonth() + '-'+ y.getDate();
                                                 } catch(ee){
+							alert(ee);
                                                 } 
                                         }
                                         //statsForDate = "{{ dailyStats.0 }}";

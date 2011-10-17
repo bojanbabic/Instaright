@@ -2,7 +2,7 @@
 
 import sys, logging, os
 import urllib2
-import service_util
+from service_util import ServiceUtil
 
 from datetime import datetime, timedelta
 from hashlib import sha1
@@ -112,7 +112,8 @@ def twitter_specifier_handler(client):
     return client.get('/account/verify_credentials')['screen_name']
 
 def evernote_specifier_handler(client):
-    userStoreHttpClient = THttpClient.THttpClient(service_util.userStoreUri)
+    sl=ServiceUtil()
+    userStoreHttpClient = THttpClient.THttpClient(sl.userStoreUri)
     userStoreProtocol = TBinaryProtocol.TBinaryProtocol(userStoreHttpClient)
     userStore = UserStore.Client(userStoreProtocol)
     user= userStore.getUser(urllib2.unquote(client.token.oauth_token))

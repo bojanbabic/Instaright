@@ -21,6 +21,7 @@ from utils.general import Cast
 from utils.category import CategoryUtil
 from utils.link import LinkUtils
 from utils.handler import RequestUtils
+from utils.user import UserUtils
 
 sys.path.append(os.path.join(os.path.dirname(__file__),'social'))
 sys.path.append(os.path.join(os.path.dirname(__file__),'fetch'))
@@ -181,7 +182,11 @@ class LinkRecommendationTask(webapp.RequestHandler):
                         logging.info('no url no recommendations')
                         return
 		url = url.encode('utf-8')
+                logging.info('getting url hash %s' %url)
                 url_hash = LinkUtils.getUrlHash(url)
+                if url_hash is None:
+                        logging.error("can't determing url hash %s" % url)
+                        return
                 try:
                         l = Links.gql('WHERE url_hash = :1' , url_hash).get()
                         if l is None:
@@ -244,31 +249,28 @@ class LinkRecommendationHandler(webapp.RequestHandler):
                         self.response.out.write(simplejson.dumps(link.recommendation, default = lambda l: {'title': l[0], 'url': l[1]}))
 
 class LinkUserHandler(webapp.RequestHandler):
+        def __init__(self):
+                conf = ConfigParser.ConfigParser()
+		conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/users.ini')
+                self.link_batch=int(conf.get('dashboard', 'show_links'))
         def get(self):
+                logging.info('fetching more user links ...')
                 cookie = self.request.get('cookie', None)
                 offset = Cast.toInt(self.request.get('offset', None), 0)
-                if cookie is None:
-                        logging.info('no user info return')
-                        return
                 logging.info('row offset %s' % offset)
-                offset = offset * 20
-                usession = UserSessionFE.gql('WHERE user_uuid = :1', cookie).get()
-                ud = usession.user_details
-                self.response.headers["Content-type"] = "application/json"
-                if ud.instaright_account is None:
-                        logging.info('not user determined from cache')
-                        self.response.out.write('{}')
-                        return 
-                logging.info('user from cookie %s ' % ud.instaright_account)
-                logging.info('offset %s' % offset)
+                offset = offset * self.link_batch
+                ud = UserUtils.getUserDetailsFromCookie(cookie)
                 sessions = SessionModel.gql('WHERE instaright_account =  :1 ORDER by date desc ', ud.instaright_account ).fetch(20,offset)
                 if sessions is None or len(sessions) == 0:
+                        self.response.headers["Content-type"] = "application/json"
                         self.response.out.write('{}')
                         return
                 d = {}
                 for d_te, j in itertools.groupby(sessions, key= lambda s: s.date.date()):
                         ss = [ {'t':ss.title,'l':ss.url,'d':ss.domain,'h':ss.url_hash} for ss in list(j) ]
                         d[str(d_te)] = ss
+                logging.info('giving more links %s' % str(d))
+                self.response.headers["Content-type"] = "application/json"
                 self.response.out.write(simplejson.dumps(d))
 
 

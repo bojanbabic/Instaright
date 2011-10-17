@@ -7,6 +7,8 @@ import ConfigParser
 from xml.dom import minidom
 import logging
 
+_MAX_LINK_PROPERTY_LENGTH=1040
+
 class RequestUtils(object):
 	@classmethod
 	def getDomain(cls, url):
@@ -82,6 +84,11 @@ class RequestUtils(object):
                 if scheme in skip_protocols:
                        logging.info('url scheme not good: %s ' % url)
                        return False
+                logging.info('checking url lenght %s' % len(url)) 
+                #if len(url.encode('utf-8')) > _MAX_LINK_PROPERTY_LENGTH:
+                if len(url) > _MAX_LINK_PROPERTY_LENGTH:
+                        logging.info('url too long for datastore, must be under %s' %str(_MAX_LINK_PROPERTY_LENGTH))
+                        return False
                 return True
 
         @classmethod

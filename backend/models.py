@@ -98,9 +98,9 @@ class SessionModel(db.Model):
                 if cursor:
 		        query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate).with_cursor(cursor)
                 else:
-                        logging.info('no key offset fetching first batch 700')
+                        logging.info('no key offset fetching first batch 500')
 		        query = SessionModel.gql(' WHERE date >= :1 and date < :2 ', targetDate, upperLimitDate)
-                data = query.fetch(700)
+                data = query.fetch(500)
                 logging.info('fetched data %d' %len(data))
                 return data
 

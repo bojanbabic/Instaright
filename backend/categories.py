@@ -308,7 +308,11 @@ class CategoryHandler(GenericWebHandler):
                 if crawler is not None:
                         self.html_snapshot(category,'category')
                         return
-                logging.info('category handler')
+		if category is None:
+			logging.info('no category provided')
+			return
+		category = urllib.unquote(category.encode('ascii')).decode('utf-8')
+                logging.info('category %s handler' % category)
                 self.redirect_perm()
                 self.get_user()
                 logging.info('category screen_name %s' %self.screen_name)
@@ -318,7 +322,7 @@ class CategoryHandler(GenericWebHandler):
 		userMessager = UserMessager(str(self.user_uuid))
 		channel_id = userMessager.create_channel()
 
-                template_variables = {'page_footer': PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'category':category}
+                template_variables = {'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar,'channel_id':channel_id,'category':category}
 		path= os.path.join(os.path.dirname(__file__), 'templates/category.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))

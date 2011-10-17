@@ -186,7 +186,13 @@ class LinkUtils(object):
                         return None
         @classmethod
         def getUrlHash(cls, url):
-                return base64.b64encode(hashlib.sha1(unicode(url).encode('utf-8')).digest())[:-1]
+                hash=None
+                try:
+                        hash = base64.b64encode(hashlib.sha1(unicode(url).encode('utf-8')).digest())[:-1]
+                except:
+                        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+                        logging.info('hash for url %s failed... error=> %s ::: %s' %(url, e0, e1))
+                return hash
         def updateStats(self, s):
                 dailyStats = DailyDomainStats.gql('WHERE domain = :1 and date = :2', s.domain, s.date).get()
                 if dailyStats is not None:

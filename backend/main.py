@@ -197,7 +197,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 #known category
                 category = LinkUtils.getLinkCategory(model)
                 ud=UserDetails.gql('WHERE instaright_account = :1', user).get()
-                if ud is not None:
+                if ud is not None and model is not None and model.key() is not None:
                         taskqueue.add(url='/service/submit', params={'user_details_key': str(ud.key()), 'session_key': str(model.key())})
                 taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': int(time.mktime(model.date.timetuple())), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 

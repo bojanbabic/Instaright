@@ -588,6 +588,7 @@ span {
 	font-size: 14px;
 	letter-spacing: -1px;
 	text-transform: uppercase;
+	padding-top: 5px;
 }
 .link_group{
 	display:block;
@@ -889,6 +890,7 @@ span {
 	margin-top: 10px;
 	padding-left: 20px;
 	padding-top: 10px;
+	float: right;
 }
 .stream-article {
 	color: #0066CC;
@@ -1086,4 +1088,11 @@ span {
 	margin-left: 30px;
 	margin-bottom: -10px;
 	display: none;
+}
+#no_more_updates{
+	text-align: center; 
+	padding-top: 15px; 
+	padding-left:-40px;
+	width: 683px;
+	padding: 20px;
 }

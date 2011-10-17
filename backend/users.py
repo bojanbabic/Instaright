@@ -74,7 +74,7 @@ class UserGenericHandler(GenericWebHandler):
         def __init__(self):
                 conf=ConfigParser.ConfigParser()
 	        conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/users.ini')
-                self.visible_links=int(conf.get('dashboard','show_links'))
+                self.link_batch=int(conf.get('dashboard','show_links'))
         def get(self):
                 #redirect from appengine domain
                 self.redirect_perm()
@@ -85,7 +85,7 @@ class UserGenericHandler(GenericWebHandler):
                         self.redirect('/')
                         return
                 logging.info('user: %s' %self.instaright_account)
-                sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , self.instaright_account).fetch(20)
+                sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , self.instaright_account).fetch(self.link_batch)
 
                 score = 0
                 links = None
@@ -118,7 +118,7 @@ class UserGenericHandler(GenericWebHandler):
                 all_badges = UserBadge.gql('WHERE user = :1 order by date desc', self.instaright_account).fetch(1000)
                 if all_badges is not None:
                         badges = set([ (b.badge, b.badge_property.badge_desc) for b in all_badges if b is not None and b.badge_property is not None ])
-                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'facebook_token':self.facebook_oauth_token,'facebook_profile': self.facebook_profile, 'twitter_profile': self.twitter_profile, 'twitter_token': self.twitter_oauth_token, 'google_profile': self.google_profile, 'google_token':self.google_oauth_token, 'picplz_profile': self.picplz_name, 'picplz_token': self.picplz_oauth_token, 'evernote_profile': self.evernote_name, 'evernote_token': self.evernote_oauth_token, 'links':links, 'score': score, 'visible_items_num': self.visible_links, 'badges': badges,'logout_url':'/account/logout'}
+                template_variables = {'user':self.screen_name, 'avatar':self.avatar,'instaright_account':self.instaright_account,'facebook_token':self.facebook_oauth_token,'facebook_profile': self.facebook_profile, 'twitter_profile': self.twitter_profile, 'twitter_token': self.twitter_oauth_token, 'google_profile': self.google_profile, 'google_token':self.google_oauth_token, 'picplz_profile': self.picplz_name, 'picplz_token': self.picplz_oauth_token, 'evernote_profile': self.evernote_name, 'evernote_token': self.evernote_oauth_token, 'links':links, 'score': score, 'visible_items_num': self.link_batch, 'badges': badges,'logout_url':'/account/logout'}
                 logging.info('templates %s' %template_variables)
                 path= os.path.join(os.path.dirname(__file__), 'templates/user_info.html')
                 self.response.headers["Content-type"] = "text/html"

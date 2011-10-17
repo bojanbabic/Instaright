@@ -15,7 +15,7 @@
 				selection = document.selection.createRange().text;
 			}
 			// Highlight all the images on the page
-			var numImages = 0;
+			/*var numImages = 0;
 			var imageElements = window.ff__reshare ? [] : document.getElementsByTagName("img");
 			for (var i = 0; i < imageElements.length; i++) {
 				var image = imageElements[i];
@@ -29,7 +29,7 @@
 						cursor: image.style.cursor,
 						listener: listener
 					});
-			}
+			}*/
 			// Create the share dialog in the corner of the window
 			var container = div();
 			container.id = "ff__container";
