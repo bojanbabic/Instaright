@@ -24,7 +24,7 @@ class DummyHandler(webapp.RequestHandler):
                 self.response.out.write('{"contacts":[["baboon1+friends","My feed",1],["scobleizer","Robert Scoble"],["plasticdreams","aka"],["bouriel","bouriel"]]}')
 class BookmarkletRequestHandler(webapp.RequestHandler):
         def post(self):
-		self.response.out.write("boom")
+		self.response.out.write('{"close_html":"Link sucessfully sent"}')
 
 application = webapp.WSGIApplication(
                 [
