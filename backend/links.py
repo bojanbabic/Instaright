@@ -260,21 +260,22 @@ class LinkUserHandler(webapp.RequestHandler):
                 logging.info('row offset %s' % offset)
                 offset = offset * self.link_batch
                 ud = UserUtils.getUserDetailsFromCookie(cookie)
-                sessions = SessionModel.gql('WHERE instaright_account =  :1 ORDER by date desc ', ud.instaright_account ).fetch(20,offset)
+                sessions = SessionModel.gql('WHERE instaright_account =  :1 ORDER by date desc ', ud.instaright_account ).fetch(self.link_batch,offset)
                 if sessions is None or len(sessions) == 0:
+			logging.info('returned no sessions for offset %s' %offset)
                         self.response.headers["Content-type"] = "application/json"
                         self.response.out.write('{}')
                         return
+		logging.info('fetched %s sessions for user %s' %(len(sessions), ud.instaright_account))
                 d = {}
                 for d_te, j in itertools.groupby(sessions, key= lambda s: s.date.date()):
                         ss = [ {'t':ss.title,'l':ss.url,'d':ss.domain,'h':ss.url_hash} for ss in list(j) ]
                         d[str(d_te)] = ss
-                logging.info('giving more links %s' % str(d))
+		import operator
+		#order by dates desc
+		dates_sorted=sorted(d.iteritems(), key=operator.itemgetter(0), reverse=True)
                 self.response.headers["Content-type"] = "application/json"
-                self.response.out.write(simplejson.dumps(d))
-
-
-
+                self.response.out.write(simplejson.dumps(dates_sorted))
 
 def main():
         run_wsgi_app(application)

@@ -1,3 +1,5 @@
+var monthNames = [ "January", "February", "March", "April", "May", "June",
+	    "July", "August", "September", "October", "November", "December" ];
                         function $(id){
                                 return document.getElementById(id);
                         }
@@ -17,4 +19,13 @@
                         function onSuccess(response) {
                                 $('visualization').innerHTML= response;
                         }
+			function getMonthString(month_int){
+				return monthNames[month_int];
+			}
+			function getMonth3U(month_str){
+				return month_str.substring(0,3)
+			}
+			function getMonth3U_int(month_int){
+				return getMonth3U(getMonthString(month_int));
+			}
 
