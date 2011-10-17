@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, logging
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -24,6 +24,11 @@ class DummyHandler(webapp.RequestHandler):
                 self.response.out.write('{"contacts":[["baboon1+friends","My feed",1],["scobleizer","Robert Scoble"],["plasticdreams","aka"],["bouriel","bouriel"]]}')
 class BookmarkletRequestHandler(webapp.RequestHandler):
         def post(self):
+                link=self.request.get('link', None);
+                title=self.request.get('title', None);
+                parenturl=self.request.get('parenturl', None);
+                note=self.request.get('note', None);
+                logging.info('got from bookmarklet: %s %s %s %s' %(link, title, parenturl, note))
 		self.response.out.write('{"close_html":"Link sucessfully sent"}')
 
 application = webapp.WSGIApplication(

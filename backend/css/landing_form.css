@@ -126,11 +126,17 @@ body{
     padding: 30px;
     width: 498px;
 }
-.addons {
+#addons, #bookmarklet {
 	margin-left:330px;
 	margin-top:80px;
 }
-.addons img {
+#bookmarklet_desc {
+	float: left;
+}
+#bookmarklet_install {
+	text-align: center;
+}
+#addons img {
 	width: 150px;
 	height: 150px;
 }

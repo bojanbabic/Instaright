@@ -1096,3 +1096,6 @@ span {
 	width: 683px;
 	padding: 20px;
 }
+.line_separator{
+	border-bottom: 1px solid;
+}

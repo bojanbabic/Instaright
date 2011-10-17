@@ -2,81 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>Instaright - </title>
-		<link rel="stylesheet" href="/static/css/nano.css" type="text/css"/>
-		<style type="text/css">
-			html,
-			body,
-			#bookmarklet {
-				height: auto;
-			}
-			body {
-				background: white;
-				margin: 10px;
-			}
-			select {
-				width: 16em;
-			}
-			div.thumbnails {
-				white-space: nowrap;
-				overflow: hidden;
-			}
-			td.button {
-				padding-left: 4px;
-				vertical-align: top;
-				padding-top: 1px;
-			}
-			td.close {
-				vertical-align: top;
-				text-align: right;
-			}
-			div.comment {
-				background: url("/static/images/note.jpg") 1px 5px no-repeat;
-			}
-			div.thumbnails img {
-				border: 1px solid #ccc;
-				padding: 1px;
-				margin-bottom: 8px;
-				margin-right: 8px;
-				vertical-align: middle;
-			}
-			textarea.blur,
-			input.blur {
-				color: #aaa;
-			}
-			div.comment {
-				padding-left: 22px;
-			}
-			textarea.title,
-			textarea.comment {
-				padding: 2px;
-			}
-			.sharebox div.title textarea.title {
-				height: 40px;
-				width: 100%;
-			}
-			textarea.comment {
-				color: #737373;
-				height: 13pt;
-				width: 100%;
-			}
-			textarea.title.blur,
-			textarea.comment.blur {
-				color: #aaa;
-				text-decoration: none;
-			}
-			div.title {
-				margin-right: 6px;
-				padding-top: 5px;
-				padding-bottom: 5px;
-			}
-			div.comment {
-				margin-right: 6px;
-				padding-bottom: 5px;
-			}
-
-		</style>
-
+		<title>Instaright Bookmarklet Save Articles </title>
+		<link rel="stylesheet" href="http://localhost:8080/css/nano.css" type="text/css"/>
+		<link rel="stylesheet" href="http://localhost:8080/css/frame.css" type="text/css"/>
 	</head>
 	<body>
 		<div id="bookmarklet">
@@ -90,19 +18,17 @@
 			</div>
 			<div id="sharediv" class="sharebox expanded" style="border-width:0px">
 				<form action="/a/bookmarklet" method="post" id="bookmarkletform">
-					<div class="title field"><textarea name="title" class="title" title="Link title" ></textarea></div>
+					<div class="title field"><label for="title">Title:</label><input type="text" name="title" class="title" title="Instaright Article Title" /></div>
+					<div class="url field"><label for="url">Link:</label><input type="text" name="url" class="url" title="Instaright Article URL" /></div>
 					<div id="thumbnails" class="thumbnails" style="display:none"></div>
-					<div class="comment field"><textarea name="comment" class="comment" title="Add a note" rows="4" cols="40"></textarea></div>
+					<div class="comment field"><textarea name="note" class="note" title="Add a note" rows="4" cols="40"></textarea></div>
 					<div class="actions">
 						<table style="width:100%">
 							<tr>
 								<td style="text-align:right; padding-left: 5px">
 									<input type="submit" value="Post" style="font-weight:bold"/>
-									<input type="hidden" name="streams" value="baboon1"/>
 									<input type="hidden" name="parenturl"/>
 									<input type="hidden" name="link" value=""/>
-									<input type="hidden" name="next" value="http://friendfeed.com/"/>
-									<input type="hidden" name="at" value="8350797342125526793_1318613323"/>
 
 								</td>
 							</tr>
@@ -173,25 +99,20 @@
 	<script type="text/javascript">
 		//<![CDATA[
 	var gLastHash = "";
-	var gReshare = null;
 	var gThumbnails = [];
 	var kThumbHeight = 150;
 	var kThumbWidth = 400;
 	var kMaxThumbnails = 3;
 	$(function() {
 			
-			console.log("after load script:");
 			var submit = function() { $("#bookmarkletform").submit() }
-			$("textarea.title").hint().focus().makeExpandable(350, submit, "100px").focus(shareFocus);
-			$("textarea.comment").hint().makeExpandable(20000, submit);
+			$("textarea.note").hint().makeExpandable(20000, submit).focus(shareFocus);
 			$("#bookmarkletform,#loginform").submit(bookmarkletSubmit); checkHash();
 			setInterval(checkHash, 100);
 
 
 			$('.sharebox .l_toinput').result(function() {setTimeout(updateFrameSize)});
 			$('.sharebox a.l_toinput').focus(shareToFocus).blur(shareToBlur);
-			$('.sharebox textarea.title').focus();
-			console.log("after after load script");
 
 			});
 function checkHash() {
@@ -204,24 +125,19 @@ function checkHash() {
 		switch (i) {
 			case "parenturl":
 				$("input[name=parenturl]").val(v);
-			$.get("/static/html/ping.txt", {bookmarklet: v});
 			break;
 			case "url":
+				$("input[name=url]").val(v);
 				$("input[name=link]").val(v);
+				$("input[name=url]").attr('disabled',true);
 			break;
 			case "title":
-				$("textarea[name=title]").val(v);
-			$("textarea[name=title]").keypress();
-			break;
-			case "image":
-				addImage(v, parseInt(p.w), parseInt(p.h), p.video);
+				$("input[name=title]").val(v);
+				$("input[name=title]").attr('disabled',true);
 			break;
 			case "selection":
 				v = $.trim(v);
-			if (v) $("textarea[name=comment]").val(('"' + v + '"').replace(/\n/g, " ")).removeClass("blur").keypress();
-			break;
-			case "reshare":
-				handleReshare();
+			if (v) $("textarea[name=note]").val(('"' + v + '"').replace(/\n/g, " ")).removeClass("blur").keypress();
 			break;
 		}
 	}
@@ -233,7 +149,7 @@ function addImage(src, width, height, video) {
 			newThumbnails.push(gThumbnails[i]);
 		}
 	}
-	if (!gReshare && newThumbnails.length == kMaxThumbnails) {
+	if (newThumbnails.length == kMaxThumbnails) {
 		newThumbnails.shift();
 	}
 	newThumbnails.push({
@@ -312,10 +228,6 @@ function updateFrameSize() {
 	sendToParent('frameh-' + (document.body.offsetHeight + 40));
 }
 function sendToParent(msg) {
-	if (gReshare) {
-		parent.handleShareMessage("X-" + msg);
-		return;
-	}
 	var url = $('input[name=parenturl]').val().split('#')[0] + "#FFSHARE-" + msg;
 	try {
 		top.location.replace(url);
@@ -330,16 +242,18 @@ function parseParams(s) {
 		var kv = a[i].split("=");
 		r[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
 	}
+	console.log(r);
 	return r;
 }
 function bookmarkletSubmit() {
 	var form = $("#bookmarkletform");
-	var streams = [];
-	form.find("input[name=streams]").val(streams.join(","));
 	var args = form.formToDict();
-	if (!args.title || $("textarea.title").hasClass("blur")) {
-		$("textarea.comment").blur();
-		$("textarea.title").focus();
+	form_serialized=form.serializeArray();
+	console.log("serialized:");
+	console.log(form_serialized);
+	console.log("args:");
+	console.log(args)
+	if (!args.link) {
 		console.log('bye bye');
 		return false;
 	}
@@ -352,31 +266,24 @@ function bookmarkletSubmit() {
 			return false;
 		}
 	}
-	args.next = "";
-	if (gReshare) args.reshare = gReshare.entry;
-	if ($("textarea.comments").hasClass("blur")) args.comment = "";
-	for (var i = 0; i < gThumbnails.length; i++) {
-		args["image" + i] = gThumbnails[i].src;
-		if (gThumbnails[i].video)
-			args["video" + i] = gThumbnails[i].video;
-	}
+	if ($("textarea.note").hasClass("blur")) args.comment = "";
 	var submit = $("input[type=submit]");
 	submit.disable();
-	console.log("submit disabled");
+	console.log(args)
 	$.postJSON("/a/bookmarklet", args, function(r) {
 			submit.enable();
-			console.log('form submitted...');
 			if (r.loginreq) {
-			showLogin();
+				showLogin();
 			} else if (r.message) {
-			$("#errormessage").html(r.message).show();
-			showLogin();
+				console.log('error message:' + r.message);
+				$("#errormessage").html(r.message).show();
+				showLogin();
 			} else {
-			if (r.close_html) {
-			sendToParent("close-" + encodeURIComponent(r.close_html).replace(/-/g, '%2d'));
-			} else {
-			sendToParent("close");
-			}
+				if (r.close_html) {
+					sendToParent("close-" + encodeURIComponent(r.close_html).replace(/-/g, '%2d'));
+				} else {
+					sendToParent("close");
+				}
 			}
 			}, submit, true);
 	return false;
@@ -388,17 +295,7 @@ function showLogin() {
 	updateFrameSize();
 }
 function handleReshare() {
-	gReshare = parent.ff__reshare;
-	$("#imgtip").replaceWith($(".cc"));
-	$("input[name=link]").val(gReshare.url);
-	$("textarea[name=title]").val(gReshare.title).css("height", "100px");
-	setTimeout(function() {
-			for (var i = 0; i < gReshare.images.length; i++) {
-			var img = gReshare.images[i];
-			addImage(img.src, img.w, img.h);
-			}
-			updateFrameSize();
-			}, 50);
+	return;
 }
 //]]>
 </script>

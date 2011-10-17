@@ -1,0 +1,69 @@
+html,
+body,
+#bookmarklet {
+	height: auto;
+}
+body {
+	background: white;
+	margin: 10px;
+}
+select {
+	width: 16em;
+}
+div.thumbnails {
+	white-space: nowrap;
+	overflow: hidden;
+}
+td.button {
+	padding-left: 4px;
+	vertical-align: top;
+	padding-top: 1px;
+}
+td.close {
+	vertical-align: top;
+	text-align: right;
+}
+div.comment {
+	background: url("/static/images/note.jpg") 1px 5px no-repeat;
+}
+div.thumbnails img {
+	border: 1px solid #ccc;
+	padding: 1px;
+	margin-bottom: 8px;
+	margin-right: 8px;
+	vertical-align: middle;
+}
+textarea.blur,
+input.blur {
+	color: #aaa;
+}
+div.comment {
+	padding-left: 22px;
+}
+input.title,
+input.url{
+	width: 100%;
+}
+input.title,
+textarea.comment {
+	padding: 2px;
+}
+textarea.note {
+	color: #737373;
+	height: 40pt;
+	width: 100%;
+}
+textarea.comment.blur {
+	color: #aaa;
+	text-decoration: none;
+}
+div.title {
+	margin-right: 6px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+div.comment {
+	margin-right: 6px;
+	padding-bottom: 5px;
+}
+

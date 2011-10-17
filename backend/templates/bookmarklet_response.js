@@ -51,7 +51,7 @@
 			foreground.style.backgroundColor = "white";
 			foreground.style.zIndex = 2;
 			foreground.style.width = "450px";
-			foreground.style.height = "310px";
+			foreground.style.height = "320px";
 			foreground.innerHTML = '<iframe frameborder="0" id="ff__iframe" style="width:100%;height:100%;border:0px;padding:0px;margin:0px"></iframe>';
 			document.body.appendChild(container);
 			var msg = {
@@ -292,8 +292,10 @@
 				iframe = byId("ff__iframe").contentWindow;
 			}
 			if (!iframe) return;
-			var url = window.ff__reshare ? "" : 'https://friendfeed.com';
-			url += '/share/bookmarklet/frame#' + p;
+			var url = window.ff__reshare ? "" : 'http://localhost:8080';
+			//var url = window.ff__reshare ? "" : 'https://friendfeed.com';
+			url += '/bookmarklet/frame#' + p;
+			//url += '/share/bookmarklet/frame#' + p;
 			try {
 				iframe.location.replace(url);
 			} catch (e) {
@@ -353,13 +355,14 @@
 			foreground.style.fontWeight = "normal";
 			foreground.style.width = "";
 			foreground.style.height = "";
-			foreground.innerHTML = '<img style="width:16px;height:16px;margin-bottom:-3px;margin-right:1px" src="http://friendfeed.com/static/images/icons/internal.png?v=e471e9afdf04ae568dcbddb5584fc6c0"> ' + message + ' <a href="#" id="ff__close" style="margin-left:1em;color:#1030cc">' + 'close' + '</a>';
+			foreground.innerHTML = '<img style="width:16px;height:16px;margin-bottom:-3px;margin-right:1px" src="http://www.instaright.com/static/images/instaright_small.png"> ' + message + ' <a href="#" id="ff__close" style="margin-left:1em;color:#1030cc">' + 'close' + '</a>';
 			byId("ff__close").onclick = removeContainer;
 			setTimeout(removeContainer, 3500);
 		}
 		if (document.getElementsByTagName('head').length == 0 ||
 			frames.length > document.getElementsByTagName('iframe').length) {
-			window.location.href = 'http://friendfeed.com/?link=' + escape(window.location.href);
+			window.location.href = 'http://www.instaright.com/?link=' + escape(window.location.href);
+			//window.location.href = 'http://friendfeed.com/?link=' + escape(window.location.href);
 		} else {
 			bookmarklet();
 		}
