@@ -3,9 +3,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>Instaright Bookmarklet Save Articles </title>
-		<link rel="stylesheet" href="http://localhost:8080/css/nano.css" type="text/css"/>
-		<link rel="stylesheet" href="http://localhost:8080/css/frame.css" type="text/css"/>
-		<script type="text/javascript" src="http://localhost:8080/static/javascript/instaright.js"></script>
+		<link rel="stylesheet" href="{{ env }}/css/nano.css" type="text/css"/>
+		<link rel="stylesheet" href="{{ env }}/css/frame.css" type="text/css"/>
+		<script type="text/javascript" src="{{ env }}/static/javascript/instaright.js"></script>
 	</head>
 	<body>
 		<div id="bookmarklet">
@@ -54,82 +54,50 @@
 			<div id="logindiv" style="display:none">
 				<div class="sharebox expanded" style="border-width:0px ;padding:30px; margin-left: 50px;">
 					<p class="howdy">Yee Haw! Claim your identity by logging at out website.</p>
-					<p class="howdy"><a target="_new" href="http://localhost:8080/user/dashboard">(login)</a></p>
-					<p class="howdy">*after login try again</p>
-					<table>
-						<tbody>
-							<tr>
-								<td><a href="/oauth/twitter/login?redirect=/bookmarklet/frame"><img style="boarder: medium none" width="80" height="80" title="Join Instaright Web App with your Twitter account" alt="Twitter" src="/static/images/twitter-button.png"/></a></td>
-								<td><a href="{{ google_login_url }}&redirect=/bookmarklet/frame"><img style="boarder: medium none" width="80" height="80" title="Join Instaright Web App with your Google account" alt="Google" src="/static/images/google-button.png"/></a></td>
-								<td>
-									<div id="fb-root"></div>
-									<script>
-										window.fbAsyncInit = function() {
-											FB.init({appId: '180962951948062', status: true, cookie: true,
-												xfbml: true});
-										};
-										(function() {
-											var e = document.createElement('script');
-											e.type = 'text/javascript';
-											e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-											e.async = true;
-											document.getElementById('fb-root').appendChild(e);
-										}());
-									</script>
-									<a href="javascript:fblogin();"> <img style="boarder: medium none" width="80" height="80" title="Join Instaright Web App with your Facebook account" alt="Facebook" src="/static/images/facebook-button.png" /> </a>
-									<script>
-										function fblogin(){
-											FB.login(function(response){
-												window.location.reload();
-											}, {perms:'read_stream,publish_stream, email, offline_access'});
-										}
-									</script>
-								</td>
-							</tbody>
-						</table>
+					<p class="howdy"><a href="#" onclick="sendToLoginPage()">(login)</a></p>
+					<p class="howdy">*try again after login</p>
+				</div>
 
-					</div>
-
-				</body>
-			</div>
+			</body>
 		</div>
+	</div>
 
 
-		<script src="/static/javascript/jquery-1.3.js" type="text/javascript"></script>
+	<script src="/static/javascript/jquery-1.3.js" type="text/javascript"></script>
 
-		<script type="text/javascript">
-			//<![CDATA[
-		var gCurrentUserId = "8023d9c9d24f4ecb954dd401744f14d8";
-
-
-		var gTwitLogin = 'bojanbabic';
-
-		var gHttpsPrefix = 'https://friendfeed.com';
-		var gRTL = false;
-		//]]>
-		</script>
-
-		<script src="/static/javascript/nano.en.js" type="text/javascript">
-		</script>
-		<script type="text/javascript">
-			//<![CDATA[
-		var gLastHash = "";
-		var gThumbnails = [];
-		var kThumbHeight = 150;
-		var kThumbWidth = 400;
-		var kMaxThumbnails = 3;
-		$(function() {
-
-				var submit = function() { $("#bookmarkletform").submit() }
-				$("textarea.note").hint().makeExpandable(20000, submit).focus(shareFocus);
-				$("#bookmarkletform,#loginform").submit(bookmarkletSubmit); checkHash();
-				setInterval(checkHash, 100);
+	<script type="text/javascript">
+		//<![CDATA[
+	var gCurrentUserId = "8023d9c9d24f4ecb954dd401744f14d8";
 
 
-				$('.sharebox .l_toinput').result(function() {setTimeout(updateFrameSize)});
-				$('.sharebox a.l_toinput').focus(shareToFocus).blur(shareToBlur);
+	var gTwitLogin = 'bojanbabic';
 
-				});
+	var gHttpsPrefix = 'https://friendfeed.com';
+	var gRTL = false;
+	//]]>
+	</script>
+
+	<script src="/static/javascript/nano.en.js" type="text/javascript">
+	</script>
+	<script type="text/javascript">
+		//<![CDATA[
+	var gLastHash = "";
+	var gThumbnails = [];
+	var kThumbHeight = 150;
+	var kThumbWidth = 400;
+	var kMaxThumbnails = 3;
+	$(function() {
+
+			var submit = function() { $("#bookmarkletform").submit() }
+			$("textarea.note").hint().makeExpandable(20000, submit).focus(shareFocus);
+			$("#bookmarkletform,#loginform").submit(bookmarkletSubmit); checkHash();
+			setInterval(checkHash, 100);
+
+
+			$('.sharebox .l_toinput').result(function() {setTimeout(updateFrameSize)});
+			$('.sharebox a.l_toinput').focus(shareToFocus).blur(shareToBlur);
+
+			});
 function checkHash() {
 	var hash = location.href.split("#")[1]; // don't use location.hash
 	if (!hash || !hash.length) return;
@@ -161,6 +129,16 @@ function checkHash() {
 function updateFrameSize() {
 	sendToParent('frameh-' + (document.body.offsetHeight + 40));
 }
+function sendToLoginPage(){
+	var redirect_url = $('input[name=parenturl]').val().split('#')[0];
+	var url="{{ env }}/user/dashboard?redirect="+redirect_url;
+	try {
+		top.location.replace(url);
+	} catch (e) {
+		console.log(e);
+		top.location = url;
+	}
+}
 function sendToParent(msg) {
 	var url = $('input[name=parenturl]').val().split('#')[0] + "#FFSHARE-" + msg;
 	try {
@@ -185,13 +163,11 @@ function bookmarkletSubmit() {
 		return false;
 	}
 	var login = $("#loginform").formToDict();
-	if (login.email) {
-		$.extend(args, login);
-	} else {
-		if (!getCookie("AD")) {
-			showLogin();
-			return false;
-		}
+	if (!getCookie("user_uuid")) {
+		showLogin();
+		return false;
+	}else {
+		$.extend(args, {'UD':getCookie("user_uuid")});
 	}
 	if ($("textarea.note").hasClass("blur")) args.comment = "";
 	var json_instaright = jsonifyInstarightObject(args);
@@ -199,6 +175,7 @@ function bookmarkletSubmit() {
 	submit.disable();
 	$.post("/rpc", {'data':json_instaright}, function(r) {
 			submit.enable();
+			r=JSON.parse(r);
 			if (r.loginreq) {
 			showLogin();
 			} else if (r.message) {

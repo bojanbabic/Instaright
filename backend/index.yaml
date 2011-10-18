@@ -240,7 +240,19 @@ indexes:
 - kind: UserSessionFE
   properties:
   - name: user_uuid
+  - name: date
+    direction: desc
+
+- kind: UserSessionFE
+  properties:
+  - name: user_uuid
   - name: last_updatetime
+    direction: desc
+
+- kind: UserSessionFE
+  properties:
+  - name: uuid
+  - name: date
     direction: desc
 
 - kind: UserStats

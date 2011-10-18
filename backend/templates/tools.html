@@ -122,7 +122,7 @@ $(document).ready(function(){
 <p>We haven't forgot Safari or Opera users, now you can use bookmarklet and boost your productivity.</p>
 <p id="bookmarklet_install">
 <span class="text_bubble_cats">
-<a href="javascript:void((function()%7Bvar%20e=document.createElement('scr'+'ipt');e.setAttribute('type','text/javascript');e.setAttribute('src','http://localhost:8080/bookmarklet/javascript');document.body.appendChild(e)%7D)())" title="Drag Instaright bookmarklet to your Bookmark Bar" onclick="javascript:alert('Click and drag the button above onto your Bookmark bar'); return false;">Instaright Bookmarklet</a></span>
+	<a href="javascript:void((function()%7Bvar%20e=document.createElement('scr'+'ipt');e.setAttribute('type','text/javascript');e.setAttribute('src','{{ env }}/bookmarklet/javascript');document.body.appendChild(e)%7D)())" title="Drag Instaright bookmarklet to your Bookmark Bar" onclick="javascript:alert('Click and drag the button above onto your Bookmark bar'); return false;">Instaright Bookmarklet</a></span>
 
 </p>
 </div>

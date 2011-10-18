@@ -292,10 +292,8 @@
 				iframe = byId("ff__iframe").contentWindow;
 			}
 			if (!iframe) return;
-			var url = window.ff__reshare ? "" : 'http://localhost:8080';
-			//var url = window.ff__reshare ? "" : 'https://friendfeed.com';
+			var url = window.ff__reshare ? "" : '{{ env }}'
 			url += '/bookmarklet/frame#' + p;
-			//url += '/share/bookmarklet/frame#' + p;
 			try {
 				iframe.location.replace(url);
 			} catch (e) {

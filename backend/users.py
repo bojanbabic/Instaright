@@ -82,7 +82,7 @@ class UserGenericHandler(GenericWebHandler):
 
                 if self.user_uuid is None or len(str(self.user_uuid)) == 0 or self.screen_name is None or self.user_detail_key is None:
                         logging.info('No cookies, redirecting to home page')
-                        self.redirect('/')
+                        self.redirect('/?redirect=/user/dashboard&show_login=1')
                         return
                 logging.info('user: %s' %self.instaright_account)
                 sessions = SessionModel.gql('WHERE instaright_account = :1 ORDER by date desc ' , self.instaright_account).fetch(self.link_batch)

@@ -43,12 +43,17 @@
          <body>
 		<script type="text/javascript" charset="utf-8">
 		$(document).ready(function(){
+			var show_login='{{ show_login }}';
 			$("#btn_login").fancybox({
 				'scrolling'		: 'no',
 				'titleShow'		: false,
-				'onClosed'		: function(){
-				}
 			});
+			if (show_login){
+				$("#btn_login").fancybox({
+					'scrolling'		: 'no',
+					'titleShow'		: false,
+				}).trigger('click');
+			}
 		});
 		</script>
                 <script type="text/javascript" charset="utf-8">

@@ -28,6 +28,8 @@ from generic_handler import GenericWebHandler
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
 
+#ENVIRONMENT='http://localhost:8080'
+ENVIRONMENT='http://www.instaright.com'
 class UserMessager:
 	def __init__(self, user_uid):
 		self.user_uuid = user_uid
@@ -90,17 +92,18 @@ class MainHandler(webapp.RequestHandler):
                 if selection is not None:
                         selection = selection[:500]
                 user_agent = self.request.headers['User-agent']
-                if user is None or user == 'undefined':
-                        logging.info('skipping since there is no user defined ( client %s )' % client )
+                if user is None and client == 'bookmarklet':
+                        logging.info('skipping since user is not defined ( client %s )' % client )
                         return
+                logging.info('request has been made from valid user %s' % user)
                 try:
 			taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent, 'share_mode': share_mode})
                 except TransientError:
 			taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent, 'share_mode': share_mode})
 
-		logging.info('checking if client is bookmarklet ...')
 		if client == 'bookmarklet':
-			self.response.out.write(simplejson.dumps({'close_html':'Link successfully marked'}))
+		        logging.info('bookmarklet specific response')
+			self.response.out.write('{"close_html":"Link successfully marked"}')
 			return
 		logging.info('triggering feed update')
 
@@ -125,6 +128,7 @@ class MainTaskHandler(webapp.RequestHandler):
 		url=self.request.get('url',None)
 		domain=self.request.get('domain',None)
                 title=self.request.get('title',None)
+                share_mode=self.request.get('share_mode',None)
                 if not RequestUtils.checkUrl([],url):
                     logging.info('skipping since url is not good!')
                     return
@@ -203,7 +207,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 #known category
                 category = LinkUtils.getLinkCategory(model)
                 ud=UserDetails.gql('WHERE instaright_account = :1', user).get()
-                if ud is not None and model is not None and model.key() is not None:
+                if ud is not None and model is not None and model.key() is not None and share_mode in ['1']:
                         taskqueue.add(url='/service/submit', params={'user_details_key': str(ud.key()), 'session_key': str(model.key())})
                 taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': int(time.mktime(model.date.timetuple())), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 
@@ -222,9 +226,12 @@ class ErrorHandling(webapp.RequestHandler):
 class IndexHandler(GenericWebHandler):
 	def get(self):
                 crawler = self.request.get('_escaped_fragment_', None)
+                redirect = self.request.get('redirect', None)
+                show_login= self.request.get('show_login', None)
                 if crawler is not None:
                         self.html_snapshot()
                         return
+                logging.info('got redirect %s' % redirect)
                 #redirect from appengine domain
                 self.redirect_perm()
                 self.get_user()
@@ -234,7 +241,7 @@ class IndexHandler(GenericWebHandler):
 		login_url = users.create_login_url('/')	
                 if self.avatar is None:
                         self.avatar='/static/images/noavatar.png'
-                template_variables = {'user':self.screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':self.avatar, 'page_footer': PageUtils.get_footer()}
+                template_variables = {'user':self.screen_name, 'login_url':login_url, 'logout_url':'/account/logout', 'channel_id':channel_id, 'hotlinks': None,'avatar':self.avatar, 'page_footer': PageUtils.get_footer(),'show_login': show_login}
 		path= os.path.join(os.path.dirname(__file__), 'templates/index.html')
                 self.response.headers["Content-Type"] = "text/html; charset=utf-8"
 		self.response.out.write(template.render(path,template_variables))
@@ -259,7 +266,7 @@ class ToolsHandler(GenericWebHandler):
                 if self.avatar is None:
                         self.avatar='/static/images/noavatar.png'
 		template_variables = []
-                template_variables = {'page_footer':PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar}
+                template_variables = {'page_footer':PageUtils.get_footer(), 'user':self.screen_name, 'logout_url':'/account/logout', 'avatar':self.avatar, 'env': ENVIRONMENT}
 		path= os.path.join(os.path.dirname(__file__), 'templates/tools.html')
                 self.response.headers["Content-Type"]= "text/html"
 		self.response.out.write(template.render(path,template_variables))

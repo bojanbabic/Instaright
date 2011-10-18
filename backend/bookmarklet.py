@@ -5,9 +5,11 @@ from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
+#ENVIRONMENT='http://localhost:8080'
+ENVIRONMENT='http://www.instaright.com'
 class BookmarkletHandler(webapp.RequestHandler):
         def get(self):
-		template_vars={}
+		template_vars={'env':ENVIRONMENT}
 		path=os.path.join(os.path.dirname(__file__), 'templates/bookmarklet_response.js')
                 self.response.headers["Content-Type"] = "text/javascript"
 		self.response.out.write(template.render(path,template_vars))
@@ -15,16 +17,11 @@ class BookmarkletHandler(webapp.RequestHandler):
 class BookmarkletFrameHandler(webapp.RequestHandler):
         def get(self):
 		google_login_url = users.create_login_url('/') 
-		template_vars={'google_login_url': google_login_url}
+		template_vars={'google_login_url': google_login_url, 'env': ENVIRONMENT}
 		path=os.path.join(os.path.dirname(__file__), 'templates/bookmarklet_frame.html')
                 self.response.headers["Content-Type"] = "text/html"
 		self.response.out.write(template.render(path,template_vars))
 
-class DummyHandler(webapp.RequestHandler):
-        def get(self):
-		self.response.out.write("boo")
-        def post(self):
-                self.response.out.write('{"contacts":[["baboon1+friends","My feed",1],["scobleizer","Robert Scoble"],["plasticdreams","aka"],["bouriel","bouriel"]]}')
 class BookmarkletRequestHandler(webapp.RequestHandler):
         def post(self):
                 link=self.request.get('link', None);

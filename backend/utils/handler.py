@@ -8,6 +8,7 @@ from xml.dom import minidom
 import logging
 import simplejson
 
+from models import UserSessionFE, UserDetails
 _MAX_LINK_PROPERTY_LENGTH=1040
 
 class RequestUtils(object):
@@ -126,10 +127,23 @@ class RequestUtils(object):
 
         @classmethod
         def getUser(cls, args):
+		user = None
                 try:
-                        return urllib2.unquote(args[0])
+			#TODO!!!
+			param = urllib2.unquote(args[0])
+			user = param
+			#check account
+			ud = UserDetails.gql('WHERE instaright_account = :1', param).get()
+			if ud is None:
+				logging.info("account name %s doesn't exist testing session" % param)
+				usession = UserSessionFE.gql('where user_uuid = :1 order by last_updatetime desc', param).get()
+				user=usession.user_details.instaright_account
+			else:
+				user=ud.instaright_account
                 except:
-                        return None
+			e0,e = sys.exc_info()[0], sys.exc_info()[1]
+			logging.error('error while determing user account %s => %s' %( e0, e))
+                return user
 
 
 	@classmethod
