@@ -6,10 +6,26 @@ import urllib2
 import ConfigParser
 from xml.dom import minidom
 import logging
+import simplejson
 
 _MAX_LINK_PROPERTY_LENGTH=1040
 
 class RequestUtils(object):
+	@classmethod
+	def parse_params(cls, params):
+		args=None
+		if params is None:
+			logging.info('no params to parse')
+			return
+		try:
+			p=dict([ s.split('=') for s in params.split('&')])
+			logging.info('params as dict %s' % p)
+			args=simplejson.loads(urllib.unquote(p["data"]))
+		except:
+			e0,e = sys.exc_info()[0], sys.exc_info()[1]
+			logging.error('error while parsing params %s => %s' %( e0, e))
+		return args
+
 	@classmethod
 	def getDomain(cls, url):
 		domain = None
@@ -69,6 +85,14 @@ class RequestUtils(object):
                         e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
                 return selection
 
+	@classmethod
+	def getShareMode(cls, args):
+		share_mode=1
+		try:
+			share_mode = int(urllib2.unqoute(args[6]))
+		except:
+                        e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
+		return share_mode
 
         @classmethod
         def checkUrl(cls, args, url=None):
@@ -76,10 +100,9 @@ class RequestUtils(object):
 	        config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
 	        skip_protocols=config.get('protocols', 'skip')
                 url = cls.getUrl(args, url)
-                scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
                 if url is None:
                        return False
-
+                scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
                 logging.info('checking scheme:%s' %scheme)
                 if scheme in skip_protocols:
                        logging.info('url scheme not good: %s ' % url)

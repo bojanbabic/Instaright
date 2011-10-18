@@ -5,6 +5,7 @@
 		<title>Instaright Bookmarklet Save Articles </title>
 		<link rel="stylesheet" href="http://localhost:8080/css/nano.css" type="text/css"/>
 		<link rel="stylesheet" href="http://localhost:8080/css/frame.css" type="text/css"/>
+		<script type="text/javascript" src="http://localhost:8080/static/javascript/instaright.js"></script>
 	</head>
 	<body>
 		<div id="bookmarklet">
@@ -18,9 +19,8 @@
 			</div>
 			<div id="sharediv" class="sharebox expanded" style="border-width:0px">
 				<form action="/a/bookmarklet" method="post" id="bookmarkletform">
-					<div class="title field"><label for="title">Title:</label><input type="text" name="title" class="title" title="Instaright Article Title" /></div>
-					<div class="url field"><label for="url">Link:</label><input type="text" name="url" class="url" title="Instaright Article URL" /></div>
-					<div id="thumbnails" class="thumbnails" style="display:none"></div>
+					<div class="title field"><label for="title">Title:</label><input type="text" name="title" class="title" /></div>
+					<div class="url field"><label for="url">Link:</label><input type="text" name="url" class="url" /></div>
 					<div class="comment field"><textarea name="note" class="note" title="Add a note" rows="4" cols="40"></textarea></div>
 					<div class="actions">
 						<table style="width:100%">
@@ -28,8 +28,8 @@
 								<td style="text-align:right; padding-left: 5px">
 									<input type="submit" value="Post" style="font-weight:bold"/>
 									<input type="hidden" name="parenturl"/>
+									<input type="hidden" name="link_title"/>
 									<input type="hidden" name="link" value=""/>
-
 								</td>
 							</tr>
 
@@ -38,8 +38,8 @@
 									<div class="ccbody">
 										<table>
 											<tr>
-												<td class="ccbox"><input type="checkbox" name="sharetwitter" value="1" class="l_sharetwitter" checked="checked"/><input type="hidden" name="maybetweet" value="1"/></td>
-												<td class="cclabel"><span class="l_sharetwitter">Send Everywhere</span></td>
+												<td class="ccbox"><input type="checkbox" name="share" value="1" checked="checked"/></td>
+												<td class="cclabel"><span>Send Everywhere</span></td>
 											</tr>
 										</table>
 									</div>
@@ -133,6 +133,7 @@ function checkHash() {
 			break;
 			case "title":
 				$("input[name=title]").val(v);
+				$("input[name=link_title]").val(v);
 				$("input[name=title]").attr('disabled',true);
 			break;
 			case "selection":
@@ -141,88 +142,6 @@ function checkHash() {
 			break;
 		}
 	}
-}
-function addImage(src, width, height, video) {
-	var newThumbnails = [];
-	for (var i = 0; i < gThumbnails.length; i++) {
-		if (gThumbnails[i].src != src) {
-			newThumbnails.push(gThumbnails[i]);
-		}
-	}
-	if (newThumbnails.length == kMaxThumbnails) {
-		newThumbnails.shift();
-	}
-	newThumbnails.push({
-src: src,
-width: width,
-height: height,
-video: video
-});
-gThumbnails = newThumbnails;
-updateImages();
-}
-function updateImages() {
-	var media = $("#thumbnails");
-	media.empty();
-	if (gThumbnails.length > 0) {
-		var heightRatios = [];
-		var totalWidth = 0;
-		for (var i = 0; i < gThumbnails.length; i++) {
-			var image = gThumbnails[i];
-			var heightRatio = Math.min(1, kThumbHeight / image.height);
-			heightRatios.push(heightRatio);
-			totalWidth += Math.floor(heightRatio * image.width);
-		}
-		var widthRatio = Math.min(1, kThumbWidth / totalWidth);
-		for (var i = 0; i < gThumbnails.length; i++) {
-			media.append(createThumbnail(gThumbnails[i], heightRatios[i], widthRatio));
-		}
-		media.show();
-	} else {
-		media.hide();
-	}
-	updateFrameSize();
-}
-function createThumbnail(image, heightRatio, widthRatio) {
-	var thumb = document.createElement("img");
-	if ((!image.height || !image.width) && !image.calledback) {
-		image.calledback = true;
-		thumb.onload = thumbnailLoaded;
-	}
-	thumb.src = image.src;
-	var ratio = heightRatio * widthRatio;
-	thumb.style.width = Math.floor(ratio * image.width) + "px";
-	thumb.style.height = Math.floor(ratio * image.height) + "px";
-	thumb.style.cursor = "pointer";
-	thumb.title = 'Click to remove';
-	$(thumb).click(function(e) {
-			removeImage(image);
-			});
-	return thumb;
-}
-function thumbnailLoaded() {
-	for (var i = 0; i < gThumbnails.length; i++) {
-		var image = gThumbnails[i];
-		if (!image.height || !image.width) {
-			var loaded = $("#thumbnails img[src=" + image.src + "]:first");
-			if(loaded.length > 0) {
-				loaded = loaded[0];
-				image.width = loaded.width;
-				image.height = loaded.height;
-			}
-		}
-	}
-	updateImages();
-}
-function removeImage(image) {
-	var newThumbnails = [];
-	for (var i = 0; i < gThumbnails.length; i++) {
-		if (gThumbnails[i] != image) {
-			newThumbnails.push(gThumbnails[i]);
-		}
-	}
-	gThumbnails = newThumbnails;
-	updateImages();
 }
 function updateFrameSize() {
 	sendToParent('frameh-' + (document.body.offsetHeight + 40));
@@ -248,11 +167,6 @@ function parseParams(s) {
 function bookmarkletSubmit() {
 	var form = $("#bookmarkletform");
 	var args = form.formToDict();
-	form_serialized=form.serializeArray();
-	console.log("serialized:");
-	console.log(form_serialized);
-	console.log("args:");
-	console.log(args)
 	if (!args.link) {
 		console.log('bye bye');
 		return false;
@@ -267,10 +181,10 @@ function bookmarkletSubmit() {
 		}
 	}
 	if ($("textarea.note").hasClass("blur")) args.comment = "";
+	var json_instaright = jsonifyInstarightObject(args);
 	var submit = $("input[type=submit]");
 	submit.disable();
-	console.log(args)
-	$.postJSON("/a/bookmarklet", args, function(r) {
+	$.post("/rpc", {'data':json_instaright}, function(r) {
 			submit.enable();
 			if (r.loginreq) {
 				showLogin();
@@ -285,7 +199,7 @@ function bookmarkletSubmit() {
 					sendToParent("close");
 				}
 			}
-			}, submit, true);
+		}, submit, true);
 	return false;
 }
 function showLogin() {

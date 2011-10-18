@@ -68,46 +68,52 @@ class ChannelHandler(webapp.RequestHandler):
 class MainHandler(webapp.RequestHandler):
 	def post(self):
 		try:
+			logging.info(self.request.body)
 			args=simplejson.loads(self.request.body)
-                       
-                        logging.info('Received args:%s' % args)
-
-                        if not RequestUtils.checkUrl(args):
-                                logging.info('skipping since url is not good!')
-                                return
-		        user=RequestUtils.getUser(args)
-		        url=RequestUtils.getUrl(args)
-		        domain=RequestUtils.getDomain(url)
-                        title = RequestUtils.getTitle(args)
-                        version = RequestUtils.getVersion(args)
-                        client = RequestUtils.getClient(args)
-                        selection = RequestUtils.getSelection(args)
-                        if selection is not None:
-                                selection = selection[:500]
-                	user_agent = self.request.headers['User-agent']
-                        if user is None or user == 'undefined':
-                                logging.info('skipping since there is no user defined ( client %s )' % client )
-                                return
-                        try:
-                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent})
-                        except TransientError:
-                                taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent})
-
-			logging.info('triggering feed update')
-
-                        user = RequestUtils.getUser(args)
-
-                        cachedBadge = memcache.get('badge_'+user)
-                        logging.info('looking for badge %s' % 'badge_'+user)
-                        if cachedBadge is not None:
-                                logging.info('response badge %s' %cachedBadge)
-                                self.response.out.write(cachedBadge)
-                        else:
-                                logging.info('no badge found, using default')
-                                self.response.out.write('')
 		except:
-			e0,e = sys.exc_info()[0],  sys.exc_info()[1]
-			logging.error('Error while handling request %s %s' % (e0, e))
+			logging.error('could not parse request old style trying new ...')
+			args = RequestUtils.parse_params(self.request.body)
+
+		logging.info('Received args:%s' % args)
+		user=RequestUtils.getUser(args)
+		url=RequestUtils.getUrl(args)
+		domain=RequestUtils.getDomain(url)
+                title = RequestUtils.getTitle(args)
+                version = RequestUtils.getVersion(args)
+                client = RequestUtils.getClient(args)
+                selection = RequestUtils.getSelection(args)
+		share_mode = RequestUtils.getShareMode(args)
+
+                if not RequestUtils.checkUrl(args):
+                        logging.info('skipping since url is not good!')
+                        return
+                if selection is not None:
+                        selection = selection[:500]
+                user_agent = self.request.headers['User-agent']
+                if user is None or user == 'undefined':
+                        logging.info('skipping since there is no user defined ( client %s )' % client )
+                        return
+                try:
+			taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent, 'share_mode': share_mode})
+                except TransientError:
+			taskqueue.add(queue_name='link-queue', url='/article/task', params={'user': user, 'url': url, 'domain': domain, 'title': title, 'version': version,'client': client, 'selection': selection, 'user_agent': user_agent, 'share_mode': share_mode})
+
+		logging.info('checking if client is bookmarklet ...')
+		if client == 'bookmarklet':
+			self.response.out.write(simplejson.dumps({'close_html':'Link successfully marked'}))
+			return
+		logging.info('triggering feed update')
+
+                user = RequestUtils.getUser(args)
+
+                cachedBadge = memcache.get('badge_'+user)
+                logging.info('looking for badge %s' % 'badge_'+user)
+                if cachedBadge is not None:
+                        logging.info('response badge %s' %cachedBadge)
+                        self.response.out.write(cachedBadge)
+                else:
+                        logging.info('no badge found, using default')
+                        self.response.out.write('')
 		
 	def get(self):
 		return self.response.out.write('<script language="javascript">top.location.href="/"</script>')
