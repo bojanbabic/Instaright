@@ -1,5 +1,7 @@
-import os, sys, logging
+import os
+import logging
 from google.appengine.ext import webapp
+from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
@@ -12,7 +14,8 @@ class BookmarkletHandler(webapp.RequestHandler):
 
 class BookmarkletFrameHandler(webapp.RequestHandler):
         def get(self):
-		template_vars={}
+		google_login_url = users.create_login_url('/') 
+		template_vars={'google_login_url': google_login_url}
 		path=os.path.join(os.path.dirname(__file__), 'templates/bookmarklet_frame.html')
                 self.response.headers["Content-Type"] = "text/html"
 		self.response.out.write(template.render(path,template_vars))
