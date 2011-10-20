@@ -166,26 +166,28 @@ class MainTaskHandler(webapp.RequestHandler):
 		url_hash = LinkUtils.getUrlHash(url)
 		today = datetime.datetime.now().date()
 		model = SessionModel.gql('WHERE instaright_account = :1 and url_hash = :2 and date > :3', user, url_hash, today).get()
+                new_entity=False
 		if model is None:
 			logging.info('did not find save dafined by: %s %s for date %s', user, url, str(today))
 			model = SessionModel()
+                        new_entity=True
 		else:
-	        	model = SessionModel()
-			logging.info('existing url updating certain params')
+			logging.info('existing url(key %s) updating certain params' %str(model.key()))
 		try:
                         #remove for local testing
                 	model.ip = self.request.remote_addr
                 	model.instaright_account = user
                 	model.date = datetime.datetime.now()
-                	model.url = url
-                        model.url_hash = url_hash
-                        model.url_counter_id = url_cnt
-                        model.url_encode26 = url_encode26
+                        if new_entity == True:
+                	        model.url = url
+                                model.url_hash = url_hash
+                                model.url_counter_id = url_cnt
+                                model.url_encode26 = url_encode26
+                	        model.title = title
                         model.user_agent=user_agent
                 	model.domain = domain
                 	model.short_link = None
                 	model.feed_link = None
-                	model.title = title
                 	model.version = version
                         model.client = client
                         model.selection = selection 
