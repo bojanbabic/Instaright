@@ -1,0 +1,2262 @@
+
+
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:39:49 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"netzrot%40gmail.com\", \"http%3A%2F%2Fwww.zeit.de%2Fpolitik%2Fausland%2F2011-10%2Fus-Republikaner%2Fkomplettansicht\", \"US-Pr%C3%A4sidentschaftswahl%3A%20Planlose%20Republikaner%20%7C%20Politik%20%7C%20ZEIT%20ONLINE\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:39:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"john%40dobie.co.uk\", \"http%3A%2F%2Fgizmodo.com%2F5851654%2Feverything-you-need-to-know-about-that-freaky-dream-last-night\", \"Everything%20You%20Need%20to%20Know%20About%20That%20Freaky%20Dream%20Last%20Night\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:39:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"john%40dobie.co.uk\", \"http%3A%2F%2Fgizmodo.com%2F5851654%2Feverything-you-need-to-know-about-that-freaky-dream-last-night\", \"Everything%20You%20Need%20to%20Know%20About%20That%20Freaky%20Dream%20Last%20Night\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:40:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"john%40dobie.co.uk\", \"http%3A%2F%2Fgizmodo.com%2F5851528%2Fmicrosoft-just-built-a-digital-holodeck\", \"Microsoft%20Is%20Developing%20a%20Digital%20Holodeck\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:41:39 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"yessiebliss%40yahoo.fr\", \"http%3A%2F%2Fnews.google.fr%2F%3Far%3D1319117866\", \"Google%20Actualit%C3%A9s\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:41:40 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"yessiebliss%40yahoo.fr\", \"http%3A%2F%2Fnews.google.fr%2F%3Far%3D1319117866\", \"Google%20Actualit%C3%A9s\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:42:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"spamnomas%40gmail.com\", \"http%3A%2F%2Fwww.slate.com%2Farticles%2Flife%2Fdear_prudence%2F2011%2F10%2Fadoption_i_want_my_sister_to_keep_her_child_.single.html\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:43:36 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jose%40gonzalezgomez.info\", \"http%3A%2F%2Fwww.infoq.com%2Farticles%2Frest-soap\", \"InfoQ%3A%20How%20REST%20replaced%20SOAP%20on%20the%20Web%3A%20What%20it%20means%20to%20yo\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:44:04 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"bohanes%40gmail.com\", \"http%3A%2F%2Fwww.forbes.com%2Fsites%2Fvictoriabarret%2F2011%2F10%2F18%2Fdropbox-the-inside-story-of-techs-hottest-startup%2F\", u"Dropbox%3A%20The%20Inside%20Story%20Of%20Tech\"s%20Hottest%20Startup%20-%20Forbes", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:44:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"bohanes%40gmail.com\", \"http%3A%2F%2Fwww.forbes.com%2Fsites%2Fvictoriabarret%2F2011%2F10%2F18%2Fdropbox-the-inside-story-of-techs-hottest-startup%2F\", u"Dropbox%3A%20The%20Inside%20Story%20Of%20Tech\"s%20Hottest%20Startup%20-%20Forbes", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:44:16 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"tjlewis13%40damien-hs.ed\", \"http%3A%2F%2Fwww.americaspace.org%2F%3Fp%3D9598\", \"GAO%20Says%20OSTP%E2%80%99s%20Chinese%20Bilateral%20Activities%20Violate%20Anti-Deficiency%20Act%20%C2%AB%20AmericaSpace\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:44:25 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jleib%40associates-solutions.com\", \"http%3A%2F%2Fwww.kansascity.com%2F2011%2F10%2F19%2F3218001%2Fbrownback-school-funding-plan.html\", \"Brownback%20school%20funding%20plan%20intrigues%20some%20Kansas%20districts%20-%20KansasCity.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:45:11 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jaceksen%40o2.pl\", \"https%3A%2F%2Fwww.facebook.com%2F\", \"Facebook\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:45:22 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"matthew.orley%40gmail.com\", \"http%3A%2F%2Fprospect.org%2Fcs%2Farticles%3Farticle%3Da_jew_of_no_religion\", \"A%20Jew%20of%20No%20Religion\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:45:53 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"emberzhang%40gmail.com\", \"http%3A%2F%2Fblog.sina.com.cn%2Fs%2Fblog_473d53360102dv4r.html\", \"%E4%BB%8E%E6%9C%AA%E5%90%AC%E8%AF%B4%E8%BF%87%E7%9A%84%E4%B8%80%E6%AC%A1%E5%8E%86%E5%8F%B2%E7%81%BE%E9%9A%BE_%E6%9D%8E%E9%93%B6%E6%B2%B3_%E6%96%B0%E6%B5%AA%E5%8D%9A%E5%AE%A2\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:45:54 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jacobomiranda%40hotmail.com\", \"http%3A%2F%2Fwww.cs.columbia.edu%2F~hgs%2Fetc%2Fwriting-style.html\", \"Writing%20Systems%20and%20Networking%20Articles\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:45:57 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"fabrik.silva%40gmail.com\", \"http%3A%2F%2Fwww.engrish.com%2F\", \"Engrish.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:46:19 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mikewang88%40gmail.com\", \"http%3A%2F%2Fwww.marketfolly.com%2F2011%2F10%2Fjim-chanos-beware-global-value-trap.html\", \"Jim%20Chanos%3A%20Beware%20the%20Global%20Value-Trap%20(Presentation%20From%20Value%20Investing%20Congress)%20~%20market%20folly\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:46:40 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jacobomiranda%40hotmail.com\", \"http%3A%2F%2Fwww.snapsurveys.com%2Fpaper-surveys%2F\", \"Paper%20Surveys\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mark.shevitz%40gmail.com\", \"http%3A%2F%2Fwww.forbes.com%2Fsites%2Fvictoriabarret%2F2011%2F10%2F18%2Fdropbox-the-inside-story-of-techs-hottest-startup%2F\", u"Dropbox%3A%20The%20Inside%20Story%20Of%20Tech\"s%20Hottest%20Startup%20-%20Forbes", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:23 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kevin%40learnnuggets.com\", \"https%3A%2F%2Fmail.google.com%2Fmail%2F%3Fui%3D2%26shva%3D1%23inbox%2F13320920f4a3bb74\", \"Articulate%20for%20Business%20Cookbook%20-%20gijombo%40gmail.com%20-%20Gmail\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:28 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kevin%40learnnuggets.com\", \"https%3A%2F%2Fmail.google.com%2Fmail%2F%3Fui%3D2%26shva%3D1%23inbox%2F13320920f4a3bb74\", \"Articulate%20for%20Business%20Cookbook%20-%20gijombo%40gmail.com%20-%20Gmail\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:30 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rvcinco%40hotmail.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F20%2Fgarden%2Fthe-indoor-tree-a-tall-green-slip-of-summer.html%3Fpagewanted%3Dall\", \"The%20Indoor%20Tree%20-%20A%20Tall%2C%20Green%20Slip%20of%20Summer%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Fhamusoku.com%2Farchives%2F6204552.html\", \"%E5%8F%B0%E6%B9%BE%E3%81%AB%E7%A7%BB%E4%BD%8F%E8%AA%BF%E6%9F%BB%E7%9B%AE%E7%9A%84%E3%81%A7%E8%A1%8C%E3%81%A3%E3%81%A6%E3%81%8D%E3%81%9F%3A%E3%83%8F%E3%83%A0%E3%82%B9%E3%82%BF%E3%83%BC%E9%80%9F%E5%A0%B1\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:44 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kevin%40learnnuggets.com\", \"http%3A%2F%2Fwww.appsumo.com%2Fwelcome%2F%3Fnext%3D%2Fsolo-freelancer-project-management-promo%2F\", \"All%20your%20software%20in%20one%20nice%20little%20burrito%20%7C%20AppSumo.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:47:52 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mark.shevitz%40gmail.com\", \"http%3A%2F%2Fwww.lamag.com%2Ffeatures%2FStory.aspx%3FID%3D1515070\", \"What%20Happened%20To%20Mitrice%20Richardson%3F%20-%20Features%20-%20Los%20Angeles%20magazine\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:48:17 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alex_valiente%40hotmail.com\", \"http%3A%2F%2Fwww.backtrack-linux.org%2Fforums%2Fworking-hardware%2F45608-intel-corporation-wifi-link-5100-wifi-802-11a-b-g-n-intel-5100-iwlagn.html\", \"Intel%20Corporation%20WiFi%20Link%205100%20WiFi%20802.11a%2Fb%2Fg%2Fn%20(Intel%205100%20-%20iwlagn)\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:48:23 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"broedner%40gmx.com\", \"http%3A%2F%2Fwww.drupalcenter.de%2Faudio%2Fby%2Ftitle%2Fdrupal-podcast_8_-_typo3_und_drupal_im_vergleich\", \"Audio%20by%20title%20drupal-podcast_8_-_typo3_und_drupal_im_vergleich%20%7C%20Drupal%20Center\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:48:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jsavargas%40gmail.com\", \"http%3A%2F%2Fwww.wingrooves.com%2F\", \"WinGrooves%C2%A0%7C%C2%A0A%20Free%20Windows%20GrooveShark%20Desktop%20Application\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:48:43 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jacobomiranda%40hotmail.com\", \"http%3A%2F%2Fwww.cs.columbia.edu%2F~hgs%2Fetc%2Fwriting-bugs.html\", \"Common%20Bugs%20in%20Writing\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:49:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jacobomiranda%40hotmail.com\", \"http%3A%2F%2Fwww.cs.columbia.edu%2F~hgs%2Fetc%2Fwriting-bugs.html\", \"Common%20Bugs%20in%20Writing\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:51:11 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"sangwook.han\", \"http%3A%2F%2Fclien.career.co.kr%2Fcs2%2Fbbs%2Fboard.php%3Fbo_table%3Dcm_mac%26wr_id%3D483651\", \"%ED%81%B4%EB%A6%AC%EC%95%99%20%EC%86%8C%EB%AA%A8%EC%9E%84%20%3E%20MaClien%20%3E%20%EC%9D%B8%EA%B0%84%EC%A0%81%EC%9C%BC%EB%A1%9C%20%EC%98%B4%EB%8B%88%EC%82%AC%20%EC%86%8C%ED%94%84%ED%8A%B8%EC%9B%A8%EC%96%B4%EB%8A%94%20%EB%84%88%EB%AC%B4%20%EB%B9%84%EC%8B%B8%EC%9A%94...%3B%3B%3B\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:51:23 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jleib%40associates-solutions.com\", \"http%3A%2F%2Fwww.kansascity.com%2F2011%2F10%2F19%2F3218067%2Fboth-mu-and-big-12-could-have.html%23storylink%3Domni_popular\", \"Both%20MU%20and%20Big%2012%20could%20have%20done%20more%20to%20prevent%20departure%20-%20KansasCity.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:06 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"seaairland0216%40gmail.com\", \"http%3A%2F%2Febookee.org%2FThe-Collected-Works-of-J-Willard-Gibbs-in-Two-Volumes-by-J-Willard-Gibbs_1122599.html\", \"The%20Collected%20Works%20of%20J.%20Willard%20Gibbs%20in%20Two%20Volumes%20by%20J.%20Willard%20Gibbs%20%7C%20Free%20eBooks%20Download%20-%20EBOOKEE!\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:07 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"aytlee@rogers.com\", \"http%3A%2F%2Fwww.thestar.com%2Fnews%2Fcanada%2Fpolitics%2Farticle%2F1072608--walkom-a-plan-to-unite-the-left-that-just-might-work%3Fbn%3D1\", \"\", \"0.4.1.2\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"arnon.eilat%40gmail.com\", \"http%3A%2F%2Fwww.hahem.co.il%2Ffriendsofgeorge%2F%3Fp%3D2630\", u"%D7%99%D7%95%D7%A6%D7%A8%D7%99%20%D7%94%D7%9E%D7%A4%D7%9C%D7%A6%D7%95%D7%AA%20%7C%20%D7%94%D7%97%D7%91%D7%A8%D7%99%D7%9D%20%D7%A9%D7%9C%20%D7%92\"%D7%95%D7%A8%D7%92\"", \"0.4.4\", \"firefox\", \"%D7%92.%20%D7%94%D7%94%D7%99%D7%A1%D7%98%D7%95%D7%A8%D7%99%D7%94%20%D7%A9%D7%90%D7%AA%D7%94%20%D7%9E%D7%AA%D7%90%D7%A8%20%D7%9E%D7%A8%D7%AA%D7%A7%D7%AA%3A%20%D7%9C%D7%A4%D7%99%20%D7%94%D7%A4%D7%95%D7%A1%D7%98%20%D7%94%D7%96%D7%94%2C%20%D7%A2%D7%95%D7%A9%D7%94%20%D7%A8%D7%95%D7%A9%D7%9D%20%D7%A9%D7%94%D7%A4%D7%9C%D7%A1%D7%98%D7%99%D7%A0%D7%99%D7%9D%20%D7%99%D7%A9%D7%91%D7%95%20%D7%9C%D7%94%D7%9D%20%D7%91%D7%A9%D7%A7%D7%98%20%D7%95%D7%91%D7%A9%D7%9C%D7%95%D7%95%D7%94%2C%20%D7%9C%D7%90%20%D7%A8%D7%A6%D7%97%D7%95%20%D7%9C%D7%90%20%D7%A4%D7%92%D7%A2%D7%95%20%D7%95%D7%9C%D7%90%20%D7%94%D7%AA%D7%A7%D7%99%D7%A4%D7%95%2C%20%D7%95%D7%90%D7%96%20%D7%99%D7%95%D7%9D%20%D7%90%D7%97%D7%93%20%D7%91%D7%A9%D7%9C%20%D7%AA%D7%90%D7%95%D7%95%D7%AA%20%D7%A9%D7%98%D7%97%D7%99%D7%9D%20%D7%90%D7%95%20%D7%A2%D7%91%D7%93%D7%99%D7%9D%20%D7%99%D7%A9%D7%A8%D7%90%D7%9C%20%D7%96%D7%99%D7%A0%D7%A7%D7%94%20%D7%A2%D7%9C%D7%99%D7%94%D7%9D%20%D7%95%D7%9B%D7%91%D7%A9%D7%94%20%D7%90%D7%95%D7%AA%D7%9D%20%E2%80%93%20%D7%9B%D7%9E%D7%95%20%D7%A9%D7%A2%D7%A9%D7%95%20%D7%94%D7%A8%D7%95%D7%9E%D7%90%D7%99%D7%9D%2C%20%D7%94%D7%91%D7%A8%D7%99%D7%98%D7%99%D7%9D%2C%20%D7%94%D7%A6%D7%A8%D7%A4%D7%AA%D7%99%D7%9D%20%D7%95%D7%94%D7%9E%D7%AA%D7%99%D7%99%D7%A9%D7%91%D7%99%D7%9D%20%D7%94%D7%9C%D7%91%D7%A0%D7%99%D7%9D%20%D7%91%D7%90%D7%A8%D7%94%22%D7%91.%20%D7%9B%D7%9E%D7%95%D7%91%D7%9F%20%D7%A9%D7%9B%D7%9C%20%D7%A7%D7%A9%D7%A8%20%D7%91%D7%99%D7%9F%20%D7%94%D7%AA%D7%99%D7%90%D7%95%D7%A8%20%D7%94%D7%96%D7%94%20%D7%95%D7%94%D7%94%D7%A7%D7%91%D7%9C%D7%94%20%D7%A9%D7%90%D7%AA%D7%94%20%D7%A2%D7%95%D7%A9%D7%94%20%D7%9C%D7%9E%D7%A6%D7%99%D7%90%D7%95%D7%AA%20%D7%94%D7%95%D7%90%20%D7%9E%D7%A7%D7%A8%D7%99%20%D7%91%D7%99%D7%95%D7%AA%D7%A8%2C%20%D7%90%D7%91%D7%9C%20%D7%91%D7%95%D7%90%20%D7%9C%D7%90%20%D7%A0%D7%99%D7%AA%D7%9F%20%D7%9C%D7%96%D7%94%20%D7%9C%D7%91%D7%9C%D7%91%D7%9C%20%D7%90%D7%95%D7%AA%D7%A0%D7%95.\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"aytlee@rogers.com\", \"http%3A%2F%2Fwww.thestar.com%2Fnews%2Fcanada%2Fpolitics%2Farticle%2F1072684--hebert-tories-fall-short-in-repairing-democratic-imbalance%3Fbn%3D1\", \"\", \"0.4.1.2\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:25 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"arnon.eilat%40gmail.com\", \"http%3A%2F%2Fwww.hahem.co.il%2Ffriendsofgeorge%2F%3Fp%3D2630\", u"%D7%99%D7%95%D7%A6%D7%A8%D7%99%20%D7%94%D7%9E%D7%A4%D7%9C%D7%A6%D7%95%D7%AA%20%7C%20%D7%94%D7%97%D7%91%D7%A8%D7%99%D7%9D%20%D7%A9%D7%9C%20%D7%92\"%D7%95%D7%A8%D7%92\"", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:31 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"lpoon%40yahoo.com\", \"http%3A%2F%2Fwww.iphonehacks.com%2F2011%2F10%2Fa-duet-with-siri-video.html%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2Biphonehacks%2B%2528iPhone%2BHacks%2529%26utm_content%3DGoogle%2BReader\", \"A%20Duet%20With%20Siri%20%5BVideo%5D\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"aytlee@rogers.com\", \"http%3A%2F%2Fwww.thestar.com%2Fnews%2Farticle%2F1072979--councillor-wants-ems-deemed-truly-essential%3Fbn%3D1\", \"\", \"0.4.1.2\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:52:59 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rvcinco%40hotmail.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F16%2Fnyregion%2Fat-the-apple-orchard-crowding-out-red-delicious.html\", \"At%20the%20Apple%20Orchard%2C%20Crowding%20Out%20Red%20Delicious%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:53:00 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"devil-akos%40hotmail.com\", \"http%3A%2F%2Fthenextweb.com%2Fapps%2F2011%2F10%2F19%2Ffocus-only-on-your-php-code-by-using-zends-phpcloud%2F\", u"Focus%20only%20on%20your%20PHP%20code%20by%20using%20Zend\"s%20phpcloud%20-%20The%20Next%20Web", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:53:06 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"aytlee@rogers.com\", \"http%3A%2F%2Fwww.thestar.com%2Fnews%2Farticle%2F1072884--heap-s-legacy-life-lessons-off-the-basketball-court%3Fbn%3D1\", \"\", \"0.4.1.2\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:53:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"soulstew%40gmail.com\", \"http%3A%2F%2Ftsukikagemaru.blog96.fc2.com%2Fblog-entry-53.html\", \"%E5%86%99%E7%9C%9F%E3%81%AE%E3%81%8D%E3%81%8A%E3%81%8F%20%E9%8A%80%E6%AE%8B%E3%81%97%E9%A2%A8%EF%BD%9ELightroom%E3%81%AE%E3%83%97%E3%83%AA%E3%82%BB%E3%83%83%E3%83%88Silverleaving%E3%82%92%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%BF%E3%81%9F\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:53:24 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"soulstew%40gmail.com\", \"http%3A%2F%2Fwww.totallysweetphotos.com%2Fmatts-bleach-bypass-lightroom-presets%2F\", \"Matt%E2%80%99s%20Bleach%20Bypass%20Lightroom%20Presets\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:55:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"myroom302%40gmail.com\", \"http%3A%2F%2Fwww.appleinsider.com%2Farticles%2F11%2F10%2F20%2Fiphone_takes_56_of_att_smartphone_activations_as_iphone_4s_hits_1m.html\", \"AppleInsider%20%7C%20Apple%20takes%2056%25%20of%20AT%26T%20smartphone%20activations%20as%20iPhone%204S%20hits%201M\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:57:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mgwfr64%40gmail.com\", \"http%3A%2F%2Fwww.smithsonianmag.com%2F%3Fref%3Dlogo\", \"History%2C%20Travel%2C%20Arts%2C%20Science%2C%20People%2C%20Places%20%7C%20Smithsonian%20Magazine\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:57:35 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mikkel%40hoegh.org\", \"http%3A%2F%2Fwww.newscientist.com%2Farticle%2Fmg21228354.500-revealed--the-capitalist-network-that-runs-the-world.html\", \"Revealed%20%E2%80%93%20the%20capitalist%20network%20that%20runs%20the%20world%20-%20physics-math%20-%2019%20October%202011%20-%20New%20Scientist\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:57:40 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nedbulmer%40gmail.com\", \"http%3A%2F%2Fshop.steadyclothing.com%2Fproduct%2Fdrive-scorpion-jacket-2nd-run\", \"Rock%20Steady%20%E2%80%94%20Drive%20Scorpion%20Mens%20Jacket%20--%202nd%20Run\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:57:43 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nedbulmer%40gmail.com\", \"http%3A%2F%2Fshop.steadyclothing.com%2Fproduct%2Fdrive-scorpion-jacket-2nd-run\", \"Rock%20Steady%20%E2%80%94%20Drive%20Scorpion%20Mens%20Jacket%20--%202nd%20Run\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:57:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"contact%40laurentbrouat.com\", \"http%3A%2F%2Fwww.employerbrandingtoday.com%2Fblog%2F2011%2F10%2F19%2Fwmaes_how_to_be_one%2F\", \"What%20does%20it%20take%20to%20be%20one%20of%20the%20World%E2%80%99s%20Most%20Attractive%20Employers%3F%20-%20Employer%20Branding%20Today\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:58:08 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"vasseurjb%40yahoo.fr\", \"https%3A%2F%2Fmultitiered.wordpress.com%2F2010%2F08%2F05%2Fgetting-started-with-the-facebook-c-sharp-sdk%2F\", \"Getting%20Started%20with%20the%20Facebook%20C%23%20SDK%20%C2%AB%20Everything%20Web\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:58:27 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mikkel%40hoegh.org\", \"http%3A%2F%2Farstechnica.com%2Fapple%2Fnews%2F2011%2F10%2Fwhy-apple-added-little-known-c-spire-as-a-us-iphone-carrier.ars%3Futm_source%3Drss%26utm_medium%3Drss%26utm_campaign%3Drss\", \"Why%20Apple%20added%20little-known%20C-Spire%20as%20a%20US%20iPhone%20carrier\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 4:58:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jacobomiranda%40hotmail.com\", \"http%3A%2F%2Fwww.cs.columbia.edu%2F~hgs%2Fetc%2Fwriting-style.html\", \"Writing%20Systems%20and%20Networking%20Articles\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:02:25 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chingfu.lan%40gmail.com\", \"http%3A%2F%2Fopinionator.blogs.nytimes.com%2F2011%2F10%2F19%2Fwhat-makes-free-will-free%2F\", \"Science%20and%20Free%20Will%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:02:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"scottjgoldman%40gmail.com\", \"http%3A%2F%2Fthehill.com%2Fopinion%2Fcolumnists%2Fab-stoddard%2F188651-time-to-get-off-the-bus\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:02:46 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"scottjgoldman%40gmail.com\", \"http%3A%2F%2Fwww.nationalreview.com%2Farticles%2F280725%2Fcan-cain-do-it-robert-costa\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:02:54 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"scottjgoldman%40gmail.com\", \"http%3A%2F%2Fideas.time.com%2F2011%2F10%2F20%2Fis-herman-cain-the-most-unctuous-black-man-alive%2F\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:03:36 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"sivakumart%40gmail.com\", \"http%3A%2F%2Fen.wikipedia.org%2Fwiki%2FPaaS\", \"Platform%20as%20a%20service%20-%20Wikipedia%2C%20the%20free%20encyclopedia\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:03:54 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"robert.ohlen%40telia.com\", \"http%3A%2F%2Fwww.omboende.se%2FGlobal%2FBygga%2FDokument%2Fkov_tips_till_dig_som_anlitar_hantverkare_2010.pdf\", \"kov_tips_till_dig_som_anlitar_hantverkare_2010.pdf%20(application%2Fpdf%20Object)\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:04:20 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"dansima%40gmail.com\", \"http%3A%2F%2Fwww.b2bmarketinginsider.com%2Fcontent-marketing%2Fwhat-is-content-strategy\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:05:49 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hiroki.kimura330%40gmail.com\", \"http%3A%2F%2Ftrendy.nikkeibp.co.jp%2Farticle%2Fpickup%2F20110105%2F1034098%2F%3FP%3D5\", \"NEC%E3%81%AEWiMAX%E3%83%AB%E3%83%BC%E3%82%BF%E3%83%BC%E3%80%8CAterm%20WM3500R%E3%80%8D%E3%80%81%E9%A7%86%E5%8B%95%E6%99%82%E9%96%93%E3%82%84%E4%BD%BF%E3%81%84%E5%8B%9D%E6%89%8B%E3%82%92%E5%BE%B9%E5%BA%95%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%20-%20%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%20-%20%E6%97%A5%E7%B5%8C%E3%83%88%E3%83%AC%E3%83%B3%E3%83%87%E3%82%A3%E3%83%8D%E3%83%83%E3%83%88\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:05:52 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"e.11enohr%40medionmail.com\", \"http%3A%2F%2Fwww.br-online.de%2Fbayern3%2Fpc-und-co%2Fkostenlose-e-mail-dienste-im-test-ID1318405603714.xml\", \"Mailen%20und%20mehr%3A%20Kostenlose%20E-Mail-Dienste%20im%20Test%20%7C%20PC%20%26%20Co.%20%7C%20BAYERN%203%20%7C%20BR\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:06:16 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"567%40getschmann.com\", \"http%3A%2F%2Fwiki.pcbsd.org%2Findex.php%2FLaptops\", \"Laptops%20-%20PC-BSD%20Wiki\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:07:35 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"e.11enohr%40medionmail.com\", \"http%3A%2F%2Fwww.br-online.de%2Fbayern3%2Fratgeber-und-geld%2Fherrenjeans-im-test-ID1317108571365.xml\", \"M%C3%A4nnerjeans%20im%20Test%3A%20Gut%2C%20g%C3%BCnstig%20-%20und%20auch%20noch%20fair%3F%20%7C%20Ratgeber%20%26%20Geld%20%7C%20BAYERN%203%20%7C%20BR\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:08:07 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"lune%40mars.dti.ne.jp\", \"http%3A%2F%2Fhandmade00.web.fc2.com%2F\", \"%E3%82%82%E3%81%A3%E3%81%A8%E6%B0%97%E3%81%BE%E3%81%BE%E3%81%AB%20HP%E7%89%88\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:09:25 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"keisuke.odagiri%40gmail.com\", \"http%3A%2F%2Flabaq.com%2Farchives%2F51707546.html\", \"%E7%B5%82%E8%BA%AB%E5%88%91%E3%81%A7%E6%9C%8D%E5%BD%B9%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F%E7%94%B7%E3%80%81%E5%AE%9F%E3%81%AF%E7%BE%A9%E7%90%86%E3%81%AE%E5%BC%9F%E3%81%8C%E8%BA%AB%E4%BB%A3%E3%82%8F%E3%82%8A%E3%82%92%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F%E3%81%93%E3%81%A8%E3%81%8C%E5%88%A4%E6%98%8E%3A%E3%82%89%E3%81%B0Q\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:09:40 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Fblog.livedoor.jp%2Fsamplems-bakufu%2Farchives%2F51291861.html\", \"%E6%BF%80%E3%82%AB%E3%83%AF%E3%81%AAAV%E5%A5%B3%E5%84%AA%E3%83%BB%E7%B5%B5%E8%89%B2%E5%8D%83%E4%BD%B3%E3%81%8C%E3%83%8B%E3%82%B3%E7%94%9F%E3%81%A7%E3%82%A8%E3%83%AD%E3%83%AA%E3%82%B9%E3%83%8A%E3%83%BC%E3%81%AB%E7%AD%94%E3%81%88M%E5%AD%97%E3%83%91%E3%83%B3%E3%83%81%E3%83%A9%20-%20%E3%81%8A%E5%AE%9D%E3%82%A8%E3%83%AD%E3%82%B0%E5%B9%95%E5%BA%9C\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:10:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kaloyan%40gmail.com\", \"http%3A%2F%2Fwww.auctionbytes.com%2Fcab%2Fabn%2Fy11%2Fm06%2Fi24%2Fs03\", \"PayPal%20Raises%20Projections%20to%20%243%20Billion%20in%20Mobile%20Payment%20Processing\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:11:06 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"tomypelluz%40gmail.com\", \"http%3A%2F%2Fmindtheproduct.com%2F2011%2F10%2Fi-am-a-product-manager%2F\", \"I%20am%20a%20Product%20Manager%20%7C%20MindTheProduct\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:11:08 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"oscarlpelaez%40gmail.com\", \"http%3A%2F%2Fwww.pitchfork.com%2Fnews%2F44313-the-pitchfork-guide-to-cmj-2011%2F\", \"The%20Pitchfork%20Guide%20to%20CMJ%202011%20%7C%20News%20%7C%20Pitchfork\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:11:09 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"keisuke.odagiri%40gmail.com\", \"http%3A%2F%2Fb.hatena.ne.jp%2Farticles%2F201110%2F6285\", \"%E3%83%9C%E3%82%AB%E3%83%AD%E3%81%A8%E3%83%80%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AE%E3%82%B3%E3%83%A9%E3%83%9C%E3%81%AB%E3%80%8C%E7%90%83%E5%BD%A2%E9%A3%9B%E8%A1%8C%E4%BD%93%E3%80%8D%E3%83%91%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%B3%E3%82%B9%E3%82%82%E3%80%80%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84EXPO%E3%81%8C10%2F22%E3%81%BE%E3%81%A7%E9%96%8B%E5%82%AC%20-%20%E3%81%AF%E3%81%A6%E3%81%AA%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:11:31 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"keisuke.odagiri%40gmail.com\", \"http%3A%2F%2Fb.hatena.ne.jp%2Farticles%2F201110%2F6285\", \"%E3%83%9C%E3%82%AB%E3%83%AD%E3%81%A8%E3%83%80%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AE%E3%82%B3%E3%83%A9%E3%83%9C%E3%81%AB%E3%80%8C%E7%90%83%E5%BD%A2%E9%A3%9B%E8%A1%8C%E4%BD%93%E3%80%8D%E3%83%91%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%B3%E3%82%B9%E3%82%82%E3%80%80%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84EXPO%E3%81%8C10%2F22%E3%81%BE%E3%81%A7%E9%96%8B%E5%82%AC%20-%20%E3%81%AF%E3%81%A6%E3%81%AA%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:11:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nasbaer%40googlemail.com\", \"http%3A%2F%2Fwww.amazon.de%2Fproduct-reviews%2FB0030U3GTO%2Fref%3Dcm_cr_dp_all_helpful%3Fie%3DUTF8%26showViewpoints%3D1%26sortBy%3DbySubmissionDateDescending\", \"Amazon.de%3A%20Kundenrezensionen%3A%20TBS%206981%20DVB-S2%20Doppel-Tuner%2C%20PCIe%20Satelliten-HDTV%20Empfangskarte%20(Low%20Profile)\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:12:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"y.timofeyev%40gmail.com\", \"http%3A%2F%2Feternallyconfuzzled.com%2Ftuts%2Fdatastructures%2Fjsw_tut_andersson.aspx\", \"Eternally%20Confuzzled%20-%20Andersson%20Tree%20Tutorial\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:12:14 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"y.timofeyev%40gmail.com\", \"http%3A%2F%2Feternallyconfuzzled.com%2Ftuts%2Fdatastructures%2Fjsw_tut_andersson.aspx\", \"Eternally%20Confuzzled%20-%20Andersson%20Tree%20Tutorial\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:12:30 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"adam.bolcsfoldi%40gmail.com\", \"http%3A%2F%2Fthefcf.co.uk%2F2011%2F10%2F20%2Fremember-when-sampdoria-scudetto-1991-vialli%2F\", \"Remember%20when...%20Sampdoria%20won%20their%20only%20%3Ci%3Escudetto%3C%2Fi%3E\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:13:05 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mark.belinsky%40gmail.com\", \"http%3A%2F%2Fconsentofthenetworked.com%2F2011%2F10%2F20%2Ftunisia-and-the-internet%2F\", \"Tunisia%20and%20the%20Internet%3A%20A%20chance%20to%20get%20things%20right%3F%20%E2%80%93%20Consent%20of%20the%20Networked\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:13:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"wwkeyboard%40gmail.com\", \"http%3A%2F%2Fpaulgraham.com%2Favg.html\", \"Beating%20the%20Averages\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:13:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"keisuke.odagiri%40gmail.com\", \"http%3A%2F%2Fb.hatena.ne.jp%2Farticles%2F201110%2F6285\", \"%E3%83%9C%E3%82%AB%E3%83%AD%E3%81%A8%E3%83%80%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%AE%E3%82%B3%E3%83%A9%E3%83%9C%E3%81%AB%E3%80%8C%E7%90%83%E5%BD%A2%E9%A3%9B%E8%A1%8C%E4%BD%93%E3%80%8D%E3%83%91%E3%83%95%E3%82%A9%E3%83%BC%E3%83%9E%E3%83%B3%E3%82%B9%E3%82%82%E3%80%80%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84EXPO%E3%81%8C10%2F22%E3%81%BE%E3%81%A7%E9%96%8B%E5%82%AC%20-%20%E3%81%AF%E3%81%A6%E3%81%AA%E3%83%96%E3%83%83%E3%82%AF%E3%83%9E%E3%83%BC%E3%82%AF%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:14:44 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"y.timofeyev%40gmail.com\", \"http%3A%2F%2Fgraphics.cs.cmu.edu%2Fcourses%2F15-463%2F2011_fall%2Fhw%2Fproj3%2F\", \"15-463%3A%20Computational%20Photography\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:15:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chingfu.lan%40gmail.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F19%2Fdining%2Fa-vegan-dinner-party-for-autumn-a-good-appetite.html%3Fsrc%3Dme%26ref%3Dgeneral\", \"A%20Vegan%20Harvest%20Dinner%20Party%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:15:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chingfu.lan%40gmail.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F20%2Fnyregion%2Ffiring-at-ethical-culture-fieldston-school-prompts-outcry.html%3Fsrc%3Dme%26ref%3Dgeneral\", \"Firing%20at%20Ethical%20Culture%20Fieldston%20School%20Prompts%20Outcry%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:15:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nasbaer%40googlemail.com\", \"http%3A%2F%2Fwww.bangkokpost.com%2Fnews%2Flocal%2F262346%2Finmates-put-up-sandbags-at-suvarnabhumi-airport\", \"Bangkok%20Post%20%3A%20Prison%20inmates%20to%20sandbag%20airport\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:15:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Frocketnews24.com%2F2011%2F10%2F12%2F139037%2F\", \"%E8%85%B9%E7%AD%8B%E5%89%B2%E3%82%8D%E3%81%86%E3%81%9C%EF%BC%81%201%E6%97%A55%E5%88%86%E3%81%A7%E5%BC%95%E3%81%8D%E7%B7%A0%E3%81%BE%E3%81%A3%E3%81%9F%E3%81%8A%E8%85%B9%E3%81%8C%E6%89%8B%E3%81%AB%E5%85%A5%E3%82%8B%E3%80%8C5%E5%88%86%E9%96%93%E3%81%8A%E8%85%B9%E5%BC%95%E3%81%8D%E7%B7%A0%E3%82%81%E9%81%8B%E5%8B%95%E3%80%8D%E3%81%AE%E5%8B%95%E7%94%BB%E3%81%8C%E8%A9%B1%E9%A1%8C%E3%81%AB%20%E2%80%93%20%E3%83%AD%E3%82%B1%E3%83%83%E3%83%88%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B924%EF%BC%88%CE%B2%EF%BC%89\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:16:26 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mikewang88%40gmail.com\", \"http%3A%2F%2Fnews.cnyes.com%2FContent%2F20111020%2FKDZTKBEAQF2XC.shtml%3Fc%3Dheadline_sitehead\", \"%E8%A6%8B%E6%AD%BB%E4%B8%8D%E6%95%91%EF%BC%9F%E5%BE%B7%E6%B3%95%E5%88%86%E6%AD%A7%E4%BB%A4%E6%AD%90%E5%85%83%E5%8F%8A%E5%85%A8%E7%90%83%E5%B8%82%E5%A0%B4%E7%B2%BE%E7%A5%9E%E5%88%86%E8%A3%82_%E6%96%B0%E8%81%9E_%E9%89%85%E4%BA%A8%E7%B6%B2_%E6%8A%95%E8%B3%87%E5%85%A8%E7%90%83%20%E8%AE%93%E4%BD%A0%E9%89%85%E4%BA%A8\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:16:26 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mikewang88%40gmail.com\", \"http%3A%2F%2Fnews.cnyes.com%2FContent%2F20111020%2FKDZTKBEAQF2XC.shtml%3Fc%3Dheadline_sitehead\", \"%E8%A6%8B%E6%AD%BB%E4%B8%8D%E6%95%91%EF%BC%9F%E5%BE%B7%E6%B3%95%E5%88%86%E6%AD%A7%E4%BB%A4%E6%AD%90%E5%85%83%E5%8F%8A%E5%85%A8%E7%90%83%E5%B8%82%E5%A0%B4%E7%B2%BE%E7%A5%9E%E5%88%86%E8%A3%82_%E6%96%B0%E8%81%9E_%E9%89%85%E4%BA%A8%E7%B6%B2_%E6%8A%95%E8%B3%87%E5%85%A8%E7%90%83%20%E8%AE%93%E4%BD%A0%E9%89%85%E4%BA%A8\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:16:30 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"eleepod%40gmail.com\", \"http%3A%2F%2Fperevodika.ru%2Farticles%2F19837.html\", \"%D0%9F%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4%D0%B8%D0%BA%D0%B0%20-%20%D0%9A%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%83%20%D0%BE%D0%B1%20%D1%83%D0%B1%D0%BE%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D0%B5%20%D0%B8%20%D0%B8%D0%B4%D0%B8%D0%BE%D1%82%D0%B8%D0%B7%D0%BC%D0%B5%20%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%20%D0%BB%D0%B8%D0%B1%D0%B5%D1%80%D0%B0%D0%BB%D0%B8%D0%B7%D0%BC%D0%B0\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:16:35 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rumosmok%40gmail.com\", \"https%3A%2F%2Faddons.mozilla.org%2Fen-US%2Ffirefox%2Faddon%2Finstaright-social-bookmarks%2F\", \"Instaright%20-%20social%20bookmarks%20(Instapaper)%20%3A%3A%20Add-ons%20for%20Firefox\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:16:36 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rumosmok%40gmail.com\", \"https%3A%2F%2Faddons.mozilla.org%2Fen-US%2Ffirefox%2Faddon%2Finstaright-social-bookmarks%2F\", \"Instaright%20-%20social%20bookmarks%20(Instapaper)%20%3A%3A%20Add-ons%20for%20Firefox\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:17:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"steven.norris%40gmail.com\", \"http%3A%2F%2Fwww.rawstory.com%2Frs%2F2011%2F10%2F19%2Fsen-demint-takes-aim-at-planned-parenthood-robo-abortions%2F\", \"Sen.%20DeMint%20takes%20aim%20at%20Planned%20Parenthood%20%E2%80%98robo-abortions%E2%80%99%20%7C%20The%20Raw%20Story\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:19:25 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kmcmenamin%40gmail.com\", \"http%3A%2F%2Ft.co%2FZPNxcsgT\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:19:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nicolas.fouche%40gmail.com\", \"http%3A%2F%2Fall-that-is-interesting.com%2Fpost%2F11631868693%2Fthe-astounding-design-of-eixample-barcelona\", \"The%20Astounding%20Design%20Of%20Eixample%2C%20Barcelona%20-%20All%20That%20Is%20Interesting\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:19:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kmcmenamin%40gmail.com\", \"http%3A%2F%2Ft.co%2FGxlqUK9O\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:20:16 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jonas313%40web.de\", \"http%3A%2F%2Fwww.spiegel.de%2Fpolitik%2Fdeutschland%2F0%2C1518%2C792502%2C00.html\", \"Netzpolitik%3A%20Gegenangriff%20der%20M%C3%B6chtegern-Piraten%20-%20SPIEGEL%20ONLINE%20-%20Nachrichten%20-%20Politik\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:20:59 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"anna.falkiewicz%40gmail.com\", \"http%3A%2F%2Fwww.wysokieobcasy.pl%2Fwysokie-obcasy%2F1%2C53581%2C10465632%2C27_cm_miedzy_sutkami.html\", \"27%20cm%20mi%C4%99dzy%20sutkami\", \"0.4.4\", \"firefox\", u"Jak%20dokumenty%20w%20skanerze%20w%20g%C3%B3r%C4%99%20i%20w%20d%C3%B3%C5%82%20%C5%9Bwiat%C5%82o%20obiega%20ich%20nagie%20cia%C5%82a.%20\"Crisis!%20What%20Crisis%3F\"%20powsta%C5%82%20w%202009%20roku%20w%20odpowiedzi%20na%20za%C5%82amanie%20%C5%9Bwiatowych%20rynk%C3%B3w.%20Ten%20numer%20to%20sol%C3%B3wka.%20Ubrana%20w%20biznesowy%2C%20dopasowany%20garnitur%20kobieta%20siedzi%20na%20biurku%2C%20a%20za%20jej%20plecami%20zmieniaj%C4%85%20si%C4%99%20liczby.%20Dzwoni%20telefon%20i%20s%C5%82ycha%C4%87%20brzd%C4%99kaj%C4%85ce%20monety.%20Kolejny%20telefon%20przynosi%20z%C5%82e%20wie%C5%9Bci%2C%20kobieta%20zaczyna%20zdejmowa%C4%87%20z%20siebie%20ubranie%2C%20ta%C5%84cz%C4%85c%20prowokacyjnie%20na%20biurku."] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:22:03 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"davidpinfold%40gmail.com\", \"http%3A%2F%2Fstackoverflow.com%2Fquestions%2F6840662%2Fselenium-webdriver-mouse\", \"Selenium%20Webdriver%20Mouse%20-%20Stack%20Overflow\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:23:09 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"robertmi%40lavabit.com\", \"http%3A%2F%2Fbugs.debian.org%2Fcgi-bin%2Fbugreport.cgi%3Fbug%3D584336\", \"%23584336%20-%20alsa-source%3A%20fails%20to%20build%20against%202.6.32%20kernel%20after%20building%20kernel%20-%20Debian%20Bug%20report%20logs\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:23:09 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chanhleo77%40gmail.com\", \"http%3A%2F%2Fwww.tienphong.vn%2FThoi-Su%2FTra-Nong-Tra-Da%2F555572%2FChuyen-lon-tpp.html\", \"Chuy%E1%BB%87n%20l%E1%BB%9Bn%20-%20Ti%E1%BB%81n%20Phong%20Online\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:24:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"todd.singletary%40gmail.com\", \"http%3A%2F%2Fwww.challies.com%2Fchristian-living%2Fhow-do-i-make-decisions-that-please-god%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2Bchallies%252FXhEt%2B%2528Challies%2BDot%2BCom%2529\", \"How%20Do%20I%20Make%20Decisions%20That%20Please%20God%3F%20%7C%20Challies%20Dot%20Com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:25:25 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"thorsten.koebe%40dfv.de\", \"http%3A%2F%2Fwww.script-example.com%2Fthemen%2Fcmd_Batch_Befehle.php\", \"CMD%20Befehle%20%C3%9Cberblick%20(Batch%20Befehle%20Windows)\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:27:02 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Fallabout.co.jp%2Fgm%2Fgc%2F49306%2F\", \"%E3%81%A7%E3%81%8D%E3%82%8B%E7%94%B7%E3%81%AB%E9%AD%85%E3%81%9B%E3%82%8B%E3%80%81%E7%94%B7%E3%81%AE%E3%82%B9%E3%83%83%E3%82%AD%E3%83%AA%E7%9C%89%E6%AF%9B%E3%83%A1%E3%82%A4%E3%82%AF%20%5B%E3%83%A1%E3%82%A4%E3%82%AF%5D%20All%20About\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:27:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"gottsu0-wrk%40yahoo.co.jp\", \"http%3A%2F%2Fgigazine.net%2Fnews%2F20111020_headline%2F\", \"2011%E5%B9%B410%E6%9C%8820%E6%97%A5%E3%81%AE%E3%83%98%E3%83%83%E3%83%89%E3%83%A9%E3%82%A4%E3%83%B3%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%20-%20GIGAZINE\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:27:13 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Fbb-wave.biglobe.ne.jp%2Fpro%2Fsuccess%2Fstudy%2F16.html\", \"Vol.16%E3%81%BE%E3%82%86%E6%AF%9B%E3%82%B1%E3%82%A2%EF%BC%9A%E3%83%87%E3%82%AD%E3%82%8B%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E3%83%9E%E3%83%B3%E3%81%AE%E3%81%BE%E3%82%86%E6%AF%9B%E3%82%AB%E3%83%83%E3%83%88%E3%80%90%E7%9F%A5%E3%81%A3%E3%81%A6%E3%83%88%E3%82%AF%E3%81%99%E3%82%8B%E3%80%8C%E7%94%B7%E3%81%AE%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%9F%E3%83%B3%E3%82%B0%E5%AD%A6%E3%80%8D%E3%80%91%20%7C%20BB-WAVE\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:27:36 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kumakun919%40gmail.com\", \"http%3A%2F%2Ffz0512.com%2Farchives%2F936\", \"Day%20134%EF%BC%9A%E7%8E%BB%E5%88%A9%E7%BB%B4%E4%BA%9A%E4%B9%8B%E9%AD%94%E5%B9%BB%E6%8B%89%E5%B7%B4%E6%96%AF%20%7C%20%E6%9C%80%E5%A5%BD%E9%87%91%E9%BE%9F%E6%8D%A2%E9%85%92\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:27:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Fwww.hair-doragon.sakura.ne.jp%2Fhair5.html\", \"%E7%B0%A1%E5%8D%98%E3%80%80%E7%9C%89%E6%AF%9B%E3%80%80%E3%81%8A%E6%89%8B%E5%85%A5%E3%82%8C%E6%96%B9%E6%B3%95%E3%83%BB%E3%83%98%E3%82%A2%E3%82%B5%E3%83%AD%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:28:34 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kumakun919%40gmail.com\", \"http%3A%2F%2Fblog.sina.com.cn%2Fs%2Fblog_470bf2570102dufv.html\", \"%E4%BD%A0%E6%83%B3%E5%9C%A8%E4%B8%80%E6%9D%AF%E5%92%96%E5%95%A1%E4%B8%AD%E5%96%9D%E5%88%B0%E4%BB%80%E4%B9%88%EF%BC%9F_%E4%B8%89%E8%81%94%E7%94%9F%E6%B4%BB%E5%91%A8%E5%88%8A_%E6%96%B0%E6%B5%AA%E5%8D%9A%E5%AE%A2\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:29:01 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fwww.fondsk.ru%2Fnews%2F2011%2F10%2F19%2Fsamyj-razyskivaemyj-meksikanskij-narkobaron-prozhivaet-v-usa.html\", \"%D0%9A%D0%B0%D0%BB%D1%8C%D0%B4%D0%B5%D1%80%D0%BE%D0%BD%3A%20%D1%81%D0%B0%D0%BC%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B7%D1%8B%D1%81%D0%BA%D0%B8%D0%B2%D0%B0%D0%B5%D0%BC%D1%8B%D0%B9%20%D0%BC%D0%B5%D0%BA%D1%81%D0%B8%D0%BA%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BD%D0%B0%D1%80%D0%BA%D0%BE%D0%B1%D0%B0%D1%80%D0%BE%D0%BD%20%D0%BF%D1%80%D0%BE%D0%B6%D0%B8%D0%B2%D0%B0%D0%B5%D1%82%20%D0%B2%20%D0%A1%D0%A8%D0%90%20%3E%20fondsk.ru%20-%20%D0%A4%D0%BE%D0%BD%D0%B4%20%D0%A1%D1%82%D1%80%D0%B0%D1%82%D0%B5%D0%B3%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B9%20%D0%9A%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D1%8B%20%7C%20Strategic%20Culture%20Foundation\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:29:17 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fmixednews.ru%2Farchives%2F11096\", \"%D0%94%D0%B5%D1%80%D0%B8%D0%B2%D0%B0%D1%82%D0%B8%D0%B2%D1%8B%20%E2%80%93%20600-%D1%82%D1%80%D0%B8%D0%BB%D0%BB%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F%20%D0%B1%D0%BE%D0%BC%D0%B1%D0%B0%20%D0%B7%D0%B0%D0%BC%D0%B5%D0%B4%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE%20%D0%B4%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B8%D1%8F%20%7C%20MixedNews\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:29:30 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fscience.compulenta.ru%2F641073%2F\", \"%D0%9F%D0%B5%D0%BD%D1%82%D0%B0%D0%B3%D0%BE%D0%BD%20%D0%B6%D0%B5%D0%BB%D0%B0%D0%B5%D1%82%20%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D0%B7%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%D0%BF%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D1%83%20-%20%D0%9D%D0%B0%D1%83%D0%BA%D0%B0%20%D0%B8%20%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D0%BA%D0%B0%20-%20%D0%9F%D1%80%D0%B8%D0%BA%D0%BB%D0%B0%D0%B4%D0%BD%D1%8B%D0%B5%20%D0%B8%D1%81%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20-%20%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D0%BB%D0%B5%D0%BD%D1%82%D0%B0\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:29:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nightfall%40freakmail.de\", \"http%3A%2F%2Ffeeds.gawker.com%2F~r%2Fgizmodo%2Ffull%2F~3%2FCj3hZaBu3lU%2Ftoshiba-crams-more-pixels-on-an-lcd-than-apples-retina-display\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:29:43 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fmixednews.ru%2Farchives%2F11139\", \"%D0%9A%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5%20%D1%81%D0%B2%D0%B5%D1%80%D1%85%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%2C%20%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D0%BE%D0%B5%20%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D1%8F%D0%B5%D1%82%20%D0%BC%D0%B8%D1%80%D0%BE%D0%BC%20%7C%20MixedNews\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:29:48 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"xiangqijiu1988%40gmail.com\", \"http%3A%2F%2Fwww.newsmth.net%2Fbbscon.php%3Fbid%3D110%26id%3D551355\", \"%E9%98%85%E8%AF%BB%E6%96%87%E7%AB%A0\", \"0.4.4\", \"firefox\", \"%E5%8F%A5%EF%BC%8C%E5%B7%B2%E7%BB%8F%E8%A2%AB%E6%89%93%E6%96%AD%E4%BA%86%E3%80%82%E6%9D%8E%E8%BF%9B%E5%B1%80%E9%95%BF%E5%8E%89%E5%A3%B0%E8%AE%AD%E6%96%A5%E9%81%93%EF%BC%8C%E6%88%91%E4%BB%AC%E6%9C%89%E8%BF%99%E4%B9%88%E5%A4%9A%E9%9D%A9%E5%91%BD%E9%9F%B3%E4%B9%90%E5%AE%B6%E2%94%81\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:30:13 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"andersplyhm%40googlemail.com\", \"http%3A%2F%2Fwww.forbes.com%2Fsites%2Ftomiogeron%2F2011%2F10%2F19%2Fhow-two-teenagers-broke-in-to-silicon-valley-and-the-music-industry%2F\", \"How%20Two%20Teenagers%20Broke%20In%20To%20Silicon%20Valley--And%20The%20Music%20Industry%20-%20Forbes\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:30:20 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Frnd.cnews.ru%2Fnatur_science%2Fnews%2Fline%2Findex_science.shtml%3F2011%2F10%2F19%2F460940\", \"%D0%A0%D0%B0%D0%B7%D0%B3%D0%B0%D0%B4%D0%B0%D0%BD%D0%B0%20%D0%B8%D1%81%D1%82%D0%B8%D0%BD%D0%BD%D0%B0%D1%8F%20%D0%BF%D1%80%D0%B8%D1%80%D0%BE%D0%B4%D0%B0%20%D1%81%D0%BF%D1%83%D1%82%D0%BD%D0%B8%D0%BA%D0%B0%20%D0%A1%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:30:21 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hepmusic%40gmail.com\", \"http%3A%2F%2Fsites.google.com%2Fsite%2Fwestnyroads%2F50-interstate-oddities\", \"50%20Interstate%20Oddities%20-%20Western%20New%20York%20Roads\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:30:45 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"lauraberliner%40gmail.com\", \"http%3A%2F%2Fdeborahespect.wordpress.com%2F2011%2F10%2F19%2Fthis-is-a-test%2F\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:30:46 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Ftop.rbc.ru%2Fsociety%2F19%2F10%2F2011%2F621110.shtml\", \"%D0%A1%D1%82%D0%BE%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%BC%20%D0%B1%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D1%86%D0%B0%D0%BC%2C%20%D1%88%D0%BA%D0%BE%D0%BB%D0%B0%D0%BC%20%D0%B8%20%D0%BA%D0%BE%D0%BC%D0%BC%D1%83%D0%BD%D0%B0%D0%BB%D1%8C%D1%89%D0%B8%D0%BA%D0%B0%D0%BC%20%D0%BF%D1%80%D0%B8%D1%81%D0%B2%D0%BE%D1%8F%D1%82%20%D1%80%D0%B5%D0%B9%D1%82%D0%B8%D0%BD%D0%B3%D0%B8%20%3A%3A%20%D0%9E%D0%B1%D1%89%D0%B5%D1%81%D1%82%D0%B2%D0%BE%20%3A%3A%20Top.rbc.r\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:30:54 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fcorp.cnews.ru%2Fnews%2Ftop%2Findex.shtml%3F2011%2F10%2F19%2F460898\", \"CNews%3A%20%D0%A1%D0%B0%D0%BC%D0%BE%D0%B5%20%D0%BF%D0%BE%D0%BF%D1%83%D0%BB%D1%8F%D1%80%D0%BD%D0%BE%D0%B5%20%D0%B2%20%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8%20BI-%D1%80%D0%B5%D1%88%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%BE%20%D0%B2%20%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D0%B8\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:31:02 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"matt.sawers@gmail.com\", \"http%3A%2F%2Fwww.newscientist.com%2Farticle%2Fmg21228354.500-revealed--the-capitalist-network-that-runs-the-world.html\", \"Revealed \u2013 the capitalist network that runs the world - physics-math - 19 October 2011 - New Scientist\", \"0.1\", \"chrome\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:31:15 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alex_valiente%40hotmail.com\", \"http%3A%2F%2Fwww.sdn.sap.com%2Firj%2Fscn%2Fweblogs%3Fblog%3D%2Fpub%2Fwlg%2F2370\", \"SAP%20Community%20Network%20Blogs\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:31:15 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"wwkeyboard%40gmail.com\", \"http%3A%2F%2Fdocs.webob.org%2Fen%2Flatest%2Fdo-it-yourself.html\", \"Another%20Do-It-Yourself%20Framework%20%E2%80%94%20WebOb%201.2b2%20documentation\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:31:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fbiz.cnews.ru%2Fnews%2Fline%2Findex.shtml%3F2011%2F10%2F19%2F460876\", \"CNews%3A%20B2B-Center%20%D0%B8%20%C2%AB%D0%A0%D0%A2%D0%A1-%D0%A2%D0%B5%D0%BD%D0%B4%D0%B5%D1%80%C2%BB%20%D1%84%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D1%83%D1%8E%D1%82%20%D0%B5%D0%B4%D0%B8%D0%BD%D1%8B%D0%B9%20%D1%80%D1%8B%D0%BD%D0%BE%D0%BA%20%D0%B3%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D1%85%20%D0%B8%20%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D1%85%20%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D1%85%20%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:31:37 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hypn0%40mail.r\", \"http%3A%2F%2Fwww.cnews.ru%2Fnews%2Fline%2Findex.shtml%3F2011%2F10%2F18%2F460723\", \"CNews%3A%20%C2%AB%D0%94%D0%BE%D0%BA%D1%81%D0%92%D0%B8%D0%B6%D0%BD%C2%BB%20%D0%B2%D1%8B%D0%BF%D1%83%D1%81%D1%82%D0%B8%D0%BB%D0%B0%20%D0%B1%D0%B5%D1%82%D0%B0-%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8E%20%D0%A1%D0%AD%D0%94%20DocsVision%205\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:32:11 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"dpnilsen%40hotmail.com\", \"http%3A%2F%2Fwww.cmswire.com%2Fcms%2Fdocument-management%2Fsharepoint-2010-share-content-types-across-site-collections-007445.php\", \"SharePoint%202010%3A%20Share%20Content%20Types%20Across%20Site%20Collections\", \"0.4.4\", \"firefox\", \"Fortunately%2C%20SharePoint%202010%20has%20addressed%20this%20issue%20through%20the%20implementation%20of%20Content%20Type%20Hubs.%20With%20the%20Content%20Type%20Hub%2C%20a%20specific%20site%20collection%20is%20selected%20to%20act%20as%20the%20central%20repository%20for%20content%20types%20intended%20for%20use%20enterprise-wide.\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:32:40 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"vincent.pagnardjourdan%40gmail.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F20%2Ftechnology%2Fpersonaltech%2Fonline-music-tools-and-services-help-you-find-new-tunes.html%3F_r%3D2\", \"Online%20Music%20Tools%20and%20Services%20Help%20You%20Find%20New%20Tunes%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:32:53 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mantir@gmail.com\", \"http%3A%2F%2Fgun.io%2Fblog%2Fpython-for-the-web%2F\", \"Python for the Web - Gun.io\", \"0.1\", \"chrome\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:33:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"andreas%40weder.net\", \"http%3A%2F%2Fonion.net%2FEnterpriseChangeSets\", \"Enterprise%20ChangeSets%20-%20onion.net%20-%20CMS\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:34:47 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"567%40getschmann.com\", \"http%3A%2F%2Fen.wikipedia.org%2Fwiki%2FDark_fiber\", \"Dark%20fibre%20-%20Wikipedia%2C%20the%20free%20encyclopedia\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:35:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mgwfr64%40gmail.com\", \"http%3A%2F%2Fwww.learnerstv.com%2Findex.php\", \"Free%20video%20lectures%2CFree%20Animations%2C%20Free%20Lecture%20Notes%2C%20Free%20Online%20Tests%2C%20Free%20Lecture%20Presentations\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:36:03 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Fd.hatena.ne.jp%2FRyoAnna%2F20111012%2F1318430555\", \"YouTube%E3%81%AE%E9%9F%B3%E6%A5%BD%E3%82%92%E3%82%A2%E3%83%AB%E3%83%90%E3%83%A0%E3%81%94%E3%81%A8%E3%81%AB%E9%81%B8%E6%9B%B2%E3%81%97%E3%81%A6%E8%81%B4%E3%81%8F%E3%82%A2%E3%83%97%E3%83%AA%EF%BD%9CMusictube%20for%20Mac%20Windows%20Ubuntu%20-%20%23RyoAnnaBlog\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:37:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"edisonic%40gmail.com\", \"http%3A%2F%2Fgotowanie.onet.pl%2F38297%2C0%2C1%2Cpikantne_danie_jednogarnkowe_z_klopsikami_z_miesa_mielonego%2Cprzepis.html\", \"Pikantne%20danie%20jednogarnkowe%20z%20klopsikami%20z%20mi%C4%99sa%20mielonego%20-%20Przepis%20-%20Gotowanie%20w%20Onet.pl\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:38:20 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"567%40getschmann.com\", \"http%3A%2F%2Fappfinder.lisisoft.com%2Fipad-iphone-apps%2Fpidgin-encryption.html\", \"pidgin%20encryption%20apps%20iPhone%2C%20iPad%20APP\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:38:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E6%B8%85%E6%BD%94%E3%81%AF%E8%B2%A7%E4%B9%8F%E4%BA%BA%E3%81%AB%E8%A8%B1%E3%81%95%E3%82%8C%E3%81%9F%E6%95%B0%E5%B0%91%E3%81%AA%E3%81%84%E8%B4%85%E6%B2%A2\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:39:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"matthew.orley%40gmail.com\", \"http%3A%2F%2Fwww.esquire.com%2Fprint-this%2Fwilliam-petit-case-0611%3Fpage%3Dall\", \"Print%20-%20The%20Survivor%20-%20Esquire\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:39:17 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"dragonblade42%40gmail.com\", \"http%3A%2F%2Ftechnet.microsoft.com%2Fen-us%2Flibrary%2Fdd335047.aspx\", \"Understanding%20Federation%3A%20Exchange%202010%20SP1%20Help\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:39:21 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"robertmi%40lavabit.com\", \"https%3A%2F%2Fbbs.archlinux.org%2Fviewtopic.php%3Fid%3D62306\", \"%5BSOLVED%5DNo%20sound.%20Intel%20Corporation%2082801DB%2FDBL%2FDBM%20(ICH4%2FICH4-L%2FICH4%20(Page%201)%20%2F%20Multimedia%20and%20Games%20%2F%20Arch%20Linux%20Forums\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:39:35 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Ffeedproxy.google.com%2F~r%2Fgorime%2F~3%2FA1QkDRWuCuU%2F10781\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:39:40 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"pfening.andras%40gmail.com\", \"http%3A%2F%2Fhvg.hu%2Fw%2F20111020_naszad\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:40:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"ryugwang%40gmail.com\", \"http%3A%2F%2Flistverse.com%2F2011%2F04%2F06%2Ftop-10-strange-ufo-encounters%2F%234938\", \"Top%2010%20Strange%20UFO%20Encounters\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:41:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E3%80%8C%E3%82%82%E3%81%A3%E3%81%9F%E3%81%84%E3%81%AA%E3%81%84%E3%80%81%E3%82%82%E3%81%A3%E3%81%9F%E3%81%84%E3%81%AA%E3%81%84%E3%80%8D%E3%81%A7%E4%BD%BF%E3%81%84%E3%82%82%E3%81%97%E3%81%AA%E3%81%84%EF%BC%88%E4%BD%BF%E3%81%88%E3%82%82%E3%81%97%E3%81%AA%E3%81%84%EF%BC%89%E7%89%A9%E3%82%92%20%20%0A%E6%BA%9C%E3%82%81%E8%BE%BC%E3%82%80%E3%81%AA%E3%82%93%E3%81%A6%E3%80%8C%E3%82%B9%E3%83%9A%E3%83%BC%E3%82%B9%E3%81%8C%E3%82%82%E3%81%A3%E3%81%9F%E3%81%84%E3%81%AA%E3%81%84%EF%BC%81%EF%BC%81%E3%80%8D%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:41:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"kromeboy%40gmail.com\", \"http%3A%2F%2Fwww.rockpapershotgun.com%2F2011%2F10%2F20%2Favaricious-artillery-catapult-for-hire%2F%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2BRockPaperShotgun%2B%2528Rock%252C%2BPaper%252C%2BShotgun%2529\", \"Avaricious%20Artillery%3A%20Catapult%20For%20Hire%20%7C%20Rock%2C%20Paper%2C%20Shotgun\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:42:45 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"graytona%40gmail.com\", \"http%3A%2F%2Fwww.bbc.com%2Ftravel%2Ffeature%2F20111014-living-in-new-orleans\", \"BBC%20-%20Travel%20-%20Living%20in%3A%20New%20Orleans%20%3A%20Living%20in...%2C%20USA\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:42:57 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E3%80%8C%E9%9B%91%E5%B7%BE%E3%82%92%E5%BD%93%E3%81%A6%E5%AD%97%E3%81%AB%E6%9B%B8%E3%81%91%E3%81%B0%E8%94%B5%E3%81%A8%E9%87%91%E3%80%81%E3%81%82%E3%81%A1%E3%82%89%E7%A6%8F%E7%A6%8F%EF%BC%88%E6%8B%AD%E3%81%8F%E6%8B%AD%E3%81%8F%EF%BC%89%E3%81%93%E3%81%A1%E3%82%89%E7%A6%8F%E7%A6%8F%EF%BC%88%E6%8B%AD%E3%81%8F%E6%8B%AD%E3%81%8F%EF%BC%89%E3%80%8D%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:43:24 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"graytona%40gmail.com\", \"http%3A%2F%2Fstraight.com%2Farticle-492106%2Fvancouver%2Ffortune-found-sound-club\", u"Fortune%20Sound%20Club\"s%20nightlife%20veterans%20keep%20it%20eclectic%20%7C%20Vancouver%2C%20Canada%20%7C%20Straight.com", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:44:03 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nicolas.fouche%40gmail.com\", \"http%3A%2F%2Fwww.homecinema-fr.com%2Fforum%2Fviewtopic.php%3Ff%3D1026%26t%3D29920985\", u"Le%20Smyth%20Realiser%20A8%2C%20l\"%C3%A9coute%207.1%20au%20casque%20R%C3%A9volutionnaire%20-%20Accessoires%20Audio%20HomeCin%C3%A9ma", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:44:10 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chadsteahly%40me.com\", \"http%3A%2F%2Fwww.rollingstone.com%2Fmusic%2Falbumreviews%2Fmylo-xyloto-20111017\", \"Mylo%20Xyloto%20%7C%20Album%20Reviews%20%7C%20Rolling%20Stone\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:44:24 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alex_livingston%40hotmail.com\", \"http%3A%2F%2Fsociety6.com%2F\", \"Society6%20%7C%20Affordable%20Art%20Prints%2C%20iPhone%20Cases%20and%20T-shirts\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:45:58 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E6%81%A5%E3%81%9A%E3%81%8B%E3%81%97%E3%81%84%E8%A9%B1%E3%81%97%E3%81%A0%E3%81%8C%E3%80%81%E6%B1%9A%E9%83%A8%E5%B1%8B%E3%81%AE%E3%81%93%E3%82%8D%E3%81%AF%20%20%20%0A%E8%B2%A1%E5%B8%83%E3%81%AE%E4%B8%AD%E8%BA%AB%E3%81%8C%E3%82%A2%E3%83%83%E3%81%A3%E3%81%A8%E3%81%84%E3%81%86%E9%96%93%E3%81%AB%E6%B6%88%E3%81%88%E3%81%A6%E3%81%84%E3%81%9F%E3%80%82%20%20%20%0A%E9%85%92%E3%80%81%E6%BC%AB%E7%94%BB%E3%80%81%E3%83%84%E3%83%9E%E3%83%9F%E3%80%81%E7%9D%80%E3%82%82%E3%81%97%E3%81%AA%E3%81%84%E6%B4%8B%E6%9C%8D%E3%81%AB%E9%9D%B4%E3%80%82%20%20%20%0A%E6%B1%9A%E9%83%A8%E5%B1%8B%E3%81%AE%E4%B8%AD%E5%BF%83%E3%81%A7%E6%9C%AA%E9%96%8B%E5%B0%81%E3%81%AE%E3%82%B7%E3%83%A7%E3%83%83%E3%83%97%E3%81%AE%E8%A2%8B%E3%81%AB%E5%9B%B2%E3%81%BE%E3%82%8C%E3%81%A6%20%20%20%0A%E3%83%93%E3%83%BC%E3%83%AB%E9%A3%B2%E3%81%BF%E3%81%AA%E3%81%8C%E3%82%89%E6%BC%AB%E7%94%BB%E3%82%92%E8%AA%AD%E3%82%80%E8%87%AA%E5%88%86%E3%81%AF%E6%9C%80%E6%82%AA%E3%81%A0%E3%81%A3%E3%81%9F%E3%80%82%20%20%20%0A%E8%84%B1%E5%87%BA%E3%81%97%E3%81%9F%E4%BB%8A%E3%81%AF%E3%80%81%E4%B8%8D%E6%80%9D%E8%AD%B0%E3%81%A8%E3%81%8A%E9%87%91%E3%81%AF%E6%B8%9B%E3%82%89%E3%81%9A%E4%BD%93%E9%87%8D%E3%81%8C%E6%B8%9B%E3%81%A3%E3%81%9F%E3%80%82%20%20%20%0A%E8%A1%A3%E3%82%82%E9%A3%9F%E3%82%82%E4%BD%8F%E3%82%82%E3%80%81%E9%A3%BD%E9%A3%9F%E3%81%AF%E3%81%84%E3%81%8B%E3%82%93%E3%81%AE%E3%81%A0%E3%81%A8%E5%AE%9F%E6%84%9F\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:46:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"nickstefan%40gmail.com\", \"https%3A%2F%2Fwww.icloud.com%2F%23contacts\", \"Kontakte\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:47:01 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"stevendstark%40gmail.com\", \"http%3A%2F%2Fharvardmagazine.com%2F2011%2F11%2Fharvard-management-company-endowment-report-2011\", \"Harvard%20Management%20Company%20endowment%20report%202011%20%7C%20Harvard%20Magazine%20Nov-Dec%202011\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:47:05 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"plasticpool\", \"http%3A%2F%2Fboingboing.net%2F2011%2F10%2F19%2Fi-live-in-the-future-and-heres-how-it-works-by-nick-bilton-an-exclusive-boing-boing-excerpt.html\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:47:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%0A%E3%80%8C%E3%81%82%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84%E3%81%AA%E3%80%8D%E3%81%AF%20%20%0A%E3%80%8C%E3%81%AA%E3%81%8F%E3%81%A6%E3%82%82%E5%B9%B3%E6%B0%97%E3%80%8D%20%20%0A%E8%87%AA%E5%88%86%E3%81%B8%E3%81%AE%E6%88%92%E3%82%81%E3%81%A8%E3%81%97%E3%81%A6%E3%80%81%E3%80%8C%E3%81%82%E3%82%8C%E3%81%B0%E4%BE%BF%E5%88%A9%E3%80%8D%E3%81%AF%E3%80%8C%E3%81%AA%E3%81%8F%E3%81%A6%E3%82%82%E5%B9%B3%E6%B0%97%E3%80%8D%E3%82%92%E8%A8%80%E3%81%84%E6%8F%9B%E3%81%88%E3%81%A6%E6%9B%B8%E3%81%84%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%99%E3%81%9F%E3%80%82%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:47:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"567%40getschmann.com\", \"http%3A%2F%2Fappfinder.lisisoft.com%2Fapp%2Fultimate-solutions-for-iphone.html\", \"Ultimate%20Solutions%20%C2%AE%20for%20iPhone%201.0%20App%20for%20iPad%2C%20iPhone\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:47:48 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alexandr.skvortsov%40gmail.com\", \"http%3A%2F%2Fwww.artlebedev.ru%2Fkovodstvo%2Fsections%2F172%2F%23yd\", \"%C2%A7%C2%A0172.%20%D0%97%D0%BE%D0%BD%D0%B0%20%D0%BA%D0%BE%D0%BC%D1%84%D0%BE%D1%80%D1%82%D0%B0\", \"0.4.4\", \"firefox\", \"%0A%0A%0A12%0A%0A%0A%0A%D0%A7%D1%82%D0%BE%20%D0%B5%D1%89%D0%B5%20%D0%B2%D1%85%D0%BE%D0%B4%D0%B8%D1%82%20%D0%B2%C2%A0%D0%B7%D0%BE%D0%BD%D1%83%20%D0%BA%D0%BE%D0%BC%D1%84%D0%BE%D1%80%D1%82%D0%B0%20%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA%D0%B0%3F%20%D0%91%D0%B5%D0%B7%D1%83%D1%81%D0%BB%D0%BE%D0%B2%D0%BD%D0%BE%2C%20%D0%BE%D0%B4%D0%B5%D0%B6%D0%B4%D0%B0%3A%20%D0%BB%D1%8E%D0%B4%D0%B8%20%D0%BB%D1%8E%D0%B1%D1%8F%D1%82%20%D0%BF%D0%BE%D0%BA%D1%83%D0%BF%D0%B0%D1%82%D1%8C%20%D1%81%D0%B5%D0%B1%D0%B5%20%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%83%D1%8E%20%D0%BE%D0%B4%D0%B5%D0%B6%D0%B4%D1%83.%20%D0%94%D0%B0%D0%B6%D0%B5%20%D0%BA%D0%BE%D0%B3%D0%B4%D0%B0%20%D0%BE%D0%BD%D0%B8%20%D0%B2%D1%8B%D1%85%D0%BE%D0%B4%D1%8F%D1%82%20%D0%B8%D0%B7%C2%A0%D0%B4%D0%BE%D0%BC%D0%B0%20%D0%B8%C2%A0%D0%B8%D0%B4%D1%83%D1%82%20%D0%BF%D0%BE%C2%A0%D0%B4%D1%80%D0%BE%D0%B2%D1%8F%D0%BD%D1%8B%D0%BC%20%D0%BC%D0%BE%D1%81%D1%82%D0%BA%D0%B0%D0%BC%2C%20%D0%BE%D0%BD%D0%B8%20%D0%B2%D1%81%D0%B5%D0%B3%D0%B4%D0%B0%20%D1%8D%D1%82%D0%BE%20%D0%B4%D0%B5%D0%BB%D0%B0%D1%8E%D1%82%20%D0%B2%C2%A0%D0%BE%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D0%BE%D0%B9%20%D0%BE%D0%B1%D1%83%D0%B2%D0%B8%2C%20%D0%BE%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%8B%D1%85%20%D0%B1%D1%80%D1%8E%D0%BA%D0%B0%D1%85%20%D0%B8%D0%BB%D0%B8%20%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D0%BE%D0%BC%20%D0%BF%D0%BB%D0%B0%D1%82%D1%8C%D0%B5.%20%D0%9E%D0%BD%D0%BE%20%D0%B4%D0%BE%D0%BB%D0%B6%D0%BD%D0%BE%20%D0%B1%D1%8B%D1%82%D1%8C%20%D0%BE%D1%87%D0%B5%D0%BD%D1%8C%20%D0%B4%D0%BE%D1%80%D0%BE%D0%B3%D0%B8%D0%BC%20%D0%B8%C2%A0%D0%BD%D0%B0%C2%A0%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%20%D0%BA%D1%83%D0%BF%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D0%BC.%0A%0A\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:48:19 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E6%89%80%E3%82%B8%E3%83%A7%E3%83%BC%E3%82%B8%20%20%20%0A%E6%89%80%E3%81%95%E3%82%93%E3%81%AE%E5%AE%B6%E3%81%A7%E9%81%8A%E3%81%BC%E3%81%86%E3%80%81%E3%81%A8%E3%81%84%E3%81%86%E7%95%AA%E7%B5%84%E3%81%A7%E3%80%81%E9%81%8A%E3%81%B6%E3%81%A0%E3%81%91%E9%81%8A%E3%82%93%E3%81%A7%E7%89%87%E4%BB%98%E3%81%91%E3%81%AA%E3%81%84%E8%8A%B8%E4%BA%BA%E3%81%AB%20%20%20%0A%E3%80%8C%E7%89%87%E4%BB%98%E3%81%91%E3%81%AF%E3%82%81%E3%82%93%E3%81%A9%E3%81%86%E3%81%AA%E3%81%93%E3%81%A8%E3%81%98%E3%82%83%E3%81%AA%E3%81%8F%E3%81%A6%E3%80%81%E6%AC%A1%E3%81%AB%E3%81%BE%E3%81%9F%E6%A5%BD%E3%81%97%E3%81%8F%E9%81%8A%E3%81%B6%E3%81%9F%E3%82%81%E3%81%AE%E6%AE%B5%E5%8F%96%E3%82%8A%E3%80%8D%20%20%20%0A%E3%81%A8%E8%A8%80%E3%81%84%E3%81%AA%E3%81%8C%E3%82%89%E3%80%81%E8%87%AA%E5%88%86%E3%81%A7%E6%97%A5%E6%9B%9C%E5%A4%A7%E5%B7%A5%E3%81%AE%E5%BE%8C%E7%89%87%E4%BB%98%E3%81%91%EF%BC%88%E9%81%93%E5%85%B7%E6%B4%97%E3%81%A3%E3%81%9F%E3%82%8A%EF%BC%89%E3%82%92%E3%81%97%E3%81%A6%E3%81%9F%E3%80%82%20%20%20%0A%E5%81%89%E3%81%84%E4%BA%BA%E3%81%A0%E3%81%AA%E3%81%82%E3%80%81%E3%81%A8%E6%80%9D%E3%81%A3%E3%81%9F%E3%80%82%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:48:27 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E5%AE%89%E3%81%84%E3%83%90%E3%83%83%E3%82%B0%E3%82%92%E8%B2%B7%E3%81%86%E6%99%82%E3%82%82%E9%80%86%E3%81%AB%E7%B4%A0%E6%9D%90%E3%81%8C%E8%89%AF%E3%81%8F%E3%81%A6%E3%80%8C10%E4%B8%87%E3%81%A7%E3%82%82%E6%AC%B2%E3%81%97%E3%81%84%E3%81%8B%EF%BC%9F%E8%A6%81%E3%82%8B%E3%81%8B%EF%BC%9F%E3%80%8D%E3%81%A8%E8%87%AA%E5%95%8F%E8%87%AA%E7%AD%94%E3%80%82%20%20%20%0A%E3%81%9D%E3%82%8C%E3%81%A7%E3%82%82%E8%B2%B7%E3%81%86%E3%81%A4%E3%82%82%E3%82%8A%E3%81%A7%E3%80%811%E5%80%8B%E6%8D%A8%E3%81%A6%E3%82%8B%E3%81%A8%E3%81%84%E3%81%86%E6%9D%A1%E4%BB%B6%E3%81%AB%E3%81%97%E3%81%9F%E3%82%89%E3%80%81%E4%BD%95%E3%82%82%E8%A6%81%E3%82%89%E3%81%AA%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F%E3%80%82%20%20%20%0A%E9%AB%98%E3%81%84%E3%82%82%E3%81%AE%E3%81%AF%E3%80%81%E3%81%93%E3%82%8C%E3%81%8C%E5%AE%89%E3%81%8F%E3%81%A6%E3%83%8E%E3%83%BC%E3%83%96%E3%83%A9%E3%83%B3%E3%83%89%E3%81%A7%E3%82%82%E8%A6%81%E3%82%8B%E3%81%8B%EF%BC%9F%E3%81%A8%E8%80%83%E3%81%88%E3%82%8B%E3%81%A8%E8%A6%81%E3%82%89%E3%81%AA%E3%81%84%E3%80%82%20%20%20%0A%E7%B5%90%E5%B1%80%E3%80%81%E3%81%8A%E5%BE%97%E6%84%9F%E3%81%A8%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E3%81%A0%E3%81%91%E3%81%A7%E8%B2%B7%E3%81%84%E7%89%A9%E3%81%97%E3%81%A6%E3%81%9F%E3%81%AE%E3%81%A7%E3%80%81%E5%BF%85%E8%A6%81%E3%81%AA%E3%83%A2%E3%83%8E%E3%81%AF%E6%AE%86%E3%81%A9%E3%81%AA%E3%81%8B%E3%81%A3%E3%81%9F%E3%80%82%20%20%20%0A%E4%BB%8A%E6%97%A5%E3%81%BE%E3%81%A7%E3%81%AA%E3%81%8F%E3%81%A6%E5%9B%B0%E3%82%8B%E3%82%82%E3%81%AE%E3%81%AF%E3%81%AA%E3%81%84%E3%81%A8%E3%81%97%E3%81%9F%E3%82%89%E3%80%81%E9%A3%9F%E3%81%B9%E7%89%A9%E4%BB%A5%E5%A4%96%E4%BD%95%E3%82%82%E8%A6%81%E3%82%89%E3%81%AA%E3%81%84%E3%81%A8%E8%87%AA%E8%A6%9A%E3%81%97%E3%81%9F%E3%80%82%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:48:46 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chandler.tg%40gmail.com\", \"http%3A%2F%2Fchronicle.com%2Farticle%2FIntellectual-Roots-of-Wall%2F129428\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:49:02 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chandler.tg%40gmail.com\", \"http%3A%2F%2Fwww.economist.com%2Fblogs%2Fdemocracyinamerica%2F2011%2F10%2Foccupy-wall-street-3\", \"Occupy%20Wall%20Street%3A%20Leaderless%2C%20consensus-based%20participatory%20democracy%20and%20its%20discontents%20%7C%20The%20Economist\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:49:03 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chandler.tg%40gmail.com\", \"http%3A%2F%2Fwww.economist.com%2Fblogs%2Fdemocracyinamerica%2F2011%2F10%2Foccupy-wall-street-3\", \"Occupy%20Wall%20Street%3A%20Leaderless%2C%20consensus-based%20participatory%20democracy%20and%20its%20discontents%20%7C%20The%20Economist\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:49:05 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chandler.tg%40gmail.com\", \"http%3A%2F%2Fwww.economist.com%2Fblogs%2Fdemocracyinamerica%2F2011%2F10%2Foccupy-wall-street-3\", \"Occupy%20Wall%20Street%3A%20Leaderless%2C%20consensus-based%20participatory%20democracy%20and%20its%20discontents%20%7C%20The%20Economist\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:49:06 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chandler.tg%40gmail.com\", \"http%3A%2F%2Fwww.economist.com%2Fblogs%2Fdemocracyinamerica%2F2011%2F10%2Foccupy-wall-street-3\", \"Occupy%20Wall%20Street%3A%20Leaderless%2C%20consensus-based%20participatory%20democracy%20and%20its%20discontents%20%7C%20The%20Economist\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:50:14 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mark%40markboyce.co.uk\", \"http%3A%2F%2Fwww.dailymail.co.uk%2Ffemail%2Farticle-2051021%2FHow-personal-trainer-obese--understand-fat-feels-like.html\", \"How%20personal%20trainer%20made%20himself%20obese...%20to%20understand%20what%20being%20fat%20feels%20like%20%7C%20Mail%20Online\", \"0.4.2.3\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:50:19 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"ahartman%40ieee.org\", \"http%3A%2F%2Fvisual.ly%2F\", \"Infographics%20%26%20Data%20Visualizations%20-%20Visual.ly\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:50:26 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mark%40markboyce.co.uk\", \"http%3A%2F%2Fwww.dailymail.co.uk%2Ffemail%2Farticle-2051021%2FHow-personal-trainer-obese--understand-fat-feels-like.html\", \"How%20personal%20trainer%20made%20himself%20obese...%20to%20understand%20what%20being%20fat%20feels%20like%20%7C%20Mail%20Online\", \"0.4.2.3\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:50:57 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"fudeen%40gmail.com\", \"http%3A%2F%2Fblog.sideriver.com%2Frandonnee%2F\", \"%E3%83%A9%E3%83%B3%E3%83%89%E3%83%8D%E7%B7%A8%E9%9B%86%E9%83%A8%E3%81%AE%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E3%83%89%E3%81%84%E3%82%89%E3%81%A3%E3%81%97%E3%82%83%EF%BD%9E%E3%81%84\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:51:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"lbienkowsky%40gmail.com\", \"http%3A%2F%2Fmojsiewicz.nowyekran.pl%2Fpost%2F30500%2Clegalizacja-narkotykow-przesadzona-soros-ostro-lobbuje\", \"Legalizacja%20narkotyk%C3%B3w%20przes%C4%85dzona.%20Soros%20ostro%20lobbuje%20-%20Marek%20Mojsiewicz%20-%20NowyEkran.pl\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:52:26 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"ihosny%40gmail.com\", \"http%3A%2F%2Fwww.macworld.com%2Farticle%2F162910%2F2011%2F10%2Fcopy_mails_autocomplete_database_to_a_new_mac.html\", u"Copy%20Mail\"s%20autocomplete%20database%20to%20a%20new%20Mac%20%7C%20Macworld", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:53:33 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rspencer8%40cogeco.ca\", \"http%3A%2F%2Fwww.mivision.com.au%2Fan-integrated-online-approach%2F\", \"mibusiness%20-%20mivision%20%7C%20Bringing%20Optics%20into%20Focus\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:54:35 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"erik.willemse%40gmail.com\", \"http%3A%2F%2Fwww.digimedia.be%2FNews%2Fnl%2F10346%2Frobotfoto-van-de-ipad-gebruiker.html\", \"Robotfoto%20van%20de%20iPad%20gebruiker\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:54:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"dpnilsen%40hotmail.com\", \"http%3A%2F%2Fwww.sharepointedutech.com%2F2010%2F02%2F22%2Fsharepoint-2010-drop-off-library%2F\", \"SharePoint%202010%20Drop%20Off%20Library%20-%20SharePointEduTech%20%C2%BB%20SharePointEduTech\", \"0.4.4\", \"firefox\", \"Another%20new%20feature%20you%20may%20have%20seen%20in%20SharePoint%202010%20is%20the%20drop%20folder%20this%20is%20basically%20a%20way%20to%20set%20up%20one%20folder%20for%20users%20to%20upload%20files%20to%20and%20it%20will%20automatically%20route%20the%20files%20to%20the%20appropriate%20locations%20that%20you%20have%20previously%20setup.\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:55:19 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"sailgears%40gmail.com\", \"http%3A%2F%2Fsolofigarolessables.blogspot.com%2F2011%2F02%2F16-inscrits-au-23-fevrier-2011.html\", \"Solo%20Figaro%20Massif%20Marine%202011%3A%2016%20inscrits%20au%2023%20f%C3%A9vrier%202011\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:55:20 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"sailgears%40gmail.com\", \"http%3A%2F%2Fsolofigarolessables.blogspot.com%2F2011%2F02%2F16-inscrits-au-23-fevrier-2011.html\", \"Solo%20Figaro%20Massif%20Marine%202011%3A%2016%20inscrits%20au%2023%20f%C3%A9vrier%202011\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:55:22 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"sailgears%40gmail.com\", \"http%3A%2F%2Fsolofigarolessables.blogspot.com%2F2011%2F02%2F16-inscrits-au-23-fevrier-2011.html\", \"Solo%20Figaro%20Massif%20Marine%202011%3A%2016%20inscrits%20au%2023%20f%C3%A9vrier%202011\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:56:29 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"ahartman%40ieee.org\", \"http%3A%2F%2Fwww.founderinstitute.com%2Fposts%2F421\", \"FI%3A%20Failure%20is%20an%20Option%3A%20Interviews%20on%20Failure%20Lessons%20Learned\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:56:46 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"me.you.m7%40gmail.com\", \"http%3A%2F%2Ftranscripts.cnn.com%2FTRANSCRIPTS%2F1110%2F20%2Fsn.01.html\", \"CNN.com%20-%20Transcripts\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:23 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"grzegorz.pawlak.pl%40gmail.com\", \"http%3A%2F%2Fwiadomosci.gazeta.pl%2Fwiadomosci%2F1%2C114881%2C10504744%2CKaddafi_schwytany__Jest_ranny_w_obie_nogi.html\", \"Kaddafi%20nie%20%C5%BCyje.%20Cia%C5%82o%20przewieziono%20do%20Misraty.%20B%C4%99dzie%20sfilmowane\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:30 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"wstuph%40gmail.com\", \"http%3A%2F%2Fbelievermag.com%2Fissues%2F200609%2F%3Fread%3Darticle_lafarge\", \"The%20Believer%20-%20Destroy%20All%20Monsters\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:31 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rassc%40nvc.net\", \"http%3A%2F%2Fwww.engadget.com%2F2011%2F10%2F20%2Fefun-announces-apen-a5-smart-pen-for-all-of-your-ipad-iphone-w%2F\", \"eFun%20announces%20aPen%20A5%20Smart%20Pen%20for%20all%20of%20your%20iPad%20%2F%20iPhone%20writing%20needs%20--%20Engadget\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"ihosny%40gmail.com\", \"http%3A%2F%2Fwww.macworld.com%2Farticle%2F162910%2F2011%2F10%2Fcopy_mails_autocomplete_database_to_a_new_mac.html\", u"Copy%20Mail\"s%20autocomplete%20database%20to%20a%20new%20Mac%20%7C%20Macworld", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:38 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"lbienkowsky%40gmail.com\", \"http%3A%2F%2Fwww.bankier.pl%2Fwiadomosc%2FPolitycy-graja-na-czas-czyli-upadek-Grecji-lada-dzien-2419839.html\", \"Politycy%20graj%C4%85%20na%20czas%2C%20czyli%20upadek%20Grecji%20lada%20dzie%C5%84%20-%20Bankier.pl\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:47 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"cool_fury%40hotmail.com\", \"http%3A%2F%2Fwww.apple-wd.com%2F2011%2F10%2Fssd-and-hdd-diffrence-and-whats-better%2F\", \"SSD%20%26%20HDD%20%D8%A7%D9%84%D9%85%D9%85%D9%8A%D8%B2%D8%A7%D8%AA%20%D8%8C%20%D8%A7%D9%84%D9%81%D8%B1%D9%88%D9%82%D8%A7%D8%AA%20%D8%8C%20%D8%A7%D9%84%D8%B9%D9%8A%D9%88%D8%A8%20%7C%20%D8%B9%D8%A7%D9%84%D9%85%20%D8%A2%D8%A8%D9%84\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:57:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"wstuph%40gmail.com\", \"http%3A%2F%2Fwww.fastcompany.com%2Fmagazine%2F160%2Ftech-wars-2012-amazon-apple-google-facebook\", \"The%20Great%20Tech%20War%20Of%202012%20%7C%20Fast%20Company\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:13 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"cool_fury%40hotmail.com\", \"http%3A%2F%2Fwww.apple-wd.com%2F2011%2F10%2Famthal-al-hijaz-for-iphone-and-ipad%2F\", \"%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%20%D8%A3%D9%85%D8%AB%D8%A7%D9%84%20%D8%A7%D9%84%D8%AD%D8%AC%D8%A7%D8%B2%20%D9%84%D9%84%D8%A2%D9%8A%D9%81%D9%88%D9%86%20%D9%88%D8%A7%D9%84%D8%A2%D9%8A%D8%A8%D8%A7%D8%AF%20%7C%20%D8%B9%D8%A7%D9%84%D9%85%20%D8%A2%D8%A8%D9%84\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:14 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F3%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%83%AD%E3%83%AA%E3%81%A8%E9%AD%94%E6%B3%95%E3%81%A8%E3%83%A1%E3%82%A4%E3%83%89%E3%81%A8%E3%81%8B\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:19 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F4%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%83%96%E3%83%BC%E3%83%A1%E3%83%A9%E3%83%B3%E3%83%91%E3%83%B3%E3%83%84%E3%81%AF%E3%81%8A%E5%A5%BD%E3%81%8D%E3%81%A7%E3%81%99%E3%81%8B%EF%BC%9F\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:24 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"cool_fury%40hotmail.com\", \"http%3A%2F%2Fwww.ittihadfans.com%2Ffans%2Ft198689%2F\", \"%D8%A7%D9%84%D8%A7%D8%AD%D8%B2%D8%A7%D9%86%20%D8%AA%D8%B9%D9%85%20%D9%86%D8%B5%D9%81%20%D8%AF%D9%88%D9%84%20%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D8%AC%20-%20%D8%A7%D9%84%D9%84%D8%A7%D8%B9%D8%A8%D9%8A%D9%86%20%D9%88%D8%B9%D8%B0%D8%B1%20%D8%A7%D9%82%D8%A8%D8%AD%20%D9%85%D9%86%20%D8%B0%D9%86%D8%A8%20-%20%D8%B4%D9%83%D8%B1%D8%A7%D9%8B%20%D8%A7%D8%B3%D8%A7%D9%85%D8%A9%20%D8%A7%D9%84%D9%85%D9%88%D9%84%D8%AF%20-%20%D8%AF%D9%8A%D9%85%D8%AA%D8%B1%D9%8A%20%D9%85%D9%81%D9%84%D8%B3.%20-%20%D9%85%D9%86%D8%AA%D8%AF%D9%89%20%D8%B1%D8%A7%D8%A8%D8%B7%D8%A9%20%D8%AC%D9%85%D9%87%D9%88%D8%B1%20%D8%A7%D9%84%D8%A7%D8%AA%D8%AD%D8%A7%D8%AF%20%D8%B9%D8%A8%D8%B1%20%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%B1%D9%86%D8%AA\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:28 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F5%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%EF%BC%AE%EF%BC%AF%EF%BD%9E%EF%BC%81%E5%A4%A9%E6%89%8D%E3%81%A8%E3%81%8B%E6%AD%BB%E3%81%AD%E3%81%B0%E3%81%84%E3%81%84%E3%81%AE%E3%81%AB\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:33 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F6%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%83%AF%E3%82%BF%E3%82%B7%E3%80%81%E3%82%A2%E3%83%8A%E3%82%BF%E3%83%8E%E3%80%81%E3%83%8A%E3%83%9E%E3%82%A8%E3%80%81%E3%82%B7%E3%83%A9%E3%83%8A%EF%BD%9E%E3%82%A4\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:41 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F6%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%83%AF%E3%82%BF%E3%82%B7%E3%80%81%E3%82%A2%E3%83%8A%E3%82%BF%E3%83%8E%E3%80%81%E3%83%8A%E3%83%9E%E3%82%A8%E3%80%81%E3%82%B7%E3%83%A9%E3%83%8A%EF%BD%9E%E3%82%A4\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:45 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F7%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%82%AA%E3%83%AC%E3%81%AF%E3%82%B5%E3%83%8E%E3%83%B4%E3%82%A1%E3%83%93%E3%83%83%E3%83%81\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F8%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%82%A4%E3%83%B4%E3%82%A1%E3%83%B3%E3%81%AE%E3%83%8F%E3%82%B2\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:58:58 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F9%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%81%AF%EF%BD%9E%E3%82%8B%E3%81%B0%E3%82%8B%E6%9D%A5%E3%81%9F%E3%81%9C%EF%BC%81%E3%83%88%E3%83%AA%E3%82%B9%E3%83%86%E3%82%A4%E3%83%B3\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:07 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F10%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E7%9C%9F%E7%90%86%E3%80%80%E3%80%8E%E3%83%8E%E3%83%BC%E3%82%BF%E3%83%83%E3%83%81%E3%80%81%E3%83%AD%E3%83%AA%E3%83%BC%E3%82%BF%EF%BC%81%E3%80%8F\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F11%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E5%A5%B3%E6%95%99%E5%B8%AB%E3%82%B6%E3%83%9E%E3%82%B9\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:21 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F12%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E6%8C%BF%E8%A9%B1%E3%80%80%E3%83%95%E3%82%A9%E3%83%BC%E3%82%B9%E3%81%A8%E5%85%B1%E3%81%AB%E3%81%82%E3%82%89%E3%82%93%E3%81%93%E3%81%A8%E3%82%92\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F13%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%82%A2%E3%83%9B%E3%81%AA%E5%AD%90%E3%81%9F%E3%81%A1\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:36 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F14%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%82%A4%E3%83%B3%E3%82%AD%E3%83%B3%C3%97%E3%83%93%E3%83%83%E3%83%81%EF%BC%9D%E2%97%8B%E2%97%8B%E3%81%A3%E3%81%A6%E4%BD%95%E3%82%92%E3%81%B6%E3%81%A3%E2%80%9C%E3%82%AB%E3%82%B1%E3%81%A6%E2%80%9D%E3%82%93%E3%81%A0%EF%BC%9F%E3%82%B4%E3%83%A9%E3%82%A1%EF%BC%81\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:37 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"eschaeffer%40riverbendlaw.com\", \"http%3A%2F%2Fwww.theawl.com%2F2011%2F10%2Fa-supposedly-true-thing-jonathan-franzen-said-about-david-foster-wallace\", \"A%20Supposedly%20True%20Thing%20Jonathan%20Franzen%20Said%20About%20David%20Foster%20Wallace%20%7C%20The%20Awl\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:39 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"contact%40laurentbrouat.com\", \"http%3A%2F%2Fexclusiverh.com%2Freseaux-sociaux%2Fsur-les-reseaux-sociaux-il-faut-une-strategie-a-long-terme-gilles-gobron-expectra.htm\", \"Exclusive%20RH%20-%20%C2%AB%20Sur%20les%20r%C3%A9seaux%20sociaux%2C%20il%20faut%20une%20strat%C3%A9gie%20%C3%A0%20long%20terme%20%C2%BB%2C%20Gilles%20Gobron%2C%20Expectra\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:41 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F15%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%82%A8%E3%83%AD%E3%80%81%E3%81%9D%E3%82%8C%E3%81%AF%E7%94%B7%E3%81%AE%E5%93%80%E3%81%97%E3%81%84%E2%80%9C%E6%80%A7%E2%80%9D\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:45 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F16%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%EF%BC%91%EF%BC%90%EF%BC%90%EF%BC%90%E4%B8%87%E3%83%91%E3%83%AF%E3%83%BC\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 5:59:49 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hermes10734%40gmail.com\", \"http%3A%2F%2Fncode.syosetu.com%2Fn0095s%2F17%2F\", \"%E7%BF%92%E4%BD%9C%E3%83%BB%E3%82%BC%E3%83%AD%E3%81%AE%E4%BD%BF%E3%81%84%E9%AD%94%E5%BC%90%E6%AC%A1%20-%20%E3%82%AA%E3%83%AC%E3%81%AE%E5%A6%B9%E3%81%8C%E3%81%93%E3%82%93%E3%81%AA%E3%81%AB%E5%8F%AF%E6%84%9B%E3%81%99%E3%81%8E%E2%80%A6%E2%80%A6%E3%82%8B%E3%81%AE%E3%81%A7%E3%81%99%E3%82%88\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:00:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"eschaeffer%40riverbendlaw.com\", \"http%3A%2F%2Fwww.theawl.com%2F2011%2F10%2Fa-supposedly-true-thing-jonathan-franzen-said-about-david-foster-wallace\", \"A%20Supposedly%20True%20Thing%20Jonathan%20Franzen%20Said%20About%20David%20Foster%20Wallace%20%7C%20The%20Awl\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:00:42 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"qoo88dd%40gmail.com\", \"http%3A%2F%2Fwww.synology.com.tw%2Fsupport%2Ffaq_show.php%3Fq_id%3D427%26lang%3Dcht\", \"Synology%20%E7%94%A2%E5%93%81%E6%94%AF%E6%8F%B4%E5%93%AA%E4%BA%9B%E7%84%A1%E7%B7%9A%20USB%20%E8%A3%9D%E7%BD%AE%EF%BC%9F%20-%20%E5%B8%B8%E8%A6%8B%E5%95%8F%E9%A1%8C%E9%9B%86%20%E7%BE%A4%E6%9A%89%E7%A7%91%E6%8A%80%20Network%20Attached%20Storage%20-%20NAS%20%E6%96%B0%E9%AB%94%E9%A9%97\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:00:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"eschaeffer%40riverbendlaw.com\", \"http%3A%2F%2Fwww.themillions.com%2F2011%2F10%2Fhow-i-learned-to-stop-worrying-and-write-the-marriage-plot.html%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2Bthemillionsblog%252Ffedw%2B%2528The%2BMillions%2529\", \"The%20Millions%20%3A%20How%20I%20Learned%20To%20Stop%20Worrying%20And%20Write%20%E2%80%98The%20Marriage%20Plot%E2%80%99\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:00:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mateusz%40skuza.info\", \"http%3A%2F%2Ftechcrunch.com%2F2011%2F10%2F19%2Fdropbox-minimal-viable-product%2F\", \"How%20DropBox%20Started%20As%20A%20Minimal%20Viable%20Product%20%7C%20TechCrunch\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:00:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"stpoulin%40mac.com\", \"http%3A%2F%2Fwww.gocomics.com%2Fcomic%2Fexplore%2F1425872%2F2\", \"Cul%20de%20Sac%20Comic%20Strip%20on%20GoComics.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:01:18 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"hassanq%40gmail.com\", \"http%3A%2F%2Fwww.haaretz.com%2Fnews%2Fshalit-prisoner-swap%2Fshalit-s-captors-he-wasn-t-tortured-he-received-medical-care-and-watched-tv-1.391072\", u"Shalit\"s%20captors%3A%20He%20wasn\"t%20tortured%2C%20he%20received%20medical%20care%20and%20watched%20TV%20-%20Haaretz%20Daily%20Newspaper%20%7C%20Israel%20News", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:02:43 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"erik.willemse%40gmail.com\", \"http%3A%2F%2Fattackemart.in%2F\", \"attackemart.in%20-%20Martin%20Gauer%20-%20Web%20Developer\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:02:58 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"erik.willemse%40gmail.com\", \"http%3A%2F%2Fwww.awwwards.com%2F\", \"Awwwards%20%7C%20The%20CSS%20website%20Awards\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:03:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rvcinco%40hotmail.com\", \"http%3A%2F%2Fwww.texasmonthly.com%2F2011-11-01%2Fbtl.php\", \"Left%20Behind%20%3A%3A%20Texas%20Monthly\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:03:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"state.steven%40hotmail.co.jp\", \"http%3A%2F%2Fwww.geocities.jp%2Fsaruyamaukiki%2Fodin%2FL3.html\", \"%E3%80%8C%E8%88%A9%E5%B1%B1%E3%80%8D%E3%81%AE%E3%83%9B%E3%83%BC%E3%83%A0%E3%83%9A%E3%83%BC%E3%82%B8\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:04:34 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"f.cannella%40yahoo.it\", \"http%3A%2F%2Fwww.dagospia.com%2Frubrica-2%2Fmedia_e_tv%2Fla-bio-del-dio-della-mela-ecco-i-primi-estratti-dellautobiografia-di-steve-jobs-31171.htm\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:04:47 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"starseeker7777%40gmail.com\", \"http%3A%2F%2Fwww.ted.com%2Ftalks%2Fpamela_meyer_how_to_spot_a_liar.html%23\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:04:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"harry_b71\", \"http%3A%2F%2Fwww.wer-weiss-was.de%2Ftheme123%2Farticle1080828.html\", \"Erscheinungsdatum%20Ericsson%20T68i%20%7C%20Mobilfunk%20(Provider%2C%20Handy%2C%20Handynummer)\", \"0.4.4\", \"firefox\", \"%0Ameines%20Wissens%20nach%20ist%20es%20jetzt%20draussen.%20Auf%20der%20CeBIT%20wurde%20es%20ja%20vorgestellt.\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:04:58 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E5%A4%A7%E3%81%8D%E3%81%AA%E5%8F%A4%E3%81%84%E3%81%8A%E5%B1%8B%E6%95%B7%E3%81%8C%E4%B8%BB%E4%BA%BA%E3%81%8C%E4%BA%A1%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F%E5%BE%8C%E9%95%B7%E3%81%84%E9%96%93%E6%94%BE%E7%BD%AE%E3%81%95%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E3%81%9D%E3%81%AE%E4%B8%BB%E4%BA%BA%E3%81%AE%E4%B8%80%E4%BA%BA%E6%81%AF%E5%AD%90%E3%81%A7%E3%81%82%E3%82%8B%E5%AD%A6%E8%80%85%E3%81%8C%E3%81%9D%E3%81%93%E3%81%AB%E4%BD%8F%E3%81%BE%E3%81%86%E4%BA%8B%E3%81%AB%E3%81%AA%E3%82%8A%E5%BC%95%E3%81%A3%E8%B6%8A%E3%81%97%E3%81%A6%E3%81%8D%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E8%8D%92%E3%82%8C%E6%94%BE%E9%A1%8C%E3%81%AE%E5%B1%8B%E6%95%B7%E3%81%AB%E3%81%AF%E3%81%A9%E3%81%AE%E9%83%A8%E5%B1%8B%E3%81%AB%E3%82%82%E8%9C%98%E8%9B%9B%E3%81%AE%E5%B7%A3%E3%80%81%E5%9F%83%E3%80%81%E3%82%AB%E3%83%93%E3%80%81%E3%81%9D%E3%81%97%E3%81%A6%E4%BD%95%E5%8D%81%E4%BA%BA%E3%82%82%E3%81%AE%E5%B9%BD%E9%9C%8A%E3%81%8C%E4%BD%8F%E3%81%BF%E7%9D%80%E3%81%84%E3%81%A6%E3%81%84%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E3%81%9D%E3%81%AE%E5%B1%8B%E6%95%B7%E3%81%AF%E8%AA%B0%E3%82%82%E3%81%84%E3%81%AA%E3%81%84%E3%81%AF%E3%81%9A%E3%81%AA%E3%81%AE%E3%81%AB%E9%A8%92%E9%9F%B3%E3%81%8C%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E5%B9%BD%E9%9C%8A%E5%B1%8B%E6%95%B7%E3%81%A8%E5%91%BC%E3%81%B0%E3%82%8C%E6%80%96%E3%81%8C%E3%82%89%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E5%AD%A6%E8%80%85%E3%81%AF%E7%A0%94%E7%A9%B6%E4%BB%A5%E5%A4%96%E3%81%AE%E4%BA%8B%E3%81%AB%E3%81%AF%E3%81%BE%E3%81%A3%E3%81%9F%E3%81%8F%E7%84%A1%E9%A0%93%E7%9D%80%E3%80%81%E4%B8%80%E9%83%A8%E5%B1%8B%E3%81%A0%E3%81%91%E3%82%92%E7%A0%94%E7%A9%B6%E7%94%A8%E3%81%AB%E4%BD%BF%E3%81%84%E5%B9%BD%E9%9C%8A%E9%81%94%E3%82%92%E6%80%96%E3%81%8C%E3%82%8A%E3%82%82%E3%81%97%E3%81%BE%E3%81%9B%E3%82%93%E3%81%A7%E3%81%97%E3%81%9F%E3%81%8C%E3%80%81%E7%A0%94%E7%A9%B6%E3%82%92%E5%A7%8B%E3%82%81%E3%82%8B%E3%81%9F%E3%81%B3%E3%81%AB%E3%82%8F%E3%81%96%E3%81%A8%E9%A8%92%E9%9F%B3%E3%82%92%E9%B3%B4%E3%82%89%E3%81%97%E8%A9%B1%E3%81%97%E3%81%8B%E3%81%91%E3%81%A6%E3%81%8F%E3%82%8B%E5%B9%BD%E9%9C%8A%E3%81%9F%E3%81%A1%E3%81%AB%E7%A0%94%E7%A9%B6%E3%81%AB%E6%B2%A1%E9%A0%AD%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E3%81%A8%E3%80%81%E5%B9%BD%E9%9C%8A%E9%80%80%E6%B2%BB%E5%8D%94%E4%BC%9A%E3%81%AB%E5%87%BA%E3%81%8B%E3%81%91%E3%80%81%E5%B9%BD%E9%9C%8A%E3%82%92%E9%80%80%E6%B2%BB%E3%81%A7%E3%81%8D%E3%82%8B%E4%BA%BA%E3%82%92%E3%82%88%E3%81%93%E3%81%97%E3%81%A6%E3%81%8F%E3%82%8C%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E9%A0%BC%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E6%AC%A1%E3%81%AE%E6%97%A5%E3%82%84%E3%81%A3%E3%81%A6%E3%81%8D%E3%81%9F%E3%81%AE%E3%81%AF%E8%8B%A5%E3%81%84%E5%A5%B3%E6%80%A7%E3%80%82%E8%8D%92%E3%82%8C%E6%94%BE%E9%A1%8C%E3%81%AE%E5%B1%8B%E6%95%B7%E3%82%92%E8%A6%8B%E3%81%A6%E3%80%8C%EF%BC%91%E9%80%B1%E9%96%93%E3%81%AF%E3%81%8B%E3%81%8B%E3%82%8B%E3%82%8F%E3%81%AD%E3%80%82%E3%80%8D%20%20%20%0A%E5%A5%B3%E6%80%A7%E3%81%8C%E5%A7%8B%E3%82%81%E3%81%9F%E3%81%AE%E3%81%AF%E5%A4%A7%E6%8E%83%E9%99%A4%E3%80%82%EF%BC%91%E9%9A%8E%E3%81%AE%E9%83%A8%E5%B1%8B%E3%81%8B%E3%82%89%E4%B8%80%E3%81%A4%E3%81%9A%E3%81%A4%E3%80%81%E7%AA%93%E3%82%92%E9%96%8B%E3%81%91%E6%94%BE%E3%81%A1%E3%80%81%E3%82%AB%E3%83%BC%E3%83%86%E3%83%B3%E3%82%92%E6%B4%97%E6%BF%AF%E3%80%81%E8%9C%98%E8%9B%9B%E3%81%AE%E5%B7%A3%E3%82%92%E5%8F%96%E3%82%8A%E3%80%81%E5%9F%83%E3%82%92%E8%BF%BD%E3%81%84%E5%87%BA%E3%81%97%E3%80%81%E3%82%AB%E3%83%93%E3%82%92%E9%80%80%E6%B2%BB%E3%81%97%E3%81%A6%E3%81%84%E3%81%8D%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E6%85%8C%E3%81%A6%E3%81%9F%E5%B9%BD%E9%9C%8A%E3%81%9F%E3%81%A1%E3%81%AF%E6%8E%83%E9%99%A4%E3%81%AE%E9%82%AA%E9%AD%94%E3%82%92%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E9%9F%B3%E3%82%92%E3%81%9F%E3%81%A6%E3%81%9F%E3%82%8A%E3%80%81%E3%82%8F%E3%81%96%E3%81%A8%E6%80%96%E3%81%84%E5%A3%B0%E3%82%92%E5%87%BA%E3%81%97%E3%81%A6%E5%A5%B3%E6%80%A7%E3%82%92%E8%BF%BD%E3%81%84%E5%87%BA%E3%81%9D%E3%81%86%E3%81%A8%E3%81%97%E3%81%BE%E3%81%99%E3%81%8C%E5%A5%B3%E6%80%A7%E3%81%AF%E3%80%8C%E3%81%93%E3%81%AE%E5%B1%8B%E6%95%B7%E3%81%AF%E5%85%A8%E9%83%A8%E7%B6%BA%E9%BA%97%E3%81%AB%E3%81%99%E3%82%8B%E3%82%8F%E3%80%82%E3%81%9D%E3%81%86%E3%81%97%E3%81%9F%E3%82%89%E3%81%82%E3%81%AA%E3%81%9F%E9%81%94%E3%81%AF%E3%81%93%E3%81%AE%E5%B1%8B%E6%95%B7%E3%81%AB%E3%81%84%E3%82%89%E3%82%8C%E3%81%AA%E3%81%8F%E3%81%AA%E3%82%8B%E3%82%93%E3%81%A0%E3%81%8B%E3%82%89%E3%80%82%E3%80%8D%20%20%20%0A%E3%81%9D%E3%81%97%E3%81%A6%E3%83%94%E3%82%AB%E3%83%94%E3%82%AB%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E9%83%A8%E5%B1%8B%E3%81%8B%E3%82%89%E6%B1%9A%E3%81%84%E9%83%A8%E5%B1%8B%E3%81%B8%E3%81%A8%E5%B9%BD%E9%9C%8A%E3%81%9F%E3%81%A1%E3%81%AF%E7%A7%BB%E5%8B%95%E3%81%97%E3%81%A6%E3%81%84%E3%81%8D%E3%81%BE%E3%81%99%E3%80%82%20%20%20%0A%E6%9C%80%E5%BE%8C%E3%81%AE%E9%83%A8%E5%B1%8B%E3%82%92%E7%B6%BA%E9%BA%97%E3%81%AB%E3%81%97%E3%81%9F%E7%9E%AC%E9%96%93%E3%80%81%E5%B9%BD%E9%9C%8A%E3%81%9F%E3%81%A1%E3%81%AF%E6%82%B2%E9%B3%B4%E3%82%92%E4%B8%8A%E3%81%92%E3%81%A6%E7%AA%93%E3%81%8B%E3%82%89%E5%A4%96%E3%81%AB%E9%80%83%E3%81%92%E3%81%A6%E3%81%84%E3%81%8D%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%20%20%20%0A%E5%AD%A6%E8%80%85%E3%81%AF%E3%81%99%E3%81%A3%E3%81%8B%E3%82%8A%E7%B6%BA%E9%BA%97%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E5%B1%8B%E6%95%B7%E3%82%92%E8%A6%8B%E3%81%A6%E3%80%81%E3%81%B2%E3%81%92%E3%82%92%E5%89%83%E3%82%8A%E6%95%A3%E9%AB%AA%E3%81%AB%E8%A1%8C%E3%81%8D%E3%80%81%E5%A5%B3%E6%80%A7%E3%81%AB%E3%83%97%E3%83%AD%E3%83%9D%E3%83%BC%E3%82%BA%E3%80%81%E4%BA%8C%E4%BA%BA%E3%81%AF%E7%B5%90%E5%A9%9A%E3%81%97%E3%80%81%E9%83%A8%E5%B1%8B%E3%81%AF%E3%81%84%E3%81%A4%E3%82%82%E3%81%8D%E3%82%8C%E3%81%84%E3%81%A7%E5%B9%BD%E9%9C%8A%E3%81%9F%E3%81%A1%E3%81%AF%E4%BA%8C%E5%BA%A6%E3%81%A8%E7%8F%BE%E3%82%8C%E3%81%BE%E3%81%9B%E3%82%93%E3%81%A7%E3%81%97%E3%81%9F%E3%81%97%E3%81%9F%E3%81%A8%E3%81%95%E3%80%82%20%20%20%0A%E5%AE%B6%E3%81%8C%E6%95%A3%E3%82%89%E3%81%8B%E3%81%A3%E3%81%A6%E3%82%8B%E3%81%A8%E3%80%81%E4%BD%95%E3%81%8B%E3%82%92%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E3%81%97%E3%81%A6%E3%82%82%E4%BD%95%E3%81%8B%E9%9B%86%E4%B8%AD%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E3%81%97%E6%A5%BD%E3%81%97%E3%82%81%E3%81%AA%E3%81%84%E4%BA%8B%E3%81%8C%E5%A4%9A%E3%81%84%E3%81%AE%E3%81%AF%E3%81%93%E3%82%93%E3%81%AA%E7%90%86%E7%94%B1%E3%81%8B%E3%81%AA%E3%80%82%20%20%20%0A%20%20%0A%20%20%0A%20%20%0A%20%20%0A%E8%87%AA%E5%88%86%E3%81%8C%E6%8E%83%E9%99%A4%E3%81%97%E3%81%9F%E9%99%A3%E5%9C%B0%E3%81%AF%E9%9C%8A%E7%9A%84%E6%94%AF%E9%85%8D%E3%81%A7%E3%81%8D%E3%82%8B%E3%81%A8%E6%80%9D%E3%81%86%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:05:24 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"contact%40laurentbrouat.com\", \"http%3A%2F%2Fwww.ere.net%2F2011%2F10%2F17%2Flinkedin-opens-conference-amid-a-changing-social-world%2F\", \"LinkedIn%20Opens%20Conference%20Amid%20a%20Changing%20Social%20World%20-%20ERE.net\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:05:50 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E3%81%A8%E3%81%A6%E3%82%82%E7%B6%BA%E9%BA%97%E5%A5%BD%E3%81%8D%E3%81%AA%E3%83%9E%E3%83%9E%E5%8F%8B%E3%81%8C%E3%81%84%E3%81%9F%E3%80%82%20%20%20%0A%E5%BD%BC%E5%A5%B3%E3%81%AE%E5%AE%B6%E3%81%AF%E3%81%84%E3%81%A4%E8%A1%8C%E3%81%A3%E3%81%A6%E3%82%82%E3%83%94%E3%82%AB%E3%83%94%E3%82%AB%E3%80%82%20%20%20%0A%E6%9C%9D%E3%80%81%E6%97%A6%E9%82%A3%E3%81%95%E3%82%93%E3%81%A8%E5%AD%90%E3%81%A9%E3%82%82%E3%82%92%E9%80%81%E3%82%8A%E5%87%BA%E3%81%97%E3%81%9F%E5%BE%8C%E3%81%AB%E6%8E%83%E9%99%A4%E6%B4%97%E6%BF%AF%E6%95%B4%E7%90%86%E6%95%B4%E9%A0%93%E5%BE%8C%20%20%20%0A%E3%82%86%E3%81%A3%E3%81%8F%E3%82%8A%E3%81%A8%E3%81%8A%E8%8C%B6%E3%81%99%E3%82%8B%E3%81%AE%E3%81%8C%E6%9C%80%E9%AB%98%E3%81%A0%E3%81%A8%E8%A8%80%E3%81%A3%E3%81%A6%E3%81%84%E3%81%9F%E3%80%82%20%20%20%0A%E4%BD%99%E5%88%86%E3%81%AA%E3%82%82%E3%81%AE%E3%81%AF%E8%B2%B7%E3%82%8F%E3%81%9A%E3%80%81%E6%B0%97%E3%81%AB%E5%85%A5%E3%81%A3%E3%81%9F%E3%82%82%E3%81%AE%E3%81%AF%E9%AB%98%E4%BE%A1%E3%81%A7%E3%82%82%E8%B3%BC%E5%85%A5%E3%81%97%E5%A4%A7%E4%BA%8B%E3%81%AB%20%20%20%0A%E4%B8%81%E5%AF%A7%E3%81%AB%E4%BD%BF%E3%81%A3%E3%81%A6%E3%81%84%E3%81%9F%E3%80%82%20%20%20%0A%E3%81%8A%E6%96%99%E7%90%86%E5%A5%BD%E3%81%8D%E3%81%AA%E5%BD%BC%E5%A5%B3%E3%81%AF%E3%81%8A%E3%81%84%E3%81%97%E3%81%84%E3%82%82%E3%81%AE%E3%82%92%E3%80%81%E7%B4%A0%E6%95%B5%E3%81%AA%E5%99%A8%E3%81%AB%E5%85%A5%E3%82%8C%E3%81%A6%E3%83%BC%E3%83%AD%E3%82%A4%E3%83%A4%E3%83%AB%20%20%20%0A%E3%82%B3%E3%83%9A%E3%83%B3%E3%83%8F%E3%83%BC%E3%82%B2%E3%83%B3%E3%82%84%E3%82%B8%E3%83%8E%E3%83%AAetc.%E5%AE%B6%E6%97%8F%E3%81%A7%E6%99%AE%E6%AE%B5%E4%BD%BF%E3%81%84%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F%E3%80%82%20%20%20%0A%E9%81%8A%E3%81%B3%E3%81%AB%E8%A1%8C%E3%81%8F%E3%81%A8%E5%A5%BD%E3%81%8D%E3%81%AA%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC%E3%82%AB%E3%83%83%E3%83%97%E3%82%92%E9%81%B8%E3%81%B0%E3%81%9B%E3%81%A6%E3%81%8F%E3%82%8C%E3%81%A6%E3%80%81%E3%81%93%E3%82%8C%E3%81%BE%E3%81%9F%20%20%20%0A%E3%81%A8%E3%81%B3%E3%81%8D%E3%82%8A%E7%BE%8E%E5%91%B3%E3%81%97%E3%81%84%E3%81%8A%E8%8C%B6%E3%82%84%E3%82%B3%E3%83%BC%E3%83%92%E3%83%BC%E3%82%92%E9%A3%B2%E3%81%BE%E3%81%9B%E3%81%A6%E3%81%8F%E3%82%8C%E3%81%9F%E3%80%82%20%20%20%0A%E3%81%A7%E3%80%81%E6%97%A6%E9%82%A3%E6%A7%98%E3%81%8C%E7%95%B0%E4%BE%8B%E3%81%AE%E5%A4%A7%E5%87%BA%E4%B8%96%E3%81%A8%E3%81%AA%E3%82%8A%E3%80%81%E4%BB%8A%E3%82%84%E5%B7%A6%E5%9B%A3%E6%89%87%E7%8A%B6%E6%85%8B%E3%81%A0%E3%80%82%20%20%20%0A%20%20%20%0A%E3%82%82%E3%81%86%E4%B8%80%E4%BA%BA%E3%81%AF%E3%80%81%E7%A7%81%E7%BE%8E%E4%BA%BA%E3%81%A7%E9%A0%AD%E3%81%8C%E3%81%84%E3%81%84%E3%83%BC%E3%82%92%E3%81%8B%E3%81%AA%E3%82%8A%E3%83%8F%E3%83%8A%E3%81%AB%E3%81%8B%E3%81%91%E3%81%A6%E3%81%84%E3%82%8B%E3%82%BF%E3%82%A4%E3%83%97%20%20%20%0A%E3%81%A7%E3%80%81%E6%80%A7%E6%A0%BC%E3%81%AB%E3%81%AF%E3%81%8B%E3%81%AA%E3%82%8A%E9%9B%A3%E3%81%82%E3%82%8A%E3%83%BC%E3%81%A0%E3%81%8C%E3%80%81%E7%B6%BA%E9%BA%97%E5%A5%BD%E3%81%8D%E3%81%A7%E3%81%8A%E5%AE%B6%E3%82%82%E3%81%84%E3%81%A4%E3%82%82%E3%83%94%E3%82%AB%E3%83%94%E3%82%AB%E3%80%82%20%20%20%0A%E3%81%93%E3%81%A1%E3%82%89%E3%81%AE%E3%81%94%E4%B8%BB%E4%BA%BA%E3%82%82%E5%A4%A7%E5%87%BA%E4%B8%96%E3%81%A7%E3%80%81%E5%BD%BC%E5%A5%B3%E3%82%82%E3%82%BB%E3%83%AC%E3%83%96%E5%BA%A6%E3%81%8C%E3%81%95%E3%82%89%E3%81%AB%E3%82%A2%E3%83%83%E3%83%97%E3%81%97%E3%81%9F%E7%94%9F%E6%B4%BB%E3%82%92%20%20%20%0A%E9%80%81%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%80%82%20%20%20%0A%20%20%20%0A%E3%81%A9%E3%81%A1%E3%82%89%E3%81%AE%E5%BD%BC%E5%A5%B3%E3%82%82%E8%BA%AB%E3%81%AA%E3%82%8A%E3%82%82%E3%81%84%E3%81%A4%E3%82%82%E7%B6%BA%E9%BA%97%E3%81%AB%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E3%80%82%20%20%20%0A%E5%AD%90%E3%81%A9%E3%82%82%E3%81%AE%E6%9C%8D%E3%82%82%E9%AB%98%E4%BE%A1%E3%81%AA%E3%82%82%E3%81%AE%E3%81%A7%E3%81%AA%E3%81%8F%E3%81%A6%E3%82%82%E3%81%84%E3%81%A4%E3%82%82%E3%82%A2%E3%82%A4%E3%83%AD%E3%83%B3%E3%82%92%E3%81%8D%E3%81%A1%E3%82%93%E3%81%A8%E5%BD%93%E3%81%A6%E3%81%A6%E3%81%84%E3%82%8B%E3%80%82%20%20%20%0A%E7%B6%BA%E9%BA%97%E3%81%AB%E3%81%99%E3%82%8B%E3%81%93%E3%81%A8%E3%81%AF%E3%80%8C%E5%8E%84%E9%99%A4%E3%81%91%E3%80%8D%E3%81%AA%E3%81%AE%E3%81%A0%E3%81%A8%E5%AE%9F%E6%84%9F%E3%80%82%20%20%20%0A%E3%81%A9%E3%81%93%E3%81%8B%E3%81%AB%E7%A5%88%E7%A5%B7%E3%81%97%E3%81%A6%E3%82%82%E3%82%89%E3%81%86%E3%81%A8%E3%81%8B%E4%BA%91%E3%80%85%E3%82%88%E3%82%8A%E3%82%82%E3%80%81%E6%8E%83%E9%99%A4%E3%81%97%E3%81%A6%E8%BA%AB%E3%81%AE%E5%9B%9E%E3%82%8A%E3%82%92%20%20%20%0A%E7%B6%BA%E9%BA%97%E3%81%AB%E3%81%99%E3%82%8B%E3%81%93%E3%81%A8%E3%81%93%E3%81%9D%E3%81%8C%E4%B8%80%E7%95%AA%E3%81%AE%E5%91%AA%E3%81%84%E8%BF%94%E3%81%97%E3%81%AB%E3%81%AA%E3%82%8B%E3%81%A8%E4%BF%A1%E3%81%98%E3%81%A6%E3%81%84%E3%82%8B%E3%82%88%E3%80%82%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:05:53 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"rvcinco%40hotmail.com\", \"http%3A%2F%2Fwww.csmonitor.com%2Flayout%2Fset%2Fprint%2Fcontent%2Fview%2Fprint%2F415564\", u"A%20long%2C%20steep%20drop%20for%20Americans\"%20standard%20of%20living%20-%20CSMonitor.com", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:06:07 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.businessweek.com%2Fnews%2F2011-10-19%2Fcitigroup-mcgraw-hill-win-appeals-in-retirement-plan-suits.html\", \"Citigroup%2C%20McGraw-Hill%20Win%20Appeals%20in%20Retirement%20Plan%20Suits%20-%20Businessweek\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:06:13 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.forbes.com%2Fsites%2Faroy%2F2011%2F10%2F19%2Fbush-budget-official-explains-how-to-repeal-obamacare-via-reconciliation%2F\", \"Bush%20Budget%20Official%20Explains%20How%20to%20Repeal%20Obamacare%20via%20Reconciliation%20-%20Forbes\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:06:15 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"robertmi%40lavabit.com\", \"http%3A%2F%2Fwww.maurix.net%2F%3Fp%3D799\", \"Gewusst%20wie%3A%20WLAN%20unter%20FreeBSD%208.0%20mit%20Ralink%20%7C%20maurix.net\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:06:17 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F20%2Fbusiness%2Fsmallbusiness%2Fmanaging-unemployment-premiums-in-a-time-of-joblessness.html\", \"Businesses%20Struggle%20With%20the%20Burden%20of%20Unemployment%20Claims.%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:06:23 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"ihosny%40gmail.com\", \"http%3A%2F%2Fwww.washingtonpost.com%2Finvestigations%2Fin-egypt-corruption-had-an-american-root%2F2011%2F10%2F07%2FgIQAApWoyL_story.html\", \"In%20Egypt%2C%20corruption%20cases%20had%20an%20American%20root%20-%20The%20Washington%20Post\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:06:57 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chengshanl%40hotmail.com\", \"http%3A%2F%2Fwww2.cna.com.tw%2FShowNews%2FWebNews_Detail.aspx%3FType%3DFirstNews%26ID%3D201110200089\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:12 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mikkel%40hoegh.org\", \"http%3A%2F%2Fthestartuptoolkit.com%2Fblog%2FThe_coffeeshop_fallacy%2F\", \"The%20coffeeshop%20fallacy%20-%20Blog\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:13 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"miwa---%40i.softbank.jp\", \"http%3A%2F%2Fmamesoku.com%2Farchives%2F2865218.html\", \"%E6%8E%83%E9%99%A4%E3%81%AE%E3%83%A2%E3%83%81%E3%83%99%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%8C%E4%B8%8A%E3%81%8C%E3%82%8B%E3%82%B3%E3%83%94%E3%83%9A%20-%20%E3%81%BE%E3%82%81%E9%80%9F\", \"0.4.4\", \"firefox\", \"%E3%81%8B%E3%81%AE%E7%BE%8E%E8%BC%AA%E6%98%8E%E5%AE%8F%E3%82%B5%E3%83%9E%E3%81%AB%E3%82%88%E3%82%8B%E3%81%A8%E3%80%81%E3%81%9F%E3%81%A8%E3%81%88%E5%85%AD%E7%95%B3%E4%B8%80%E9%96%93%E3%81%A7%E3%82%82%E3%80%81%E8%87%AA%E5%88%86%E3%81%AE%E4%BD%8F%E3%82%80%E9%83%A8%E5%B1%8B%E3%81%AF%20%20%20%0A%E3%83%89%E3%83%A9%E3%83%9E%E3%81%AE%E5%A4%A7%E9%81%93%E5%85%B7%E3%82%84%E5%B0%8F%E9%81%93%E5%85%B7%E3%82%92%E6%8F%83%E3%81%88%E3%82%8B%E3%81%A4%E3%82%82%E3%82%8A%E3%81%A7%E3%80%81%E3%83%89%E3%83%A9%E3%83%9E%E3%83%81%E3%83%83%E3%82%AF%E3%81%AB%E6%BC%94%E5%87%BA%E3%81%97%E3%81%AA%E3%81%95%E3%81%84%20%20%20%0A%E3%81%A8%E3%81%AE%E3%81%93%E3%81%A8%E3%81%A7%E3%81%99%E3%80%82%20%20%20%0A%20%20%0A%E3%80%8C%E5%AE%89%E3%81%84%E3%81%8B%E3%82%89%E3%80%8D%E3%80%8C%E6%89%8B%E8%BB%BD%E3%81%A0%E3%81%8B%E3%82%89%E3%80%8D%E3%81%A7%E9%81%B8%E3%81%B0%E3%81%9A%E3%81%AB%E3%80%81%E8%87%AA%E5%88%86%E3%81%A7%E6%89%8B%E3%81%AB%E5%85%A5%E3%82%8C%E3%82%89%E3%82%8C%E3%82%8B%E4%BE%A1%E6%A0%BC%E3%81%AE%E4%B8%AD%E3%81%A7%E3%80%81%20%20%20%0A%E6%9C%80%E3%82%82%E7%BE%8E%E3%81%97%E3%81%84%E3%81%A8%E6%80%9D%E3%81%88%E3%82%8B%E3%82%82%E3%81%AE%E3%82%92%E9%81%B8%E3%82%93%E3%81%A7%E8%BA%AB%E3%81%AE%E3%81%BE%E3%82%8F%E3%82%8A%E3%81%AB%E7%BD%AE%E3%81%8D%E3%81%AA%E3%81%95%E3%81%84%E3%81%A8%E3%80%82%20%20%20%0A%E8%87%AA%E5%88%86%E3%81%8C%E3%81%A9%E3%81%86%E3%81%84%E3%81%86%E3%83%89%E3%83%A9%E3%83%9E%E3%81%AE%E3%81%A9%E3%82%93%E3%81%AA%E4%B8%BB%E4%BA%BA%E5%85%AC%E3%81%AB%E3%81%AA%E3%82%8A%E3%81%9F%E3%81%84%E3%81%8B%E3%82%92%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B8%E3%81%97%E3%81%A6%E3%80%81%20%20%20%0A%E3%81%9D%E3%81%AE%E4%B8%BB%E4%BA%BA%E5%85%AC%E3%81%AB%E7%9B%B8%E5%BF%9C%E3%81%97%E3%81%84%E7%94%9F%E6%B4%BB%E3%82%92%E3%80%81%E3%83%89%E3%83%A9%E3%83%9E%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%92%E3%81%A4%E3%81%8F%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E8%87%AA%E5%88%86%E3%81%A7%E6%8F%83%E3%81%88%E3%82%8B%E3%80%82%20%20%20%0A%E3%81%9D%E3%81%86%E3%81%99%E3%82%8B%E3%81%A8%E4%BA%BA%E7%94%9F%E3%81%8C%E3%81%9D%E3%81%AE%E7%AD%8B%E6%9B%B8%E3%81%8D%E3%81%AB%E5%90%91%E3%81%8B%E3%81%A3%E3%81%A6%E5%8B%95%E3%81%8D%E5%A7%8B%E3%82%81%E3%82%8B%E3%81%A8%E3%81%AE%E3%81%93%E3%81%A8%E3%80%82%20%20%20%0A%20%20%0A%E5%80%A4%E6%AE%B5%E3%81%A8%E6%A9%9F%E8%83%BD%E3%81%A0%E3%81%91%E8%A6%8B%E3%81%A6%E3%80%81%E3%80%8C%E3%81%93%E3%82%8C%E3%81%A7%E3%81%84%E3%81%84%E3%81%8B%E3%80%8D%E3%81%A8%E9%81%A9%E5%BD%93%E3%81%AA%E3%82%82%E3%81%AE%E3%81%B0%E3%81%8B%E3%82%8A%E9%81%B8%E3%82%93%E3%81%A7%E3%81%9F%E3%81%AA%E3%83%BC%E3%80%82%20%20%20%0A%E3%81%A0%E3%81%8B%E3%82%89%E5%A4%A7%E5%88%87%E3%81%AB%E5%87%BA%E6%9D%A5%E3%81%AA%E3%81%84%E3%80%81%E6%BA%80%E8%B6%B3%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E3%80%82%20%20%20%0A%E7%BE%8E%E8%BC%AA%E3%82%B5%E3%83%9E%E3%81%AE%E3%82%88%E3%81%86%E3%81%AA%E8%B1%AA%E5%A5%A2%E3%81%AA%E3%83%A8%E3%83%BC%E3%83%AD%E3%83%94%E3%82%A2%E3%83%B3%E3%81%AF%E8%8B%A6%E6%89%8B%E3%81%A0%E3%81%91%E3%81%A9%EF%BD%97%E3%80%80%20%20%20%0A%E3%81%A7%E3%82%82%E8%87%AA%E5%88%86%E3%81%AE%E9%83%A8%E5%B1%8B%E3%81%AB%E3%81%AF%E7%BE%8E%E3%81%A8%E3%83%AD%E3%83%9E%E3%83%B3%E3%81%8C%E8%B6%B3%E3%82%8A%E3%81%AA%E3%81%84%E3%81%A8%E6%80%9D%E3%81%86%E3%80%82%20%20%20%0A%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB%E3%81%AA%E3%82%93%E3%81%A6%E8%87%AA%E7%94%B1%E3%81%AB%E9%81%B8%E3%82%93%E3%81%A7%E3%81%84%E3%81%84%E3%81%AF%E3%81%9A%E3%81%AA%E3%81%AE%E3%81%AB%E3%80%81%20%20%20%0A%E5%A4%89%E3%81%AA%E5%88%B6%E9%99%90%E3%81%A8%E3%81%8B%E9%81%A0%E6%85%AE%E3%81%8C%E3%81%84%E3%81%A3%E3%81%B1%E3%81%84%E3%81%82%E3%81%A3%E3%81%9F%E3%81%8B%E3%82%82%E3%80%82%20%20%20%0A%20%20%0A%E6%8E%83%E9%99%A4%E3%81%97%E3%81%AA%E3%81%8C%E3%82%89%E5%B0%91%E3%81%97%E3%81%9A%E3%81%A4%E3%82%A4%E3%83%B3%E3%83%86%E3%83%AA%E3%82%A2%E3%82%82%E5%90%91%E4%B8%8A%E3%81%95%E3%81%9B%E3%81%A6%E3%81%84%E3%81%8D%E3%81%9F%E3%81%84%E3%81%AA%E3%80%82%20\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:20 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chengshanl\", \"http%3A%2F%2Fwww2.cna.com.tw%2FShowNews%2FWebNews_Detail.aspx%3FType%3DFirstNews%26ID%3D201110200093\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:34 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.huffingtonpost.com%2F2011%2F10%2F20%2Fmillenials-social-security_n_1021602.html\", u"Half%20Of%20Millennials%20Don\"t%20Believe%20Social%20Security%20Will%20Exist%20When%20They%20Retire%3A%20Poll", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:43 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fonline.wsj.com%2Farticle%2FSB10001424052970203914304576627683818892932.html%3FKEYWORDS%3Dhealth%2Breform\", \"Review%20%26%20Outlook%3A%20The%20GOP%20and%20RomneyCare%20-%20WSJ.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:49 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.sfgate.com%2Fcgi-bin%2Farticle.cgi%3Ff%3D%2Fc%2Fa%2F2011%2F10%2F19%2FBU8G1LJLNT.DTL%23ixzz1bK25OPWI\", \"Medicare%20premiums%20may%20offset%20Social%20Security%20hikes\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:53 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alegis%40gmail.com\", \"http%3A%2F%2Fwww.rockpapershotgun.com%2F2011%2F10%2F19%2Fon-fake-freedom%2F%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2BRockPaperShotgun%2B%2528Rock%252C%2BPaper%252C%2BShotgun%2529%26utm_content%3DGoogle%2BReader\", \"Stop%20Teasing%20Me%20With%20Fake%20Freedom%20%7C%20Rock%2C%20Paper%2C%20Shotgun\", \"0.4.2.3\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alegis%40gmail.com\", \"http%3A%2F%2Fwww.rockpapershotgun.com%2F2011%2F10%2F19%2Fon-fake-freedom%2F%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2BRockPaperShotgun%2B%2528Rock%252C%2BPaper%252C%2BShotgun%2529%26utm_content%3DGoogle%2BReader\", \"Stop%20Teasing%20Me%20With%20Fake%20Freedom%20%7C%20Rock%2C%20Paper%2C%20Shotgun\", \"0.4.2.3\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:07:55 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"alegis%40gmail.com\", \"http%3A%2F%2Fwww.rockpapershotgun.com%2F2011%2F10%2F19%2Fon-fake-freedom%2F%3Futm_source%3Dfeedburner%26utm_medium%3Dfeed%26utm_campaign%3DFeed%253A%2BRockPaperShotgun%2B%2528Rock%252C%2BPaper%252C%2BShotgun%2529%26utm_content%3DGoogle%2BReader\", \"Stop%20Teasing%20Me%20With%20Fake%20Freedom%20%7C%20Rock%2C%20Paper%2C%20Shotgun\", \"0.4.2.3\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:01 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"chengshanl%40hotmail.com\", \"http%3A%2F%2Fwww2.cna.com.tw%2FShowNews%2FWebNews_Detail.aspx%3FType%3DFirstNews%26ID%3D201110200093\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:04 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.usatoday.com%2Fnews%2Fpolitics%2Fstory%2F2011-10-19%2Fmitt-romney-rivals-health-care%2F50830852%2F1\", u"Republican%20rivals\"%20stabs%20at%20\"Romneycare\"%20gaining%20traction%20%E2%80%93%20USATODAY.com", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:08 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fonline.wsj.com%2Farticle%2FSB10001424052970203752604576641501948282190.html%3FKEYWORDS%3Dhealth%2Blaw\", u"Republican%20Rivals%20Put%20Focus%20on%20Shifts%20in%20Romney\"s%20Views%20-%20WSJ.com", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:15 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fwww.nytimes.com%2F2011%2F10%2F20%2Fus%2Fsocial-security-benefits-to-rise-3-6-next-year.html%3F_r%3D1%26emc%3Dtnt%26tntemail0%3Dy\", \"U.S.%20Benefits%20for%20Retirees%20to%20Rise%203.6%25%20Next%20Year%20-%20NYTimes.com\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:22 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"jegreen%40sbmedia.com\", \"http%3A%2F%2Fblogs.reuters.com%2Freuters-money%2F2011%2F10%2F19%2Fretirement-confidence-falls-especially-in-social-security-poll%2F\", \"Retirement%20confidence%20falls%2C%20especially%20in%20Social%20Security%3A%20Poll%20%7C%20Reuters%20Money\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:27 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"shauns57%40yahoo.com\", \"https%3A%2F%2Fradon.nkasd.com%2Fzimbra%2F%2350\", \"Zimbra%3A%20Inbox%20(2439)\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:31 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"5541817%40gmail.com\", \"http%3A%2F%2Fwww.mydesy.com%2Fmoleskine\", \"%E7%82%BA%E4%BD%A0%E6%84%9B%E7%9A%84%E7%94%9F%E6%B4%BB%E8%80%8C%E7%AD%86%E8%A8%98%EF%BC%8DMOLESKINE%20%7C%20%E3%84%87%E3%84%9E%CB%8B%E9%BB%9E%E5%AD%90%E9%9D%88%E6%84%9F%E5%89%B5%E6%84%8F%E8%AA%8C\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"5541817%40gmail.com\", \"http%3A%2F%2Fwww.mydesy.com%2Fmoleskine-passion-journal\", \"Moleskine%20%E8%A8%98%E9%8C%84%E6%AF%8F%E4%B8%80%E7%A8%AE%E5%8B%95%E4%BA%BA%E6%97%85%E7%A8%8B%20%7C%20%E3%84%87%E3%84%9E%CB%8B%E9%BB%9E%E5%AD%90%E9%9D%88%E6%84%9F%E5%89%B5%E6%84%8F%E8%AA%8C\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:35 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"5541817%40gmail.com\", \"http%3A%2F%2Fwww.mydesy.com%2Fmore-than-paper\", \"Moleskine%E3%80%8A%20More%20than%20Paper%20%E3%80%8B%20%7C%20%E3%84%87%E3%84%9E%CB%8B%E9%BB%9E%E5%AD%90%E9%9D%88%E6%84%9F%E5%89%B5%E6%84%8F%E8%AA%8C\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:08:37 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"5541817%40gmail.com\", \"http%3A%2F%2Fwww.mydesy.com%2Fhow-to-use-moleskine-right\", \"MOLESKINE%E4%B8%8D%E5%83%85%E6%98%AF%E4%B8%80%E6%9C%AC%E7%AD%86%E8%A8%98%E6%9C%AC%20%7C%20%E3%84%87%E3%84%9E%CB%8B%E9%BB%9E%E5%AD%90%E9%9D%88%E6%84%9F%E5%89%B5%E6%84%8F%E8%AA%8C\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:09:05 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"mail%40matthiasdaum.ch\", \"http%3A%2F%2Fwww.zeit.de%2F2011%2F04%2FLeslie-Feist%2Fkomplettansicht\", \"Leslie%20Feist%3A%20Der%20leise%20Superstar%20%7C%20Kultur%20%7C%20ZEIT%20ONLINE\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:09:24 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"baru3kyodai.gst%40gmail.com\", \"http%3A%2F%2Ffeedproxy.google.com%2F~r%2Fitea30%2F~3%2Fhfrg7XgE1JM%2Fmac12.html\", \"null\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:09:56 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"darren.mueller%40gmail.com\", \"http%3A%2F%2Fwww.npr.org%2Fblogs%2Fablogsupreme%2F2010%2F11%2F09%2F131193798%2Farranging-randy-weston-s-biography\", u"\"Arranging\"%20The%20Autobiography%20Of%20Jazz%20Piano%20Legend%20Randy%20Weston%20%3A%20A%20Blog%20Supreme%20%3A%20NPR", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:10:06 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"darren.mueller%40gmail.com\", \"http%3A%2F%2Fwww.npr.org%2Fblogs%2Fablogsupreme%2F2011%2F10%2F04%2F141061716%2Fhow-do-jazz-musicians-make-money\", \"How%20Do%20Jazz%20Musicians%20Make%20Money%3F%20%3A%20A%20Blog%20Supreme%20%3A%20NPR\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:10:22 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"amlowenstein%40gmail.com\", \"http%3A%2F%2Fwww.bloomberg.com%2Fnews%2F2011-10-20%2Fron-wyden-senator-from-planet-where-congress-works-ezra-klein.html%3Fwpisrc%3Dnl_wonk\", \"Ron%20Wyden%2C%20Senator%20From%20Planet%20Where%20Congress%20Works%3A%20Ezra%20Klein%20-%20Bloomberg\", \"0.4.4\", \"firefox\"] 
+ud: None
+Begin forwarded message:
+
+From: gbabun@gmail.com
+Date: October 20, 2011 6:10:32 PM GMT+03:00
+To: bojan@instaright.com
+Subject: Bad request!
+
+Request: args = [\"sylphidsu%40gmail.com\", \"http%3A%2F%2Fsofa1543.pixnet.net%2Fblog%2Fpost%2F26873176-discovery---%25E7%259C%258B%25E7%25A9%25BF%25E8%25AE%2580%25E5%25BF%2583%25E8%25A1%2593\", \"Discovery%20-%20%E7%9C%8B%E7%A9%BF%E8%AE%80%E5%BF%83%E8%A1%93%20%40%201543%20%3A%3A%20%E7%97%9E%E5%AE%A2%E9%82%A6%20PIXNET%20%3A%3A\", \"0.4.4\", \"firefox\"] 
+ud: None
+
