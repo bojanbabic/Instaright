@@ -198,6 +198,12 @@ indexes:
 
 - kind: SessionModel
   properties:
+  - name: instaright_account
+  - name: url_hash
+  - name: date
+
+- kind: SessionModel
+  properties:
   - name: url
   - name: date
     direction: desc

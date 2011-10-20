@@ -79,9 +79,9 @@ class LinkUtils(object):
                 description = LinkUtils.getJsonFieldSimple(json, "description")
                 image = LinkUtils.getJsonFieldSimple(json, "url")
                 html = LinkUtils.getJsonFieldSimple(json, "html")
-                type = LinkUtils.getJsonFieldSimple(json, "type")
+                ttype = LinkUtils.getJsonFieldSimple(json, "type")
                 embeded = ""
-                if image is not None and type == "photo":
+                if image is not None and ttype == "photo":
                         embeded = '<a href="%s"><img src="%s" /></a>'  % ( url, image )
                 if html is not None:
                         embeded = html

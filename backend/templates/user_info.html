@@ -123,10 +123,14 @@
 									dd = new Date(j[p][0]);
 									dd_day=dd.getDate();
 									dd_month=getMonth3U_int(dd.getMonth());
-									console.log("::for date" + dd_month + " got " + j[p][1].length + " links");
+									if (window.console && window.console.log) {
+										console.log("::for date" + dd_month + " got " + j[p][1].length + " links");
+									}
 									date_group=dd_month + " " + dd_day
 									if ($(".date_group:last").text() != date_group){
-										console.log("date group " + date_group + " doesn't exists creating new date group");
+										if (window.console && window.console.log) {
+											console.log("date group " + date_group + " doesn't exists creating new date group");
+										}
 										link_group_clone=$(".link_group:last").clone();
 										$(link_group_clone).find(".date_group").text(date_group);
 										$(link_group_clone).find(".toggle_div").children().remove();
@@ -140,7 +144,9 @@
 										title=links_for_date[i]['t'];
 										domain=links_for_date[i]['d'];
 										link=links_for_date[i]['l'];
-										console.log('title:'+title+' domain:'+ domain+' link:'+ link)
+										if (window.console && window.console.log) {
+											console.log('title:'+title+' domain:'+ domain+' link:'+ link)
+										}
 										new_elem=last_content_clone;
 										ico='http://'+domain+'/favicon.ico';
 										$(new_elem).find('a:first').attr('href', link);
@@ -149,7 +155,9 @@
 										$(new_elem).find('a:last').text(link);
 										$(new_elem).find('img:last').attr('src',ico);
 										$(content).append(new_elem);
-										console.log(new_elem);
+										if (window.console && window.console.log) {
+											console.log(new_elem);
+										}
 										last_content_clone = $("div .link_details_container:last").clone();
 									}
 								}

@@ -76,12 +76,12 @@ class MainHandler(webapp.RequestHandler):
 		ud, args = RequestUtils.parse_request(self.request.body)
 
 		logging.info('Received args:%s' % args)
+                client = RequestUtils.getClient(args)
 		user=RequestUtils.getUser(ud,args)
 		url=RequestUtils.getUrl(args)
 		domain=RequestUtils.getDomain(url)
-                title = RequestUtils.getTitle(args)
+                title = RequestUtils.getTitle(args, client)
                 version = RequestUtils.getVersion(args)
-                client = RequestUtils.getClient(args)
                 selection = RequestUtils.getSelection(args)
 		share_mode = RequestUtils.getShareMode(args)
 
@@ -90,10 +90,11 @@ class MainHandler(webapp.RequestHandler):
 			self.response.out.write('{"message":"Bad url"}')
                         return
                 user_agent = self.request.headers['User-agent']
-                if user is None:
+                if user is None or len(user) == 0:
                         logging.info('skipping since user is not defined ( client %s )' % client )
 			from google.appengine.api import mail
-                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Bad request!', html='Request: args = %s <br> ud: %s' %( args, ud), body='Request: args = %s <br> ud: %s' %( args, ud))
+			if ENVIRONMENT == 'http://www.instaright.com':
+	                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Bad request!', html='Request: args = %s <br> ud: %s' %( args, ud), body='Request: args = %s <br> ud: %s' %( args, ud))
 			self.response.out.write('{"message":"User not defined"}')
                         return
                 logging.info('request has been made from valid user %s' % user)
@@ -134,8 +135,10 @@ class MainTaskHandler(webapp.RequestHandler):
                 description = link_info["d"]
                 embeded = link_info["e"]
                 title_new = link_info["t"]
+		if title_new is not None and len(title) > 0:
+			title = title_new
                 logging.info("link info desc: %s embede: %s" %( description, embeded))
-                if title is None or title == 'None' or title == 'null':
+                if title is not None or title == 'None' or title == 'null':
                         title=LinkUtils.getLinkTitle(url)
                 if title is not None:
                         title = title[:199]
@@ -160,14 +163,22 @@ class MainTaskHandler(webapp.RequestHandler):
                 enbased=e.encode(url_cnt)
                 url_encode26 = e.enbase(enbased)
                 logging.info("url encode: %s and enbase : %s" % (enbased, url_encode26))
-	        model = SessionModel()
+		url_hash = LinkUtils.getUrlHash(url)
+		today = datetime.datetime.now().date()
+		model = SessionModel.gql('WHERE instaright_account = :1 and url_hash = :2 and date > :3', user, url_hash, today).get()
+		if model is None:
+			logging.info('did not find save dafined by: %s %s for date %s', user, url, str(today))
+			model = SessionModel()
+		else:
+	        	model = SessionModel()
+			logging.info('existing url updating certain params')
 		try:
                         #remove for local testing
                 	model.ip = self.request.remote_addr
                 	model.instaright_account = user
                 	model.date = datetime.datetime.now()
                 	model.url = url
-                        model.url_hash = LinkUtils.getUrlHash(url)
+                        model.url_hash = url_hash
                         model.url_counter_id = url_cnt
                         model.url_encode26 = url_encode26
                         model.user_agent=user_agent

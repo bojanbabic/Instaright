@@ -35,7 +35,7 @@ class RequestUtils(object):
 			return
 		try:
 			p=dict([ s.split('=') for s in params.split('&')])
-			args=simplejson.loads(urllib.unquote(p["data"]))
+			args=simplejson.loads(urllib.unquote_plus(p["data"]).decode('utf-8'))
 			ud = urllib.unquote(p["ud"])
 		except:
 			e0,e = sys.exc_info()[0], sys.exc_info()[1]
@@ -61,15 +61,20 @@ class RequestUtils(object):
 		return domain
 	
         @classmethod
-        def getTitle(cls, args):
+        def getTitle(cls, args, client):
                 title = None
                 try:
-                    title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
+		    if client == "bookmarklet":
+			title=args[2]
+		    else:
+                    	title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
+            #        title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
+		    logging.info('got exploded title %s' % urllib.unquote_plus(title))
                     if title == "null":
                             raise Exception('null title from request')
                 except:
                     e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
-                    logging.info('title value error: %s ::: %s' %(e0, e1))
+                    logging.info('title error: %s ::: %s' %(e0, e1))
                 return title
 
         @classmethod
@@ -152,9 +157,7 @@ class RequestUtils(object):
 				if usession.user_details is not None:
 					user=usession.user_details.instaright_account
 			else:
-				user=RequestUtils.getUser(args)
-				param = urllib2.unquote(args[0])
-				user=param
+				user = urllib2.unquote(args[0])
                 except:
 			e0,e = sys.exc_info()[0], sys.exc_info()[1]
 			logging.error('error while determing user account %s => %s' %( e0, e))
