@@ -1,12 +1,15 @@
 import os
 import logging
+import ConfigParser
 from google.appengine.ext import webapp
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-#ENVIRONMENT='http://localhost:8080'
-ENVIRONMENT='http://www.instaright.com'
+conf = ConfigParser.ConfigParser()
+conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/devel.ini')
+ENVIRONMENT=conf.get('server', 'env')
+
 class BookmarkletHandler(webapp.RequestHandler):
         def get(self):
 		template_vars={'env':ENVIRONMENT}
@@ -36,7 +39,6 @@ application = webapp.WSGIApplication(
                         ('/bookmarklet/javascript', BookmarkletHandler),
                         ('/bookmarklet/frame', BookmarkletFrameHandler),
                         ('/a/bookmarklet', BookmarkletRequestHandler),
-                        ('/a/.*', DummyHandler),
                 ],
                 debug=True)
 def main():

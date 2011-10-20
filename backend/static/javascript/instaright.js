@@ -10,7 +10,7 @@ function jsonifyObject(o){
 }
 function jsonifyInstarightObject(o){
 	var a = Array();
-	a.push(quote_wrap(o.UD));
+	a.push(quote_wrap(''));
 	a.push(quote_wrap(o.link));
 	a.push(quote_wrap(o.link_title));
 	a.push(quote_wrap("0.1"));

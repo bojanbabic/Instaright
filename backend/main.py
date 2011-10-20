@@ -1,6 +1,7 @@
 import sys
 import os
 import datetime
+import ConfigParser
 import logging
 import thread
 import time
@@ -28,8 +29,10 @@ from generic_handler import GenericWebHandler
 sys.path.append(os.path.join(os.path.dirname(__file__),'lib'))
 import simplejson
 
-#ENVIRONMENT='http://localhost:8080'
-ENVIRONMENT='http://www.instaright.com'
+conf = ConfigParser.ConfigParser()
+conf.read(os.path.split(os.path.realpath(__file__))[0]+'/properties/devel.ini')
+ENVIRONMENT=conf.get('server', 'env')
+
 class UserMessager:
 	def __init__(self, user_uid):
 		self.user_uuid = user_uid
@@ -69,15 +72,11 @@ class ChannelHandler(webapp.RequestHandler):
 
 class MainHandler(webapp.RequestHandler):
 	def post(self):
-		try:
-			logging.info(self.request.body)
-			args=simplejson.loads(self.request.body)
-		except:
-			logging.error('could not parse request old style trying new ...')
-			args = RequestUtils.parse_params(self.request.body)
+
+		ud, args = RequestUtils.parse_request(self.request.body)
 
 		logging.info('Received args:%s' % args)
-		user=RequestUtils.getUser(args)
+		user=RequestUtils.getUser(ud,args)
 		url=RequestUtils.getUrl(args)
 		domain=RequestUtils.getDomain(url)
                 title = RequestUtils.getTitle(args)
@@ -86,14 +85,16 @@ class MainHandler(webapp.RequestHandler):
                 selection = RequestUtils.getSelection(args)
 		share_mode = RequestUtils.getShareMode(args)
 
-                if not RequestUtils.checkUrl(args):
+                if not RequestUtils.checkUrl(url):
                         logging.info('skipping since url is not good!')
+			self.response.out.write('{"message":"Bad url"}')
                         return
-                if selection is not None:
-                        selection = selection[:500]
                 user_agent = self.request.headers['User-agent']
-                if user is None and client == 'bookmarklet':
+                if user is None:
                         logging.info('skipping since user is not defined ( client %s )' % client )
+			from google.appengine.api import mail
+                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='Bad request!', html='Request: args = %s <br> ud: %s' %( args, ud), body='Request: args = %s <br> ud: %s' %( args, ud))
+			self.response.out.write('{"message":"User not defined"}')
                         return
                 logging.info('request has been made from valid user %s' % user)
                 try:
@@ -105,10 +106,6 @@ class MainHandler(webapp.RequestHandler):
 		        logging.info('bookmarklet specific response')
 			self.response.out.write('{"close_html":"Link successfully marked"}')
 			return
-		logging.info('triggering feed update')
-
-                user = RequestUtils.getUser(args)
-
                 cachedBadge = memcache.get('badge_'+user)
                 logging.info('looking for badge %s' % 'badge_'+user)
                 if cachedBadge is not None:
@@ -129,7 +126,7 @@ class MainTaskHandler(webapp.RequestHandler):
 		domain=self.request.get('domain',None)
                 title=self.request.get('title',None)
                 share_mode=self.request.get('share_mode',None)
-                if not RequestUtils.checkUrl([],url):
+                if not RequestUtils.checkUrl(url):
                     logging.info('skipping since url is not good!')
                     return
                 lu = LinkUtils()

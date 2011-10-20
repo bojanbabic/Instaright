@@ -52,6 +52,7 @@
 			</div>
 
 			<div id="logindiv" style="display:none">
+				<div id="errormessage" style="margin-bottom:1em; display:none"></div>
 				<div class="sharebox expanded" style="border-width:0px ;padding:30px; margin-left: 50px;">
 					<p class="howdy">Yee Haw! Claim your identity by logging at out website.</p>
 					<p class="howdy"><a href="#" onclick="sendToLoginPage()">(login)</a></p>
@@ -92,10 +93,6 @@
 			$("textarea.note").hint().makeExpandable(20000, submit).focus(shareFocus);
 			$("#bookmarkletform,#loginform").submit(bookmarkletSubmit); checkHash();
 			setInterval(checkHash, 100);
-
-
-			$('.sharebox .l_toinput').result(function() {setTimeout(updateFrameSize)});
-			$('.sharebox a.l_toinput').focus(shareToFocus).blur(shareToBlur);
 
 			});
 function checkHash() {
@@ -166,16 +163,13 @@ function bookmarkletSubmit() {
 	if (!getCookie("user_uuid")) {
 		showLogin();
 		return false;
-	}else {
-		$.extend(args, {'UD':getCookie("user_uuid")});
 	}
 	if ($("textarea.note").hasClass("blur")) args.comment = "";
 	var json_instaright = jsonifyInstarightObject(args);
 	var submit = $("input[type=submit]");
 	submit.disable();
-	$.post("/rpc", {'data':json_instaright}, function(r) {
+	$.postJSON("/rpc", {'data':json_instaright}, function(r) {
 			submit.enable();
-			r=JSON.parse(r);
 			if (r.loginreq) {
 			showLogin();
 			} else if (r.message) {

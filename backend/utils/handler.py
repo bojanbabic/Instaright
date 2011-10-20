@@ -8,24 +8,39 @@ from xml.dom import minidom
 import logging
 import simplejson
 
-from models import UserSessionFE, UserDetails
+from models import UserSessionFE
+
 _MAX_LINK_PROPERTY_LENGTH=1040
 
 class RequestUtils(object):
 	@classmethod
+	def parse_request(cls, request_body):
+		args = None
+		ud=None
+		try:
+			logging.info('just received: %s' %request_body)
+			args=simplejson.loads(request_body)
+		except:
+			logging.error('could not parse request old style trying new ...')
+			ud, args = RequestUtils.parse_params(request_body)
+		logging.info('request processed: args=[%s] ud=[%s]' % (args, ud))
+		return ud, args
+
+	@classmethod
 	def parse_params(cls, params):
 		args=None
+		ud=None
 		if params is None:
 			logging.info('no params to parse')
 			return
 		try:
 			p=dict([ s.split('=') for s in params.split('&')])
-			logging.info('params as dict %s' % p)
 			args=simplejson.loads(urllib.unquote(p["data"]))
+			ud = urllib.unquote(p["ud"])
 		except:
 			e0,e = sys.exc_info()[0], sys.exc_info()[1]
 			logging.error('error while parsing params %s => %s' %( e0, e))
-		return args
+		return ud, args
 
 	@classmethod
 	def getDomain(cls, url):
@@ -82,6 +97,7 @@ class RequestUtils(object):
                 try:
                         selection = urllib2.unquote(args[5].encode('ascii')).decode('utf-8')
                         selection = ' '.join(unicode(selection).split())
+                        selection = selection[:500]
                 except:
                         e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
                 return selection
@@ -96,13 +112,12 @@ class RequestUtils(object):
 		return share_mode
 
         @classmethod
-        def checkUrl(cls, args, url=None):
+        def checkUrl(cls, url):
+                if url is None:
+                       return False
                 config=ConfigParser.ConfigParser()
 	        config.read(os.path.split(os.path.realpath(__file__))[0]+'/../properties/general.ini')
 	        skip_protocols=config.get('protocols', 'skip')
-                url = cls.getUrl(args, url)
-                if url is None:
-                       return False
                 scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
                 logging.info('checking scheme:%s' %scheme)
                 if scheme in skip_protocols:
@@ -126,20 +141,20 @@ class RequestUtils(object):
                         return None
 
         @classmethod
-        def getUser(cls, args):
+        def getUser(cls, ud, args):
 		user = None
                 try:
-			#TODO!!!
-			param = urllib2.unquote(args[0])
-			user = param
-			#check account
-			ud = UserDetails.gql('WHERE instaright_account = :1', param).get()
-			if ud is None:
-				logging.info("account name %s doesn't exist testing session" % param)
-				usession = UserSessionFE.gql('where user_uuid = :1 order by last_updatetime desc', param).get()
-				user=usession.user_details.instaright_account
+
+			if ud is not None:
+                		usession = UserSessionFE.gql('WHERE user_uuid = :1 order by last_updatetime desc', ud).get()
+				if usession is None:
+					return None
+				if usession.user_details is not None:
+					user=usession.user_details.instaright_account
 			else:
-				user=ud.instaright_account
+				user=RequestUtils.getUser(args)
+				param = urllib2.unquote(args[0])
+				user=param
                 except:
 			e0,e = sys.exc_info()[0], sys.exc_info()[1]
 			logging.error('error while determing user account %s => %s' %( e0, e))
