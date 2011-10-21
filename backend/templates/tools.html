@@ -119,7 +119,20 @@ $(document).ready(function(){
 <div id="bookmarklet_desc">
 <p>From now on use Instaright on all platfroms!</p>
 <p>iPhone, Android, Nokia platforms provide browsers that are compatible with Instaright bookmarklet and and help you save stories on-the-go!</p>
-<p>We haven't forgot Safari or Opera users, now you can use bookmarklet and boost your productivity.</p>
+<p>If you are on your iPhone or iPad, follow steps from below</p>
+<p>
+1. Add this page as a bookmark <br />
+2. Select and copy the Javascript bookmarklet below to your clipboard. <br />
+3. Go to your bookmarks and edit the new bookmark.  Edit the name and paste the Javascript in the field for the URL.<br />
+4.  Done.
+</p>
+<b>Add the Instaright Bookmarklet</b>
+<br />
+<textarea name="code" cols="50" rows="10" readonly>
+javascript:void((function()%7Bvar%20e=document.createElement('scr'+'ipt');e.setAttribute('type','text/javascript');e.setAttribute('src','{{ env }}/bookmarklet/javascript');document.body.appendChild(e)%7D)())
+</textarea><br />
+<br>
+<p>We haven't forgot Safari or Opera users, now you can use instaright bookmarklet and boost your productivity.</p>
 <p id="bookmarklet_install">
 <span class="text_bubble_cats">
 	<a href="javascript:void((function()%7Bvar%20e=document.createElement('scr'+'ipt');e.setAttribute('type','text/javascript');e.setAttribute('src','{{ env }}/bookmarklet/javascript');document.body.appendChild(e)%7D)())" title="Drag Instaright bookmarklet to your Bookmark Bar" onclick="javascript:alert('Click and drag the button above onto your Bookmark bar'); return false;">Instaright Bookmarklet</a></span>
