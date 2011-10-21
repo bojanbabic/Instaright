@@ -142,9 +142,7 @@
                                 			}
                         			}
                         			link = e['l'];
-						dateUpdated = new Date(e['u']);
-						dateUpdated_int = parseInt(e['u']);
-						dateNow_int = parseInt(e['n']);
+						dateUpdated = new Date(parseInt(e['u']) * 1000);
                         			id = e['id'];
 						a = e['a'];
 						lc = e['lc'];
@@ -216,7 +214,7 @@
 						contentParagraph.innerHTML = html_lc;
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
-						contentParagraph_footer.setAttribute('info', dateUpdated_int);
+						contentParagraph_footer.setAttribute('info', e['u']);
 						contentParagraph_footer.innerHTML = updated_ago_string;
 
                         			domainParagraph = document.createElement('p');

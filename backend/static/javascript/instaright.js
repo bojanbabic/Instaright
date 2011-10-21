@@ -26,9 +26,19 @@ function quote_wrap(word){
 function bracket_wrap(word){
 	return "["+ word + "]";
 }
-function updated_string(dateUpdated, now){
+function updated_string(dateUpdated){
 	/* stupid hack need to remove this*/
-	updated_ago = now - dateUpdated;
+	localDate = new Date();
+	localOffset = new Date().getTimezoneOffset() * 60000;
+
+	utc = localDate.getTime() + localOffset;
+	console.log('utc:'+ utc);
+	now=new Date(utc);
+	
+	if (window.console && window.console.log){
+		console.log("calculate post update: now:" + now + "("+now.getTime()+ ") post time: " + dateUpdated+ "("+dateUpdated.getTime()+")");
+	}
+	updated_ago = now.getTime() - dateUpdated.getTime();
 	//console.info('date updated milis:' + dateUpdated + ' now:'+ now +' => updated ago:'+updated_ago);
 	updated_ago_secs = Math.floor(updated_ago / 1000);
 	updated_ago_mins = Math.floor(updated_ago / 1000 / 60);
@@ -53,6 +63,9 @@ function updated_string(dateUpdated, now){
 		updated_ago_string = "now";
 	} else {
 		//console.info('dif is less then 1s');
+	}
+	if (window.console && window.console.log){
+		console.log("updated ago:" + updated_ago_string);
 	}
 	return updated_ago_string;
 }
