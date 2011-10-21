@@ -1099,3 +1099,9 @@ span {
 .line_separator{
 	border-bottom: 1px solid;
 }
+#install_ipad_ipod{
+	margin-left: 35px;
+}
+#bookmarklet_install {
+	margin-left: 35px;
+}
