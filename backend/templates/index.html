@@ -142,7 +142,8 @@
                                 			}
                         			}
                         			link = e['l'];
-						dateUpdated = new Date(parseInt(e['u']) * 1000);
+						dateUpdated_int=parseInt(e['u']) * 1000;
+						dateUpdated = new Date(dateUpdated_int);
                         			id = e['id'];
 						a = e['a'];
 						lc = e['lc'];
@@ -214,7 +215,8 @@
 						contentParagraph.innerHTML = html_lc;
 						contentParagraph_footer = document.createElement('div');
 						contentParagraph_footer.setAttribute('class', 'content_footer');
-						contentParagraph_footer.setAttribute('info', e['u']);
+						contentParagraph_footer.setAttribute('info', dateUpdated_int)
+						contentParagraph_footer.setAttribute('source_info', source);
 						contentParagraph_footer.innerHTML = updated_ago_string;
 
                         			domainParagraph = document.createElement('p');
@@ -250,9 +252,18 @@
 					// adjust times
 					$(".content_footer").each(function(){
 							milis = $(this).attr('info');
-							//updated_ago = updated_string(milis, dateNow_int);
-							//$(this).html(updated_ago);
-							
+							current_source = $(this).attr('source_info');
+							dateForUpdate=new Date(parseInt(milis));
+							if (window.console && window.console.log){
+								console.log('current link text:' + $(this).find('a').text());
+								console.log('milis:'+ milis);
+								console.log('date for update :'+ dateForUpdate);
+							}
+							updated_ago_string = "as seen "+updated_string(dateForUpdate)+" on "+ current_source;
+							if (window.console && window.console.log){
+								console.log('updated link text:'+ updated_ago_string);
+							}
+							$(this).find("a").text(updated_ago_string);
 					}); 
 
         			}catch(e){

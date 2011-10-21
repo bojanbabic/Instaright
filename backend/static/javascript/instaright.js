@@ -28,14 +28,15 @@ function bracket_wrap(word){
 }
 function updated_string(dateUpdated){
 	/* stupid hack need to remove this*/
-	localDate = new Date();
-	localOffset = new Date().getTimezoneOffset() * 60000;
+	//localDate = new Date();
+	//localOffset = new Date().getTimezoneOffset() * 60000;
 
-	utc = localDate.getTime() + localOffset;
-	console.log('utc:'+ utc);
-	now=new Date(utc);
+	//utc = localDate.getTime() + localOffset;
+	now=new Date();
+	//now=new Date(utc);
 	
 	if (window.console && window.console.log){
+		//console.log('utc:'+ utc);
 		console.log("calculate post update: now:" + now + "("+now.getTime()+ ") post time: " + dateUpdated+ "("+dateUpdated.getTime()+")");
 	}
 	updated_ago = now.getTime() - dateUpdated.getTime();
