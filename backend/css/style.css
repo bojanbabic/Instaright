@@ -1098,6 +1098,10 @@ span {
 }
 .line_separator{
 	border-bottom: 1px solid;
+	border-bottom-color: #ADA699;
+	border-bottom-width: 1px;
+	margin-left: 140px;
+	width: 80%;
 }
 #install_ipad_ipod{
 	margin-left: 35px;
