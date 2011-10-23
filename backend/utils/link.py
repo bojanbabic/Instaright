@@ -76,6 +76,8 @@ class LinkUtils(object):
                 api_call="http://api.embed.ly/1/oembed?key="+urllib.quote(self.embedly_key)+"&url="+urllib.quote(url.encode('utf-8'))+"&maxwidth=500&format=json"
                 json = LinkUtils.getJsonFromApi(api_call)
                 title = LinkUtils.getJsonFieldSimple(json, "title")
+                if title is not None:
+                        title = ' '.join(title.splitlines())
                 description = LinkUtils.getJsonFieldSimple(json, "description")
                 image = LinkUtils.getJsonFieldSimple(json, "url")
                 html = LinkUtils.getJsonFieldSimple(json, "html")

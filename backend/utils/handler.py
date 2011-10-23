@@ -68,10 +68,12 @@ class RequestUtils(object):
 			title=args[2]
 		    else:
                     	title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
-            #        title = urllib2.unquote(args[2].encode('ascii')).decode('utf-8')
-		    logging.info('got exploded title %s' % urllib.unquote_plus(title))
+		    logging.info('got exploded title %s' % title)
+		    #logging.info('got exploded title %s' % urllib.unquote_plus(title))
                     if title == "null":
                             raise Exception('null title from request')
+                    title = ' '.join(title.splitlines())
+                    title = (title.encode('ascii')).decode('utf-8')
                 except:
                     e0, e1 = sys.exc_info()[0], sys.exc_info()[1]
                     logging.info('title error: %s ::: %s' %(e0, e1))
@@ -102,6 +104,10 @@ class RequestUtils(object):
                 try:
                         selection = urllib2.unquote(args[5].encode('ascii')).decode('utf-8')
                         selection = ' '.join(unicode(selection).split())
+                        if selection.endswith("\""):
+                                selection=selection[0:-1]
+                        if selection.startswith("\""):
+                                selection=selection[1:]
                         selection = selection[:500]
                 except:
                         e0, e1 = sys.exc_info()[0], sys.exc_info()[1]

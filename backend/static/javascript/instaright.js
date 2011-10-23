@@ -12,10 +12,10 @@ function jsonifyInstarightObject(o){
 	var a = Array();
 	a.push(quote_wrap(''));
 	a.push(quote_wrap(o.link));
-	a.push(quote_wrap(o.link_title));
+	a.push(quote_wrap(o.link_title.replace(/\"/g, "\\\"")));
 	a.push(quote_wrap("0.1"));
 	a.push(quote_wrap("bookmarklet"));
-	a.push(quote_wrap(o.note));
+	a.push(quote_wrap(o.note.replace(/\"/g, "\\\"")));
 	a.push(quote_wrap(o.share));
 	
 	return bracket_wrap(a.join(','));

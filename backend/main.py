@@ -134,15 +134,16 @@ class MainTaskHandler(webapp.RequestHandler):
                 link_info = lu.getLinkInfo(url)
                 description = link_info["d"]
                 embeded = link_info["e"]
+                logging.info('got post title %s' % title)
                 title_new = link_info["t"]
-		if title_new is not None and len(title) > 0:
+		if title is None and title_new is not None and len(title_new) > 0:
 			title = title_new
-                logging.info("link info desc: %s embede: %s" %( description, embeded))
-                if title is not None or title == 'None' or title == 'null':
+                if title is None or title == 'None' or title == 'null':
                         title=LinkUtils.getLinkTitle(url)
                 if title is not None:
                         title = title[:199]
-                logging.info('link title %s' %title)
+                logging.info('final link title %s' %title)
+                logging.info("link info desc: %s embede: %s" %( description, embeded))
                 version=self.request.get('version',None)
                 client=self.request.get('client',None)
                 selection = self.request.get('selection', None)
@@ -173,6 +174,7 @@ class MainTaskHandler(webapp.RequestHandler):
                         new_entity=True
 		else:
 			logging.info('existing url(key %s) updating certain params' %str(model.key()))
+                logging.info('link: %s title: %s' %(url, title))
 		try:
                         #remove for local testing
                 	model.ip = self.request.remote_addr
@@ -183,7 +185,7 @@ class MainTaskHandler(webapp.RequestHandler):
                                 model.url_hash = url_hash
                                 model.url_counter_id = url_cnt
                                 model.url_encode26 = url_encode26
-                	        model.title = title
+                	model.title = title
                         model.user_agent=user_agent
                 	model.domain = domain
                 	model.short_link = None
@@ -217,7 +219,7 @@ class MainTaskHandler(webapp.RequestHandler):
                 #known category
                 category = LinkUtils.getLinkCategory(model)
                 ud=UserDetails.gql('WHERE instaright_account = :1', user).get()
-                if ud is not None and model is not None and model.key() is not None and share_mode in ['1']:
+                if ud is not None and model.key() is not None and share_mode in ['1']:
                         taskqueue.add(url='/service/submit', params={'user_details_key': str(ud.key()), 'session_key': str(model.key())})
                 taskqueue.add(queue_name='message-broadcast-queue', url= '/message/broadcast/task', params={'user_id':str(model.key()), 'title':model.title, 'link':model.url, 'domain':model.domain, 'updated': int(time.mktime(model.date.timetuple())), 'link_category': category, 'e': embeded, 'subscribers': simplejson.dumps(subscribers, default=lambda s: {'a':s.subscriber.address, 'd':s.domain})})
 

@@ -91,7 +91,7 @@ class ServiceUtil(object):
                         note.content += '<en-note>%s<br/>' % escape(session.url)
                         note.content += '</en-note>'
                 note.content = note.content.encode('utf-8')
-                note.title = 'Sample'
+                #note.title = 'Sample'
                 logging.info('note content:%s ' % note.content)
 
                 createdNote = noteStore.createNote(evernote_token, note)

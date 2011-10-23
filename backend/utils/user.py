@@ -227,7 +227,7 @@ class UserUtils(object):
 		logging.info('user auth with %s: %s' %(auth_service, screen_name))
                 if screen_name is not None and screen_name not in self.skip_list:
                         logging.info('user %s not in skip list %s ... sending mail' %(screen_name, str(self.skip_list)))
-                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %( screen_name , avatar, avatar), body='Awesome new user signed up: %s avatar %s' %( screen_name, avatar))
+                        mail.send_mail(sender='gbabun@gmail.com', to='bojan@instaright.com', subject='User sign up!', html='Awesome new user(%s) signed up: %s <br>avatar <a href="%s"><img src="%s" width=20 height=20 /></a>' %(auth_service, screen_name , avatar, avatar), body='Awesome new user(%s) signed up: %s avatar %s' %(auth_service, screen_name, avatar))
                                         
                 user_details = {'screen_name':screen_name, 'auth_service':auth_service, 'user_details_key':user_details_key, 'avatar':avatar, 'instaright_account':instaright_account,'facebook_access_token': facebook_access_token, 'evernote_name': evernote_username, 'flickr_name': flickr_username}
 		logging.info('[utils] user details:%s' % user_details)
